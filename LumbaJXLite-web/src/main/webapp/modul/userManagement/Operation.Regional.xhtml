@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+   <ui:define name="top">
+      top
+   </ui:define>
+
+   <ui:define name="menuBar">
+      menuBar
+   </ui:define>
+
+   <ui:define name="content">
+
+      <p:panel toggleable="true" closable="true" header="Wilayah">
+         <h:form id="formFieldsetRegion" >
+            <p:fieldset legend="Tambah Kantor Wilayah"
+                        toggleable="TRUE"
+                        collapsed="#{regionBean.fieldsetCollapse}"
+                        toggleSpeed="500">
+               <h:panelGrid columns="3">
+                  <p:outputLabel for="RegionHeadOffice" value="Kantor Pusat"/>
+                  <p:selectOneMenu id="RegionHeadOffice" value="#{regionBean.selectedRegion.headOffice.headofficeid}" required="true" label="Kantor Wilayah" style="width: 200px;">
+                     <f:selectItem itemValue="" itemLabel="Pilih Kantor Wilayah"/>
+                     <f:selectItems value="#{regionBean.headOfficeList}" var="headOffice" itemLabel="#{headOffice.headOffice.headofficename}" itemValue="#{headOffice.headOffice.headofficeid}"/>
+                  </p:selectOneMenu>
+                  <p:message for="RegionHeadOffice"/>
+
+                  <p:outputLabel for="RegionCode" value="Kode Wilayah"/>
+                  <p:inputText id="RegionCode" value="#{regionBean.selectedRegion.region.regionCode}" required="true" maxlength="4" label="Kode Wilayah"/>
+                  <p:message for="RegionCode"/>
+
+                  <p:outputLabel for="RegionName" value="Nama Wilayah"/>
+                  <p:inputText id="RegionName" value="#{regionBean.selectedRegion.region.regionName}" required="true" maxlength="40" label="Nama Wilayah"/>
+                  <p:message for="RegionName"/>
+
+                  <p:outputLabel for="RegionProvinceID" value="Provinsi"/>
+                  <p:selectOneMenu id="RegionProvinceID" required="true" label="Provinsi" value="#{regionBean.selectedRegion.village.subDistrict.district.province.provinceid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Provinsi"/>
+                     <f:selectItems value="#{regionBean.listProvince}" var="province" itemLabel="#{province.provincename}" itemValue="#{province.provinceid}"/>
+                     <p:ajax update="RegionDistrictID"/>
+                  </p:selectOneMenu>
+                  <p:message for="RegionProvinceID"/>
+
+                  <p:outputLabel for="RegionDistrictID" value="Kota / Kabupaten"/>
+                  <p:selectOneMenu id="RegionDistrictID" required="true" label="Kota / Kabupaten" value="#{regionBean.selectedRegion.village.subDistrict.district.districtid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Kota / Kabupaten"/>
+                     <f:selectItems value="#{regionBean.listDistrict}" var="district" itemLabel="#{district.districtname}" itemValue="#{district.districtid}"/>
+                     <p:ajax update="RegionSubDistrictID"/>
+                  </p:selectOneMenu>
+                  <p:message for="RegionDistrictID"/>
+
+                  <p:outputLabel for="RegionSubDistrictID" value="Kecamatan"/>
+                  <p:selectOneMenu id="RegionSubDistrictID" required="true" label="Kecamatan" value="#{regionBean.selectedRegion.village.subDistrict.subdistrictid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Kecamatan"/>
+                     <f:selectItems value="#{regionBean.listSubDistrict}" var="subdistrict" itemLabel="#{subdistrict.subdistrictname}" itemValue="#{subdistrict.subdistrictid}"/>
+                     <p:ajax update="RegionVillageID"/>
+                  </p:selectOneMenu>
+                  <p:message for="RegionSubDistrictID"/>
+
+                  <p:outputLabel for="RegionVillageID" value="Keluarahan / Desa"/>
+                  <p:selectOneMenu id="RegionVillageID" required="true" label="Keluarahan / Desa" value="#{regionBean.selectedRegion.village.villageid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Keluarahan / Desa"/>
+                     <f:selectItems value="#{regionBean.listVillage}" var="village" itemLabel="#{village.villagename}" itemValue="#{village.villageid}"/>
+                  </p:selectOneMenu>
+                  <p:message for="RegionVillageID"/>
+
+                  <p:outputLabel for="RegionAddress1" value="Alamat"/>
+                  <p:inputText id="RegionAddress1" value="#{regionBean.selectedRegion.address}" required="true" maxlength="100" label="Alamat"/>
+                  <p:message for="RegionAddress1"/>
+
+                  <p:outputLabel for="RegionPhomeNumber" value="Nomer Telepon"/>
+                  <p:inputText id="RegionPhomeNumber" value="#{regionBean.selectedRegion.phonenumber}"/>
+                  <p:spacer/>
+
+                  <p:outputLabel for="RegionStatus" value="Status Wilayah"/>
+                  <p:selectOneRadio id="RegionStatus" value="#{regionBean.selectedRegion.region.regionStatus}">
+                     <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                     <f:selectItem itemValue="false" itemLabel="Tidak Aktif"/>
+                  </p:selectOneRadio>
+                  <p:spacer/>
+
+                  <h:outputText value="Branch Vault Account"/>
+                  <p:selectOneMenu id="BranchVaultAccount" value="#{regionBean.selectedRegion.region.branchVaultAccount}" style="width: 200px">
+                     <f:selectItem itemLabel="Pilih Satu COA"/>
+                     <f:selectItems value="#{regionBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.generalaccountnumber} | #{coa.chartofaccountname}}" />
+                  </p:selectOneMenu>
+                  <h:outputText/>
+
+                  <h:outputText value="Inter Branch Account"/>
+                  <p:selectOneMenu id="InterBranchAccount" value="#{regionBean.selectedRegion.region.interBranchAccount}" style="width: 200px">
+                     <f:selectItem itemLabel="Pilih Satu COA"/>
+                     <f:selectItems value="#{regionBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.generalaccountnumber} | #{coa.chartofaccountname}}" />
+                  </p:selectOneMenu>
+                  <h:outputText/>
+
+                  <h:outputText value="BranchBankAccount"/>
+                  <p:selectOneMenu id="BranchBankAccount" value="#{regionBean.selectedRegion.region.branchBankAccount}" style="width: 200px">
+                     <f:selectItem itemLabel="Pilih Satu COA"/>
+                     <f:selectItems value="#{regionBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.generalaccountnumber} | #{coa.chartofaccountname}}" />
+                  </p:selectOneMenu>
+                  <h:outputText/>
+
+                  <p:commandButton value="Simpan" icon="ui-icon ui-icon-check" update="@form :panelGroupTableRegion" actionListener="#{regionBean.createRegion()}" rendered="#{regionBean.status == 'insert'}"/>
+                  <p:commandButton value="Reset" rendered="#{regionBean.status.equalsIgnoreCase('insert')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+                  <p:commandButton value="Rubah" icon="ui-icon ui-icon-check" update="@form :panelGroupTableRegion" actionListener="#{regionBean.update()}" rendered="#{regionBean.status == 'update'}"/>
+                  <p:commandButton value="Cancel" rendered="#{regionBean.status.equalsIgnoreCase('update')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+
+               </h:panelGrid>
+            </p:fieldset>
+         </h:form>
+
+         <h:panelGroup id="panelGroupTableRegion">
+            <h:form id="formTableRegion" >
+               <p:dataTable
+                  emptyMessage="Tidak Ada Kantor Wilayah"
+                  id="tableRegion"
+                  widgetVar="tableRegion"
+                  value="#{regionBean.regionList}"
+                  var="region"
+                  sortOrder="descending">
+
+                  <pe:paginator
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rows="10"
+                     rowsPerPageTemplate="5,10,15"
+                     />
+
+                  <f:facet name="header">Daftar Kantor Wilayah</f:facet>
+
+                  <p:column sortBy="#{region.region.regionCode}" filterBy="#{region.region.regionCode}" filterMatchMode="contains">
+                     <f:facet name="header">Kode</f:facet>
+                     <h:outputText value="#{region.region.regionCode}"/>
+                  </p:column>
+
+                  <p:column sortBy="#{region.region.regionName}" filterBy="#{region.region.regionName}" filterMatchMode="contains">
+                     <f:facet name="header">Nama</f:facet>
+                     <h:outputText value="#{region.region.regionName}"/>
+                  </p:column>
+
+                  <p:column sortBy="#{region.headOffice.headofficename}" filterBy="#{region.headOffice.headofficename}" filterMatchMode="contains">
+                     <f:facet name="header">Kantor Pusat</f:facet>
+                     <h:outputText value="#{region.headOffice.headofficename}"/>
+                  </p:column>
+
+                  <p:column style="width: 80px; text-align: center;">
+                     <f:facet name="header">Status</f:facet>
+                     <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{region.region.regionStatus == true}"/>
+                     <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{region.region.regionStatus == false}"/>
+                  </p:column>
+
+                  <p:column style="width: 80px;">
+                     <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{region.region.regionName}" actionListener="#{regionBean.edit(region)}" update=":formFieldsetRegion"/>
+                     <p:commandButton icon="ui-icon ui-icon-trash" title="Delete #{region.region.regionName}" actionListener="#{regionBean.delete(region)}" update="@form"/>
+                  </p:column>
+               </p:dataTable>
+            </h:form>
+         </h:panelGroup>
+      </p:panel>
+   </ui:define>
+
+   <ui:define name="bottom">
+      bottom
+   </ui:define>
+
+</ui:composition>

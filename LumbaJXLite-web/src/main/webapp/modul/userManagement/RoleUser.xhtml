@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:o="http://omnifaces.org/ui">
+
+   <ui:define name="top">
+      top
+   </ui:define>
+
+   <ui:define name="menuBar">
+      menuBar
+   </ui:define>
+
+   <ui:define name="content">
+      <p:panel closable="true" header="Setting User Role" toggleable="true">
+         <h:form id="formFieldsetUserManagement">
+            <p:messages showDetail="true" id="msg"/>
+            <p:growl id="growl" showDetail="true" showSummary="true"/>
+            <!-- <p:log/> -->
+            <p:fieldset legend="Setting Role User #{settingUserRoleBean.selectedOperatorUser.employeename}"
+                        toggleable="TRUE"
+                        toggleSpeed="500"
+                        rendered="#{settingUserRoleBean.selectedOperatorUser.userid != null}">
+
+               <h:panelGrid columns="2">
+                  <p:dataTable value="#{settingUserRoleBean.userroutingroles}" var="userroutingrole">
+                     <f:facet name="header">
+                        <h:outputText value="Routing Settings"/>
+                     </f:facet>
+
+                     <p:column headerText="Menu Name">
+                        <h:outputText value="#{msgs[userroutingrole.menu.menuname]}"/>
+                     </p:column>
+
+                     <p:column headerText="Privilage">
+                        <p:selectBooleanCheckbox itemLabel="Maker" value="#{userroutingrole.maker}"/>
+                        <p:selectBooleanCheckbox itemLabel="Checker" value="#{userroutingrole.checker}"/>
+                        <p:selectBooleanCheckbox itemLabel="Approval" value="#{userroutingrole.approval}"/>
+                     </p:column>
+
+                     <p:column headerText="Next Target">
+                        <h:outputText value="null"/>
+                        <p:commandLink value="Edit #{msgs[userroutingrole.menu.menuname]} Next Target" rendered="#{userroutingrole.menu.menuid == 200}" onclick="addTarget.show();" type="button"/>
+                     </p:column>
+                  </p:dataTable>
+               </h:panelGrid>
+
+               <h:panelGrid columns="3" id="panelButton">
+                  <p:commandButton value="Simpan" icon="ui-icon ui-icon-check" rendered="#{settingUserRoleBean.status.equalsIgnoreCase('insert')}"/>
+                  <p:commandButton value="Reset" rendered="#{settingUserRoleBean.status.equalsIgnoreCase('insert')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+                  <p:commandButton value="Rubah" icon="ui-icon ui-icon-check" rendered="#{settingUserRoleBean.status.equalsIgnoreCase('update')}"/>
+                  <p:commandButton value="Cancel" rendered="#{settingUserRoleBean.status.equalsIgnoreCase('update')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+                  <p:commandButton icon="ui-icon ui-icon-trash" value="Delete" rendered="#{settingUserRoleBean.status.equalsIgnoreCase('update')}" actionListener="#{settingUserRoleBean.delete}" update="@form"/>
+               </h:panelGrid>
+
+            </p:fieldset>
+         </h:form>
+
+         <h:form id="formTableUserManagement" >
+            <p:dataTable
+               id="tableUserManagement"
+               value="#{settingUserRoleBean.operatorUsers}"
+               var="opUser"
+               emptyMessage="No Position Found"
+               sortOrder="descending">
+
+               <pe:paginator
+                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                  rows="10"
+                  rowsPerPageTemplate="5,10,15"
+                  />
+
+               <f:facet name="header">Daftar User Operator</f:facet>
+
+               <p:column sortBy="#{opUser.username}" filterBy="#{opUser.username}" filterMatchMode="contains">
+                  <f:facet name="header">User Name</f:facet>
+                  <h:outputText value="#{opUser.username}"/>
+               </p:column>
+
+               <p:column sortBy="#{opUser.employeename}" filterBy="#{opUser.employeename}" filterMatchMode="contains">
+                  <f:facet name="header">Operator Name</f:facet>
+                  <h:outputText value="#{opUser.employeename}"/>
+               </p:column>
+
+               <p:column sortBy="#{opUser.employeename}" filterBy="#{opUser.employeename}" filterMatchMode="contains">
+                  <f:facet name="header">Position Name</f:facet>
+                  <h:outputText value="#{opUser.position.positionname}"/>
+               </p:column>
+
+               <p:column style="width: 80px; text-align: center;">
+                  <f:facet name="header">Status</f:facet>
+                  <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{opUser.userstatus == true}"/>
+                  <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{opUser.userstatus == false}"/>
+               </p:column>
+
+               <p:column style="width: 80px; text-align: center;" headerText="Action">
+                  <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{opUser.username}'s Role" actionListener="#{settingUserRoleBean.edit(opUser)}" update=":formFieldsetUserManagement"/>
+               </p:column>
+            </p:dataTable>
+
+            <p:separator/>
+
+            <p:panel style="text-align: right;">
+               <h:outputText value="Click dit button to configure the user's role"/>
+            </p:panel>
+         </h:form>
+      </p:panel>
+
+      <p:dialog header="Add Target #{settingUserRoleBean.targetMenuName}" widgetVar="addTarget" modal="true" hideEffect="fade" showEffect="fade" id="idaddTarget">
+         <h:form id="formAddTargetLoanApplicationApproval">
+            <h:panelGrid columns="2">
+               <p:outputLabel for="addTargetPosition" value="Position"/>
+               <p:selectOneMenu id="addTargetPosition" value="#{settingUserRoleBean.targetRouting.position}">
+                  <f:selectItem itemLabel="Select Position"/>
+                  <f:selectItems value="#{settingUserRoleBean.positions}" var="addPosition" itemLabel="#{addPosition.positioncode} | #{addPosition.positionname}" itemValue="#{addPosition}"/>
+               </p:selectOneMenu>
+
+               <p:outputLabel for="addTargetLevel" value="Level"/>
+               <p:selectOneMenu id="addTargetLevel" style="width: 300px;" value="#{settingUserRoleBean.targetRouting.loanapproval}">
+                  <f:selectItem itemLabel="Select Loan Approval Level" />
+                  <f:selectItems value="#{settingUserRoleBean.loanapprovals}" var="loanApproval" itemLabel="#{loanApproval.loanapprovalgroup} (#{loanApproval.minimumloanlimit} - #{loanApproval.maximumloanlimit})" itemValue="#{loanApproval}"/>
+                  <p:ajax update="minimumloanlimit, maximimloanlimit"/>
+               </p:selectOneMenu>
+
+               <p:outputLabel for="minimumloanlimit" value="Minimum Loan Limit"/>
+               <p:inputText id="minimumloanlimit" value="#{settingUserRoleBean.targetRouting.loanapproval.minimumloanlimit}" disabled="true">
+                  <f:convertNumber type="currency" currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" pattern="#.00" minFractionDigits="2"/>
+               </p:inputText>
+
+               <p:outputLabel for="maximimloanlimit" value="Maximum Loan Limit"/>
+               <p:inputText id="maximimloanlimit" value="#{settingUserRoleBean.targetRouting.loanapproval.maximumloanlimit}" disabled="true">
+                  <f:convertNumber type="currency" currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" pattern="#.00" minFractionDigits="2"/>
+               </p:inputText>
+            </h:panelGrid>
+         </h:form>
+      </p:dialog>
+
+   </ui:define>
+
+   <ui:define name="bottom">
+      bottom
+   </ui:define>
+
+</ui:composition>

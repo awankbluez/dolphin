@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:define name="content">
+        <p:panel header="Loan Issue" closable="true" toggleable="true">
+            <h:form prependId="false" id="formeditschedule">
+                <p:fieldset collapsed="#{loanissueBean.fieldseteditschedule}" rendered="#{not loanissueBean.fieldseteditschedule}" id="fieldsetedit" toggleable="true" legend="#{msgs.formissue}">
+                    <p:panel id="editscheduleissue" >
+                        <h:panelGrid columns="3">
+                            <h:outputText value="#{msgs.disbursementdate}"/><h:outputText value=" : "/>
+                            <p:calendar value="#{loanissueBean.issuenasabah.issuedate}" yearRange="c-120:c+20" navigator="true" readonlyInput="true" pattern="#{loanissueBean.patterndate}"/>
+                            <h:outputText value="#{msgs.disbursementamount}"/><h:outputText value=" : "/>
+                            <p:inputText value="#{loanissueBean.issuenasabah.issueamount}" disabled="true" >
+                                <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                            </p:inputText>
+                            <p:commandButton value="#{msgs.edit}" actionListener="#{loanissueBean.editIssue()}" update=":tblpencairan,:formeditschedule" icon="ui-icon ui-icon-pencil"/>
+                        </h:panelGrid>
+                    </p:panel>
+                </p:fieldset>
+            </h:form>
+            <h:form prependId="false" id="tblpencairan">  
+                <p:fieldset rendered="#{not loanissueBean.fieldsetCollapsed}" collapsed="#{loanissueBean.fieldsetCollapsed}" id="fieldsetutama" toggleable="true" legend="#{msgs.formissue}">
+                    <h:panelGroup>
+                        <p:dataTable value="#{loanissueBean.listissuenasabah}" id="tableListIssue" var="list"
+                                     style="text-align: center; width: 500px">
+                            <p:column headerText="#{msgs.disbursementdate}">
+                                <h:outputText value="#{loanissueBean.convertDate(list.issuedate)}">
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msgs.disbursementamount}">
+                                <h:outputText value="#{list.issueamount}">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+
+                                <p:commandButton value="#{msgs.choose}" disabled="#{loanissueBean.checknow(list)}" actionListener="#{loanissueBean.retrieve_issueschedule(list)}" update=":formissue"/>
+                            </p:column>
+                        </p:dataTable>   
+                        <p:commandButton value="#{msgs.Cancel}" actionListener="#{loanissueBean.cancel_select()}" update="@form,:formtabelnasabah,:formissue"/><h:outputText/>
+                    </h:panelGroup>
+                </p:fieldset>
+            </h:form>
+
+            <h:form prependId="false" id="formissue">
+                <h:panelGroup rendered="#{loanissueBean.formissuerend}">
+                    <h:panelGrid columns="2">
+                        <p:panel style="border-color: white">
+                            <h:panelGrid columns="4">
+                                <h:outputText value="#{msgs.customerName}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.customer.customername}" disabled="true">
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.plafontotal}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.dramount}" disabled="true">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.referencenumber}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.referencenumber}" disabled="true"/><h:outputText/>
+                                <h:outputText value="#{msgs.product}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.loan.loanname}" disabled="true"/><h:outputText/>
+                                <h:outputText value="#{msgs.longterm}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.loantermvalue}" disabled="true"/><h:outputText/>
+                                <h:outputText value="#{msgs.initialdisbursementdate}"/><h:outputText value=" : "/>
+                                <p:calendar value="#{loanissueBean.loanissueschedule.issuedate}" pattern="#{loanissueBean.patterndate}" navigator="true" readonlyInput="true" disabled="true"/><h:outputText/>
+                                <h:outputText value="#{msgs.initialpaymentdate}"/><h:outputText value=" : "/>
+                                <p:calendar value="#{loanissueBean.loanissueschedule.loanapplication.initialpaymentdate}" pattern="#{loanissueBean.patterndate}" navigator="true" readonlyInput="true" disabled="true"/><h:outputText/>
+                                <h:outputText value="#{msgs.maturitydate}"/><h:outputText value=" : "/>
+                                <p:calendar value="#{loanissueBean.loanissueschedule.loanapplication.maturitydate}" disabled="true" pattern="#{loanissueBean.patterndate}" navigator="true" readonlyInput="true"/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+
+                                <h:outputText value="#{msgs.interestrate}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.interest}" disabled="true"/><h:outputText/>        
+                                <h:outputText value="#{msgs.disbursementamount}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.issueamount}"  disabled="true">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.disbursementamountplan}"/><h:outputText value=" : "/>
+                                <p:inputText id="issueamountplan" value="#{loanissueBean.issueamount}" disabled="true" >
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.issuemethod}"/><h:outputText value=" : "/>
+                                <p:selectOneMenu value="#{loanissueBean.methodissue}" style="width: 180px">
+                                    <f:selectItem itemValue="true" itemLabel="#{msgs.autodebet}" />
+                                    <f:selectItem itemValue="false" itemLabel="#{msgs.cash}" />
+                                    <p:ajax listener="#{loanissueBean.methodissue()}" update="accountcode"/>
+                                </p:selectOneMenu><h:outputText/>
+                                <h:outputText value="#{msgs.chooseaccountcode}"/><h:outputText value=" : "/>
+                                <p:selectOneMenu id="accountcode" value="#{loanissueBean.loanissueschedule.issuedtoaccountid}" disabled="#{(not loanissueBean.methodissue)}" style="width: 180px">
+                                    <f:selectItems value="#{loanissueBean.accountcode}" var="rekening" itemValue="#{rekening.accountid}" itemLabel="#{rekening.accountcode}" />
+                                </p:selectOneMenu><h:outputText/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel style="border-color: white" rendered="#{loanissueBean.loanissueschedule.statusFee != 'paid'}">
+                            <h:panelGrid columns="4">
+                                <h:outputText value="#{msgs.choosefee}"/><h:outputText value=" : "/>
+                                <p:selectOneMenu id="feelist" value="#{loanissueBean.varfee.feeid}" style="width: 180px" >
+                                    <f:selectItem itemValue="0" itemLabel="#{msgs.ChooseOne}"/>
+                                    <f:selectItems value="#{loanissueBean.listfee}" var="feecombo" itemValue="#{feecombo.feeid}" itemLabel="#{feecombo.feename}"/>
+                                </p:selectOneMenu>
+                                <p:commandButton value="#{msgs.addrecord}" process="@form" actionListener="#{loanissueBean.addfee_listselected()}" update="pnlgrpfeelist,feetotalid,issueamountplan"/>
+                                <h:outputText value="#{msgs.feetotal}"/><h:outputText value=" : "/>
+                                <p:inputText id="feetotalid" value="#{loanissueBean.loanissueschedule.feetotal}" disabled="true">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.capitalizationvalue}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.capitalizationvalue}" disabled="true">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.insurancevalue}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.insurancevalue}" disabled="true">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.totalinitialpayment}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.repayment}" disabled="true">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.downpayment}"/><h:outputText value=" : "/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.downpayment}" disabled="true">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText/>
+                                <h:outputText value="#{msgs.mandatorySaving}" rendered="false"/><h:outputText value=" : " rendered="false"/>
+                                <p:inputText value="#{loanissueBean.loanissueschedule.loanapplication.mandatorySaving}" disabled="true" rendered="false">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </p:inputText><h:outputText rendered="false"/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                                <h:outputText value="aa" style="color: white"/><h:outputText/><h:outputText/><h:outputText/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:panelGrid>
+                    <h:panelGroup id="pnlgrpfeelist" rendered="#{loanissueBean.loanissueschedule.statusFee != 'paid'}">
+                        <p:dataTable value="#{loanissueBean.listfeeselected}" var="fee" style="text-align: center">
+                            <p:column headerText="#{msgs.feeName}">
+                                <h:outputText value="#{fee.feename}"/>
+                            </p:column>
+                            <p:column headerText="#{msgs.feeValue}">
+                                <h:outputText value="#{fee.feevalue}">
+                                    <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msgs.delete}">
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton}" actionListener="#{loanissueBean.deletefeelist(fee)}" process="@this" update=":formissue:pnlgrpfeelist,:formissue:issueamountplan,:formissue:feetotalid"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+
+                    <p:commandButton value="#{msgs.disbursementissue}" actionListener="#{loanissueBean.submit_issue()}" update=":formissue,:formtabelnasabah,:dialog,:tblpencairan"/><h:outputText/>
+                    <p:commandButton value="#{msgs.Cancel}" actionListener="#{loanissueBean.cancel_issue()}" update=":formissue,:formtabelnasabah"/><h:outputText/>
+
+                </h:panelGroup>
+            </h:form>
+
+            <h:form prependId="false" id="formtabelnasabah">
+                <p:panel style="border: white" rendered="#{loanissueBean.fieldsetCollapsed}">
+                    <p:dataTable value="#{loanissueBean.daftarnasabah}" var="daftar" style="text-align: center">
+                        <p:column headerText="#{msgs.referencenumber}" filterBy="#{daftar.referencenumber}">
+                            <h:outputText value="#{daftar.referencenumber}"/>
+                        </p:column>
+                        <p:column headerText="#{msgs.customername}" filterBy="#{daftar.loanapplication.customer.firstName}" filterMatchMode="contains">
+                            <h:outputText value="#{daftar.loanapplication.customer.firstName}"/>
+                        </p:column>
+                        <p:column headerText="#{msgs.customernumber}" filterBy="#{daftar.loanapplication.customer.customerCode}" filterMatchMode="contains">
+                            <h:outputText value="#{daftar.loanapplication.customer.customerCode}"/>
+                        </p:column>
+                        <p:column headerText="#{msgs.product}" filterBy="#{daftar.loanapplication.loan.loanname}" filterMatchMode="contains">
+                            <h:outputText value="#{daftar.loanapplication.loan.loanname}"/>
+                        </p:column>
+                        <p:column headerText="#{msgs.disbursementdate}">
+                            <h:outputText value="#{daftar.issuedate}"/>
+                        </p:column>
+                        <p:column headerText="Jumlah yang Dicairkan">
+                            <h:outputText value="#{daftar.issueamount}">
+                                <f:convertNumber currencySymbol="#{loanissueBean.currencySimbol}" type="currency" maxFractionDigits="#{loanissueBean.maxfraction}"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msgs.Show}">
+                            <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.Show}" actionListener="#{loanissueBean.edit(daftar)}" update=":tblpencairan,@form"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+            <h:form id="dialog" >
+                <p:dialog header="Warning" widgetVar="warn" id="warn" modal="true" showEffect="explode" hideEffect="explode" >
+                    <center>
+                        <h:outputText value="#{loanissueBean.warningText}"/>
+                        <br/>
+                        <p:commandButton value="OK" oncomplete="warn.hide()" />
+                    </center>
+                </p:dialog>
+                <p:dialog header="Information" widgetVar="success" id="success" modal="true" showEffect="explode" hideEffect="explode" >
+                    <center>
+                        <h:outputText value="#{loanissueBean.warningText}"/>
+                        <br/>
+                        <p:commandButton value="OK" oncomplete="success.hide()" />
+                    </center>
+                </p:dialog>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

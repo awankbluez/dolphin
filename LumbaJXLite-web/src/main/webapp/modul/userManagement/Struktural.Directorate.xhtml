@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+   <ui:define name="top">
+      Directorate
+   </ui:define>
+
+   <ui:define name="menuBar">
+      menuBar
+   </ui:define>
+
+   <ui:define name="content">
+      <p:panel toggleable="true" closable="true" header="Direktorat">
+         <h:form id="formFieldsetDirectorate">
+            <p:fieldset legend="Tambah Direktorat"
+                        toggleable="TRUE"
+                        collapsed="#{directorateBean.fieldsetCollapse}"
+                        toggleSpeed="500"
+                        >
+
+               <h:panelGrid columns="3">
+                  <p:outputLabel for="directorateCode" value="Kode Direktorat*"/>
+                  <p:inputText id="directorateCode" value="#{directorateBean.directorate.directoratecode}" required="true" label="Kode Direktorat" maxlength="4"/>
+                  <p:message for="directorateCode"/>
+
+                  <p:outputLabel for="directorateName" value="Nama Direktorat*"/>
+                  <p:inputText id="directorateName" value="#{directorateBean.directorate.directoratename}" required="true" label="Nama Direktorat" maxlength="40"/>
+                  <p:message for="directorateName"/>
+
+                  <p:outputLabel for="directorateStatus" value="Status Direktorat"/>
+                  <p:selectOneRadio id="directorateStatus" value="#{directorateBean.directorate.directoratestatus}">
+                     <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                     <f:selectItem itemValue="false" itemLabel="Tidak Aktif"/>
+                  </p:selectOneRadio>
+                  <p:spacer/>
+
+                  <p:commandButton id="btnSubmitDirectorate" value="Simpan" icon="ui-icon ui-icon-check" update="@form :formTableDirectorate:tableDirectorate" actionListener="#{directorateBean.add()}" rendered="#{directorateBean.status == 'insert'}"/>
+                  <p:commandButton value="Reset" rendered="#{directorateBean.status.equalsIgnoreCase('insert')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+                  <p:commandButton id="btnUpdateDirectorate" value="Rubah" icon="ui-icon ui-icon-check" update="@form :formTableDirectorate:tableDirectorate" actionListener="#{directorateBean.update()}" rendered="#{directorateBean.status == 'update'}"/>
+                  <p:commandButton value="Cancel" rendered="#{directorateBean.status.equalsIgnoreCase('update')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+               </h:panelGrid>
+            </p:fieldset>
+         </h:form>
+
+         <p:spacer/><p:spacer/>
+
+         <h:form id="formTableDirectorate">
+            <p:dataTable
+               id="tableDirectorate"
+               emptyMessage="Tidak Ada Direktorat"
+               value="#{directorateBean.directorateList}"
+               var="dir"
+               sortOrder="descending">
+
+               <pe:paginator
+                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                  rows="10"
+                  rowsPerPageTemplate="5,10,15"
+                  />
+
+               <f:facet name="header">Daftar Direktorat</f:facet>
+
+               <p:column sortBy="#{dir.directoratecode}" filterBy="#{dir.directoratecode}" filterMatchMode="contains" headerText="Kode">
+                  <h:outputText value="#{dir.directoratecode}"/>
+               </p:column>
+
+               <p:column sortBy="#{dir.directoratename}" filterBy="#{dir.directoratename}" filterMatchMode="contains"  headerText="Nama">
+                  <h:outputText value="#{dir.directoratename}"/>
+               </p:column>
+
+               <p:column style="width: 80px; text-align: center;" headerText="Status">
+                  <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{dir.directoratestatus == true}"/>
+                  <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{dir.directoratestatus == false}"/>
+               </p:column>
+
+               <p:column style="width: 80px; text-align: center;">
+                  <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{dir.directoratename}" action="#{directorateBean.edit(dir)}" update=":formFieldsetDirectorate"/>
+                  <p:commandButton icon="ui-icon ui-icon-trash" title="Delete #{dir.directoratename}"  update="@form" action="#{directorateBean.delete(dir)}"/>
+               </p:column>
+            </p:dataTable>
+         </h:form>
+      </p:panel>
+   </ui:define>
+
+   <ui:define name="bottom">
+      bottom
+   </ui:define>
+
+</ui:composition>

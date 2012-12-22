@@ -1,0 +1,838 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+
+        <p:panel id="panelsaving" header="#{msgs.savingProduct}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000">
+            <h:form id="saving">
+                <p:growl id="growl" sticky="false" life="5000"/>
+                <p:fieldset legend="#{msgs.createsavingproduct}" collapsed="#{savingBean.fieldsetCollapse}" toggleable="true">
+                    <p:tabView id="abc" activeIndex="#{tabsaving.indexTab}">
+                        <p:tab title="#{msgs.settingproduct}" id="tab0" disabled="#{tabsaving.cekTabCifCreate(0)}">
+                            <p:panel id="xa">
+                                <h:panelGrid columns="3" columnClasses="label, value" styleClass="grid" >
+
+                                    <h:outputText value="#{msgs.savingtype}"/>
+                                    <p:selectOneMenu value="#{savingBean.saving.savingtype}"  style="width: 110px" disabled="#{savingBean.status == 'update'}">
+                                        <f:selectItem itemValue="wajib" itemLabel="#{msgs.mandatory}" />
+                                        <f:selectItem itemValue="pokok" itemLabel="#{msgs.principle}" />
+                                        <f:selectItem itemValue="reguler" itemLabel="#{msgs.reguler}" />
+                                        <f:selectItem itemValue="kapitalisasi" itemLabel="#{msgs.capitalization}" />
+                                        <f:selectItem itemValue="deposito" itemLabel="#{msgs.deposito}" />
+                                        <f:selectItem itemValue="tabungan berjangka" itemLabel="#{msgs.termdeposit}" />
+                                        <p:ajax update=":saving:abc"/>
+                                    </p:selectOneMenu>
+                                    <p:spacer/>
+
+                                    <h:outputText value="#{msgs.savingid} *"/>
+                                    <p:inputText id="SaveCode" value="#{savingBean.saving.savingcode}" style="width: 70px" maxlength="4" required="true" requiredMessage="Harus diisi" validator="#{savingBean.validateSavingcode}" disabled="#{savingBean.status == 'update'}">
+                                        <p:ajax event="blur" update="msgsavecode"/>
+                                    </p:inputText>
+                                    <p:message id="msgsavecode" for="SaveCode"/>
+
+                                    <h:outputText value="#{msgs.savingname} *"/>
+                                    <p:inputText id="SaveName" value="#{savingBean.saving.savingname}" style="width: 200px" required="true" requiredMessage="Harus diisi" validator="#{savingBean.validateSavingname}" disabled="#{savingBean.status == 'update'}">
+                                        <p:ajax event="blur" update="msgsavename"/>
+                                    </p:inputText>
+                                    <p:message id="msgsavename" for="SaveName"/>
+
+                                    <h:outputText value="#{msgs.Status} *" />
+                                    <p:selectOneRadio value="#{savingBean.saving.savingstatus}">
+                                        <f:selectItem itemValue="active" itemLabel="Aktif"/>
+                                        <f:selectItem itemValue="inactive" itemLabel="Tidak Aktif" />
+                                    </p:selectOneRadio>
+                                    <p:spacer/>
+
+                                    <h:outputText value="#{msgs.Description}"/>
+                                    <p:inputText value="#{savingBean.saving.description}" style="width: 200px"/>
+                                    <p:spacer/>
+
+                                    <p:commandButton process="xa" action="#{savingBean.add()}" value="#{msgs.next}" actionListener="#{tabsaving.nextTab1()}" update=":saving:abc, :zxcv" rendered="#{savingBean.status == 'insert'}"/>
+                                    <p:commandButton process="xa" action="#{savingBean.updateall()}" value="update" update=":saving:abc, :zxcv" rendered="#{savingBean.status == 'update'}"/>
+
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab title="#{msgs.generalsetup}" id="tab1" disabled="#{tabsaving.cekTabCifCreate(1)}">
+                            <p:panel id="xb">
+                                <h:panelGrid columns="5">
+
+                                    <h:outputText value="#{msgs.Currency}"/>
+                                    <p:selectOneMenu id="SavingCurrency" value="#{savingBean.saving.currency.currencyID}">
+                                        <f:selectItems value="#{savingBean.currencylist}" var="currency" itemValue="#{currency.currencyID}" itemLabel="#{currency.currencyCode} | #{currency.currencyDescribe}" />
+                                        <f:ajax/>
+                                    </p:selectOneMenu>
+                                    <h:outputText />
+                                    <p:spacer/>
+                                    <p:spacer/>
+
+                                    <h:outputText value="Apakah mengakomodir fasilitas Pembayaran?" rendered="#{savingBean.saving.savingtype != 'pokok'}"/>
+                                    <p:selectOneRadio value="#{savingBean.saving.standingorderssupported}" rendered="#{savingBean.saving.savingtype != 'pokok'}">
+                                        <f:selectItem itemValue="true" itemLabel="#{msgs.yes}"/>
+                                        <f:selectItem itemValue="false" itemLabel="#{msgs.no}" />
+                                        <f:ajax/>
+                                    </p:selectOneRadio>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype != 'pokok'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype != 'pokok'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype != 'pokok'}"/>
+
+                                    <h:outputText value="Apakah mengakomodir keterkaitan antar rekening?" rendered="#{savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:selectOneRadio value="#{savingBean.saving.linkingbetweenaccounttype}" rendered="#{savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}">
+                                        <f:selectItem itemValue="true" itemLabel="#{msgs.yes}"/>
+                                        <f:selectItem itemValue="false" itemLabel="#{msgs.no}" />
+                                        <f:ajax/>
+                                    </p:selectOneRadio>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                    <h:outputText value="Apakah mengakomodir payroll?" rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <p:selectOneRadio value="#{savingBean.saving.payrollsupport}" rendered="#{savingBean.saving.savingtype == 'reguler'}">
+                                        <f:selectItem itemValue="true" itemLabel="#{msgs.yes}"/>
+                                        <f:selectItem itemValue="false" itemLabel="#{msgs.no}" />
+                                        <f:ajax/>
+                                    </p:selectOneRadio>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                    <h:outputText value="Pajak Bunga(%)" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito' }"/>
+                                    <pe:inputNumber  value="#{savingBean.saving.interesttax}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito' }"  symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix">
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito' }"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito' }"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito' }"/>
+
+                                    <h:outputText value="dihitung berdasar" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:selectOneRadio value="#{savingBean.saving.calculatebased}" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}">
+                                        <f:selectItem itemLabel="Pokok" itemValue="true"/>
+                                        <f:selectItem itemLabel="Bunga" itemValue="false"/>
+                                        <f:ajax/>
+                                    </p:selectOneRadio>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                    <h:outputText value="Minimum saldo kena pajak bunga" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.minimumbalanceofinteresttax}" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999" >
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                    <h:outputText value="Apakah menggunakan Akumulasi" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:selectOneRadio value="#{savingBean.saving.isuseaccumulated}" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}">
+                                        <f:selectItem itemLabel="#{msgs.yes}" itemValue="true"/>
+                                        <f:selectItem itemLabel="#{msgs.no}" itemValue="false"/>
+                                        <p:ajax update="xb"/>
+                                    </p:selectOneRadio>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                    <h:outputText value="Pilihan Akumulasi" rendered="#{savingBean.saving.isuseaccumulated=='true'}"/>
+                                    <p:selectOneMenu value="#{savingBean.saving.chooseaccumulated}" rendered="#{savingBean.saving.isuseaccumulated=='true'}">
+                                        <f:selectItem itemLabel="Akumulasi Rekening" itemValue="1"/>
+                                        <f:selectItem itemLabel="Akumulasi Keterkaitan" itemValue="2"/>
+                                        <f:selectItem itemLabel="Keduanya" itemValue="3"/>
+                                        <f:ajax/>
+                                    </p:selectOneMenu>
+                                    <p:spacer rendered="#{savingBean.saving.isuseaccumulated=='true'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.isuseaccumulated=='true'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.isuseaccumulated=='true'}"/>
+
+                                    <h:outputText id="xcv" value="Periode simpanan" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:selectOneMenu id="cvb" value="#{savingBean.saving.paymentperiodemethod}" style="width: 100px" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}">
+                                        <f:selectItem itemValue="days" itemLabel="#{msgs.day}"/>
+                                        <f:selectItem itemValue="weeks" itemLabel="#{msgs.week}"/>
+                                        <f:selectItem itemValue="months" itemLabel="#{msgs.month}" />
+                                        <f:ajax/>
+                                    </p:selectOneMenu>
+                                    <p:inputText id="zxc" value="#{savingBean.saving.minimumpaymentperiodvalue}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <h:outputText value="hingga" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:inputText id="zxc2" value="#{savingBean.saving.maximumpaymentperiodvalue}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                    <h:outputText value="jangka waktu denda grace periode (hari)" rendered="#{savingBean.saving.savingtype == 'wajib'}"/>
+                                    <p:inputText value="#{savingBean.saving.graceperiodpenalty}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'wajib'}">
+                                        <f:ajax/>
+                                    </p:inputText>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'wajib'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'wajib'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'wajib'}"/>
+
+                                    <h:outputText value="Denda Keterlambatan" rendered="#{savingBean.saving.savingtype == 'wajib'}"/>
+                                    <p:inputText value="#{savingBean.saving.penalty}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'wajib'}">
+                                        <f:ajax/>
+                                    </p:inputText>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'wajib'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'wajib'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'wajib'}"/>
+
+
+                                    <p:commandButton process="xb" action="#{savingBean.updatetab2()}" value="#{msgs.next}" actionListener="#{tabsaving.nextTab()}" update=":saving:abc" rendered="#{savingBean.status == 'insert'}"/>
+                                    <p:commandButton process="xb" action="#{savingBean.updatetab2()}" value="update" update="xb, :zxcv" rendered="#{savingBean.status == 'update'}"/>
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab title="#{msgs.limit}" id="tab2" disabled="#{tabsaving.cekTabCifCreate(2)}">
+                            <p:panel id="xc">
+
+                                <h:panelGrid columns="5" columnClasses="label, value">
+
+                                    <h:outputText value="#{msgs.AgeLimit} *"/>
+                                    <p:inputText id="batasusiamin" value="#{savingBean.saving.minimumage}" style="width: 50px" required="true" requiredMessage="Harus diisi" >
+                                        <f:ajax/>
+                                    </p:inputText>
+                                    <h:outputText value="#{msgs.to}"/>
+                                    <p:inputText id="batasusiamax" value="#{savingBean.saving.maximumage}" style="width: 50px" required="true" requiredMessage="Harus diisi" >
+                                        <f:ajax/>
+                                    </p:inputText>
+                                    <p:message for="batasusiamax" />
+
+
+                                    <h:outputText value="Setoran Awal Minimum" rendered="#{savingBean.saving.savingtype != 'pokok'}"/>
+                                    <pe:inputNumber id="setoranawalmin" value="#{savingBean.saving.initialminimumdeposit}"  style="width: 200px" rendered="#{savingBean.saving.savingtype != 'pokok'}" required="true" requiredMessage="Harus diisi" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype != 'pokok'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype != 'pokok'}"/>
+                                    <p:message for="setoranawalmin" rendered="#{savingBean.saving.savingtype != 'pokok'}"/>
+
+                                    <h:outputText value="Setoran Awal Maksimum" rendered="#{savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'deposito'or savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <pe:inputNumber id="setoranawalmax" value="#{savingBean.saving.initialmaximumdeposit}"  style="width: 200px" rendered="#{savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'deposito'or savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'tabungan berjangka'}" required="true" requiredMessage="Harus diisi" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'deposito'or savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'deposito'or savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:message for="setoranawalmax" rendered="#{savingBean.saving.savingtype == 'kapitalisasi' or savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'deposito'or savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                    <h:outputText value="#{msgs.minimumbalance} *" rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.minimumbalance}" style="width: 200px" rendered="#{savingBean.saving.savingtype == 'reguler'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                    <h:outputText value="#{msgs.minimumbalancetoearninterest}" rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.minimumbalancetoearninterest}"  style="width: 200px" rendered="#{savingBean.saving.savingtype == 'reguler'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                    <h:outputText value="Setoran Minimal" rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.minimumdeposit}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999" rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}">
+                                        <f:convertNumber pattern="###.#####" />
+                                    </pe:inputNumber>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}"/>
+
+                                    <h:outputText value="Setoran Maksimal" rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.maximumdeposit}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'kapitalisasi'}">
+                                        <f:convertNumber pattern="###.#####" />
+                                    </pe:inputNumber>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'  or savingBean.saving.savingtype == 'kapitalisasi'}"/>
+
+
+                                    <h:outputText value="#{msgs.requireddeposit}" rendered="#{savingBean.saving.savingtype == 'pokok'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.requireddeposit}"  style="width: 200px" rendered="#{savingBean.saving.savingtype == 'pokok'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'pokok'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'pokok'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'pokok'}"/>
+
+                                    <h:outputText value="#{msgs.overdraftLimit}" rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.overdraftlimit}"  style="width: 200px" rendered="#{savingBean.saving.savingtype == 'reguler'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                    <h:outputText value="#{msgs.excesswithdrawal}" rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.excesswithdrawal}" style="width: 200px" rendered="#{savingBean.saving.savingtype == 'reguler'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                    <h:outputText value="#{msgs.atmenable}" rendered="#{savingBean.saving.savingtype == 'reguler'}" />
+                                    <p:selectOneRadio value="#{savingBean.saving.atmenable}" rendered="#{savingBean.saving.savingtype == 'reguler'}">
+                                        <f:selectItem itemValue="true" itemLabel="#{msgs.yes}"/>
+                                        <f:selectItem itemValue="false" itemLabel="#{msgs.no}" />
+                                        <f:ajax render="xc"/>
+
+                                    </p:selectOneRadio>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                    <h:outputText value="#{msgs.dailylimit}" rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}"/>
+                                    <pe:inputNumber value="#{savingBean.saving.dailylimit}" style="width: 200px" rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}"/>
+
+                                    <h:outputText value="#{msgs.numberoffreewithdrawalinamonth}" rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}"/>
+                                    <p:inputText  value="#{savingBean.saving.numberoffreewithdrawalinamonth}" style="width: 200px" rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}">
+                                        <f:ajax/>
+                                    </p:inputText>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.saving.atmenable == 'true'}"/>
+                                </h:panelGrid>
+                                <pe:keyFilter for="batasusiamax" mask="pnum"/>
+                                <pe:keyFilter for="batasusiamin" mask="pnum"/>
+
+                                <p:commandButton process="xc" action="#{savingBean.updatetab3()}" value="#{msgs.next}" actionListener="#{tabsaving.nextTab()}" update=":saving:abc" rendered="#{savingBean.status == 'insert'}"/>
+                                <p:commandButton process="xc" action="#{savingBean.updatetab3()}" value="update"  update="xc" rendered="#{savingBean.status == 'update'}"/>
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab title="#{msgs.Fee}" id="tab3" disabled="#{tabsaving.cekTabCifCreate(3)}">
+
+                            <p:fieldset id="addfeedetailfieldset" legend="#{msgs.Fee}" toggleable="true" collapsed="#{savingBean.addfeedetailfieldset}" toggleSpeed="500" >
+                                <h:panelGrid id="paneladdfeedetail2" columns="2" columnClasses="label, value" styleClass="grid" >
+
+                                    <h:outputText value="#{msgs.Fee}"/>
+                                    <p:selectOneMenu value="#{savingBean.feedetail.fee.feeid}">
+                                        <f:selectItems value="#{savingBean.feelist}" var="feesaving" itemValue="#{feesaving.feeid}" itemLabel="#{feesaving.feename}" />
+                                    </p:selectOneMenu>
+
+
+                                    <h:outputText value="#{msgs.whenispaid}"/>
+                                    <p:selectOneMenu value="#{savingBean.feedetail.whenispaidParameter.whenispaidid}">
+                                        <f:selectItems value="#{savingBean.whenispaidParametersList}" var="savingwhenispaid" itemValue="#{savingwhenispaid.whenispaidid}" itemLabel="#{savingwhenispaid.whenispaidname}" />
+                                    </p:selectOneMenu>
+
+                                    <p:commandButton process="paneladdfeedetail2" value="#{msgs.add}" actionListener="#{savingBean.updatetab4()}" update="addfeedetail4"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                            <h:panelGroup id="panelfee">
+                                <p:dataTable style="text-align: center"
+                                             value="#{savingBean.feedetaillist}"
+                                             emptyMessage="Data masih kosong"
+                                             id="addfeedetail4"
+                                             var="feedetail1"
+                                             paginator="true"
+                                             paginatorPosition="top"
+                                             rows="25"
+                                             rowsPerPageTemplate="5,10,20,25">
+                                    <p:column>
+                                        <f:facet name="header">Fee name</f:facet>
+                                        <h:outputText value="#{feedetail1.fee.feename}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">fee Value</f:facet>
+                                        <h:outputText value="Rp. " rendered="#{feedetail1.fee.useto == 'Nominal'}"/>
+                                        #{feedetail1.fee.feevalue}
+                                        <h:outputText value=" %" rendered="#{feedetail1.fee.useto == 'Percentage'}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">Waktu Pembayaran</f:facet>
+                                        <h:outputText value="#{feedetail1.whenispaidParameter.whenispaidname}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:commandButton process="@this" icon="ui-icon ui-icon-trash" title="#{msgs.delete}" action="#{savingBean.removefeedetail(feedetail1)}" update=":saving:abc:panelfee" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            <p:commandButton process="@this" value="#{msgs.next}" actionListener="#{tabsaving.nextTab()}" update=":saving:abc" rendered="#{(savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler')and savingBean.status=='insert'}"/>
+                            <p:commandButton process="@this" value="#{msgs.next}" actionListener="#{tabsaving.wajibpokokkapitalisasi(savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler')}" update=":saving:abc" rendered="#{(savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'pokok' or savingBean.saving.savingtype == 'kapitalisasi')and savingBean.status=='insert'}"/>
+                        </p:tab>
+
+                        <p:tab title="#{msgs.interest}" id="tab4" disabled="#{tabsaving.cekTabCifCreate(4)}" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}" >
+                            <p:panel id="xe">
+                                <h:panelGrid columns="4" columnClasses="label, value">
+                                    <h:outputText value="#{msgs.InterestMethod}" rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <p:selectOneMenu id="InterestMethod" value="#{savingBean.saving.calculationmethod}" rendered="#{savingBean.saving.savingtype == 'reguler'}">
+                                        <f:selectItem itemValue="Saldo Akhir Simpanan" itemLabel="#{msgs.savingbalance}" />
+                                        <f:selectItem itemValue="Saldo bulanan Minimum" itemLabel="#{msgs.monthlyminimumbalance}" />
+                                        <f:selectItem itemValue="Saldo Harian" itemLabel="#{msgs.dailybalance}" />
+                                        <f:selectItem itemValue="Saldo Rata-rata" itemLabel="#{msgs.averagebalance}" />
+                                    </p:selectOneMenu>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                    <h:outputText value="Periode Pembayaran Bunga" rendered="false"/>
+                                    <p:selectOneMenu value="#{savingBean.saving.interestpaymentmethod}" style="width: 160px" rendered="false">
+                                        <f:selectItem itemValue="bulanan" itemLabel="#{msgs.month}" />
+                                        <f:selectItem itemValue="tahunan" itemLabel="#{msgs.year}" />
+                                    </p:selectOneMenu>
+                                    <h:outputText rendered="false"/>
+                                    <h:outputText rendered="false"/>
+
+                                    <h:outputText value="#{msgs.minimuminterestagelimit}" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                    <p:inputText id="minimuminterestagelimit" value="#{savingBean.saving.minimuminterestagelimit}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                    <h:outputText value="#{msgs.to}" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                    <p:inputText id="maximuminterestagelimit" value="#{savingBean.saving.maximuminterestagelimit}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+
+
+                                    <p:commandButton process="xe" action="#{savingBean.updatetab5()}" value="update" update="xe" rendered="#{savingBean.status == 'update'}"/>
+
+                                </h:panelGrid>
+
+                                <p:fieldset id="addinterestfieldset" legend="#{msgs.interest}" toggleable="true" collapsed="#{savingBean.addinterestfieldset}" toggleSpeed="500" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}">
+                                    <h:panelGrid id="addsavinginterest" columns="4" columnClasses="label, value">
+
+                                        <h:outputText value="#{msgs.InterestRate}" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                        <h:outputText rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Apakah menggunakan Nominal" rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                        <p:selectOneRadio value="#{savingBean.interest.isusenominal}" rendered="#{savingBean.saving.savingtype == 'reguler'}">
+                                            <f:selectItem itemValue="true" itemLabel="#{msgs.yes}"/>
+                                            <f:selectItem itemValue="false" itemLabel="#{msgs.no}" />
+                                            <p:ajax update="addsavinginterest"/>
+                                        </p:selectOneRadio>
+                                        <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                        <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                        <h:outputText value="Nominal" rendered="#{savingBean.saving.savingtype == 'reguler' and savingBean.interest.isusenominal == 'true'}"/>
+                                        <pe:inputNumber id="amountfrom" value="#{savingBean.interest.amountfrom}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999" rendered="#{savingBean.saving.savingtype == 'reguler'  and savingBean.interest.isusenominal == 'true'}">
+                                            <f:convertNumber pattern="###.#####" />
+                                            <f:ajax/>
+                                            <p:ajax process="amountfrom" event="blur" update="messages buttonaddinterest buttoneditinterest" listener="#{savingBean.validateInterestReguler}"/>
+                                        </pe:inputNumber>
+                                        <h:outputText value="Hingga" rendered="#{savingBean.saving.savingtype == 'reguler'  and savingBean.interest.isusenominal == 'true'}"/>
+                                        <pe:inputNumber id="amountto" value="#{savingBean.interest.amountto}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999" rendered="#{savingBean.saving.savingtype == 'reguler'  and savingBean.interest.isusenominal == 'true'}">
+                                            <f:convertNumber pattern="###.#####" />
+                                            <f:ajax/>
+                                            <p:ajax process="amountto" event="blur" update="messages buttonaddinterest buttoneditinterest" listener="#{savingBean.validateInterestReguler}"/>
+                                        </pe:inputNumber>
+
+                                        <h:outputText value="#{msgs.MinimumInterest}" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                        <pe:inputNumber id="MinimumInterest" value="#{savingBean.interest.minimuminterest}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}" symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100">
+                                            <f:ajax/>
+                                        </pe:inputNumber>
+                                        <h:outputText value="#{msgs.MaximumInterest}" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                        <pe:inputNumber id="MaximumInterest" value="#{savingBean.interest.maximuminterest}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}" symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100">
+                                            <f:ajax/>
+                                        </pe:inputNumber>
+
+                                        <h:outputText value="#{msgs.BaseInterest}" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                        <pe:inputNumber id="BaseInterest" value="#{savingBean.interest.baseinterest}" style="width: 50px" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}" symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100">
+                                            <f:ajax/>
+                                        </pe:inputNumber>
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Tanggal Penentuan Bunga Awal" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"/>
+                                        <p:calendar id="startdatesaving" value="#{savingBean.interest.startdate}"  pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true"  rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}"   >
+                                            <f:ajax/>
+                                            <p:ajax process="startdatesaving" event="dateSelect" update="messages buttonaddinterest buttoneditinterest" listener="#{savingBean.validateInterestReguler}"/>
+                                        </p:calendar>
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Apakah menggunakan Split ?" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito'}"/>
+                                        <p:selectOneRadio value="#{savingBean.interest.isusesplit}" rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito'}">
+                                            <f:selectItem itemValue="true" itemLabel="#{msgs.yes}"/>
+                                            <f:selectItem itemValue="false" itemLabel="#{msgs.no}" />
+                                            <p:ajax update="addsavinginterest" listener="#{savingBean.split()}"/>
+                                        </p:selectOneRadio>
+                                        <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito'}"/>
+                                        <p:spacer rendered="#{savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'deposito'}"/>
+
+                                        <h:outputText value="Pihak 1" rendered="#{savingBean.interest.isusesplit == 'true'}"/>
+                                        <p:inputText id="firstbaseinterest" value="#{savingBean.interest.firstbaseinterest}" rendered="#{savingBean.interest.isusesplit == 'true'}"/>
+                                        <h:outputText value="Pihak 2" rendered="#{savingBean.interest.isusesplit == 'true'}"/>
+                                        <p:inputText id="secondbaseinterest" value="#{savingBean.interest.secondbaseinterest}" rendered="#{savingBean.interest.isusesplit == 'true'}"/>
+
+                                        <h:outputText value="Pilih product Pihak 2" rendered="#{savingBean.interest.isusesplit == 'true'}" />
+                                        <p:selectOneMenu  value="#{savingBean.interest.secondsavingid}" rendered="#{savingBean.interest.isusesplit == 'true'}" >
+                                            <f:selectItem itemLabel="pilih produk"/>
+                                            <f:selectItems value="#{savingBean.savingregulerlist}" var="regulerlist"  itemLabel="#{regulerlist.savingname}" itemValue="#{regulerlist.savingid}" />
+                                        </p:selectOneMenu>
+                                        <h:outputText value="Nomor Rekening" rendered="#{savingBean.interest.isusesplit == 'true'}"/>
+                                        <p:inputText value="#{savingBean.interest.accountcodesaving}" rendered="#{savingBean.interest.isusesplit == 'true'}"/>
+
+                                    </h:panelGrid>
+                                    <p:messages id="messages" />
+
+                                    <p:commandButton id="buttonaddinterest" process="addinterestfieldset" value="tambah interest" actionListener="#{savingBean.addinterest()}" update=":saving:abc:addinterestfieldset cvbn2" rendered="#{(savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler') and savingBean.buttoninterest == 'insert'}" disabled="#{savingBean.statuscek}"/>
+                                    <p:commandButton id="buttoneditinterest" process="addinterestfieldset" value="update interest" actionListener="#{savingBean.editinterest()}" update="addsavinginterest cvbn2 addinterestfieldset" rendered="#{(savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler') and savingBean.buttoninterest == 'update'}" disabled="#{savingBean.statuscek}"/>
+                                    <p:commandButton process="addinterestfieldset" value="#{msgs.cancel}" actionListener="#{savingBean.canceleditinterest()}" update="xe" rendered="#{(savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler') and savingBean.buttoninterest == 'update'}" />
+
+                                </p:fieldset>
+                                <p:panel id="updatelist" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' or savingBean.saving.savingtype == 'reguler'}">
+                                    <p:dataTable style="text-align: center" value="#{savingBean.interestlist}" emptyMessage="Data masih kosong" id="cvbn2" var="interest1" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25">
+                                        <p:column headerText="Nominal" rendered="#{savingBean.saving.savingtype=='reguler'}">
+                                            <h:outputText value="#{interest1.amountfrom}">
+                                                <f:convertNumber pattern="###.#####" />
+                                            </h:outputText>
+                                            <h:outputText value=" hingga "/>
+                                            <h:outputText value="#{interest1.amountto}">
+                                                <f:convertNumber pattern="###.#####" />
+                                            </h:outputText>
+
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">#{msgs.MaximumInterest}</f:facet>
+                                            <h:outputText value="#{interest1.maximuminterest} %"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">#{msgs.MinimumInterest}</f:facet>
+                                            <h:outputText value="#{interest1.minimuminterest} %"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">#{msgs.BaseInterest} </f:facet>
+                                            <h:outputText value="#{interest1.baseinterest} %"/>
+                                        </p:column>
+                                        
+                                        <p:column>
+                                            <f:facet name="header">#{msgs.StartDate}</f:facet>
+                                            <h:outputText value="#{interest1.startdate}"/>
+                                        </p:column>
+                                        <p:column style="width: 100px;">
+                                            <p:commandButton process="@this" icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{savingBean.editInterest(interest1)}" update=":saving:abc:addinterestfieldset"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </p:panel>
+
+                                <p:commandButton process="xe" action="#{savingBean.updatetab5()}" value="#{msgs.next}" actionListener="#{tabsaving.nextTab()}" update=":saving:abc" rendered="#{savingBean.status == 'insert'}"/>
+
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab title="#{msgs.GLAccount}" id="tab5" disabled="#{tabsaving.cekTabCifCreate(5)}">
+
+                            <h:panelGrid id="panelgridGL" columns="2" columnClasses="label, value">
+                                <h:outputText value="GLType" style="font-weight: bold"/>
+                                <h:outputText value="Chart of Account" style="font-weight: bold"/>
+
+                                <h:outputText value="Produk Jatuh Tempo"/>
+                                <p:selectOneMenu id="savingstaxwithheld" value="#{savingBean.saving.savingstaxwithheld}" style="width: 200px">
+                                    <f:selectItem itemLabel="Pilih COA" itemValue="0"/>
+                                    <f:selectItems value="#{savingBean.savingstaxwithheld}" var="savingstaxwithheld" itemValue="#{savingstaxwithheld.chartofaccountid}" itemLabel="#{savingstaxwithheld.chartofaccountname} #{savingstaxwithheld.chartofaccountid}" />
+                                    <f:ajax/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Hutang Pajak"/>
+                                <p:selectOneMenu id="SavingInterestDevidedTaxPayable" value="#{savingBean.saving.savinginterestdevidedtaxpayable}" style="width: 200px">
+                                    <f:selectItem itemLabel="Pilih COA" itemValue="0"/>
+                                    <f:selectItems value="#{savingBean.savinginterestdevidedtaxpayable}" var="savinginterestdevidedtaxpayable" itemValue="#{savinginterestdevidedtaxpayable.chartofaccountid}" itemLabel="#{savinginterestdevidedtaxpayable.chartofaccountname}" />
+                                    <f:ajax/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Hutang Bunga Simpanan"/>
+                                <p:selectOneMenu id="SavingInterestDevidedPayable" value="#{savingBean.saving.savinginterestdevidedpayable}" style="width: 200px">
+                                    <f:selectItem itemLabel="Pilih COA" itemValue="0"/>
+                                    <f:selectItems value="#{savingBean.savinginterestdevidedpayable}" var="savinginterestdevidedpayable" itemValue="#{savinginterestdevidedpayable.chartofaccountid}" itemLabel="#{savinginterestdevidedpayable.chartofaccountname}" />
+                                    <f:ajax/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Biaya Bunga Simpanan"/>
+                                <p:selectOneMenu id="SavingInterestDevidedExpense" value="#{savingBean.saving.savinginterestdevidedexpense}" style="width: 200px">
+                                    <f:selectItem itemLabel="Pilih COA" itemValue="0"/>
+                                    <f:selectItems value="#{savingBean.savinginterestdevidedexpense}" var="savinginterestdevidedexpense" itemValue="#{savinginterestdevidedexpense.chartofaccountid}" itemLabel="#{savinginterestdevidedexpense.chartofaccountname}" />
+                                    <f:ajax/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Produk Simpanan"/>
+                                <p:selectOneMenu id="SavingProductControlAccount" value="#{savingBean.saving.productcontrolaccountnormal}" style="width: 200px">
+                                    <f:selectItem itemLabel="Pilih COA" itemValue="0"/>
+                                    <f:selectItems value="#{savingBean.productcontrolaccountnormal}" var="productcontrolaccountnormal" itemValue="#{productcontrolaccountnormal.chartofaccountid}" itemLabel="#{productcontrolaccountnormal.chartofaccountname}" />
+                                    <f:ajax/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Produk Dormansi"/>
+                                <p:selectOneMenu id="SavingOverdraftControlAccount" value="#{savingBean.saving.overdraftcontrolaccountnormal}" style="width: 200px">
+                                    <f:selectItem itemLabel="Pilih COA" itemValue="0"/>
+                                    <f:selectItems value="#{savingBean.overdraftcontrolaccountnormal}" var="overdraftcontrolaccountnormal" itemValue="#{overdraftcontrolaccountnormal.chartofaccountid}" itemLabel="#{overdraftcontrolaccountnormal.chartofaccountname}" />
+                                    <f:ajax/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Produk Blokir"/>
+                                <p:selectOneMenu id="SavingBadDebtIncome" value="#{savingBean.saving.baddebtincome}" style="width: 200px">
+                                    <f:selectItem itemLabel="Pilih COA" itemValue="0"/>
+                                    <f:selectItems value="#{savingBean.baddebtincome}" var="baddebtincome" itemValue="#{baddebtincome.chartofaccountid}" itemLabel="#{baddebtincome.chartofaccountname}" />
+                                    <f:ajax/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Beban Lain-lain"/>
+                                <p:selectOneMenu id="SavingBadDebtExpense" value="#{savingBean.saving.baddebtexpense}" style="width: 200px">
+                                    <f:selectItem itemLabel="Pilih COA" itemValue="0"/>
+                                    <f:selectItems value="#{savingBean.baddebtexpense}" var="baddebtexpense" itemValue="#{baddebtexpense.chartofaccountid}" itemLabel="#{baddebtexpense.chartofaccountname}" />
+                                    <f:ajax/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+
+                            <h:panelGrid columns="2">
+                                <p:commandButton value="Next" action="#{savingBean.updatetabGL}" process="@this" actionListener="#{tabsaving.nextTab()}"  update=":saving:abc :zxcv" rendered="#{savingBean.status == 'insert' and (savingBean.saving.savingtype == 'reguler' or savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka' )}"/>
+                                <p:commandButton value="save" action="#{savingBean.updatetabGL}" process="@this" update=":saving:abc :zxcv" rendered="#{savingBean.status == 'insert' and (savingBean.saving.savingtype == 'wajib' or savingBean.saving.savingtype == 'pokok' or savingBean.saving.savingtype == 'kapitalisasi') }"/>
+                                <p:commandButton value="update" action="#{savingBean.updatetabGL}"  process="@form" update=":saving:abc :zxcv" rendered="#{savingBean.status == 'update'}"/>
+                            </h:panelGrid>
+
+                        </p:tab>
+
+                        <p:tab title="#{msgs.Dormancy}" id="tab6" disabled="#{tabsaving.cekTabCifCreate(6)}" rendered="#{savingBean.saving.savingtype == 'reguler'}">
+                            <p:panel id="x6">
+                                <h:panelGrid columns="3">
+                                    <h:outputText value="#{msgs.allowdormancy}" rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+                                    <p:selectOneRadio value="#{savingBean.saving.allowdormancy}" rendered="#{savingBean.saving.savingtype == 'reguler'}">
+                                        <f:selectItem itemValue="true" itemLabel="#{msgs.yes}"/>
+                                        <f:selectItem itemValue="false" itemLabel="#{msgs.no}" />
+                                        <p:ajax update="x6"/>
+                                    </p:selectOneRadio>
+                                    <h:outputText rendered="#{savingBean.saving.savingtype == 'reguler'}"/>
+
+                                    <h:outputText value="#{msgs.dormanafter}" rendered="#{savingBean.saving.allowdormancy == 'true'}"/>
+                                    <p:selectOneMenu id="DormanAfter" value="#{savingBean.saving.dormanafter}" style="width: 200px" rendered="#{savingBean.saving.allowdormancy == 'true'}">
+                                        <f:selectItem itemValue="day" itemLabel="#{msgs.day}" />
+                                        <f:selectItem itemValue="week" itemLabel="#{msgs.week}" />
+                                        <f:selectItem itemValue="month" itemLabel="#{msgs.month}" />
+                                        <f:selectItem itemValue="year" itemLabel="#{msgs.year}" />
+                                        <f:ajax execute="x6" render="x6"/>
+                                    </p:selectOneMenu>
+                                    <h:inputText value="#{savingBean.saving.dormanaftervalue}" rendered="#{savingBean.saving.allowdormancy == 'true'}">
+                                        <f:ajax execute="@this"/>
+                                    </h:inputText>
+
+                                    <h:outputText value="#{msgs.dormancyfee}" rendered="#{savingBean.saving.allowdormancy == 'true'}"/>
+                                    <pe:inputNumber style="width: 100px" disabled="true" value="#{savingBean.saving.dormancyfee}" rendered="#{savingBean.saving.allowdormancy == 'true'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.allowdormancy == 'true'}"/>
+
+                                    <h:outputText value="#{msgs.minimumbalancedormancy}" rendered="#{savingBean.saving.allowdormancy == 'true'}"/>
+                                    <pe:inputNumber style="width: 100px" value="#{savingBean.saving.minimumbalance}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="99999999999" rendered="#{savingBean.saving.allowdormancy == 'true'}">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax execute="@this"/>
+                                    </pe:inputNumber>
+                                    <h:outputText rendered="#{savingBean.saving.allowdormancy == 'true'}"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="3" rendered="#{savingBean.saving.allowdormancy == 'true'}">
+                                    <h:outputText value="#{msgs.TypeKenadormancy}" style="font-weight: bold"/>
+                                    <p:spacer/>
+                                    <p:spacer/>
+
+                                    <p:spacer/>
+                                    <p:selectBooleanCheckbox label="deposit" value="#{savingBean.saving.deposit}">
+                                        <f:ajax execute="@this"/>
+                                    </p:selectBooleanCheckbox>
+                                    <h:outputText value="deposit"/>
+
+                                    <p:spacer/>
+                                    <p:selectBooleanCheckbox label="branch transfer" value="#{savingBean.saving.branchtransfer}">
+                                        <f:ajax execute="@this"/>
+                                    </p:selectBooleanCheckbox>
+                                    <h:outputText value="branchtransfer"/>
+
+                                    <p:spacer/>
+                                    <p:selectBooleanCheckbox label="withdrawl" value="#{savingBean.saving.withdrawl}">
+                                        <f:ajax execute="@this"/>
+                                    </p:selectBooleanCheckbox>
+                                    <h:outputText value="withdrawal"/>
+                                </h:panelGrid>
+
+
+
+                                <p:commandButton value="Simpan" process="@this" actionListener="#{savingBean.updatetab6()}" update=":saving:abc :zxcv" rendered="#{savingBean.status == 'insert'}"/>
+                                <p:commandButton value="Update" process="@this" actionListener="#{savingBean.updatetab6()}" update=":saving:abc :zxcv" rendered="#{savingBean.status == 'update'}"/>
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab title="#{msgs.termdeposit}" id="tab7" disabled="#{tabsaving.cekTabCifCreate(6)}" rendered="#{savingBean.saving.savingtype == 'deposito' or savingBean.saving.savingtype == 'tabungan berjangka'}">
+                            <p:panel id="xt">
+                                <h:panelGrid columns="4">
+
+                                    <h:outputText value="#{msgs.termLimit} (bulan)" rendered="#{savingBean.saving.savingtype == 'deposito'}"/>
+                                    <p:inputText id="termLimit" value="#{savingBean.saving.termlimit}" rendered="#{savingBean.saving.savingtype == 'deposito'}">
+                                        <f:ajax execute="@this"/>
+                                    </p:inputText>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'deposito'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'deposito'}"/>
+
+
+                                    <h:outputText value="#{msgs.rolloverperiode}"/>
+                                    <p:inputText value="#{savingBean.saving.rolloverperiode}">
+                                        <f:ajax execute="@this"/>
+                                    </p:inputText>
+                                    <h:outputText />
+                                    <h:outputText />
+
+                                    <h:outputText value="withdrawal penalty exceed the time limit value" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:inputText value="#{savingBean.saving.withdrawalpenaltyexceedthetimelimitvalue}" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}">
+                                        <f:ajax execute="@this"/>
+                                        <f:convertNumber pattern="###.#####" />
+                                    </p:inputText>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                    <h:outputText value="#{msgs.earlyclosurepenaltytype}"/>
+                                    <p:selectOneMenu id="EarlyClosurePenalty" value="#{savingBean.saving.earlyclosurepenaltytype}" style="width: 200px">
+                                        <f:selectItem itemValue="prosentase" itemLabel="#{msgs.inPercentage}" />
+                                        <f:selectItem itemValue="nominal" itemLabel="#{msgs.inNominal}" />
+                                        <f:ajax execute="@this"/>
+                                    </p:selectOneMenu>
+                                    <h:outputText value="#{msgs.value}" />
+                                    <p:inputText id="earlyclosurepenaltyvalue" value="#{savingBean.saving.earlyclosurepenaltyvalue}">
+                                        <f:ajax execute="@this"/>
+                                    </p:inputText>
+
+                                    <h:outputText value="#{msgs.nointerestifclosedbeforeminimumterm}" />
+                                    <p:selectBooleanCheckbox label="no interest if closed before minimum term" value="#{savingBean.saving.nointerestifclosedbeforeminimumterm}">
+                                        <f:ajax execute="@this"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:spacer/>
+                                    <p:spacer/>
+
+                                    <h:outputText value="Tunjangan Kenaikan Kelas" style="font-weight: bold" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:spacer rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                    <h:outputText value="Bentuk Tunjangan" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:selectOneMenu value="#{savingBean.saving.achivement.type}" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}">
+                                        <f:selectItem itemLabel="Persentase" itemValue="P"/>
+                                        <f:selectItem itemLabel="Nominal" itemValue="N"/>
+                                        <f:ajax/>
+                                    </p:selectOneMenu>
+                                    <h:outputText value="Nilai" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}"/>
+                                    <p:inputText value="#{savingBean.saving.achivement.value}" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}">
+                                        <f:ajax/>
+                                    </p:inputText>
+                                </h:panelGrid>
+                                <pe:keyFilter for="earlyclosurepenaltyvalue" mask="pnum"/>
+                                <p:fieldset id="addtermdepositfieldset" legend="Tunjangan" toggleable="true" collapsed="false" toggleSpeed="500" rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}">
+                                    <h:panelGrid columns="4" id="sdf">
+
+                                        <h:outputText value="Tunjangan Prestasi" style="font-weight: bold"/>
+                                        <p:spacer/>
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Peringkat"/>
+                                        <p:inputText value="#{savingBean.achivement.ranking}"/>
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Bentuk Tunjangan"/>
+                                        <p:selectOneMenu value="#{savingBean.achivement.type}">
+                                            <f:selectItem itemLabel="Persentase" itemValue="P"/>
+                                            <f:selectItem itemLabel="Nominal" itemValue="N"/>
+                                        </p:selectOneMenu>
+                                        <h:outputText value="Nilai"/>
+                                        <p:inputText value="#{savingBean.achivement.value}"/>
+
+                                        <p:commandButton process="addtermdepositfieldset" value="#{msgs.add}" actionListener="#{savingBean.addtunjanganprestasi()}" update="paneltunjanganprestasi addtermdepositfieldset" rendered="#{savingBean.buttontp == 'insert'}"/>
+                                        <p:commandButton process="addtermdepositfieldset" value="update" actionListener="#{savingBean.updatetunjanganprestasi()}" update="paneltunjanganprestasi addtermdepositfieldset" rendered="#{savingBean.buttontp == 'edit'}"/>
+                                        <p:commandButton process="addtermdepositfieldset" value="cancel" actionListener="#{savingBean.canceltp()}" update="addtermdepositfieldset" rendered="#{savingBean.buttontp == 'edit'}"/>
+                                    </h:panelGrid>
+                                </p:fieldset>
+
+                                <h:panelGroup id="paneltunjanganprestasi">
+                                    <p:dataTable style="text-align: center"
+                                                 value="#{savingBean.achivementlist}"
+                                                 emptyMessage="Data masih kosong"
+                                                 id="achivementid"
+                                                 var="achivement"
+                                                 paginator="true"
+                                                 paginatorPosition="top"
+                                                 rows="25"
+                                                 rowsPerPageTemplate="5,10,20,25"
+                                                 rendered="#{savingBean.saving.savingtype == 'tabungan berjangka'}" >
+                                        <p:column headerText="Ranking">
+                                            <h:outputText value="#{achivement.ranking}"/>
+                                        </p:column>
+                                        <p:column headerText="Nilai">
+                                            <h:outputText value="#{achivement.value} %" rendered="#{achivement.type == 'P'}"/>
+                                            <h:outputText value="#{achivement.value} " rendered="#{achivement.type == 'N'}"/>
+                                        </p:column>
+                                        <p:column headerText="Aksi">
+                                            <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{savingBean.edittunjanganprestasi(achivement)}" update="@form"/>
+                                            <p:commandButton process="@this" icon="ui-icon ui-icon-trash" title="hapus" action="#{savingBean.removetunjanganprestasi(achivement)}" update=":saving:abc:xt"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGroup>
+                            </p:panel>
+                            <p:commandButton value="Simpan" process="@this" action="#{savingBean.updatetab7()}" update=":saving:abc, :zxcv" rendered="#{savingBean.status == 'insert'}"/>
+                            <p:commandButton value="Update" process="@this" action="#{savingBean.updatetab7()}" update="xt, :zxcv" rendered="#{savingBean.status == 'update'}"/>
+                        </p:tab>
+                    </p:tabView>
+                    <p:commandButton value="Create New Product" action="#{savingBean.init}" actionListener="#{tabsaving.fungsi()}" rendered="#{savingBean.status != 'insert'}" update="@form"/>
+                </p:fieldset>
+            </h:form>
+            <h:form id="zxcv">
+                <p:panel id="listproduct">
+                    <h:outputText/>
+                    <p:dataTable style="text-align: center" sortOrder="desc" value="#{savingBean.savinglist}" emptyMessage="Data Tidak Ditemukan" var="saving1" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25">
+
+
+                        <p:column sortBy="#{saving1.savingtype}" filterBy="#{saving1.savingtype}" filterMatchMode="contains">
+                            <f:facet name="header">#{msgs.savingtype}</f:facet>
+                            <h:outputText value="#{saving1.savingtype}"/>
+                        </p:column>
+                        <p:column sortBy="#{saving1.savingcode}" filterBy="#{saving1.savingcode}" filterMatchMode="contains">
+                            <f:facet name="header">#{msgs.savingid}</f:facet>
+                            <h:outputText value="#{saving1.savingcode}"/>
+                        </p:column>
+                        <p:column sortBy="#{saving1.savingname}" filterBy="#{saving1.savingname}" filterMatchMode="contains">
+                            <f:facet name="header">#{msgs.savingname}</f:facet>
+                            <h:outputText value="#{saving1.savingname}"/>
+                        </p:column>
+
+
+                        <p:column style="width: 50px;">
+                            <f:facet name="header">Status</f:facet>
+                            <p:commandButton icon="ui-icon ui-icon-check" title="Aktif" rendered="#{saving1.savingstatus == 'active'}" disabled="true"/>
+                            <p:commandButton icon="ui-icon ui-icon-closethick" title="Tidak Aktif" rendered="#{saving1.savingstatus == 'inactive'}"  disabled="true"/>
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{savingBean.edit(saving1)}" update=":panelsaving" actionListener="#{tabsaving.setTabCC(7)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+
+
+            <p:dialog header="hapus" widgetVar="hapusDlg" resizable="false" id="hapusDialog" showEffect="fade" modal="true" >
+                <h:form id="formHapusDialog" prependId="false">
+                    <h:panelGrid id="panelDetail2" columns="1" cellpadding="2">
+                        <h:outputText value="Yakin mau dihapus ?"/>
+                        <p:commandButton action="#{savingBean.delete(selectedSaving)}" oncomplete="hapusDlg.hide()" value="Hapus" update=":zxcv"/>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
+
+
+
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

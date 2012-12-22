@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panel collapsed="false" header="Live Chart Table" toggleable="true">
+        <h:panelGrid columns="1">
+            <p:pieChart id="chart1" value="#{userdbManagedBean.chart}" title="Live Statistics User Connected to DB" legendPosition="w"
+                        style="width: 200px;"/>
+            <p:meterGaugeChart id="chart2" value="#{userdbManagedBean.meterGaugeChartModel}"
+                               showTickLabels="true"
+                               labelHeightAdjust="-40"
+                               intervalOuterRadius="120"
+                               seriesColors="66cc66, 93b75f, E7E658, cc6666"
+                               style="width: 500px;"/>
+        </h:panelGrid>
+    </p:panel>
+    <p:panel collapsed="true" header="Statistic Table" toggleable="true">
+        <p:dataTable
+            value="#{userdbManagedBean.userDBList}"
+            var="userdb"
+            >
+            <f:facet name="header">User Yang Terkoneksi Dengan Database</f:facet>
+
+            <p:column headerText="User Name">
+                <h:outputText value="#{userdb.userName}"/>
+            </p:column>
+
+            <p:column headerText="Jumlah Koneksi">
+                <h:outputText value="#{userdb.userSumConnection}"/>
+            </p:column>
+
+            <p:column headerText="User Rate">
+                <h:outputText value="#{userdb.userRate}"/>
+            </p:column>
+        </p:dataTable>
+    </p:panel>
+
+</ui:composition>

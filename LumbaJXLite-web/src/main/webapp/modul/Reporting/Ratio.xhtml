@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Financial Performance Ratio Report">
+            <h:form id="searchFinancialPerformanceRatioReport" prependId="false">
+                <h:panelGrid columns="4" >
+                    <p:outputLabel for="Ratio" value="Ratio"/>
+                    <p:selectOneMenu id="Ratio" value="#{ratio.ratiotype}" style="width: 150px;">
+                        <f:selectItem itemLabel="Select Ratio" />
+                        <f:selectItem itemLabel="Rasio Permodalan" itemValue="Rasio Permodalan"/>                        
+                        <f:selectItem itemLabel="Rasio Aktiva Produktif" itemValue="Rasio Aktiva Produktif"/>                        
+                        <f:selectItem itemLabel="Rasio Rentabilitas" itemValue="Rasio Rentabilitas"/>                        
+                        <f:selectItem itemLabel="Rasio Likuiditas" itemValue="Rasio Likuiditas"/>                        
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    
+                    <p:outputLabel for="Branch" value="#{msgs.branch}"/>
+                    <p:selectOneMenu id="Branch" value="#{ratio.branch}" style="width: 150px;">
+                        <f:selectItem itemLabel="Select Branch" />
+                        <f:selectItems value="#{ratio.listbranch}"/>
+                        <p:ajax listener="#{ratio.comboBranch()}" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Period" value="#{msgs.period}"/>
+                    <p:selectOneMenu id="Period" value="#{ratio.period}" style="width: 150px;">
+                        <f:selectItem itemLabel="Pilih period" itemValue=""/>
+                        <f:selectItem itemLabel="Monthly" itemValue="Monthly"/>
+                        <f:selectItem itemLabel="Quarter" itemValue="Quarter"/>
+                        <f:selectItem itemLabel="Semester" itemValue="Semester"/>
+                        <f:selectItem itemLabel="Annual" itemValue="Annual"/>
+                        <p:ajax listener="#{ratio.generate_date(ratio.period,ratio.periodto3)}" update="Period1From,Period1FromTo,Period3From,Period3FromTo,Period2From,Period2FromTo"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Period3From" value="Period Three From"/>
+                    <p:calendar id="Period3From" value="#{ratio.periodfrom3}" pattern="dd-MM-yyyy" navigator="true" style="width: 150px" effect="explode" disabled="true"/>
+                    <p:outputLabel for="Period3FromTo" value="#{msgs.to}"/>
+                    <p:calendar id="Period3FromTo" value="#{ratio.periodto3}" pattern="dd-MM-yyyy" navigator="true" style="width: 150px" effect="explode" readonlyInput="true">
+                        <p:ajax event="dateSelect" listener="#{ratio.generate_date(ratio.period,ratio.periodto3)}" update="Period1From,Period1FromTo,Period3From,Period2From,Period2FromTo"/>
+                    </p:calendar>
+
+                    <p:outputLabel for="Period2From" value="Period Two From"/>
+                    <p:calendar id="Period2From" value="#{ratio.periodfrom2}" pattern="dd-MM-yyyy" navigator="true" style="width: 150px" effect="explode" disabled="true"/>
+                    <p:outputLabel for="Period2FromTo" value="#{msgs.to}"/>
+                    <p:calendar id="Period2FromTo" value="#{ratio.periodto2}" pattern="dd-MM-yyyy" navigator="true" style="width: 150px" effect="explode" disabled="true"/>
+
+                    <p:outputLabel for="Period1From" value="Period One From"/>
+                    <p:calendar id="Period1From" value="#{ratio.periodfrom1}" pattern="dd-MM-yyyy" navigator="true" style="width: 150px" effect="explode" disabled="true"/>
+                    <p:outputLabel for="Period1FromTo" value="#{msgs.to}"/>
+                    <p:calendar id="Period1FromTo" value="#{ratio.periodto1}" pattern="dd-MM-yyyy" navigator="true" style="width: 150px" effect="explode" disabled="true"/>
+
+                    <p:commandButton value="Report" actionListener="#{ratio.searchratio(ratio.ratiotype)}" process="@form"/>
+                </h:panelGrid>
+            </h:form>
+            <h:form id="ratiotable">
+                <p:panel style="border-color: white">
+                    <p:dataTable value="#{ratio.ratio}" var="list" style="text-align: center">
+                        <f:facet name="header">#{ratio.ratiotype}</f:facet>
+                        <p:column headerText="Indicator">
+                            #{list.indikator}
+                        </p:column>
+                        <p:column headerText="Periode 1">                            
+                            <h:outputText value="#{list.period1}">
+                                <f:convertNumber type="percent"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Periode 2">
+                            <h:outputText value="#{list.period2}">
+                                <f:convertNumber type="percent"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Periode 3">
+                            <h:outputText value="#{list.period3}">
+                                <f:convertNumber type="percent"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

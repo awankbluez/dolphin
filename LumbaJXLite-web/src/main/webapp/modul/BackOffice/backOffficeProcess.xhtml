@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:jr="http://jasperreportjsf.sf.net/tld/jasperreports-jsf-1_2.tld">
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Processing Back Office" id="panelChecking">
+
+            <p:growl autoUpdate="true" severity="info" life="3000" id="growlInfo" />
+            <p:growl autoUpdate="true" severity="error" sticky="true" id="growlError" showDetail="true" showSummary="true"/>
+
+            <h:form id="formCheckBOProcess">
+                <h:panelGrid columns="3" style="width: 100%;">
+                    <p:progressBar id="progressBarBOProcess" value="#{backOfficeBean.progress}" widgetVar="progressBarBOProcess" style="width: 750px;" labelTemplate="{value}%" styleClass="animated" ajax="true" interval="1000">
+                        <p:ajax event="complete" listener="#{backOfficeBean.completeProgress()}" update=":formreport"/>
+                    </p:progressBar>
+                    <p:commandButton id="buttonCalculate"  actionListener="#{backOfficeBean.processAllBackOfficeProcess}" value="Process" widgetVar="btnCalculate" onclick="progressBarBOProcess.start(); btnCalculate.disable(); blockPanelReporting.block(); pooling.start();"/>
+                    <p:commandButton id="buttonCancelCalculate" actionListener="#{backOfficeBean.forceCancelProgress}" value="Cancel Process" widgetVar="btnCancelCalculate" onclick="progressBarBOProcess.cancel(); btnCalculate.enable(); blockPanelReporting.unblock(); pooling.stop();"/>
+
+                    <h:outputText id="BackOfficeCurrentProcessing" value="#{backOfficeBean.currentProcessing}" style="font-weight: bold;"/>
+
+                    <p:poll async="true" autoStart="false" update="BackOfficeCurrentProcessing" widgetVar="pooling" interval="1"/>
+                </h:panelGrid>
+            </h:form>
+
+            <h:form id="formreport" target="_blank">
+                <h:panelGroup layout="block" id="panelReports">
+                    <p:panel id="panelJournalView" header="Journal View" collapsed="true" toggleable="true">
+                        <h:panelGrid columns="5">
+                            <p:outputLabel value="Rounding" for="roundingJV"/>
+                            <p:selectOneMenu id="roundingJV" value="#{backOfficeBean.roundingProcessJV}">
+                                <f:selectItem itemLabel="Select Rounding"/>
+                                <f:selectItem itemLabel="No Rounding" itemValue="1"/>
+                                <f:selectItem itemValue="1000" itemLabel="1.000"/>
+                                <f:selectItem itemValue="10000" itemLabel="10.000"/>
+                                <f:selectItem itemValue="100000" itemLabel="100.000"/>
+                                <f:selectItem itemValue="1000000" itemLabel="1.000.000"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Ordering" for="groupingJV"/>
+                            <p:selectOneMenu id="groupingJV" value="#{backOfficeBean.orderingProcessJV}">
+                                <f:selectItem itemLabel="Select Ordering"/>
+                                <f:selectItem itemLabel="No Ordering" itemValue="1"/>
+                                <f:selectItem itemValue="2" itemLabel="Description"/>
+                                <f:selectItem itemValue="3" itemLabel="Account"/>
+                                <f:selectItem itemValue="4" itemLabel="Indicator"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Generate Journal View Report" actionListener="#{backOfficeBean.printJournalView()}" ajax="false" process="@form" disabled="#{not backOfficeBean.processedBO}"/>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <p:panel id="panelTrialBalance" header="Trial Balance" collapsed="true" toggleable="true">
+                        <h:panelGrid columns="5">
+                            <p:outputLabel value="Category" for="detailBOProcessTB"/>
+                            <p:selectOneMenu id="detailBOProcessTB" value="#{backOfficeBean.detailProcessTB}">
+                                <f:selectItem itemLabel="Select one Category"/>
+                                <f:selectItem itemValue="1" itemLabel="Category"/>
+                                <f:selectItem itemValue="2" itemLabel="Financial Category"/>
+                                <f:selectItem itemValue="3" itemLabel="Account Category"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Rounding" for="roundingBOProcessTB"/>
+                            <p:selectOneMenu id="roundingBOProcessTB" value="#{backOfficeBean.roundingProcessTB}">
+                                <f:selectItem itemLabel="Select Rounding"/>
+                                <f:selectItem itemLabel="No Rounding" itemValue="1"/>
+                                <f:selectItem itemValue="1000" itemLabel="1.000"/>
+                                <f:selectItem itemValue="10000" itemLabel="10.000"/>
+                                <f:selectItem itemValue="100000" itemLabel="100.000"/>
+                                <f:selectItem itemValue="1000000" itemLabel="1.000.000"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Generate Trial Balance Report" actionListener="#{backOfficeBean.printTrialBalanceReport()}" ajax="false" process="@form" disabled="#{not backOfficeBean.processedBO}"/>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <p:panel id="panelIncomeStatement" header="Income Statement" collapsed="true" toggleable="true">
+                        <h:panelGrid columns="5">
+                            <p:outputLabel value="Category" for="detailBOProcessIS"/>
+                            <p:selectOneMenu id="detailBOProcessIS" value="#{backOfficeBean.detailProcessIS}">
+                                <f:selectItem itemLabel="Select one Category"/>
+                                <f:selectItem itemValue="1" itemLabel="Category"/>
+                                <f:selectItem itemValue="2" itemLabel="Financial Category"/>
+                                <f:selectItem itemValue="3" itemLabel="Account Category"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Rounding" for="roundingBOProcessIS"/>
+                            <p:selectOneMenu id="roundingBOProcessIS" value="#{backOfficeBean.roundingProcessIS}">
+                                <f:selectItem itemLabel="Select Rounding"/>
+                                <f:selectItem itemLabel="No Rounding" itemValue="1"/>
+                                <f:selectItem itemValue="1000" itemLabel="1.000"/>
+                                <f:selectItem itemValue="10000" itemLabel="10.000"/>
+                                <f:selectItem itemValue="100000" itemLabel="100.000"/>
+                                <f:selectItem itemValue="1000000" itemLabel="1.000.000"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Generate Income Statement Report" actionListener="#{backOfficeBean.printIncomeStatementReport()}" ajax="false" process="@form" disabled="#{not backOfficeBean.processedBO}"/>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <p:panel id="panelBalanceSheet" header="Balance Sheet" collapsed="true" toggleable="true">
+                        <h:panelGrid columns="5">
+                            <p:outputLabel value="Category" for="detailBSProcessIS"/>
+                            <p:selectOneMenu id="detailBSProcessIS"  value="#{backOfficeBean.detailProcessBS}">
+                                <f:selectItem itemLabel="Select one Category"/>
+                                <f:selectItem  itemValue="1" itemLabel="Category"/>
+                                <f:selectItem itemValue="2" itemLabel="Financial Category"/>
+                                <f:selectItem itemValue="3" itemLabel="Account Category"/>
+                                <f:selectItem itemValue="4" itemLabel="Account"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Rounding" for="roundingBSProcessIS"/>
+                            <p:selectOneMenu id="roundingBSProcessIS"  value="#{backOfficeBean.roundingProcessBS}">
+                                <f:selectItem itemLabel="Select Rounding"/>
+                                <f:selectItem itemLabel="No Rounding" itemValue="1"/>
+                                <f:selectItem itemValue="1000" itemLabel="1.000"/>
+                                <f:selectItem itemValue="10000" itemLabel="10.000"/>
+                                <f:selectItem itemValue="100000" itemLabel="100.000"/>
+                                <f:selectItem itemValue="1000000" itemLabel="1.000.000"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Generate Balance Sheet Report" actionListener="#{backOfficeBean.printBalanceSheetReport()}" ajax="false" process="@form" disabled="#{not backOfficeBean.processedBO}"/>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <p:separator/>
+
+                    <h:panelGrid columns="3">
+                        <p:selectBooleanCheckbox id="booleanConfirmedBackOfficeProcess" value="#{backOfficeBean.confirmedProcessBO}"/>
+                        <p:outputLabel for="booleanConfirmedBackOfficeProcess" value="Pastikan semua preview laporan di atas sesuai dengan hasil Real, jika sudah yakin silahkan konfirmasi hasil ini agar pihak pusat dapat melakukan EOD pada cabang Anda."/>
+                        <p:commandButton value="Confirm &amp; Submit" actionListener="#{backOfficeBean.confirmBackofficeProcess()}"/>
+                    </h:panelGrid>
+                </h:panelGroup>
+
+                <pe:blockUI target="panelReports" widgetVar="blockPanelReporting">
+                    <h:panelGrid columns="2">
+                        <h:graphicImage library="images" name="ajax-loader.gif" style="margin-right: 12px; vertical-align: middle;"/>
+                        <h:outputText value="Processing backoffice..." style="white-space: nowrap;"/>
+                    </h:panelGrid>
+                </pe:blockUI>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

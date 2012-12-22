@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+
+     
+     
+    <ui:define name="content">
+        <h2 class="title">System Parameter : Formating ID</h2>
+                <p:tabView id="tabView">  
+                    <p:tab id="tab1" title="CIF">  
+                        <ui:include src="formating_cif.xhtml"/>
+                    </p:tab>  
+
+                    <p:tab id="tab2" title="Saving Account">  
+                        <ui:include src="formating_saving.xhtml"/>
+                    </p:tab>  
+
+                    <p:tab id="tab3" title="Deposito Account">  
+                        <ui:include src="formating_deposito.xhtml"/>
+                    </p:tab>  
+                    
+                    <p:tab id="tab4" title="Loan">  
+                        <ui:include src="formating_loan.xhtml"/>
+                    </p:tab>  
+                    
+                    <p:tab id="tab5" title="COA">  
+                        <ui:include src="formating_coa.xhtml"/>
+                    </p:tab>  
+
+                </p:tabView>  
+    </ui:define>
+</ui:composition>

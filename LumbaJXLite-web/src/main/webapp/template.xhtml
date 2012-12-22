@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <f:view locale="#{userInfoBean.locale}" encoding="UTF-8" contentType="text/html">
+        <h:head>
+            <title><ui:insert name="page">Untitled Page</ui:insert></title>
+            <ui:param name="root" value="#{facesContext.externalContext.requestContextPath}"/>
+            <h:outputStylesheet name="style.default.css" library="css"/>
+            <h:outputScript name="custom/general.js" library="js"/>
+            <link href="#{root}/resources/dolphin3d.ico" rel="shortcut icon" type="image/x-icon" />
+            <f:metadata>
+                <f:event listener="#{userSessionBean.varifyUserLoggedIn}" type="preRenderView"/>
+            </f:metadata>
+
+            <!--<f:loadBundle var="msgs" basename="i18n.Messages"/>-->
+        </h:head>
+
+        <h:body>
+
+            <div class="bodywrapper">
+
+                <ui:include src="header.xhtml"/>
+
+                <div class="pageheader notab">
+                    <h3 class="pagetitle"><ui:insert name="title">Untitled</ui:insert></h3>
+                    <span class="pagedesc"><ui:insert name="desk">Undesk</ui:insert></span>
+                </div><!--pageheader-->
+
+                <div id="contentwrapper" class="contentwrapper">
+                    <ui:insert name="content">Content</ui:insert>
+                </div><!--contentwrapper-->
+
+                <br clear="all" />
+
+            </div><!--bodywrapper-->
+
+            <!--global tooltips-->
+            <pe:tooltip global="true"/>
+
+            <!-- An example of custom layout -->
+            <pe:ajaxErrorHandler button="Close warning!" widgetVar="myAjaxErrorHandler">
+                <h:panelGrid columns="1">
+                    <p:tabView >
+                        <p:tab title="#{msgs['lumbajx.error']}">
+                            <h:panelGrid style="height: 25px;">
+                                <span style="float: left; width: 7%">
+                                    <h:graphicImage value="/resources/images/warning.png" height="32" style=""/>
+                                </span>
+                                <span style="float: right; width: 93%">
+                                    <h:outputText value="#{msgs['lumbajx.error.desc']}"/>
+                                </span>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Error">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="2">
+                                    <h:outputLabel value="Error message:" />
+                                    <h:outputText value="{error-message}" style="font-size: 1.2em;color:navy;" />
+
+                                    <h:outputLabel value="Server name:" />
+                                    <h:outputText value="{error-hostname}"  style="font-size: 1.2em;color:navy;"/>
+                                </h:panelGrid>
+
+                                <p:inputTextarea value="{error-stacktrace}" style="overflow: auto; height: 300px; width: 700px;"/>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+
+                    <h:panelGrid columns="2" style="text-align  :center; padding: 5px;">
+                        <p:commandButton onclick="window.location.href=window.location.href; return false;" value="Buka ulang"/>
+                        <p:commandButton onclick="myAjaxErrorHandler.hide(); return false;" value="Tutup"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </pe:ajaxErrorHandler>
+
+            <!--            global component using omnifaces highlight-->
+            <!--<o:highlight styleClass="error"/>-->
+
+            <p:dialog header="Your session is about to expire!"
+                      widgetVar="timeoutDialog"
+                      showEffect="fade"
+                      hideEffect="fade"
+                      modal="true"
+                      width="400"
+                      height="200"
+                      closable="false"
+                      draggable="false"
+                      resizable="false"
+                      appendToBody="true"
+                      >
+                <br/><br/>
+                <p>
+                    <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
+                    <div>You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.</div>
+                </p>
+                <br/><br/><br/>
+                <p>Do you want to continue your session?</p>
+                <p:commandButton  value="Yes, Keep working"  action="#{loginController.keepAlive}" oncomplete="resetPageTimer()" />
+                <p:commandButton value="No, Log off" action="#{loginController.logoutUser}"  />
+            </p:dialog>
+
+
+            <script type="text/javascript">
+                var startFrom = 10;//#{session.maxInactiveInterval};  // Total session time out setting eg 10 sec, Real implementation assign from session
+                var loopTill = 6;//#{systemController.getSessionTimeoutAlertDuration()};  //Count down degins from 6 sec and starts after 4 sec ie 10-6
+                var reduce = 1;
+                var handleDialog = null;
+                var redirectPage = "#{request.contextPath}/login.xhtml";
+                var countDownDiv = "dialog-countdown";
+
+                function resetPageTimer()  {
+                    timeoutDialog.hide();
+                    startPageTimer(startFrom, loopTill);
+                    clearInterval(handleDialog);
+                }
+
+                function startDialogTimer(wCounter, timeOutPage) {
+                    var e = null;
+                    if(!e)
+                        e = document.getElementById(countDownDiv);
+                    e.innerHTML = wCounter;
+                    handleDialog = setInterval(function() {
+                        if(wCounter == 0) {
+                            clearInterval(handleDialog);
+                            window.location.href = timeOutPage;
+                        }
+                        else {
+                            wCounter -= reduce;
+                            e.innerHTML = wCounter;
+                        }
+                    }, reduce * 1000);
+                }
+
+                function startPageTimer(wFrom, wReach) {
+                    var handle = null;
+                    handle = setInterval(function() {
+                        if(wFrom == wReach) {
+                            clearInterval(handle);
+                            timeoutDialog.show();
+                            startDialogTimer(loopTill, redirectPage);
+                        }
+                        else {
+                            wFrom -= reduce;
+                        }
+                    }, reduce * 1000);
+                }
+                startPageTimer(startFrom, loopTill);
+            </script>
+        </h:body>
+    </f:view>
+</html>

@@ -1,0 +1,13 @@
+/* CSS Document */
+
+#content .contLeft{
+    display: inline-block;
+    float: left;
+    width: 555px;
+}
+
+#content .contRight{
+    display: inline-block;
+    float: right;
+    width: 440px;
+}

@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:compo="http://java.sun.com/jsf/composite/CompositeComponent"
+                >
+
+   <ui:define name="top">
+      top
+   </ui:define>
+
+   <ui:define name="menuBar">
+      menuBar
+   </ui:define>
+
+   <ui:define name="content">
+      <p:panel closable="true" toggleable="true" header="Kantor Pusat">
+         <h:form id="formFieldsetHeadOffice" >
+            <p:fieldset legend="Tambah Kantor Pusat"
+                        toggleable="TRUE"
+                        collapsed="#{headOfficeBean.fieldsetCollapse}"
+                        toggleSpeed="500">
+
+               <h:panelGrid columns="3">
+                  <p:outputLabel for="HeadOfficeCode" value="Kode Kantor Pusat"/>
+                  <p:inputText id="HeadOfficeCode" value="#{headOfficeBean.masterOperational.headOffice.headofficecode}" required="true" maxlength="4" label="Kode Kantor Pusat"/>
+                  <p:message for="HeadOfficeCode"/>
+
+                  <p:outputLabel for="HeadOfficeName" value="Nama Kantor Pusat"/>
+                  <p:inputText id="HeadOfficeName" value="#{headOfficeBean.masterOperational.headOffice.headofficename}" required="true" maxlength="40" label="Nama Kantor Pusat"/>
+                  <p:message for="HeadOfficeName"/>
+
+                  <p:outputLabel for="HeadOfficeProvinceID" value="Provinsi"/>
+                  <p:selectOneMenu id="HeadOfficeProvinceID" required="true" label="Provinsi" value="#{headOfficeBean.masterOperational.village.subDistrict.district.province.provinceid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Provinsi"/>
+                     <f:selectItems value="#{headOfficeBean.listProvince}" var="province" itemLabel="#{province.provincename}" itemValue="#{province.provinceid}"/>
+                     <p:ajax update="HeadOfficeDistrictID"/>
+                  </p:selectOneMenu>
+                  <p:message for="HeadOfficeProvinceID"/>
+
+                  <p:outputLabel for="HeadOfficeDistrictID" value="Kota / Kabupaten"/>
+                  <p:selectOneMenu id="HeadOfficeDistrictID" required="true" label="Kota / Kabupaten" value="#{headOfficeBean.masterOperational.village.subDistrict.district.districtid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Kota / Kabupaten"/>
+                     <f:selectItems value="#{headOfficeBean.listDistrict}" var="district" itemLabel="#{district.districtname}" itemValue="#{district.districtid}"/>
+                     <p:ajax update="HeadOfficeSubDistrictID"/>
+                  </p:selectOneMenu>
+                  <p:message for="HeadOfficeDistrictID"/>
+
+                  <p:outputLabel for="HeadOfficeSubDistrictID" value="Kecamatan"/>
+                  <p:selectOneMenu id="HeadOfficeSubDistrictID" required="true" label="Kecamatan" value="#{headOfficeBean.masterOperational.village.subDistrict.subdistrictid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Kecamatan"/>
+                     <f:selectItems value="#{headOfficeBean.listSubDistrict}" var="subdistrict" itemLabel="#{subdistrict.subdistrictname}" itemValue="#{subdistrict.subdistrictid}"/>
+                     <p:ajax update="HeadOfficeVillageID"/>
+                  </p:selectOneMenu>
+                  <p:message for="HeadOfficeSubDistrictID"/>
+
+                  <p:outputLabel for="HeadOfficeVillageID" value="Keluarahan / Desa"/>
+                  <p:selectOneMenu id="HeadOfficeVillageID" required="true" label="Keluarahan / Desa" value="#{headOfficeBean.masterOperational.village.villageid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Keluarahan / Desa"/>
+                     <f:selectItems value="#{headOfficeBean.listVillage}" var="village" itemLabel="#{village.villagename}" itemValue="#{village.villageid}"/>
+                  </p:selectOneMenu>
+                  <p:message for="HeadOfficeVillageID"/>
+
+                  <p:outputLabel for="HeadOfficeAddress1" value="Alamat"/>
+                  <p:inputText id="HeadOfficeAddress1" value="#{headOfficeBean.masterOperational.address}" required="true" maxlength="400" label="Alamat"/>
+                  <p:message for="HeadOfficeAddress1"/>
+
+                  <p:outputLabel for="HeadOfficePhomeNumber" value="Nomer Telpon"/>
+                  <p:inputText id="HeadOfficePhomeNumber" value="#{headOfficeBean.masterOperational.phonenumber}" maxlength="10"/>
+                  <p:spacer/>
+
+                  <p:outputLabel for="HeadOfficeStatus" value="Status Kantor Pusat"/>
+                  <p:selectOneRadio id="HeadOfficeStatus" value="#{headOfficeBean.masterOperational.headOffice.headofficestatus}">
+                     <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                     <f:selectItem itemValue="false" itemLabel="Tidak Aktif"/>
+                  </p:selectOneRadio>
+                  <p:spacer/>
+
+                  <p:outputLabel for="BranchVaultAccount" value="Branch Vault Account"/>
+                  <h:panelGrid columns="2">
+                     <p:inputText id="BranchVaultAccount" value="#{headOfficeBean.branchVaultAccount.chartofaccountname}"/>
+                     <p:commandButton icon="ui-icon ui-icon-search" onclick="BranchVaultAccountSearchCOADialog.show();"/>
+                  </h:panelGrid>
+                  <h:outputText/>
+
+                  <p:outputLabel for="InterBranchAccount" value="Inter Branch Account"/>
+                  <h:panelGrid columns="2">
+                     <p:inputText id="InterBranchAccount" value="#{headOfficeBean.interBranchAccount.chartofaccountname}"/>
+                     <p:commandButton icon="ui-icon ui-icon-search" onclick="InterBranchAccountSearchCOADialog.show();"/>
+                  </h:panelGrid>
+                  <h:outputText/>
+
+                  <p:outputLabel for="BranchBankAccount" value="BranchBankAccount"/>
+                  <h:panelGrid columns="2">
+                     <p:inputText id="BranchBankAccount" value="#{headOfficeBean.branchBankAccount.chartofaccountname}"/>
+                     <p:commandButton icon="ui-icon ui-icon-search" onclick="BranchBankAccountSearchCOADialog.show();"/>
+                  </h:panelGrid>
+                  <h:outputText/>
+
+                  <p:commandButton value="Simpan" icon="ui-icon ui-icon-check" update="@form :panelGroupTableHeadOffice" actionListener="#{headOfficeBean.add()}" rendered="#{headOfficeBean.status == 'insert'}" immediate="true"/>
+                  <p:commandButton value="Reset" rendered="#{headOfficeBean.status.equalsIgnoreCase('insert')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+                  <p:commandButton value="Rubah" icon="ui-icon ui-icon-check" update="@form :panelGroupTableHeadOffice" actionListener="#{headOfficeBean.update()}" rendered="#{headOfficeBean.status == 'update'}"/>
+                  <p:commandButton value="Cancel" rendered="#{headOfficeBean.status.equalsIgnoreCase('update')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+               </h:panelGrid>
+            </p:fieldset>
+         </h:form>
+
+         <h:panelGroup id="panelGroupTableHeadOffice">
+            <h:form id="formTableHeadOffice" >
+               <p:dataTable
+                  id="tableHeadOffice"
+                  widgetVar="tableHeadOffice"
+                  emptyMessage="Tidak Ada Kantor Pusat"
+                  value="#{headOfficeBean.listHeadOffice}"
+                  var="headOffice"
+                  sortOrder="descending">
+
+                  <pe:paginator
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rows="10"
+                     rowsPerPageTemplate="5,10,15"
+                     />
+
+                  <f:facet name="header">
+                     <h:outputText value="Daftar Kantor Pusat"/>
+                  </f:facet>
+
+                  <p:column sortBy="#{headOffice.headOffice.headofficecode}" filterBy="#{headOffice.headOffice.headofficecode}" filterMatchMode="contains">
+                     <f:facet name="header">Kode</f:facet>
+                     <h:outputText value="#{headOffice.headOffice.headofficecode}"/>
+                  </p:column>
+
+                  <p:column sortBy="#{headOffice.headOffice.headofficename}" filterBy="#{headOffice.headOffice.headofficename}" filterMatchMode="contains">
+                     <f:facet name="header">Nama</f:facet>
+                     <h:outputText value="#{headOffice.headOffice.headofficename}"/>
+                  </p:column>
+
+                  <p:column style="width: 80px; text-align: center;">
+                     <f:facet name="header">Status</f:facet>
+                     <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{headOffice.headOffice.headofficestatus == true}"/>
+                     <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{headOffice.headOffice.headofficestatus == false}"/>
+                  </p:column>
+
+                  <p:column style="width: 80px; text-align: center;">
+                     <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{headOffice.headOffice.headofficename}" actionListener="#{headOfficeBean.edit(headOffice)}" update=":formFieldsetHeadOffice"/>
+                     <p:commandButton icon="ui-icon ui-icon-trash" title="Delete #{headOffice.headOffice.headofficename}" actionListener="#{headOfficeBean.delete(headOffice)}" update="@form"/>
+                  </p:column>
+               </p:dataTable>
+            </h:form>
+         </h:panelGroup>
+      </p:panel>
+
+      <p:dialog widgetVar="BranchVaultAccountSearchCOADialog" closable="true" modal="true" draggable="true">
+         <compo:SearchChartOfAccount DialogWidgetVarName="BranchVaultAccountSearchCOADialog" bean="#{headOfficeBean}" property="branchVaultAccount" />
+      </p:dialog>
+
+      <p:dialog widgetVar="InterBranchAccountSearchCOADialog" closable="true" modal="true" draggable="true">
+         <compo:SearchChartOfAccount DialogWidgetVarName="InterBranchAccountSearchCOADialog" />
+      </p:dialog>
+
+      <p:dialog widgetVar="BranchBankAccountSearchCOADialog" closable="true" modal="true" draggable="true">
+         <compo:SearchChartOfAccount DialogWidgetVarName="BranchBankAccountSearchCOADialog"/>
+      </p:dialog>
+
+   </ui:define>
+
+   <ui:define name="bottom">
+      bottom
+   </ui:define>
+
+</ui:composition>

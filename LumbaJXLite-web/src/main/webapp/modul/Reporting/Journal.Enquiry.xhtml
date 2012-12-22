@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+   <ui:define name="content">
+      <p:panel closable="true" toggleable="true" header="Journal Enquiry">
+         <h:form id="formJournalEnquiry" target="_blank">
+            <p:growl id="growl" showDetail="true"/>
+            <h:panelGrid columns="4">
+               <p:outputLabel for="JournalEnquiryCurrency" value="Currency"/>
+               <p:selectOneMenu id="JournalEnquiryCurrency" value="#{journalEnquiryBean.currencyid}" style="width: 200px;" required="true">
+                  <f:selectItem itemLabel="Select Currency"/>
+                  <f:selectItems value="#{journalEnquiryBean.currencys}" var="currency" itemLabel="#{currency.currencyDescribe} | #{currency.currencyCode}" itemValue="#{currency.currencyID}"/>
+               </p:selectOneMenu>
+               <p:outputLabel for="JournalEnquiryUser" value="Branch"/>
+               <p:inputText id="JournalEnquiryUser" disabled="true" value="#{journalEnquiryBean.loggedinBranchName}"/>
+
+               <p:outputLabel for="JournalEnquiryJournalType" value="Journal Type"/>
+               <p:selectOneMenu id="JournalEnquiryJournalType" value="#{journalEnquiryBean.journalType}" required="true">
+                  <f:selectItem itemLabel="Select Journal Type"/>
+                  <f:selectItem itemValue="1" itemLabel="All Journal"/>
+                  <f:selectItem itemValue="2" itemLabel="Batch Journal"/>
+                  <f:selectItem itemValue="3" itemLabel="Single Journal"/>
+                  <p:ajax update="@form"/>
+               </p:selectOneMenu>
+               <p:outputLabel for="JournalEnquiryGLType" value="GL ?"/>
+               <p:selectOneMenu id="JournalEnquiryGLType" value="#{journalEnquiryBean.useGL}" required="true">
+                  <f:selectItem itemLabel="Select GL"/>
+                  <f:selectItem itemValue="1" itemLabel="GL and Banking"/>
+                  <f:selectItem itemValue="2" itemLabel="GL"/>
+                  <f:selectItem itemValue="3" itemLabel="Banking"/>
+               </p:selectOneMenu>
+
+               <p:outputLabel for="JournalEntryDateFrom" value="Journal Date"/>
+               <p:calendar id="JournalEntryDateFrom" pattern="EEE, dd MMM yyyy"  navigator="true" yearRange="c-3:c" value="#{journalEnquiryBean.journalDateFrom}" required="true">
+                  <p:ajax event="dateSelect" listener="#{journalEnquiryBean.updateBatchListByDate}" update="JournalEnquiryJournalEntryBatchFrom JournalEnquiryJournalEntryBatchTo JournalEnquiryJournalEntryRefferenceFrom JournalEnquiryJournalEntryRefferenceTo JournalEntryDateTo"/>
+               </p:calendar>
+               <p:outputLabel for="JournalEntryDateTo" value="To"/>
+               <p:calendar id="JournalEntryDateTo" pattern="EEE, dd MMM yyyy"  navigator="true" yearRange="c-3:c" value="#{journalEnquiryBean.journalDateTo}">
+                  <p:ajax event="dateSelect" listener="#{journalEnquiryBean.updateBatchListBetweenDate}" update="JournalEnquiryJournalEntryBatchFrom JournalEnquiryJournalEntryBatchTo JournalEnquiryJournalEntryRefferenceFrom JournalEnquiryJournalEntryRefferenceTo"/>
+               </p:calendar>
+
+               <p:outputLabel for="JournalEnquiryJournalEntryBatchFrom" value="Journal Batch From" rendered="#{journalEnquiryBean.journalType == 1 or journalEnquiryBean.journalType == 2}"/>
+               <p:selectOneMenu id="JournalEnquiryJournalEntryBatchFrom" value="#{journalEnquiryBean.journalBatchFrom}" rendered="#{journalEnquiryBean.journalType == 1 or journalEnquiryBean.journalType == 2}" required="true">
+                  <f:selectItem itemLabel="Select Journal Batch from"/>
+                  <f:selectItems value="#{journalEnquiryBean.batchs}" var="batch" itemValue="#{batch.batchid}" itemLabel="#{batch.subject} | #{batch.description}"/>
+                  <p:ajax listener="#{journalEnquiryBean.updateListRefferenceNumberByBatch}" update="JournalEnquiryJournalEntryRefferenceFrom JournalEnquiryJournalEntryRefferenceTo JournalEnquiryJournalEntryBatchTo"/>
+               </p:selectOneMenu>
+               <p:outputLabel for="JournalEnquiryJournalEntryBatchTo" value="To" rendered="#{journalEnquiryBean.journalType == 1 or journalEnquiryBean.journalType == 2}"/>
+               <p:selectOneMenu id="JournalEnquiryJournalEntryBatchTo" value="#{journalEnquiryBean.journalBatchTo}" rendered="#{journalEnquiryBean.journalType == 1 or journalEnquiryBean.journalType == 2}">
+                  <f:selectItem itemLabel="Select Journal Batch to"/>
+                  <f:selectItems value="#{journalEnquiryBean.batchs}" var="batch" itemValue="#{batch.batchid}" itemLabel="#{batch.subject} | #{batch.description}"/>
+                  <p:ajax listener="#{journalEnquiryBean.updateListRefferenceNumberBetweenBatch}" update="JournalEnquiryJournalEntryRefferenceFrom JournalEnquiryJournalEntryRefferenceTo"/>
+               </p:selectOneMenu>
+
+               <p:outputLabel for="JournalEnquiryJournalEntryRefferenceFrom" value="Refference From"/>
+               <p:selectOneMenu id="JournalEnquiryJournalEntryRefferenceFrom" value="#{journalEnquiryBean.journalRefferenceFrom}" required="true">
+                  <f:selectItem itemLabel="Select Refference from"/>
+                  <f:selectItems value="#{journalEnquiryBean.journalEntryHeaders}" var="journalheader" itemLabel="#{journalheader.refferencenumber.toString()}" itemValue="#{journalheader.refferencenumber}"/>
+               </p:selectOneMenu>
+               <p:outputLabel for="JournalEnquiryJournalEntryRefferenceTo" value="To"/>
+               <p:selectOneMenu id="JournalEnquiryJournalEntryRefferenceTo" value="#{journalEnquiryBean.journalRefferenceTo}">
+                  <f:selectItem itemLabel="Select Refference to"/>
+                  <f:selectItems value="#{journalEnquiryBean.journalEntryHeaders}" var="journalheader" itemLabel="#{journalheader.refferencenumber.toString()} " itemValue="#{journalheader.refferencenumber}"/>
+               </p:selectOneMenu>
+
+               <p:outputLabel for="JournalEntryCategory" value="Category"/>
+               <p:selectManyCheckbox id="JournalEntryCategory" layout="pageDirection" value="#{journalEnquiryBean.category}" required="true">
+                  <f:selectItem itemValue="1" itemLabel="Aktiva"/>
+                  <f:selectItem itemValue="2" itemLabel="Kewajiban"/>
+                  <f:selectItem itemValue="3" itemLabel="Pendpatan"/>
+                  <f:selectItem itemValue="4" itemLabel="Beban"/>
+                  <f:selectItem itemValue="5" itemLabel="Modal / Cadangan"/>
+               </p:selectManyCheckbox>
+               <h:outputText/>
+               <h:outputText/>
+            </h:panelGrid>
+
+            <h:panelGrid columns="2">
+               <p:outputLabel for="JournalEntryRounding" value="Rounding"/>
+               <p:selectOneMenu id="JournalEntryRounding" value="#{journalEnquiryBean.rounding}" required="true">
+                  <f:selectItem itemValue="0" itemLabel="Select rounding by"/>
+                  <f:selectItem itemValue="1" itemLabel="1000"/>
+                  <f:selectItem itemValue="2" itemLabel="10.000"/>
+                  <f:selectItem itemValue="3" itemLabel="100.000"/>
+                  <f:selectItem itemValue="4" itemLabel="1.000.000"/>
+               </p:selectOneMenu>
+            </h:panelGrid>
+
+            <h:panelGrid columns="2">
+               <p:commandButton value="Generate Report" actionListener="#{journalEnquiryBean.generateReport}" ajax="false"/>
+            </h:panelGrid>
+
+            <p:watermark for="JournalEntryDateFrom" value="Day, Date Month Year"/>
+            <p:watermark for="JournalEntryDateTo" value="Day, Date Month Year"/>
+         </h:form>
+      </p:panel>
+   </ui:define>
+
+</ui:composition>

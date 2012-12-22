@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:define name="content">
+        <p:panel id="PanelGLRekeningBank" header="GLBank" closable="true" toggleSpeed="500" closeSpeed="500">  
+            <h:form id="FormFieldGLRekeningBank">
+                <p:fieldset legend="Rekening Bank" collapsed="#{BankAccountManageBean.fieldset}" toggleable="true">
+                    <p:panel>
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Bank"/>
+                            <p:selectOneMenu value="#{BankAccountManageBean.bankaccount.bank.bankid}">
+                                <f:selectItem itemLabel="silahkan pilih Bank" itemValue=""/>
+                                <f:selectItems value="#{BankAccountManageBean.banklist}" var="bank" itemValue="#{bank.bankid}" itemLabel="#{bank.bankname}" />
+                                <f:ajax execute="bankbranchselect" render="bankbranchselect" listener="#{BankAccountManageBean.lookupbankbranch()}"/> 
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Nama Kantor Cabang"/>
+                            <p:selectOneMenu id="bankbranchselect" value="#{BankAccountManageBean.bankaccount.bankbranch.bankbranchid}">
+                                <f:selectItem itemLabel="silahkan pilih Cabang Bank" itemValue=""/>
+                                <f:selectItems value="#{BankAccountManageBean.bankbranchlist}" var="bankbranch" itemValue="#{bankbranch.bankbranchid}" itemLabel="#{bankbranch.bankbranchname}" />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Nama Rekening Bank"/>
+                            <p:inputText value="#{BankAccountManageBean.bankaccount.bankaccountname}"/>
+
+                            <h:outputText value="Nomor Rekening Bank"/>
+                            <p:inputText value="#{BankAccountManageBean.bankaccount.bankaccountnumber}"/>
+
+                            <h:outputText value="Status"/>
+                            <p:selectOneRadio value="#{BankAccountManageBean.bankaccount.invesment}">
+                                <f:selectItem itemLabel="Ya" itemValue="true"/>
+                                <f:selectItem itemLabel="Tidak" itemValue="false"/>
+                                <p:ajax update="xc2"/> 
+                            </p:selectOneRadio>
+
+                            <h:outputText id="xc" value="Tanggal Jatuh Tempo Investasi"/>
+                            <p:calendar id="xc2" value="#{BankAccountManageBean.bankaccount.invesmentmaturitydate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{BankAccountManageBean.bankaccount.invesment == 'false'}" />
+
+                            <p:commandButton value="Tambah" action="#{BankAccountManageBean.create()}" update="@form :FormTabelGLRekeningBank" rendered="#{BankAccountManageBean.status == 'insert'}"/>
+                            <p:commandButton value="Update" action="#{BankAccountManageBean.update()}" update="@form :FormTabelGLRekeningBank" rendered="#{BankAccountManageBean.status == 'edit'}"/>
+                            <p:commandButton value="Cancel" action="#{BankAccountManageBean.cancel()}" update="@form :FormTabelGLRekeningBank" rendered="#{BankAccountManageBean.status == 'edit'}"/>
+                        </h:panelGrid>
+                    </p:panel>
+                </p:fieldset>
+            </h:form>
+
+            <h:form id="FormTabelGLRekeningBank">
+                <p:dataTable
+                    id="tablelist"
+                    widgetVar="tableKategoryAccount"
+                    emptyMessage="#{msgs.norecord}"
+                    value="#{BankAccountManageBean.bankaccountlist}"
+                    var="entry"
+                    paginator="true"
+                    paginatorPosition="bottom   "
+                    rows="10"
+                    rowsPerPageTemplate="10,20,50"
+                    sortOrder="descending"
+                    >
+
+                    <p:column headerText="Bank" sortBy="#{entry.bank.bankname}" filterBy="#{entry.bank.bankname}" filterMatchMode="contains">
+                        <h:outputText value="#{entry.bank.bankname}"/>
+                    </p:column>
+                    <p:column headerText="Nama Kantor Cabang Bank" sortBy="#{entry.bankbranch.bankbranchname}" filterBy="#{entry.bankbranch.bankbranchname}" filterMatchMode="contains">
+                        <h:outputText value="#{entry.bankbranch.bankbranchname}"/>
+                    </p:column>
+                    <p:column headerText="Nama Rekening Bank" sortBy="#{entry.bankaccountname}" filterBy="#{entry.bankaccountname}" filterMatchMode="contains">
+                        <h:outputText value="#{entry.bankaccountname}"/>
+                    </p:column>
+                    <p:column headerText="Nomor Rekening Bank" sortBy="#{entry.bankaccountnumber}" filterBy="#{entry.bankaccountnumber}" filterMatchMode="contains">
+                        <h:outputText value="#{entry.bankaccountnumber}"/>
+                    </p:column>
+
+                    <p:column headerText="investment">
+                        <h:outputText value="#{entry.invesment}"/>
+                    </p:column>
+
+                    <p:column headerText="Tanggal Jatuh Tempo Investasi">
+                        <h:outputText value="#{entry.invesmentmaturitydate}"/>
+                    </p:column>
+
+                    <p:column headerText="Action">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{BankAccountManageBean.edit(entry)}" update=":FormFieldGLRekeningBank"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.delete}" oncomplete="confirmation.show()" update="@form">
+                            <f:setPropertyActionListener value="#{entry}" target="#{BankAccountManageBean.selectedMsg}" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <p:confirmDialog id="confirmDialog" message="Are you sure to delete ?"  
+                                 header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                    <p:commandButton id="confirm" value="Yes" update="@form :FormFieldGLRekeningBank" oncomplete="confirmation.hide()"  
+                                     action="#{BankAccountManageBean.delete(BankAccountManageBean.selectedMsg)}" />  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>
+            </h:form>
+
+        </p:panel>
+
+    </ui:define>
+</ui:composition>

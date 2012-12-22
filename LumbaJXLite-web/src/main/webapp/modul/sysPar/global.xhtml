@@ -1,0 +1,226 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui">
+
+     
+     
+    <ui:define name="content">
+        <h:outputStylesheet name="sysPar_global.css" library="css"/>
+        <h2 class="title">System Parameter : Global</h2>
+        <h:form prependId="false">
+            <p:growl id="messages" life="5000"/> 
+            <div class="contLeft">
+                <div class="tabHead">Site Application Setting</div>
+                <div class="frgroup">
+                    <div class="label w150">Site Online</div>
+                    <p:selectOneRadio value="#{sysParGlobal.siteOnline}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Site Active</div>
+                    <p:selectOneRadio value="#{sysParGlobal.siteOffline}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Site Inactive Message</div> <p:inputTextarea value="#{sysParGlobal.siteOfflinemessage}" styleClass="w300"/>
+                    <div class="clear space"></div>
+                    <div class="label w150">Site Business</div>
+                    <p:selectOneMenu value="#{sysParGlobal.siteBusiness}">
+                        <f:selectItem itemLabel="BPR" itemValue="B"/>
+                        <f:selectItem itemLabel="Credit Union" itemValue="C"/>
+                        <f:selectItem itemLabel="Koperasi" itemValue="K"/>
+                    </p:selectOneMenu>
+                    <div class="clear space"></div>
+                    <div class="label w150">Site Name</div>
+
+                    <p:inputText value="#{sysParGlobal.siteName}" styleClass="w300"/>
+                    <div class="clear space"></div>
+                    <div class="label w150">Logo</div><p:fileUpload value="#{sysParGlobal.siteLogo}" mode="simple"/> 
+                    <div class="clear space"></div>
+                    <div class="label w150">Format Date</div>
+                    <p:selectOneMenu value="#{sysParGlobal.siteFormatdate}">
+                        <f:selectItem itemLabel="dd/MM/yyyy" itemValue="dd/MM/yyyy"/>
+                        <f:selectItem itemLabel="dd MMM yyyy" itemValue="dd MMM yyyy"/>
+                        <f:selectItem itemLabel="MM, dd yyyy" itemValue="MM, dd yyyy"/>
+                    </p:selectOneMenu>
+                    <div class="clear space"></div>
+                    <div class="label w150">Session Life Time</div><p:inputText value="#{sysParGlobal.siteSessionlifetime}" styleClass="w20" maxlength="2"/> Minutes
+                    <div class="clear space"></div>
+                </div>
+                <div class="tabHead">Widgets</div>
+                <div class="frgroup">
+                    <div class="label w150">Calendar</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.widgetsCalender}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Customer View</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.widgetsCustomerview}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Loan Simulation</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.widgetsLoansimulation}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Message Between User</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.widgetsMessage}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Currency Converter</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.widgetsConverter}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                </div>
+                <div class="tabHead">PPH</div>
+                <div class="frgroup">
+                    <div class="label w150">12.5 % x laba</div>
+                    <pe:inputNumber decimalPlaces="0" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="9999999999" style="float: left" value="#{sysParGlobal.from_income[1]}"/> <span class="opt"> - </span><pe:inputNumber decimalPlaces="0" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="9999999999" style="float: left" value="#{sysParGlobal.to_income[1]}"/>
+
+                    <div class="clear space"></div>
+                    <div class="label w150">
+                        4.8M/ pendapatan x laba = m <br/>
+                        laba - m = n <br/>
+                        50% x 25% x m = p <br/>
+                        25% x n = q<br/>
+                        p + q
+                    </div>
+                    <pe:inputNumber decimalPlaces="0" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="9999999999" style="float: left" value="#{sysParGlobal.from_income[2]}"/> <span class="opt"> - </span><pe:inputNumber decimalPlaces="0" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="9999999999" style="float: left" value="#{sysParGlobal.to_income[2]}"/>
+                    <div class="clear space"></div>
+                    <div class="label w150">25% x laba</div>
+                    <pe:inputNumber decimalPlaces="0" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="9999999999" style="float: left" value="#{sysParGlobal.from_income[3]}"/> <span class="opt"> - </span><pe:inputNumber decimalPlaces="0" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="9999999999" style="float: left" value="#{sysParGlobal.to_income[3]}"/>
+                    <div class="clear space"></div>
+
+                    <div class="label w150">Current Year Surplus (COA) / Defisit</div>
+                    <p:selectOneMenu value="#{sysParGlobal.currentyearprofitid}">
+                        <f:selectItem itemLabel="Pilih Chart of Account"/>
+                        <f:selectItems value="#{sysParGlobal.chartofaccounts}" var="chartofaccount" itemLabel="#{chartofaccount.chartofaccountname} | #{chartofaccount.generalaccountnumber}" itemValue="#{chartofaccount.chartofaccountid}"/>
+                    </p:selectOneMenu>
+                </div>
+            </div>
+            <div class="contRight">
+                <div class="tabHead">Mail Setting</div>
+                <div class="frgroup">
+                    <div class="label w150">Allow Send Notification</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.mailSendnotification}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Mail From</div><p:inputText value="#{sysParGlobal.mailFrom}"/>
+                    <div class="clear space"></div>
+                    <div class="label w150">From Name</div><p:inputText value="#{sysParGlobal.mailFromname}"/>
+                    <div class="clear space"></div>
+                </div>
+                <div class="tabHead">Currency</div>
+                <div class="frgroup">
+                    <div class="label w150">Use Decimals In Calculation</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.curUsedecimals}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Digit Of Decimals</div><p:inputText value="#{sysParGlobal.curDigitdecimals}" styleClass="w20" maxlength="2"/>
+                    <div class="clear space"></div>
+                    <div class="label w150">Allow Multi Currency</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.curAllowmulti}">  
+                        <f:selectItem itemLabel="Yes" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <div class="clear space"></div>
+                    <div class="label w150">Default Currency</div>
+
+                    <p:selectOneMenu value="#{sysParGlobal.curDefault}" styleClass="w200">
+                        <f:selectItems value="#{combo.currency}"/>
+                    </p:selectOneMenu>
+                    <div class="clear space"></div>
+                </div>
+                <div class="tabHead">Rounding/ Module</div>
+                <div class="frgroup">
+                    <div class="label w150">Loan</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.rounding_loan}">  
+                        <f:selectItem itemLabel="No" itemValue="NO" />  
+                        <f:selectItem itemLabel="Rounding Up" itemValue="RU" />  
+                        <f:selectItem itemLabel="Rounding Down" itemValue="RD" />  
+                        <f:ajax render="@form"/>
+                    </p:selectOneRadio>
+                    <div class="clear space"></div>
+                    <h:panelGroup layout="block" rendered="#{sysParGlobal.rounding_loan != 'NO'}">
+                        <div class="label w150">Loan Smaller Unit</div>
+                        <p:selectOneMenu value="#{sysParGlobal.rounding_loan_smallerunit}">  
+                            <f:selectItems value="#{sysParGlobal.cmbDenomination}"/>  
+                        </p:selectOneMenu>  
+                        <div class="clear space"></div>
+                    </h:panelGroup>
+                    <div class="label w150">Saving</div>
+
+                    <p:selectOneRadio value="#{sysParGlobal.rounding_saving}">  
+                        <f:selectItem itemLabel="No" itemValue="NO" />  
+                        <f:selectItem itemLabel="Rounding Up" itemValue="RU" />  
+                        <f:selectItem itemLabel="Rounding Down" itemValue="RD" />
+                        <f:ajax render="@form"/>
+                    </p:selectOneRadio>
+                    <div class="clear space"></div>
+                    <h:panelGroup layout="block" rendered="#{sysParGlobal.rounding_saving != 'NO'}">
+                        <div class="label w150">Saving Smaller Unit</div>
+                        <p:selectOneMenu value="#{sysParGlobal.rounding_saving_smallerunit}">  
+                            <f:selectItems value="#{sysParGlobal.cmbDenomination}"/>  
+                        </p:selectOneMenu>
+                        <div class="clear space"></div>
+                    </h:panelGroup>
+                </div>
+                <div class="tabHead">Account Officer/ Marketer</div>
+                <div class="frgroup">
+                    <div class="label w150">Reminder Days</div><p:inputText value="#{sysParGlobal.aoReminderday}" styleClass="w20" maxlength="2"/> Days
+                    <div class="clear space"></div>
+                </div>
+                <div class="tabHead">Accrue / Cash Basis</div>
+                <div class="frgroup">
+                    <div class="label w150">Loan</div>
+                    <p:selectOneRadio value="#{sysParGlobal.accrueLoan}">  
+                        <f:selectItem itemLabel="Accrue" itemValue="true" />  
+                        <f:selectItem itemLabel="Cash Basis" itemValue="false" />  
+                        <f:ajax/>
+                    </p:selectOneRadio>
+                    <div class="clear space"></div>
+                    <div class="label w150">Saving</div>
+                    <p:selectOneRadio value="#{sysParGlobal.accrueSaving}">  
+                        <f:selectItem itemLabel="Accrue" itemValue="true" />  
+                        <f:selectItem itemLabel="Cash Basis" itemValue="false" />  
+                        <f:ajax/>
+                    </p:selectOneRadio>
+                    <div class="clear space"></div>
+                </div>
+
+            </div>
+            <div class="buttonGroup">
+                <p:commandButton id="saveButton" value="#{msgs.saveButton}" styleClass="saveButton" icon="ui-icon-disk" process="@form" update="messages" action="#{sysParGlobal.save()}"/>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

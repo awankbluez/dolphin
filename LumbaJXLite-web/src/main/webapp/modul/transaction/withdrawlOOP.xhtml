@@ -1,0 +1,319 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.withdrawl}" closable="true" toggleSpeed="500" closeSpeed="500">            
+            <h:form id="transactionwithdrawlsearch">
+                <h:panelGrid columns="2">
+                    <h:panelGrid columns="4">                    
+                        <h:outputText value="#{msgs.acccountnumber}"/>
+                        <h:outputText value=" : "/>                        
+                        <p:autoComplete minQueryLength="5" value="#{bean_withdrawl.accountcode}" completeMethod="#{bean_withdrawl.complete}"  disabled="#{bean_withdrawl.accountcode!=null}">  
+                            <f:ajax event="itemSelect" execute="@this" render="@form :transactionwithdrawlsearch :transactionwithdrawlform"/>                            
+                        </p:autoComplete>
+                        <h:outputText/>
+                        <h:outputText value="#{msgs.customerName}"/>
+                        <h:outputText value=" : "/>
+                        <p:inputText value="#{bean_withdrawl.transaction.customer.customername}" disabled="#{bean_withdrawl.accountcode!=null}">
+                            <p:ajax event="keyup" update="btnsearch"/>
+                        </p:inputText>
+                        <p:commandButton title="#{msgs.Search}" icon="ui-icon ui-icon-search"
+                                         actionListener="#{bean_withdrawl.findAll()}" id="btnsearch"
+                                         update=":transactionwithdralsearchlist:tabelsearchlist"
+                                         onclick="vardialogsearchlist.show()" process="@this"
+                                         disabled="#{bean_withdrawl.accountcode!=null or bean_withdrawl.transaction.customer.customername==null}"/>
+                        <h:outputText value="#{msgs.socialsecuritynumber}"/>
+                        <h:outputText value=" : "/>
+                        <p:inputText value="#{bean_withdrawl.transaction.person.socialsecuritynumber}" disabled="true"/>
+                        <h:outputText/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="3">
+                        <h:outputText value="#{msgs.office}"/>
+                        <h:outputText value=" : "/>
+                        <p:inputText value="#{bean_withdrawl.transaction.customer.customeroffice}" disabled="true"/>
+                        <h:outputText value="#{msgs.transactiondate}"/>
+                        <h:outputText value=" : "/>
+                        <p:calendar pattern="#{bean_withdrawl.applicationManagedBean.systemGlobal.siteFormatdate}" disabled="true" value="#{bean_withdrawl.systemdate}"/>                        
+                        <h:outputText value="#{msgs.product}"/>
+                        <h:outputText value=" : "/>
+                        <p:inputText value="#{bean_withdrawl.transaction.saving.savingname}" disabled="true"/>
+                    </h:panelGrid>                    
+                </h:panelGrid>
+                <p:blockUI block="transactionwithdrawlsearch" trigger=":dialog2:btnwithdrawlpost" />
+            </h:form>
+            <!-- form dialog hasil search -->
+            <h:form id="transactionwithdralsearchlist">
+                <p:dialog widgetVar="vardialogsearchlist" id="iddialogsearchlist" modal="true" position="top">
+                    <p:dataTable id="tabelsearchlist" value="#{bean_withdrawl.listsearch}" var="tabellist"
+                                 style="text-align: center; width: 1000px" paginator="true" rows="5" sortOrder="ascending">
+                        <p:column headerText="Account Code" filterBy="#{tabellist.account.accountcode}" filterMatchMode="contains" sortBy="#{tabellist.account.accountcode}">
+                            #{tabellist.account.accountcode}
+                        </p:column>
+                        <p:column headerText="#{msgs.product}" filterBy="#{tabellist.saving.savingtype}" filterMatchMode="contains" sortBy="#{tabellist.saving.savingtype}">
+                            #{tabellist.saving.savingtype}
+                        </p:column>
+                        <p:column headerText="#{msgs.productname}" filterBy="#{tabellist.saving.savingname}" filterMatchMode="contains" sortBy="#{tabellist.saving.savingname}">
+                            #{tabellist.saving.savingname}
+                        </p:column>
+                        <p:column headerText="#{msgs.customername}" filterBy="#{tabellist.customer.customername}" filterMatchMode="contains" sortBy="#{tabellist.customer.customername}">
+                            #{tabellist.customer.customername}
+                        </p:column>
+                        <p:column headerText="#{msgs.socialsecuritynumber}" filterBy="#{tabellist.person.socialsecuritynumber}" filterMatchMode="contains" sortBy="#{tabellist.person.socialsecuritynumber}">
+                            #{tabellist.person.socialsecuritynumber}
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.Search}"
+                                             actionListener="#{bean_withdrawl.check_list(tabellist)}"                                             
+                                             update=":transactionwithdrawlform :transactionwithdrawlsearch"
+                                             onclick="vardialogsearchlist.hide()"/>                            
+                        </p:column>
+                    </p:dataTable>                    
+                </p:dialog>
+            </h:form>
+            <!-- Form Utama -->
+            <h:form id="transactionwithdrawlform">
+                <p:panel visible="#{bean_withdrawl.panelutamawithdrawl}">
+                    <p:growl id="transactionsuccess" sticky="false" life="10000"/>
+                    <h:panelGrid columns="2">
+                        <h:panelGroup>
+                            <h:panelGrid columns="3">
+                                <h:outputText value="#{msgs.ammount}"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_withdrawl.transaction.amount}" id="amount" label="#{msgs.ammount}" style="width: 150px"
+                                             disabled="#{bean_withdrawl.transaction.saving.savingtype == 'wajib' or bean_withdrawl.transaction.saving.savingtype == 'pokok' or
+                                                         bean_withdrawl.transaction.saving.savingtype == 'deposito' or bean_withdrawl.transaction.saving.savingtype == 'tabungan berjangka' or bean_withdrawl.transaction.saving.savingtype == 'kapitalisasi'}"
+                                                         symbol="#{bean_withdrawl.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <p:ajax event="blur" listener="#{bean_withdrawl.check_balance(bean_withdrawl.transaction.amount)}" process=":transactionwithdrawlform:amount" partialSubmit="false" update=":transactionwithdrawlform:btnwithdrawl"/>                                    
+                                </pe:inputNumber>
+                                <h:outputText value="Bunga" rendered="#{bean_withdrawl.transaction.saving.savingtype == 'deposito' or bean_withdrawl.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+                                <h:outputText value=" : " rendered="#{bean_withdrawl.transaction.saving.savingtype == 'deposito' or bean_withdrawl.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+                                <pe:inputNumber value="#{bean_withdrawl.transaction.bunga}" id="bunga" style="width: 150px" disabled="true"
+                                             rendered="#{bean_withdrawl.transaction.saving.savingtype == 'deposito' or bean_withdrawl.transaction.saving.savingtype == 'tabungan berjangka'}"
+                                             symbol="#{bean_withdrawl.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText value="#{msgs.penalty}"
+                                              rendered="#{bean_withdrawl.transaction.saving.savingtype == 'deposito' or bean_withdrawl.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+                                <h:outputText value=" : "
+                                              rendered="#{bean_withdrawl.transaction.saving.savingtype == 'deposito' or bean_withdrawl.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+                                <pe:inputNumber disabled="true" style="width: 150px" value="#{bean_withdrawl.transaction.saving.penalty}"
+                                             rendered="#{bean_withdrawl.transaction.saving.savingtype == 'deposito' or bean_withdrawl.transaction.saving.savingtype == 'tabungan berjangka'}"
+                                             symbol="#{bean_withdrawl.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText value="#{msgs.fee}"/>
+                                <h:outputText value=" : "/>
+                                <p:selectOneMenu value="#{bean_withdrawl.transaction.transactionlist.feeid}" id="combobiaya" style="width: 150px">
+                                    <f:selectItem itemLabel="#{msgs.chooseonefee}" itemValue="0"/>
+                                    <f:selectItems value="#{bean_withdrawl.listfee}" var="biaya"
+                                                   itemLabel="#{biaya.feename}" itemValue="#{biaya.feeid}"/>
+                                    <p:ajax listener="#{bean_withdrawl.addfee(bean_withdrawl.transaction.transactionlist.feeid)}"
+                                            update=":transactionwithdrawlform:biaya 
+                                            @this 
+                                            :transactionwithdrawlform:totalbiaya
+                                            :transactionwithdrawlform:totalpayment
+                                            :transactionwithdrawlform:cash :transactionwithdrawlform:changes"/>
+                                </p:selectOneMenu>
+                                <h:outputText value="#{msgs.totalfee}"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_withdrawl.transaction.totalfee}" id="totalbiaya" disabled="true" style="width: 150px" symbol="#{bean_withdrawl.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>                            
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Total Pembayaran"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_withdrawl.transaction.totalpayment}" id="totalpayment" disabled="true" symbol="#{bean_withdrawl.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText value="Tunai"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_withdrawl.transaction.cash}" id="cash" symbol="#{bean_withdrawl.applicationManagedBean.systemGlobal.currency.currencySymbol} " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <p:ajax event="blur" listener="#{bean_withdrawl.count_changes()}" partialSubmit="false"
+                                            update=":transactionwithdrawlform:changes :transactionwithdrawlform:btnwithdrawl" process="@this"/>
+                                </pe:inputNumber>
+                                <h:outputText value="Kembalian"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_withdrawl.transaction.changes}" id="changes" disabled="true" symbol="#{bean_withdrawl.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                    </h:panelGrid>                                        
+                    <p:panel id="panelfee">
+                        <p:dataTable value="#{bean_withdrawl.tabelfee}" var="tabelbiaya" id="biaya" style="text-align: center">
+                            <f:facet name="header">#{msgs.listfee}</f:facet>
+                            <p:column headerText="Cash">
+                                <p:selectBooleanCheckbox value="#{tabelbiaya.cash}" disabled="#{tabelbiaya.feepayment!='Auto Debet dan Tunai'}">
+                                    <p:ajax listener="#{bean_withdrawl.check_fee(tabelbiaya.cash, tabelbiaya.feevalue)}" process="@this"
+                                            update=":transactionwithdrawlform:totalpayment :transactionwithdrawlform:totalbiaya :transactionwithdrawlform:cash"/>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+                            <p:column headerText="#{msgs.feeName}">
+                                #{tabelbiaya.feename}
+                            </p:column>
+                            <p:column headerText="#{msgs.fee}">
+                                #{tabelbiaya.feevalue}
+                            </p:column>
+                            <p:column headerText="Fee Payment">
+                                #{tabelbiaya.feepayment}
+                            </p:column>
+                            <p:column headerText="#{msgs.deletefee}">
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deletefee}"
+                                                 update=":transactionwithdrawlform:panelfee 
+                                                 :transactionwithdrawlform:totalbiaya 
+                                                 :transactionwithdrawlform:combobiaya
+                                                 :transactionwithdrawlform:totalpayment
+                                                 :transactionwithdrawlform:cash
+                                                 :transactionwithdrawlform:changes"
+                                                 action="#{bean_withdrawl.deletefee(tabelbiaya.feevalue, tabelbiaya.feeid)}">
+                                    <p:collector value="#{tabelbiaya}" addTo="#{bean_withdrawl.listfee}"/>    
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                    <p:commandButton value="#{msgs.posting}" id="btnwithdrawl" actionListener="#{bean_withdrawl.amount_reguler()}" disabled="#{bean_withdrawl.transaction.cash==0.0 and bean_withdrawl.transaction.amount==0.0}"/>
+                    <p:commandButton value="#{msgs.cancel}" onclick="cancel.show()"/>
+                </p:panel>
+                <p:blockUI block="transactionwithdrawlform" trigger=":dialog2:btnwithdrawlpost" />
+            </h:form>
+
+            <h:form id="formdialoggagal">
+                <p:confirmDialog message="saldo tidak mencukupi" widgetVar="vardialoggagal" closable="false">
+                    <p:commandButton value="OK" onclick="vardialoggagal.hide()"/>
+                </p:confirmDialog>
+            </h:form>
+
+            <h:form id="idUserPassFail">
+                <p:confirmDialog message="Konfirmasi gagal, silahkan ulangi kembali" widgetVar="varUserPassFail" closable="false">
+                    <p:commandButton value="OK" onclick="varUserPassFail.hide()"/>
+                </p:confirmDialog>
+            </h:form>
+
+            <h:form id="dialog2">
+                <p:confirmDialog message="Petugas tidak diijinkan untuk melakukan transaksi melebihi batas maksimum!" header="Peringatan" widgetVar="cantconfirm">
+                    <p:commandButton value="Ok" onclick="cantconfirm.hide()"/>
+                </p:confirmDialog>
+                <p:dialog id="chooseregulerdeposito" widgetVar="varchooseregulerdeposito" closable="false" modal="true">
+                    <h:panelGrid columns="3">
+                        <h:outputText value="Metode Penarikan"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneRadio value="#{bean_withdrawl.depositotransfer}">
+                            <f:selectItem itemLabel="Transfer to my account" itemValue="true"/>
+                            <f:selectItem itemLabel="Cash" itemValue="false"/>
+                            <p:ajax update=":dialog2:c" process="@this"/>
+                        </p:selectOneRadio>
+                        <h:outputText value="Pilih rekening reguler"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{bean_withdrawl.accountid_transferdeposito}" id="c" disabled="#{bean_withdrawl.depositotransfer==false}">
+                            <f:selectItem itemLabel="Pilih rekening" itemValue="0"/>
+                            <f:selectItems value="#{bean_withdrawl.listaccounttransferdeposito}" var="account"
+                                           itemLabel="#{account.account.accountcode}" itemValue="#{account.account.accountid}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="OK" title="Close" onclick="varchooseregulerdeposito.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="accountauto" id="accountautodebet" closable="false" modal="true" header="Choose Account to Autodebet">
+                    <h:panelGrid columns="3">
+                        <h:outputText value="Pilih rekening"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{bean_withdrawl.accountid_autodebet}">
+                            <f:selectItem itemLabel="Pilih rekening" itemValue="0"/>
+                            <f:selectItems value="#{bean_withdrawl.listaccountautodebet}" var="acc" 
+                                           itemLabel="#{acc.account.accountcode}" itemValue="#{acc.account.accountid}"/>
+                            <p:ajax listener="#{bean_withdrawl.balance_account_autodebet(bean_withdrawl.accountid_autodebet)}" process="@this"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:confirmDialog message="Saldo rekening tidak cukup untuk autodebet" header="Error balance" widgetVar="errbalance" closable="false">
+                    <p:commandButton value="Close" onclick="errbalance.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to post this transaction ?" header="Posting" widgetVar="post" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{bean_withdrawl.insert()}"  process="@this" id="btnwithdrawlpost">
+                        <f:actionListener binding="#{headerBean.retrieveUserCashAmount()}"/>
+                    </p:commandButton>
+                    <p:commandButton value="No" onclick="post.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to cancel this transaction ?" header="Cancel" widgetVar="cancel" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{bean_withdrawl.setPanelutamawithdrawl(false)}"
+                                     update=":transactionwithdrawlform :transactionwithdralsearchlist :transactionwithdrawlsearch"
+                                     action="#{bean_withdrawl.reset_form()}"/>
+                    <p:commandButton value="No" onclick="cancel.hide()"/>
+                </p:confirmDialog>
+                <p:dialog widgetVar="varSuccess" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction succes"/>
+                        <p:commandButton value="OK" onclick="varSuccess.hide()" actionListener="#{bean_withdrawl.reset_form()}"
+                                         update=":transactionwithdrawlsearch :transactionwithdralsearchlist :transactionwithdrawlform"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varFail" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction fail"/>
+                        <p:commandButton value="OK" onclick="varFail.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>                
+                <p:dialog widgetVar="varMaturiyDate" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Belum jatuh tempo"/>
+                        <h:outputLabel value="Jatuh tempo tanggal"/>
+                        <h:outputText value="#{bean_withdrawl.transaction.savingapplication.maturitydate}" id="maturity">
+                            <f:convertDateTime pattern="EEE,dd MMM yyyy"/>
+                        </h:outputText>
+                        <p:commandButton value="OK" onclick="varMaturiyDate.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>                
+                <p:dialog widgetVar="varOverTerm" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Melebihi batas pengambilan tabungan berjangka"/>
+                        <p:commandButton value="OK" onclick="varOverTerm.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>                
+                <p:dialog widgetVar="varLowerMinimumBalance" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Saldo akhir dibawah minimum saldo"/>
+                        <p:commandButton value="OK" onclick="varLowerMinimumBalance.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>                
+                <p:dialog widgetVar="varNolBalance" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Saldo akhir 0"/>
+                        <p:commandButton value="OK" onclick="varNolBalance.hide()" actionListener="#{bean_withdrawl.setPanelutamawithdrawl(false)}"
+                                         update=":transactionwithdrawlsearch :transactionwithdralsearchlist :transactionwithdrawlform"
+                                         action="#{bean_withdrawl.reset_form()}"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:growl id="growl" showDetail="true" sticky="false" life="2000"/>
+                <p:dialog widgetVar="konfirmasi" id="confirm" header="Confirmation" modal="true" closable="false">
+                    <h:panelGrid columns="3">
+                        <h:outputText value="Employee"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{bean_withdrawl.operatorUser.userid}" id="userid">
+                            <f:selectItem itemLabel="Pilih pegawai" itemValue=""/>
+                            <f:selectItems value="#{bean_withdrawl.userconfirmation}" var="user" itemLabel="#{user.employeename}" itemValue="#{user.userid}"/>
+                            <p:ajax update="username,password"/>
+                        </p:selectOneMenu>
+                        <h:outputText value="Username"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{bean_withdrawl.operatorUser.username}" id="username" disabled="#{bean_withdrawl.operatorUser.userid==null}"/>
+                        <h:outputText value="Password"/>
+                        <h:outputText value=":"/>
+                        <p:password value="#{bean_withdrawl.operatorUser.password}" id="password" disabled="#{bean_withdrawl.operatorUser.userid==null}"/>
+                    </h:panelGrid>
+                    <p:commandButton value="OK" actionListener="#{bean_withdrawl.check_username_and_password()}"/>                    
+                </p:dialog>
+                <p:dialog widgetVar="varKapitalFail" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputText value="Tanggungan pinjaman belum lunas"/>
+                        <p:commandButton value="OK" onclick="varKapitalFail.hide()"/>
+                    </h:panelGrid>                    
+                </p:dialog>
+                <p:dialog widgetVar="varCash" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Cash kurang dari total pembayaran"/>
+                        <p:commandButton value="OK" onclick="varCash.hide()" update=":transactionwithdrawlform:cash"/>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+        </p:panel>
+    </ui:define>
+</ui:composition>

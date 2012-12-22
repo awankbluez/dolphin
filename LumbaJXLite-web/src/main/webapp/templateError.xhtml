@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:o="http://omnifaces.org/ui">
+
+
+    <ui:define name="contentTitle">
+        Error
+    </ui:define>
+
+    <ui:define name="content">
+        <ui:insert name="errorContent">
+            <ul>#
+                <li>Date/time: <h:outputText value="#{of:formatDate(now, 'yyyy-MM-dd HH:mm:ss')}" style="font-weight: bold;"/></li>
+                <li>User agent: <h:outputText value="#{header['user-agent']}" style="font-weight: bold;"/></li>
+                <li>User IP: <h:outputText value="#{request.remoteAddr}" style="font-weight: bold;"/></li>
+                <li>Request URI: <a href="#{requestScope['javax.servlet.error.request_uri']}">#{requestScope['javax.servlet.error.request_uri']}</a></li>
+                <li>Ajax request: <h:outputText value="#{facesContext.partialViewContext.ajaxRequest ? 'Yes' : 'No'}" style="font-weight: bold;"/></li>
+                <li>Status code: <h:outputText value="#{requestScope['javax.servlet.error.status_code']}" style="font-weight: bold;"/></li>
+                <li>Exception type: <h:outputText value="#{requestScope['javax.servlet.error.exception_type']}" style="font-weight: bold;"/></li>
+                <li>Exception message: <h:outputText value="#{requestScope['javax.servlet.error.message']}" style="font-weight: bold;"/></li>
+                <li>Stack trace:
+                    <pre><code>#{of:printStackTrace(requestScope['javax.servlet.error.exception'])}</code></pre>
+                </li>
+            </ul>
+        </ui:insert>
+<!--        <h:outputScript rendered="#{facesContext.partialViewContext.ajaxRequest}">scrollTo(0, 0);</h:outputScript>-->
+    </ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel header="Loan Settlement" closable="true" toggleSpeed="500" closeSpeed="500">
+            <h:form id="transactionsettlementsearch">
+                <p:panel style="border-color: white">
+                    <h:panelGrid columns="2">
+                        <h:panelGrid columns="2">
+                            <h:outputText value="#{msgs.customerName}"/>
+                            <p:autoComplete minQueryLength="2" value="#{loansettlement.customername}" completeMethod="#{loansettlement.complete}">  
+                                <f:ajax event="itemSelect" execute="@this" render="@form"/>
+                            </p:autoComplete>
+
+                            <h:outputText value="Customer Code"/>
+                            <p:inputText value="#{loansettlement.transaction.customer.customercode}" disabled="true"/>                                                        
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Nama Produk"/>
+                            <p:selectOneMenu value="#{loansettlement.transaction.loan.loanid}" disabled="#{loansettlement.customername==null}">
+                                <f:selectItem itemLabel="Pilih satu produk"/>
+                                <f:selectItems value="#{loansettlement.comboproduct}" var="produk" itemLabel="#{produk.loan.loanname}" itemValue="#{produk.loan.loanid}"/>
+                                <p:ajax listener="#{loansettlement.selected_product(loansettlement.transaction.loan.loanid)}" update="@form :transactionsettlementform"/>
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Nomer Rekening"/>
+                            <p:inputText value="#{loansettlement.transaction.account.accountcode}" disabled="true"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:blockUI block="transactionsettlementsearch" trigger=":transactionsettlementform:btnsettlementpost" />
+            </h:form>
+            <p:separator/>
+            <h:form id="transactionsettlementform">
+                <p:growl id="transactionsuccess" sticky="false" life="10000"/>
+                <p:panel style="border-color: white">
+                    <h:panelGrid columns="2">
+                        <h:panelGroup>
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Pokok"/>
+                                <pe:inputNumber value="#{loansettlement.transactionform.loanschedule.principle}" id="pokok" disabled="#{loansettlement.fieldpokok}"
+                                                symbol="#{loansettlement.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>                                
+                                <p:spacer/>
+
+                                <h:outputText value="Bunga"/>
+                                <pe:inputNumber value="#{loansettlement.transactionform.loanschedule.interest}" id="bunga" disabled="#{loansettlement.fieldbunga}"
+                                                symbol="#{loansettlement.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=",">
+                                    <p:ajax event="blur" listener="#{loansettlement.hitTotalpayment()}" update="totalpayment,@this,editbunga" process="@this" partialSubmit="false"/>
+                                </pe:inputNumber>
+                                <p:commandButton icon="ui-icon ui-icon-pencil" id="editbunga" actionListener="#{loansettlement.setFieldbunga(false)}" disabled="#{loansettlement.fieldbunga==false}" update="bunga,@this"/>
+
+                                <h:outputText value="Denda"/>
+                                <pe:inputNumber value="#{loansettlement.transactionform.loanschedule.penalty}" id="denda" disabled="#{loansettlement.fielddenda}"
+                                                symbol="#{loansettlement.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=",">
+                                    <p:ajax event="blur" listener="#{loansettlement.hitTotalpayment()}" update="totalpayment,@this,editdenda" process="@this" partialSubmit="false"/>
+                                </pe:inputNumber>
+                                <p:commandButton icon="ui-icon ui-icon-pencil" id="editdenda" actionListener="#{loansettlement.setFielddenda(false)}" disabled="#{loansettlement.fielddenda==false}" update="denda,@this"/>
+
+                                <h:outputText value="Biaya"/>
+                                <pe:inputNumber value="#{loansettlement.transactionform.fee.feevalue}" disabled="true"
+                                                symbol="#{loansettlement.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <p:spacer/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:panelGrid columns="2">                                                                
+                                <h:outputText value="Total Payment"/>
+                                <pe:inputNumber value="#{loansettlement.transactionform.totalpayment}" id="totalpayment" disabled="true"
+                                                symbol="#{loansettlement.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+
+                                <h:outputText value="Cash"/>
+                                <pe:inputNumber value="#{loansettlement.transactionform.cash}" id="cash" disabled="false"
+                                                symbol="#{loansettlement.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <p:ajax event="blur" listener="#{loansettlement.count_changes()}" update="changes,btnsettlement" partialSubmit="false"/>
+                                </pe:inputNumber>
+
+                                <h:outputText value="Changes"/>
+                                <pe:inputNumber value="#{loansettlement.transactionform.changes}" id="changes" disabled="true"
+                                                symbol="#{loansettlement.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                            </h:panelGrid>                            
+                        </h:panelGroup>
+                    </h:panelGrid>                
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="#{msgs.posting}" actionListener="#{loansettlement.cek_perubahan()}" id="btnsettlement" disabled="#{loansettlement.transactionform.cash==0.0}"/>
+                        <p:commandButton value="#{msgs.cancel}" onclick="cancel.show()"/>
+                    </h:panelGrid>
+                </p:panel>
+                <p:blockUI block="transactionsettlementform" trigger="btnsettlementpost" />
+                <p:confirmDialog message="Petugas tidak diijinkan untuk memberikan diskon!" header="Peringatan" widgetVar="cantconfirm">
+                    <p:commandButton value="Ok" onclick="cantconfirm.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to post this transaction ?" header="Posting" widgetVar="post" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{loansettlement.insert()}" process="@this" id="btnsettlementpost"/>
+                    <p:commandButton value="No" onclick="post.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to cancel this transaction ?" header="Cancel" widgetVar="cancel" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{loansettlement.reset()}"
+                                     update=":transactionsettlementsearch :transactionsettlementform" immediate="true"/>
+                    <p:commandButton value="No" onclick="cancel.hide()"/>
+                </p:confirmDialog>
+                <p:dialog widgetVar="varFail" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction fail"/>
+                        <p:commandButton value="OK" onclick="varFail.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varCash" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Cash kurang dari total pembayaran"/>
+                        <p:commandButton value="OK" onclick="varCash.hide()" update=":transactionsettlementform:cash"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="konfirmasi" id="confirm" header="Confirmation" modal="true" closable="false">
+                    <h:panelGrid columns="3" id="bajolconfirm">
+                        <h:outputText value="Employee"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{loansettlement.operatorUser.userid}" id="userid">
+                            <f:selectItem itemLabel="Pilih pegawai" itemValue=""/>
+                            <f:selectItems value="#{loansettlement.userconfirmation}" var="user" itemLabel="#{user.employeename}" itemValue="#{user.userid}"/>
+                            <p:ajax update="username,password"/>
+                        </p:selectOneMenu>
+                        <h:outputText value="Username"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{loansettlement.operatorUser.username}" id="username" disabled="#{loansettlement.operatorUser.userid==null}"/>
+                        <h:outputText value="Password"/>
+                        <h:outputText value=":"/>
+                        <p:password value="#{loansettlement.operatorUser.password}" id="password" disabled="#{loansettlement.operatorUser.userid==null}"/>
+                    </h:panelGrid>
+                    <p:commandButton value="OK" actionListener="#{loansettlement.check_username_and_password()}"/>                    
+                </p:dialog>
+                <p:confirmDialog message="Konfirmasi gagal, silahkan ulangi kembali" widgetVar="varUserPassFail" closable="false">
+                    <p:commandButton value="OK" onclick="varUserPassFail.hide()"/>
+                </p:confirmDialog>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

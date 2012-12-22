@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui">
+
+     
+     
+    <ui:define name="content">
+        <p:panel id="panelSaving" header="Cash Manager" closable="true">
+            <h:form prependId="false">
+                <p:growl id="messages" life="5000"/> 
+
+
+                <p:treeTable value="#{cashMan.root}" var="tt">                      
+                    <p:column headerText="" sortBy="#{tt.username}" filterBy="#{tt.username}"  filterStyle="display:none;">  
+                        <h:outputText value="#{(tt.chartofaccountid == 0 ? 'Mengambil | ' : 'Menyerahkan | ') }" rendered="#{tt.level == 1}"/> 
+                        <h:outputText value="#{tt.username} | #{tt.chartofaccountname}"/>  
+                    </p:column> 
+                    <p:column headerText="Saldo" sortBy="#{tt.cash}" filterBy="#{tt.cash}"  filterStyle="display:none;">  
+                        <h:outputText value="#{tt.cash}">
+                            <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="w100">
+                        <p:commandButton icon="ui-icon-circle-arrow-w" title="Mengambil" oncomplete="formCashMan.show()" update="@form" action="#{cashMan.process()}" rendered="#{tt.level == 0}">
+                            <f:setPropertyActionListener value="from" target="#{cashMan.act}" /> 
+                            <f:setPropertyActionListener value="#{tt}" target="#{cashMan.selectDtTeller}" /> 
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-circle-arrow-e" title="Menyerahkan" oncomplete="formCashMan.show()" update="@form" action="#{cashMan.process()}" rendered="#{tt.level == 0}">
+                            <f:setPropertyActionListener value="to" target="#{cashMan.act}" /> 
+                            <f:setPropertyActionListener value="#{tt}" target="#{cashMan.selectDtTeller}" /> 
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-search" title="Detail Denomination" oncomplete="formCashMan.show()" update="@form" action="#{cashMan.process()}" rendered="#{tt.level == 1}">
+                            <f:setPropertyActionListener value="view" target="#{cashMan.act}" /> 
+                            <f:setPropertyActionListener value="#{tt}" target="#{cashMan.selectDtTeller}" /> 
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-pencil" title="Edit Denomination" oncomplete="formCashMan.show()" update="@form" action="#{cashMan.process()}" rendered="#{tt.level == 1 and tt.journaled == false }">
+                            <f:setPropertyActionListener value="edit" target="#{cashMan.act}" /> 
+                            <f:setPropertyActionListener value="#{tt}" target="#{cashMan.selectDtTeller}" /> 
+                        </p:commandButton>
+                    </p:column>
+                </p:treeTable>
+                <p:commandButton icon="ui-icon-disk" title="Posting" oncomplete="formCashMan.show()" update="@form" action="#{cashMan.initVal()}" value="Posting" styleClass="button" style="margin-top: 20px;">
+                    <f:setPropertyActionListener value="to" target="#{cashMan.act}" /> 
+                    <f:setPropertyActionListener value="#{tt}" target="#{cashMan.selectDtTeller}" /> 
+                </p:commandButton>
+                <p:dialog widgetVar="formCashMan" modal="true">  
+                    <div class="cLeft">
+                        <h:panelGroup layout="block" rendered="#{cashMan.act != 'view' and cashMan.act != 'edit'}">
+                            <div class="label w150">Posisi Saldo</div>
+                            <h:outputText value="#{cashMan.selectDtTeller.cash}">
+                                <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                            </h:outputText>  
+                            <div class="clear space"></div>
+                        </h:panelGroup>
+                        <div class="label w150">Tanggal</div>
+                        <h:outputText value="#{appBean.sessionday.sessiondate}">
+                            <f:convertDateTime pattern="EEE, dd MMM yyyy" />
+                        </h:outputText>
+                        <div class="clear space"></div>
+                        <div class="label w150">Mata Uang</div>
+                        <h:outputText value="#{appBean.systemGlobal.currency.currencyDescribe}"/>
+                        <div class="clear space"></div>
+                        <div class="label w150">Process</div>
+                        <h:outputText value="#{(cashMan.act == 'from' ? 'Mengambil' : 'Menyerahkan')}" rendered="#{cashMan.act != 'view'}"/>
+                        <h:outputText value="#{(cashMan.selectDtTeller.chartofaccountid == 0 ? 'Mengambil' : 'Menyerahkan')}" rendered="#{cashMan.act == 'view'}"/>
+                        <div class="clear space"></div>
+                        <div class="label w150">COA</div>
+                        <h:outputText value="#{cashMan.selectDtTeller.chartofaccountname}" rendered="#{cashMan.act != 'view' and cashMan.act != 'edit'}"/>
+                        <h:outputText value="#{ (cashMan.selectDtTeller.chartofaccountid==1) ? cashMan.debetcoaname : cashMan.creditcoaname}" rendered="#{cashMan.act == 'view' or cashMan.act == 'edit'}"/>
+                        <div class="clear space"></div>
+                        <div class="label w150">COA Contra</div>
+                        <p:selectOneMenu value="#{cashMan.contraaccountid}" rendered="#{cashMan.act != 'view'}">
+                            <f:selectItems value="${combo.coaOperationalAsset}"/>
+                        </p:selectOneMenu>
+                        <h:outputText value="#{(cashMan.selectDtTeller.chartofaccountid==0) ? cashMan.debetcoaname : cashMan.creditcoaname}" rendered="#{cashMan.act == 'view'}"/>
+                        <div class="clear space"></div>
+                        <div class="label w150">Description</div>
+                        <p:inputText value="#{cashMan.description}" rendered="#{cashMan.act != 'view'}"/>
+                        <h:outputText value="#{cashMan.selectDtTeller.chartofaccountname}" rendered="#{cashMan.act == 'view'}"/>
+                        <div class="clear space"></div>
+                    </div>
+                    <div class="cRight" style="margin-left: 30px">
+                        <p:dataTable var="d" 
+                                     value="#{cashMan.dtDenomination}"  
+                                     emptyMessage="No Data Retrived"
+                                     id="tbDenomination">  
+                            <p:column headerText="Pecahan Mata Uang">  
+                                <h:outputText value="#{d.amount}">
+                                    <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                                </h:outputText>
+                            </p:column>  
+                            <p:column headerText="Jumlah">  
+                                <pe:inputNumber maxValue="999" decimalPlaces="0" styleClass="pew30" value="#{cashMan.amount[d.idx]}" disabled="#{cashMan.act == 'view'}">
+                                    <p:ajax update="totalAmmount total" event="blur" listener="#{cashMan.calcAmount()}" partialSubmit="false"/>  
+                                </pe:inputNumber>
+                            </p:column>  
+                            <p:column headerText="Total Nilai" width="100">  
+                                <h:outputText value="#{cashMan.totalAmount[d.idx]}" id="totalAmmount">
+                                    <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                                </h:outputText>
+                            </p:column> 
+                            <f:facet name="footer"> 
+                                <h:panelGroup layout="block" id="total" style="text-align: right">
+                                    <h:outputText value="#{cashMan.total}">
+                                        <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                                    </h:outputText>
+                                </h:panelGroup>
+                            </f:facet>
+                        </p:dataTable>
+                    </div>
+                    <div class="clear space"></div>
+                    <p:commandButton value="Save" oncomplete="formCashMan.hide()" action="#{cashMan.saveCashMan()}" update="@form :HeaderUserSessionInfo:userCash" rendered="#{cashMan.act != 'view'}"/>  
+                </p:dialog> 
+            </h:form>
+        </p:panel>
+    </ui:define>
+</ui:composition>

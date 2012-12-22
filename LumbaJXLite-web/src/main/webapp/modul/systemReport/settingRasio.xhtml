@@ -1,0 +1,350 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel header="Rasio" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="RasioForm">
+                <p:growl id="growl" life="5000"/>
+                <p:fieldset legend="Tambah Rasio" id="fieldset" collapsed="false" >
+                    <p:panel style="border-color: white" id="a">
+                        <h:panelGrid columns="4">
+                            <h:outputText value="Pilih Pembilang/Penyebut"/>
+                            <h:outputText value=":"/>
+                            <p:selectOneMenu id="PPP" value="#{settingratioBean.idparameter}" style="width: 400px">
+                                <f:selectItem itemLabel="Pilih Tipe Pembilang/Penyebut" itemValue=""/>
+                                <f:selectItems var="comboPPP" value="#{settingratioBean.dtCmbParameter}" itemLabel="#{comboPPP.parametername}" itemValue="#{comboPPP.manualparameter_fpid}"/>     
+                                <p:ajax listener="#{settingratioBean.cekparam(settingratioBean.idparameter)}" update="atmrno,atmryes,:RasioForm:paneltabelATMR,:RasioForm:paneltabelRATIO,tabelATMR,tabelRATIO"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Tambah Pembilang/Penyebut" oncomplete="varDialogPP.show()"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    
+                    <p:panel visible="#{settingratioBean.grid==false}" style="border-color: white" id="atmrno">
+                        <h:panelGrid columns="4">
+                            <h:outputText value="Pilih Category" rendered="#{settingratioBean.iscategory}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.iscategory}"/>
+                            <p:selectOneMenu id="category" value="#{settingratioBean.idcategory}" style="width: 400px" rendered="#{settingratioBean.iscategory}">
+                                <f:selectItem itemLabel="Pilih Tipe Category" itemValue=""/>
+                                <f:selectItems var="comboCATEGORY" value="#{settingratioBean.dtCmbCategory}" itemLabel="#{comboCATEGORY.categoryname}" itemValue="#{comboCATEGORY.categoryid}"/>     
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:commandButton icon="ui-icon-circle-plus" actionListener="#{settingratioBean.tambahCategorykeTabel()}" update="idtabelCTGR,category" process="@this" style="padding:0"  rendered="#{settingratioBean.iscategory}"/>
+                            
+                            <p:spacer rendered="#{settingratioBean.iscategory}"/><p:spacer rendered="#{settingratioBean.iscategory}"/>
+                            <p:dataTable value="#{settingratioBean.listTabelCategory}" var="tabelCTGR" style="width: 400px" id="idtabelCTGR" rendered="#{settingratioBean.iscategory}">
+                                <p:column headerText="Category">#{tabelCTGR.categoryname}</p:column>
+                                <p:column headerText="Aksi">
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus" actionListener="#{settingratioBean.hapustabelCategory(tabelCTGR.categoryid)}" update=":RasioForm:atmrno,:RasioForm:category" process="@this"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:spacer rendered="#{settingratioBean.iscategory}"/>
+
+                            <h:outputText value="Pilih Financial Category" rendered="#{settingratioBean.isfinancialcategory}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.isfinancialcategory}"/>
+                            <p:selectOneMenu id="f_category" value="#{settingratioBean.idfinancialcategory}" style="width: 400px" rendered="#{settingratioBean.isfinancialcategory}">
+                                <f:selectItem itemLabel="Pilih Tipe Financial Category" itemValue="" />
+                                <f:selectItems var="comboFC" value="#{settingratioBean.dtCmbFinancialCategory}" itemLabel="#{comboFC.financialcategoryname}" itemValue="#{comboFC.financialcategoryid}"/>
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:commandButton icon="ui-icon-circle-plus" style="padding:0" actionListener="#{settingratioBean.tambahFinancialCategorykeTabel()}" update="idtabelFCTGR,f_category" process="@this" rendered="#{settingratioBean.isfinancialcategory}"/>
+                            
+                            <p:spacer rendered="#{settingratioBean.isfinancialcategory}"/><p:spacer rendered="#{settingratioBean.isfinancialcategory}"/>
+                            <p:dataTable var="tabelFCTGR" value="#{settingratioBean.listTabelFinancialCategory}" style="width: 400px" id="idtabelFCTGR" rendered="#{settingratioBean.isfinancialcategory}">
+                                <p:column headerText="Financial Category">#{tabelFCTGR.categoryname}</p:column>
+                                <p:column headerText="Aksi">
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus" actionListener="#{settingratioBean.hapustabelFinancialCategory(tabelFCTGR.categoryid)}" update=":RasioForm:atmrno,:RasioForm:f_category" process="@this"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:spacer rendered="#{settingratioBean.isfinancialcategory}"/>
+
+                            <h:outputText value="Gunakan semua COA"/>
+                            <h:outputText value=":"/>
+                            <p:selectOneRadio value="#{settingratioBean.usecoafirst}" id="firstcoa">
+                                <f:selectItem itemLabel="Yes" itemValue="true" />  
+                                <f:selectItem itemLabel="No" itemValue="false" />
+                                <p:ajax listener="#{settingratioBean.cekCOA()}" event="change" update="atmrno"/>
+                            </p:selectOneRadio>
+                            <p:spacer width="10"/>
+                            
+                            <h:outputText value="Nama COA" rendered="#{settingratioBean.usecoafirst==false}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.usecoafirst==false}"/>
+                            <p:selectOneMenu id="combofirstcoa" value="#{settingratioBean.idcoa}" style="width: 400px" rendered="#{settingratioBean.usecoafirst==false}">
+                                <f:selectItem itemLabel="Pilih COA" itemValue="" />
+                                <f:selectItems var="comboCOAsatu" value="#{settingratioBean.dtCmbCOA}" itemLabel="#{comboCOAsatu.chartofaccountname}" itemValue="#{comboCOAsatu.chartofaccountid}"/>
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:commandButton icon="ui-icon-circle-plus" actionListener="#{settingratioBean.tambahCOAFirstkeTabel()}" update="idtabelCOAfirst,combofirstcoa" process="@this" style="padding:0" rendered="#{settingratioBean.usecoafirst==false}"/>                            
+                            
+                            <p:spacer rendered="#{settingratioBean.usecoafirst==false}"/><p:spacer rendered="#{settingratioBean.usecoafirst==false}"/>
+                            <p:dataTable value="#{settingratioBean.listTabelCOAFirst}" var="tabelCOAFirst" style="width: 400px" id="idtabelCOAfirst" rendered="#{settingratioBean.usecoafirst==false}">
+                                <p:column headerText="Nama COA">#{tabelCOAFirst.chartofaccountname}</p:column>
+                                <p:column headerText="Aksi">
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus" actionListener="#{settingratioBean.hapustabelCOAFirst(tabelCOAFirst.chartofaccountid)}" update=":RasioForm:atmrno,:RasioForm:combofirstcoa" process="@this"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:spacer rendered="#{settingratioBean.usecoafirst==false}"/>
+                            
+                            <h:outputText value="Gunakan Pengurang"/>
+                            <h:outputText value=":"/>
+                            <p:selectOneRadio value="#{settingratioBean.usesubtractor}" id="subs1">
+                                <f:selectItem itemLabel="Yes" itemValue="true" />  
+                                <f:selectItem itemLabel="No" itemValue="false" />
+                                <p:ajax event="change" update="atmrno" listener="#{settingratioBean.cekCOMBOCOA()}"/>
+                            </p:selectOneRadio>
+                            <p:spacer width="10"/>
+
+                            <h:outputText value="Pilih Pengurang" rendered="#{settingratioBean.usesubtractor}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.usesubtractor}"/>
+                            <p:selectOneMenu id="pengurang" value="#{settingratioBean.idsubstractor1}" style="width: 400px" rendered="#{settingratioBean.usesubtractor and settingratioBean.substractorcoa}">
+                                <f:selectItem itemLabel="Pilih Tipe Pengurang" />
+                                <f:selectItems var="comboPengurang" value="#{settingratioBean.dtCmbCOAFinancialCategory}" itemLabel="#{comboPengurang.financialcategoryname}" itemValue="#{comboPengurang.financialcategoryid}"/>
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:selectOneMenu id="pengurang2" value="#{settingratioBean.idsubstractor2}" style="width: 400px" rendered="#{settingratioBean.usesubtractor and settingratioBean.substractorcoa==false}">
+                                <f:selectItem itemLabel="Pilih Tipe Pengurang" />
+                                <f:selectItems var="comboPengurang2" value="#{settingratioBean.dtCmbCOACategory}" itemLabel="#{comboPengurang2.categoryname}" itemValue="#{comboPengurang2.categoryid}"/>
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:spacer width="10" rendered="#{settingratioBean.usesubtractor}"/>
+                            
+                            <h:outputText value="Gunakan semua COA" rendered="#{settingratioBean.usesubtractor}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.usesubtractor}"/>
+                            <p:selectOneRadio value="#{settingratioBean.usecoasecond}" id="secondcoa" rendered="#{settingratioBean.usesubtractor}">
+                                <f:selectItem itemLabel="Yes" itemValue="true" />  
+                                <f:selectItem itemLabel="No" itemValue="false" />
+                                <p:ajax event="change" update="atmrno" listener="#{settingratioBean.cekCOAsecond()}"/>
+                            </p:selectOneRadio>
+                            <p:spacer width="10" rendered="#{settingratioBean.usesubtractor}"/>
+                            
+                            <h:outputText value="Nama COA" rendered="#{settingratioBean.usecoasecond==false}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.usecoasecond==false}"/>
+                            <p:selectOneMenu id="combosecondcoa" value="#{settingratioBean.idcoadua}" style="width: 400px" rendered="#{settingratioBean.usecoasecond==false}">
+                                <f:selectItem itemLabel="Pilih COA" itemValue="" />
+                                <f:selectItems var="comboCOAdua" value="#{settingratioBean.dtCmbCOAsecond}" itemLabel="#{comboCOAdua.chartofaccountname}" itemValue="#{comboCOAdua.chartofaccountid}"/>
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:commandButton icon="ui-icon-circle-plus" actionListener="#{settingratioBean.tambahCOASecondkeTabel()}" update="idtabelCOAsecond,combosecondcoa" style="padding:0" rendered="#{settingratioBean.usecoasecond==false}" process="@this"/>                            
+                            
+                            <p:spacer rendered="#{settingratioBean.usecoasecond==false}"/><p:spacer rendered="#{settingratioBean.usecoasecond==false}"/>
+                            <p:dataTable value="#{settingratioBean.listTabelCOASecond}" var="tabelCOASecond" style="width: 400px" id="idtabelCOAsecond" rendered="#{settingratioBean.usecoasecond==false}">
+                                <p:column headerText="Nama COA">#{tabelCOASecond.chartofaccountname}</p:column>
+                                <p:column headerText="Aksi">
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus" actionListener="#{settingratioBean.hapustabelCOASecond(tabelCOASecond.chartofaccountid)}" update=":RasioForm:atmrno,:RasioForm:combosecondcoa" process="@this"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:spacer rendered="#{settingratioBean.usecoasecond==false}"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    
+                    <p:panel visible="#{settingratioBean.grid}" style="border-color: white" id="atmryes">                        
+                        <h:panelGrid columns="4">
+                            <h:outputText value="ATMR"/>
+                            <h:outputText value=":"/>
+                            <p:selectOneMenu id="ATMR" value="#{settingratioBean.idatmr}" style="width: 400px">
+                                <f:selectItem itemLabel="Pilih Tipe ATMR" itemValue="" />
+                                <f:selectItems var="comboATMR" value="#{settingratioBean.dtCmbATMR}" itemLabel="#{comboATMR.atmrRatio}" itemValue="#{comboATMR.atmrFpid}"/>     
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Tambah ATMR" oncomplete="varDialogATMR.show()"/>
+
+                            <h:outputText value="Nama COA"/>
+                            <h:outputText value=":"/>
+                            <p:selectOneMenu id="COA" value="#{settingratioBean.idcoaatmr}" style="width: 400px">
+                                <f:selectItem itemLabel="Pilih Nama COA" />
+                                <f:selectItems var="comboCOAATMR" value="#{settingratioBean.dtCmbCOAATMR}" itemLabel="#{comboCOAATMR.chartofaccountname}" itemValue="#{comboCOAATMR.chartofaccountid}"/>
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:commandButton icon="ui-icon-circle-plus" style="padding:0" actionListener="#{settingratioBean.tambahCOAFirstkeTabel()}" update="COA,idcoaatmrfirst" process="@this"/>
+                            
+                            <p:spacer/><p:spacer/>
+                            <p:dataTable value="#{settingratioBean.listTabelCOAATMRFirst}" var="coaatmrfirst" id="idcoaatmrfirst">
+                                <p:column headerText="COA">
+                                    #{coaatmrfirst.chartofaccountname}
+                                </p:column>
+                                <p:column headerText="Hapus">
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus" actionListener="#{settingratioBean.hapustabelCOAFirst(coaatmrfirst.chartofaccountid)}" update=":RasioForm:atmryes,:RasioForm:COA" process="@this"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:spacer/>
+
+                            <h:outputText value="Ada COA Pengurang"/>
+                            <h:outputText value=":"/>
+                            <p:selectOneRadio value="#{settingratioBean.usersubtractorcoa}" id="subs2">
+                                <f:selectItem itemLabel="Yes" itemValue="true" />  
+                                <f:selectItem itemLabel="No" itemValue="false" /> 
+                                <p:ajax update="atmryes" event="change"/>
+                            </p:selectOneRadio>
+                            <p:spacer width="10"/>
+
+                            <h:outputText id="satu" value="Nama COA Pengurang" rendered="#{settingratioBean.usersubtractorcoa}"/>
+                            <h:outputText id="dua" value=":" rendered="#{settingratioBean.usersubtractorcoa}"/>
+                            <p:selectOneMenu id="COASub" value="#{settingratioBean.idcoaatmrdua}" style="width: 400px" rendered="#{settingratioBean.usersubtractorcoa}">
+                                <f:selectItem itemLabel="Pilih Nama COA Pengurang"/>
+                                <f:selectItems var="comboCOAPengurangDua" value="#{settingratioBean.dtCmbCOAATMRdua}" itemLabel="#{comboCOAPengurangDua.chartofaccountname}" itemValue="#{comboCOAPengurangDua.chartofaccountid}"/>
+                                <p:ajax process="@this"/>
+                            </p:selectOneMenu>
+                            <p:commandButton id="tiga" icon="ui-icon-circle-plus" style="padding:0" rendered="#{settingratioBean.usersubtractorcoa}" actionListener="#{settingratioBean.tambahCOASecondkeTabel()}" update="idcoaatmrsecond,COASub" process="@this"/>
+                            
+                            <p:spacer rendered="#{settingratioBean.usersubtractorcoa}"/><p:spacer rendered="#{settingratioBean.usersubtractorcoa}"/>
+                            <p:dataTable value="#{settingratioBean.listTabelCOAATMRSecond}" var="coaatmrsecond" id="idcoaatmrsecond" rendered="#{settingratioBean.usersubtractorcoa}">
+                                <p:column headerText="COA">
+                                    #{coaatmrsecond.chartofaccountname}
+                                </p:column>
+                                <p:column headerText="Hapus">
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus" actionListener="#{settingratioBean.hapustabelCOASecond(coaatmrsecond.chartofaccountid)}" update=":RasioForm:atmryes,:RasioForm:COASub" process="@this"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:spacer rendered="#{settingratioBean.usersubtractorcoa}"/>
+
+                            <h:outputText value="Prosentase"/>
+                            <h:outputText value=":"/>
+                            <pe:inputNumber value="#{settingratioBean.amount_ratio}" id="prosentase" required="true" style="width: 150px"  symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100">
+                                <p:ajax process="@this" partialSubmit="false"/>
+                            </pe:inputNumber>
+                            <p:message for="prosentase"/>
+                        </h:panelGrid>
+                    </p:panel>
+                
+                    <p:commandButton value="Simpan" title="Simpan" actionListener="#{settingratioBean.simpanSemuaData()}" process="@this"/>
+                </p:fieldset>
+
+                <p:panel id="paneltabelATMR" visible="#{settingratioBean.grid}" >
+                    <p:dataTable id="tabelATMR" value="#{settingratioBean.dtListTabelATMRretieve}" var="oo" sortOrder="desc" paginator="true" paginatorPosition="top" rows="5" rowsPerPageTemplate="5,10,20,25"  >
+                        <p:column headerText="ATMR" sortBy="#{oo.parametername}" filterBy="#{oo.parametername}">
+                            #{oo.parametername}
+                        </p:column>
+                        <p:column headerText="Nama COA" sortBy="#{oo.categoryname}" filterBy="#{oo.categoryname}">
+                            #{oo.categoryname}
+                        </p:column>
+                        <p:column headerText="Status">
+                            <h:outputText value="bukan pengurang" rendered="#{oo.flag==false}"/>
+                            <h:outputText value="pengurang" rendered="#{oo.flag}"/>
+                        </p:column>
+                        <p:column style="width: 100px;">
+                            <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus" actionListener="#{settingratioBean.hapusATMR(oo.parameterid)}" process="@this"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+
+                <p:panel id="paneltabelRATIO" visible="#{settingratioBean.grid==false}">
+                    <p:dataTable id="tabelRATIO" value="#{settingratioBean.dtListTabelNONATMRretieve}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="5" rowsPerPageTemplate="5,10,20,25"  >
+                        <p:column headerText="Nama Parameter" sortBy="#{o.parametername}" filterBy="#{o.parametername}">
+                            #{o.parametername}
+                        </p:column>
+
+                        <p:column headerText="Category / Financial Category / COA" sortBy="#{o.categoryname}" filterBy="#{o.categoryname}">
+                            #{o.categoryname}
+                        </p:column>                        
+
+                        <p:column headerText="Gunakan pengurang">
+                            <h:outputText value="pengurang" rendered="#{o.usesubstractor==true}"/>
+                            <h:outputText value="bukan pengurang" rendered="#{o.usesubstractor==false}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Status" >
+                            <h:outputText value="Category" rendered="#{o.status=='C'}"/>
+                            <h:outputText value="Financial Category" rendered="#{o.status=='FC'}"/>
+                            <h:outputText value="Chart of Account" rendered="#{o.status=='COA'}"/>
+                        </p:column>
+                        <p:column style="width: 100px;">
+                            <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus" actionListener="#{settingratioBean.hapusNONATMR(o.parameterid)}" process="@this"/>
+                        </p:column>
+                    </p:dataTable> 
+                </p:panel>
+
+
+                <p:dialog id="dialogRATIO" 
+                          header="popup Tambah Pembilang/Penyebut" 
+                          widgetVar="varDialogPP" 
+                          resizable="false"  
+                          showEffect="clip" 
+                          hideEffect="fold"
+                          modal="true">
+                    <p:panel header="Form Tambah Pembilang/Penyebut" id="panelPP">
+                        <h:panelGrid columns="3">
+                            <h:outputText value="Nama Pembilang/Penyebut"/>
+                            <h:outputText value=":"/>
+                            <p:inputText value="#{settingratioBean.atmr}" id="PPname" required="true" style="width: 300px">
+                                <p:ajax process="@this" event="keyup"/>
+                            </p:inputText>
+
+                            <h:outputText value="ATMR"/>
+                            <h:outputText value=":"/>
+                            <p:selectOneRadio value="#{settingratioBean.pilihATMR}" id="PilihATMR">
+                                <f:selectItem itemLabel="Yes" itemValue="true" />  
+                                <f:selectItem itemLabel="No" itemValue="false" /> 
+                                <p:ajax listener="#{settingratioBean.popupRASIO_atmr()}" event="change" update=":RasioForm:panelPP"/>
+                            </p:selectOneRadio>
+                            <h:outputText value="Category" rendered="#{settingratioBean.pilihATMR==false}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.pilihATMR==false}"/>
+                            <p:selectOneRadio value="#{settingratioBean.pilihCategory}" id="PilihCategory" rendered="#{settingratioBean.pilihATMR==false}">
+                                <f:selectItem itemLabel="Yes" itemValue="true" />  
+                                <f:selectItem itemLabel="No" itemValue="false" /> 
+                                <p:ajax listener="#{settingratioBean.cekCategory(settingratioBean.pilihCategory)}" update="PilihFinancialCategory"/>
+                            </p:selectOneRadio>
+
+                            <h:outputText value="Financial Category" rendered="#{settingratioBean.pilihATMR==false}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.pilihATMR==false}"/>
+                            <p:selectOneRadio value="#{settingratioBean.pilihFinancialCategory}" id="PilihFinancialCategory" rendered="#{settingratioBean.pilihATMR==false}" disabled="#{settingratioBean.pilihCategory==false}">
+                                <f:selectItem itemLabel="Yes" itemValue="true" />  
+                                <f:selectItem itemLabel="No" itemValue="false" />
+                            </p:selectOneRadio>
+                        </h:panelGrid>
+                        <h:panelGrid columns="3">
+                            <h:outputText value="Setting Pembilang/Penyebut Manual"/>
+                            <h:outputText value=":"/>
+                            <p:selectOneRadio value="#{settingratioBean.pilihManual}" id="PilihManual" disabled="#{settingratioBean.pilihATMR==null}">
+                                <f:selectItem itemLabel="Yes" itemValue="true" />  
+                                <f:selectItem itemLabel="No" itemValue="false" /> 
+                                <p:ajax listener="#{settingratioBean.comboAutoParameter()}" update=":RasioForm:panelPP"/>
+                            </p:selectOneRadio>
+
+                            <h:outputText value="Cara Perhitungan Pembilang/Penyebut" rendered="#{settingratioBean.pilihManual==false and settingratioBean.pilihManual!=null}"/>
+                            <h:outputText value=":" rendered="#{settingratioBean.pilihManual==false and settingratioBean.pilihManual!=null}"/>
+                            <p:selectOneMenu id="pengurangPOPUP" value="#{settingratioBean.caraHitung}" style="width: 400px" rendered="#{settingratioBean.pilihManual==false and settingratioBean.pilihManual!=null}">                        
+                                <f:selectItem itemLabel="Pilih Tipe Pengurang"/>
+                                <f:selectItems var="comboAutoParameter" value="#{settingratioBean.dtCmbAutoParameter}" itemLabel="#{comboAutoParameter.parametername}" itemValue="#{comboAutoParameter.automaticparameter_fpid}"/>
+                            </p:selectOneMenu>                                
+                        </h:panelGrid>
+                        <p:commandButton value="Simpan" process="panelPP" update="@form :RasioForm:panelPP" action="#{settingratioBean.savePOPUPsetting()}"/>
+                        <p:commandButton value="Reset"  actionListener="#{settingratioBean.resetATMR()}" process="@this" immediate="true" update=":RasioForm:panelPP"/>
+                    </p:panel>
+                </p:dialog>
+
+                <p:panel id="popupATMR">
+                    <p:dialog id="dialogATMR" 
+                              header="popup Tambah ATMR" 
+                              widgetVar="varDialogATMR" 
+                              resizable="false"  
+                              showEffect="clip" 
+                              hideEffect="fold"
+                              modal="true"> 
+
+                        <p:panel header="Form Tambah ATMR" id="panelATMR">
+                            <h:panelGrid columns="4">
+                                <h:outputText value="Nama ATMR"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{settingratioBean.atmr}" id="ATMRname" style="width: 300px">
+                                    <p:ajax event="keyup" process="@this"/>
+                                </p:inputText>
+                                <p:spacer width="10"/>
+
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:commandButton value="Simpan" actionListener="#{settingratioBean.saveAtmrr(settingratioBean.atmr)}" process="@this" />
+                                <p:commandButton value="Reset"  actionListener="#{settingratioBean.resetATMR()}" process="@this"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:dialog>
+                </p:panel>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

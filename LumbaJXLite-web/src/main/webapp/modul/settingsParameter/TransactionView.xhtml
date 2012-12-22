@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">  
+        <p:panel header="#{msgs.formReceipt}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="transaction1">
+                <h:panelGrid columns="7">
+                    <h:outputText value="#{msgs.customername}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{transactionviewBean.customername}" id="CustomerName" />
+                    <p:spacer width="10"/>
+                    <h:outputText value="#{msgs.productType}"/>
+                    <h:outputText value=":"/>
+                    <p:selectOneRadio id="ProductType" value="#{transactionviewBean.producttype}" >
+                        <f:selectItem itemLabel="#{msgs.saving}" itemValue="S"/>
+                        <f:selectItem itemLabel="#{msgs.loan}" itemValue="L" />  
+                        <p:ajax listener="#{transactionviewBean.combo()}" update="accountCode"/>
+                    </p:selectOneRadio>
+
+                    <h:outputText value="#{msgs.customernumber}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{transactionviewBean.customercode}" id="CustomerNumber"/>
+                    <p:spacer width="10"/>
+                    <h:outputText value="#{msgs.account}"/>
+                    <h:outputText value=":"/>
+                    <p:selectOneMenu id="accountCode" value="#{transactionviewBean.accountcode}" style="width: 127px">
+                        <f:selectItem  itemLabel="Pilih Product"/>
+                        <f:selectItems value="#{transactionviewBean.dtCmbTransaction}"/>
+                        <p:ajax listener="#{transactionviewBean.listUtama()}" update=":transaction2:tabelReceiptView"/>
+                    </p:selectOneMenu>        
+
+                    <h:outputText value="#{msgs.branch}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{transactionviewBean.branch}" id="Branch" readonly="true"/>
+                    <p:spacer width="10"/>
+                    <h:outputText value="#{msgs.transactiondate}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{receiptviewBean.branch}" id="TransactionDate" readonly="true"/>
+
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:commandButton id="cari" value="#{msgs.searchButton}" update="@form" action="#{transactionviewBean.search()}" process="@this CustomerName CustomerNumber"/>
+                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{occupationTabBean.resetManagementType()}" update="@form" process="@this"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                </h:panelGrid>
+            </h:form>
+            <br/>
+            <h:form id="transaction2">
+                <p:dataTable value="#{transactionviewBean.dtListTransaction}" 
+                             var="transactionlist" 
+                             id="tabelReceiptView"
+                             paginator="true"
+                             paginatorPosition="top"
+                             rows="5"
+                             rowsPerPageTemplate="5,10,20,25"
+                             sortOrder="descending"
+                             resizableColumns="true"
+                             selection="#{transactionviewBean.dialogTransactionSelected}" selectionMode="single" rowKey="#{transactionlist.transactionid}">
+
+                    <p:ajax event="rowSelect" oncomplete="varDialogTransaction.show()" update=":transaction3:tabeldialogTransaction"  listener="#{transactionviewBean.retDialog(transactionviewBean.dialogTransactionSelected.transactionid)}"/> 
+
+                    <p:column id="ReceiptNumber" style="width: 200px">
+                        <f:facet name="header">#{msgs.receiptNumber}</f:facet>
+                        #{transactionlist.receiptnumber}
+                    </p:column>
+                    <p:column id="Description" style="width: 350px">
+                        <f:facet name="header">#{msgs.description}</f:facet>
+                        #{transactionlist.description}
+                    </p:column>
+                    <p:column id="Amount" style="width: 200px">
+                        <f:facet name="header">#{msgs.amount}</f:facet>
+                        <h:outputText value="Rp."/>
+                        #{transactionlist.amount}
+                    </p:column>
+                </p:dataTable>   
+                <br/>
+                <p:commandButton id="print" value="#{msgs.printButton}" update="@form" actionListener="#{occupationTabBean.addManagementType()}"/>
+            </h:form>
+
+            <h:form id="transaction3">
+                <p:dialog id="dialogTransaction" 
+                          header="" 
+                          widgetVar="varDialogTransaction" 
+                          resizable="false"  
+                          showEffect="clip" 
+                          hideEffect="fold"> 
+                    <p:dataTable id="tabeldialogTransaction" 
+                                 value="#{transactionviewBean.dtListTransactionDetail}"
+                                 var="tbldialogTransaction"
+                                 paginator="true"
+                                 paginatorPosition="top"
+                                 rows="25"
+                                 rowsPerPageTemplate="5,10,20,25"
+                                 sortOrder="descending"
+                                 >
+                        <p:column id="ReceiptNumber" style="width:140px">
+                            <f:facet name="header">#{msgs.referencenumber}</f:facet>
+
+                        </p:column>
+                        <p:column id="Date" style="width:130px">
+                            <f:facet name="header">#{msgs.description}</f:facet>
+                            #{tbldialogTransaction.description}
+                        </p:column>
+                        <p:column id="Transaction" style="width:130px" headerText="#{msgs.account}">
+                            <h:outputText value="#{tbldialogTransaction.debit}"/>
+                            <h:outputText value="#{tbldialogTransaction.credit}" />
+                        </p:column>
+                        <p:column id="Debit" style="width:130px">
+                            <f:facet name="header">#{msgs.DRAmount}</f:facet>
+                            <h:outputText value="Rp."/>
+                            <h:outputText value="#{tbldialogTransaction.dramount}"/>
+                            <h:outputText value="-" rendered="#{tbldialogTransaction.dramount == null}"/>
+                        </p:column>
+                        <p:column id="Credit" style="width:130px">
+                            <f:facet name="header">#{msgs.CRAmount}</f:facet>
+                            <h:outputText value="Rp."/>
+                            <h:outputText value="#{tbldialogTransaction.cramount}"/>
+                            <h:outputText value="-" rendered="#{tbldialogTransaction.cramount == null}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+</ui:composition>

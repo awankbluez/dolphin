@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:define name="content">
+        <p:panel header="TAB" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelSemua">
+
+            <p:tabView id="tabSemua">
+                <p:tab id="TabTransactionSource"  title="#{msgs.transactionSource}">
+                    <p:panel header="#{msgs.transactionSource}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelTransactionSource">
+                        <h:form id="TransactionSource">
+                            <p:fieldset legend="#{msgs.add} #{msgs.transactionSource}" toggleable="true" collapsed="true" id="fieldsetTransactionSource">
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.transactionSourceCode}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText id="TransactionSourceCode" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="TransactionSourceCodeValidasi"/>
+                                    </p:inputText>                                                                                                     
+                                    <p:message id="TransactionSourceCodeValidasi" for="TransactionSourceCode"/>
+
+                                    <h:outputText value="#{msgs.transactionSourceName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText  id="TransactionSourceName" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="TransactionSourceNameValidasi"/>
+                                    </p:inputText>                                                                                                     
+                                    <p:message id="TransactionSourceNameValidasi" for="TransactionSourceName"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}"   />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  />
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" />
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}" />
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="FormtabelTransactionSource">
+                            <p:dataTable id="tabelTransactionSource" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                                <p:column >
+                                    <f:facet name="header">#{msgs.transactionSource}</f:facet>
+                                    
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">#{msgs.transactionSourceName}</f:facet>
+                                    
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton}" />
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton}" />
+                                </p:column>
+                            </p:dataTable>   
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="TabTransactionType"  title="#{msgs.transactionType}">
+                    <p:panel header="#{msgs.transactionType}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelTransactionType">
+                        <h:form id="TransactionType">
+                            <p:fieldset legend="#{msgs.add} #{msgs.transactionType}" toggleable="true" collapsed="true" id="fieldsetTransactionType">
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.transactionSourceCode}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneMenu id="transactionSourceCode_combo" style="width: 400px">
+                                        <f:selectItem value="Pilih Kode Transaction Source"/>
+                                        <f:selectItems var="varTransactionSource" />  
+                                    </p:selectOneMenu>
+                                    <p:spacer width="10"/>
+                                    
+                                    <h:outputText value="#{msgs.transactionTypeCode}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText  id="TransactionTypeCode" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="TransactionTypeCodeValidasi"/>
+                                    </p:inputText>                                                                                                     
+                                    <p:message id="TransactionTypeCodeValidasi" for="TransactionTypeCode"/>
+
+                                    <h:outputText value="#{msgs.TransactionTypeName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText  id="TransactionTypeName" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="TransactionTypeNameValidasi"/>
+                                    </p:inputText>                                                                                                     
+                                    <p:message id="TransactionTypeNameValidasi" for="TransactionTypeName"/>
+
+                                    <h:outputText value="#{msgs.EOD}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneRadio id="EOD"  style="width: 400px" >
+                                        <f:selectItem itemLabel="#{msgs.yes}" itemValue="true"/>
+                                        <f:selectItem itemLabel="#{msgs.no}" itemValue="false" />  
+                                    </p:selectOneRadio>
+                                    <p:spacer width="10"/>
+                                    
+                                    <h:outputText value="#{msgs.EOM}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneRadio id="EOM" style="width: 400px" >
+                                        <f:selectItem itemLabel="#{msgs.yes}" itemValue="true"/>
+                                        <f:selectItem itemLabel="#{msgs.no}" itemValue="false" />  
+                                    </p:selectOneRadio>
+                                    <p:spacer width="10"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}"   />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  />
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" />
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}" />
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="FormtabelTransactionType">
+                            <p:dataTable id="tabelTransactionType"  var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                                <p:column >
+                                    <f:facet name="header">#{msgs.transactionSourceCode}</f:facet>
+                                    
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">#{msgs.transactionTypeCode}</f:facet>
+                                    #{o.occupationmanagementcode}
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">#{msgs.TransactionTypeName}</f:facet>
+                                    
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton}" />
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} "/>
+                                </p:column>
+                            </p:dataTable>    
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+            </p:tabView>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

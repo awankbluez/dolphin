@@ -1,0 +1,253 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="Posting Journal" closable="true" toggleable="true">
+            <h:form id="formChooseJournal">
+                <p:growl id="poststatus" sticky="false" life="5000"/>
+                <h:panelGrid columns="2">
+                    <h:outputLabel for="postJournal" value="Journal That will be posted"/>
+                    <p:selectOneMenu id="postJournal" value="#{postjournalBean.journaltobeposted}">
+                        <f:selectItem itemLabel="Select Journal" itemValue=""/>
+                        <f:selectItem itemLabel="Single Journal Entry" itemValue="entrysingle"/>
+                        <f:selectItem itemLabel="Batch Journal Entry" itemValue="entrybatch"/>
+                        <p:ajax update="@form" listener="#{postjournalBean.listJournalEntryHeaderTable()}"/>
+                    </p:selectOneMenu>
+                    
+                    
+                </h:panelGrid>
+                
+
+                <p:panel  id="panelFormJournalEntry" rendered="#{postjournalBean.journaltobeposted == 'entrysingle' or postjournalBean.journaltobeposted == 'entrybatch'}">
+                    <h:panelGrid columns="3">
+                        <h:outputLabel for="totalPostJournalEntry" value="Post Type" rendered="#{postjournalBean.journaltobeposted == 'entrybatch'}"/>
+                        <p:selectOneMenu id="totalPostJournalEntry" value="#{postjournalBean.postjpurnaltype}" rendered="#{postjournalBean.journaltobeposted == 'entrybatch'}">
+                            <f:selectItem itemValue="" itemLabel="Choose Post Type"/>
+                            <f:selectItem itemValue="all" itemLabel="All Batch"/>
+                            <f:selectItem itemValue="perbatch" itemLabel="Per Batch"/>
+                            <p:ajax update="@form" listener="#{postjournalBean.listJournalEntryHeaderTableBatch()}"/>
+                        </p:selectOneMenu>
+                        <p:message for="totalPostJournalEntry" rendered="#{postjournalBean.journaltobeposted == 'entrybatch'}"/>
+
+                        <h:outputLabel for="EntrySubject" value="#{msgs.subject}" rendered="#{postjournalBean.postjpurnaltype == 'perbatch'}"/>
+                        <p:selectOneMenu id="EntrySubject" value="#{postjournalBean.journalEntryHeader.batch.batchid}" rendered="#{postjournalBean.postjpurnaltype == 'perbatch'}">
+                            <f:selectItem itemLabel="Pilih Subject"/>
+                            <f:selectItems value="#{postjournalBean.batchs}" var="batch" itemLabel="#{batch.subject}" itemValue="#{batch.batchid}"/>
+                            <p:ajax update="tableJournal" event="change" listener="#{postjournalBean.listJournalEntryHeaderTableBatch()}"/>
+                        </p:selectOneMenu>
+                        <p:message for="EntrySubject" rendered="#{postjournalBean.postjpurnaltype == 'perbatch'}"/>
+                    </h:panelGrid>
+
+                    <p:dataTable id="tableJournal"
+                                 var="entryheader" 
+                                 value="#{postjournalBean.listJournalEntryHeader}"
+                                 selection="#{postjournalBean.journalEntryHeadersSelected}"
+                                 rowKey="#{entryheader.headerjournalentryid}">
+
+                        <p:column selectionMode="multiple"/>
+
+                        <f:facet name="header">
+                            <h:outputText value="Journal Entry List"/>
+                        </f:facet>
+
+                        <p:column headerText="Ref">
+                            <h:outputText value="#{entryheader.refferencenumber}"/>
+                        </p:column>
+
+                        <p:column headerText="Batch" rendered="#{postjournalBean.journaltobeposted == 'entrybatch'}">
+                            <h:outputText value="#{entryheader.batch.subject}"/>
+                        </p:column>
+                        <p:column headerText="#{msgs.description}">
+                            <h:outputText value="#{entryheader.descriptionheader}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msgs.date}">
+                            <h:outputText value="#{entryheader.creationdate}"/>
+                        </p:column>
+                        <p:column headerText="Action">
+                            <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.delete}" oncomplete="confirmation.show()"  update="@form">
+                                <f:setPropertyActionListener value="#{entryheader}" target="#{postjournalBean.journalEntryHeaderSelected}" />
+                            </p:commandButton>
+                            <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.view}" oncomplete="detailvar.show()" action="#{postjournalBean.showDetailEntry(entryheader)}" update="@form :formChooseJournal:modalDialog"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton icon="ui-icon ui-icon-trash" id="ddd" value="Delete" update="@form" oncomplete="selecteddelete.show()" />
+                            <p:commandButton icon="ui-icon ui-icon-search" id="post" value="Posting" update="@form" oncomplete="selectedposting.show()" />
+                        </f:facet>
+                    </p:dataTable>
+
+                </p:panel>
+
+                <p:confirmDialog id="confirmDialog" message="Are you sure to move trash messages with title [ #{postjournalBean.journalEntryHeaderSelected.refferencenumber} ] ?"  
+                                 header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                    <p:commandButton id="confirm" value="Yes" update="tableJournal" oncomplete="confirmation.hide()"  
+                                     action="#{postjournalBean.deleteHeaderJournalEntryId(postjournalBean.journalEntryHeaderSelected)}" />  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>
+
+                <p:dialog header="delete" widgetVar="selecteddelete" resizable="false" showEffect="fade" hideEffect="explode" closable="true">
+                    <p:dataList id="datalistdelete" value="#{postjournalBean.journalEntryHeadersSelected}" var="selectdelete">
+                        <h:outputText value="Are You sure to remove #{selectdelete.headerjournalentryid}?"/>
+                        #{postjournalBean.setTempid(selectdelete.headerjournalentryid)}
+                    </p:dataList>
+                    <p:commandButton value="Delete" actionListener="#{postjournalBean.deleteAll()}" update="@form"/>
+                    <p:commandButton value="Cancel" oncomplete="selecteddelete.hide()"/>
+                </p:dialog>
+
+                <p:dialog header="Posting" widgetVar="selectedposting" resizable="false" showEffect="fade" hideEffect="explode" closable="true">
+                    <p:dataList id="datalistposting" value="#{postjournalBean.journalEntryHeadersSelected}" var="selectposting">
+                        <h:outputText value="Are You sure to posting #{selectposting.headerjournalentryid}?"/>
+                        #{postjournalBean.setTempid(selectposting.headerjournalentryid)}
+                    </p:dataList>
+                    <p:commandButton value="Posting" actionListener="#{postjournalBean.postAll()}" update="@form"/>
+                    <p:commandButton value="Cancel" oncomplete="selectedposting.hide()"/>
+                </p:dialog>
+                
+                <p:dialog header="Validation" widgetVar="empty" resizable="false" showEffect="fade" hideEffect="explode" closable="true">
+                    <h:panelGrid columns="1">
+                    <h:outputText value="Tidak Ada Data yang terpilih"/>
+                    <p:commandButton value="Close" oncomplete="empty.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+
+
+                <p:dialog id="modalDialog" header="Detail Journal" widgetVar="detailvar" modal="true" >
+                    <p:dataTable style="text-align: center" 
+                                 value="#{postjournalBean.listDetailEntry}" 
+                                 sortOrder="desc" 
+                                 emptyMessage="#{msgs.emptymessage}" 
+                                 var="detail" 
+                                 paginator="false" 
+                                 paginatorPosition="top" 
+                                 >
+                        <p:column headerText="general account" sortBy="#{detail.chartofaccount.generalaccountnumber}" filterBy="#{detail.chartofaccount.generalaccountnumber}" filterMatchMode="contains">
+                            <h:outputText value="#{detail.chartofaccount.generalaccountnumber} || #{detail.chartofaccount.chartofaccountname}"/>
+                        </p:column>
+                        <p:column headerText="#{msgs.debet}">
+                            <h:outputText value="#{detail.amount}" rendered="#{detail.credit == false}">
+                                <f:convertNumber pattern="###.#####" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msgs.credit}">
+                            <h:outputText value="#{detail.amount}" rendered="#{detail.credit == true}">
+                                <f:convertNumber pattern="###.#####" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="transaction date" sortBy="#{detail.transactiondate}" filterBy="#{detail.transactiondate}" filterMatchMode="contains">
+                            <h:outputText value="#{detail.transactiondate}"/>
+                        </p:column>
+                        <p:column headerText="description" sortBy="#{detail.description}" filterBy="#{detail.description}" filterMatchMode="contains">
+                            <h:outputText value="#{detail.description}"/>
+                        </p:column>
+
+                    </p:dataTable>   
+
+                </p:dialog>
+
+                <p:panel header="Posting Journal Reconciliation" id="panelFormJournalReconciliation" rendered="#{postjournalBean.journaltobeposted == 'recon'}">
+                    <h:panelGrid columns="3">
+                        <h:outputLabel for="postReconThirdPartyBanktype" value="#{msgs.thirdpartybank}"/>
+                        <p:selectOneMenu id="postReconThirdPartyBanktype" value="#{postjournalBean.postReconThirdPartyBanktype}">
+                            <f:selectItem itemLabel=""/>
+                            <f:selectItem itemValue="all" itemLabel="All Bank"/>
+                            <f:selectItem itemValue="perbank" itemLabel="Per Bank"/>
+                            <p:ajax update="@form"/>
+                        </p:selectOneMenu>
+                        <p:message for="postReconThirdPartyBanktype"/>
+
+                        <h:outputLabel for="reconThirdPartyBank" value="#{msgs.thirdpartybank}" rendered="#{postjournalBean.postReconThirdPartyBanktype == 'perbank'}"/>
+                        <p:selectOneMenu id="reconThirdPartyBank" rendered="#{postjournalBean.postReconThirdPartyBanktype == 'perbank'}">
+                            <f:selectItem itemLabel="Bank Pihak ke 3"/>
+                            <f:selectItem itemValue="1" itemLabel="Isi Generate Database"/>
+                        </p:selectOneMenu>
+                        <p:message for="reconThirdPartyBank" rendered="#{postjournalBean.postReconThirdPartyBanktype == 'perbank'}"/>
+
+                        <h:outputLabel for="reconAmountPosted" value="#{msgs.amounttobeposted}"/>
+                        <p:inputText id="reconAmountPosted" />
+                        <p:message for="reconAmountPosted"/>
+
+                        <h:outputLabel for="reconCreditSum" value="#{msgs.sumcredit}"/>
+                        <p:inputText id="reconCreditSum" />
+                        <p:message for="reconCreditSum"/>
+
+                        <h:outputLabel for="reconDebitSum" value="#{msgs.sumdebit}"/>
+                        <p:inputText id="reconDebitSum" />
+                        <p:message for="reconDebitSum"/>
+                    </h:panelGrid>
+
+                    <p:dataTable
+                        id="tablePostJournalRecon"
+                        widgetVar="tableJournalRecon"
+                        emptyMessage="No Journal Reconciliation"
+                        var="entry"
+                        paginator="true"
+                        paginatorPosition="bottom"
+                        rows="10"
+                        rowsPerPageTemplate="10,20,50"
+                        sortOrder="descending"
+                        >
+                        <f:facet name="header">
+                            <h:outputText value="Journal Reconciliation List"/>
+                        </f:facet>
+
+                        <p:column headerText="Ref">
+
+                        </p:column>
+
+                        <p:column headerText="Bank" rendered="#{postjournalBean.postReconThirdPartyBanktype == 'all'}">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.description}">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.date}">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.coa}">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.debit} (Foreign Currency)">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.credit} (Foreign Currency)">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.debit}">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.credit}">
+
+                        </p:column>
+
+                        <p:column headerText="checked">
+
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:commandButton value="#{msgs.posting}"/>
+                </p:panel>
+            </h:form>
+        </p:panel>
+
+
+        <p:dialog>
+            <h:form id="formSearchCOA" prependId="false">
+
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>

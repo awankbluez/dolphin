@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="123"/>
+	<parameter name="periodFrom" class="java.lang.String"/>
+	<parameter name="periodTo" class="java.lang.String"/>
+	<parameter name="branchName" class="java.lang.String"/>
+	<parameter name="accountName" class="java.lang.String"/>
+	<parameter name="loggedUser" class="java.lang.String"/>
+	<parameter name="loggedBranch" class="java.lang.String"/>
+	<parameter name="lastBalanced" class="java.lang.Double"/>
+	<parameter name="description" class="java.lang.String"/>
+	<parameter name="transactiondate" class="java.lang.String"/>
+	<parameter name="openBalance" class="java.lang.Double"/>
+	<parameter name="sitename" class="java.lang.String"/>
+	<parameter name="sitebisnis" class="java.lang.String"/>
+	<parameter name="dateSession" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="tanggalTansaksi" class="java.lang.String"/>
+	<field name="balance" class="java.lang.Double"/>
+	<field name="credit" class="java.lang.Double"/>
+	<field name="debit" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="143" splitType="Stretch">
+			<staticText>
+				<reportElement x="121" y="61" width="314" height="26"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GENERAL LEDGER]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="7" width="553" height="26"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sitebisnis}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="33" width="553" height="28"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sitename}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="164" y="105" width="59" height="14"/>
+				<textElement/>
+				<text><![CDATA[Period from : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="291" y="105" width="16" height="14"/>
+				<textElement/>
+				<text><![CDATA[To]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="311" y="105" width="75" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{periodTo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="219" y="119" width="117" height="21"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{branchName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="105" width="67" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{periodFrom}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="15" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="80" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="274" height="20"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{accountName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="151" y="30" width="82" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="31" width="137" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="469" y="30" width="86" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balance]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="51" width="555" height="2"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="54" width="555" height="2"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="248" y="30" width="99" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Debit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="359" y="30" width="98" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Credit]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="57" width="137" height="21"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="151" y="58" width="82" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{transactiondate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0#">
+				<reportElement x="469" y="58" width="86" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{openBalance}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0#">
+				<reportElement x="250" y="57" width="97" height="21"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{openBalance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="58" width="98" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[0.0]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="5" width="137" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="152" y="5" width="81" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tanggalTansaksi}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="469" y="5" width="86" height="20"/>
+				<textElement textAlignment="Center">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="5" width="98" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="5" width="97" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{debit}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="36" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="12" width="87" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{loggedUser}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="12" width="87" height="20"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{loggedBranch}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="429" y="12" width="67" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page : " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="496" y="12" width="59" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Of : " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="12" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dateSession}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="365" y="7" width="93" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balance]]></text>
+			</staticText>
+			<textField pattern="#0.0#">
+				<reportElement x="468" y="7" width="86" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{lastBalanced}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="1" width="555" height="2"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

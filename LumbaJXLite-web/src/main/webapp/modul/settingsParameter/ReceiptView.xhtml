@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    
+    <ui:define name="content">
+        <p:panel header="#{msgs.formReceipt}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="receipt1">
+                <h:panelGrid columns="8">
+                    <h:outputText value="#{msgs.receiptNumber}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{receiptviewBean.param}" id="ReceiptNumber" required="true" requiredMessage="Harus diisi" />
+                    <p:message for="ReceiptNumber"/>
+                    <p:spacer width="10"/>
+                    <h:outputText value="#{msgs.operator}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText  id="Operator" readonly="true"/>
+
+                    <h:outputText value="#{msgs.customerName}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{receiptviewBean.customername}" id="CustomerName" readonly="true"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <h:outputText value="#{msgs.branch}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{receiptviewBean.branch}" id="Branch" readonly="true"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <h:outputText value="#{msgs.receiptDate}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{receiptviewBean.receiptdate}" id="ReceiptDate" readonly="true"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:commandButton id="cari" value="#{msgs.searchButton}" update="@form :receipt2:tabelReceiptView" action="#{receiptviewBean.search()}" process="@this ReceiptNumber"/>
+                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{receiptviewBean.reset()}" update="@form" process="@this"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                </h:panelGrid>
+            </h:form>
+            <br/>
+            <h:form id="receipt2">
+                <p:dataTable value="#{receiptviewBean.dtListReceipt2}" 
+                            var="receipt" 
+                            id="tabelReceiptView"
+                            paginator="true"
+                            paginatorPosition="top"
+                            rows="5"
+                            rowsPerPageTemplate="5,10,20,25"
+                            sortOrder="descending">
+                    <p:column >
+                        <f:facet name="header">#{msgs.accNumber}</f:facet>
+                        #{receipt.accnumber}
+                    </p:column>
+                     <p:column >
+                         <f:facet name="header">#{msgs.product}</f:facet>
+                        #{receipt.product}
+                    </p:column>
+                    <p:column >
+                        <f:facet name="header">#{msgs.description}</f:facet>
+                        #{receipt.description}
+                    </p:column>
+                    <p:column >
+                        <f:facet name="header">#{msgs.DRAccount}</f:facet>
+                        #{receipt.draccount}
+                    </p:column>
+                    <p:column >
+                        <f:facet name="header">#{msgs.CRAccount}</f:facet>
+                        #{receipt.craccount}
+                    </p:column>
+                     <p:column >
+                        <f:facet name="header">#{msgs.amount}</f:facet>
+                        <h:outputText value="Rp."/>
+                        #{receipt.amount}
+                    </p:column>
+                </p:dataTable>   
+                <br/>
+            <p:commandButton id="print" value="#{msgs.printButton}" update="@form" actionListener="#{occupationTabBean.addManagementType()}"/>
+            </h:form>
+            
+        </p:panel>
+
+    </ui:define>
+</ui:composition>

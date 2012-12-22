@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:jr="http://jasperreportjsf.sf.net/tld/jasperreports-jsf-1_2.tld">
+
+   <ui:define name="content">
+      <p:panel closable="true" toggleable="true" header="Posting Back Office" id="panelChecking">
+         <h:form id="formCheckBOProcess">
+            <p:growl autoUpdate="true" severity="info" life="3000" id="growlInfo" />
+            <p:growl autoUpdate="true" severity="error" sticky="true" id="growlError" showDetail="true" showSummary="true"/>
+            <p:dataTable
+               value="#{backofficepostingBean.backofficepostings}"
+               var="backofficeposting"
+               selection="#{backofficepostingBean.selectedBackoffice}"
+               rowKey="#{backofficeposting.masterOperational.masteroperationalid}"
+               >
+
+               <f:facet name="header">
+                  <h:outputText value="Back Office Status Each Office"/>
+               </f:facet>
+
+               <p:column selectionMode="multiple" style="width: 18px;"/>
+
+               <p:column headerText="Office Name">
+                  <h:outputText value="#{backofficeposting.masterOperational.headOffice.headofficename}" rendered="#{backofficeposting.masterOperational.officetype.equalsIgnoreCase('h')}"/>
+                  <h:outputText value="#{backofficeposting.masterOperational.region.regionName}" rendered="#{backofficeposting.masterOperational.officetype.equalsIgnoreCase('r')}"/>
+                  <h:outputText value="#{backofficeposting.masterOperational.branch.branchname}" rendered="#{backofficeposting.masterOperational.officetype.equalsIgnoreCase('b')}"/>
+                  <h:outputText value="#{backofficeposting.masterOperational.subBranchUnitCo.subbranchunitconame}" rendered="#{backofficeposting.masterOperational.officetype.equalsIgnoreCase('s')}"/>
+               </p:column>
+
+               <p:column headerText="Address">
+                  <h:outputText value="#{backofficeposting.masterOperational.address}"/>
+               </p:column>
+
+               <p:column headerText="Processed ?" style="width: 50px;">
+                  <p:selectBooleanCheckbox value="#{backofficeposting.processed}" disabled="true"/>
+               </p:column>
+
+               <p:column headerText="Processed Date" style="width: 150px;">
+                  <h:outputText value="#{backofficeposting.processdate}">
+                     <f:convertDateTime pattern="#{appBean.systemGlobal.siteFormatdate}"/>
+                  </h:outputText>
+               </p:column>
+
+               <p:column headerText="Posted ?" style="width: 50px;">
+                  <p:selectBooleanCheckbox value="#{backofficeposting.posted}" disabled="true"/>
+               </p:column>
+
+               <p:column headerText="Posted Date" style="width: 150px;">
+                  <h:outputText value="#{backofficeposting.postingdate}">
+                     <f:convertDateTime pattern="#{appBean.systemGlobal.siteFormatdate}"/>
+                  </h:outputText>
+               </p:column>
+
+               <p:column headerText="Action" style="width: 160px;">
+                  <p:commandButton value="Process" disabled="true"/>
+                  <p:commandButton value="Posting" disabled="true"/>
+               </p:column>
+            </p:dataTable>
+            
+            <p:separator/>
+
+            <p:panel id="panelButtonPostingAll">
+               <!--<div align="right">-->
+               <h:panelGrid columns="2">
+                  <h:outputText value="Posting Back Office Branch"/>
+                  <p:commandButton value="Post" actionListener="#{backofficepostingBean.postingProcessedBranch}" update="@form" onstart="blockFormPosting.block();" oncomplete="blockFormPosting.unblock();"/>
+               </h:panelGrid>
+               <!--</div>-->
+            </p:panel>
+
+            <pe:blockUI target="formCheckBOProcess" widgetVar="blockFormPosting">
+               <h:panelGrid columns="2">
+                  <h:graphicImage library="images" name="ajax-loader1.gif" style="margin-right: 12px; vertical-align: middle;"/>
+                  <h:outputText value="Posting backoffice process..." style="white-space: nowrap;"/>
+               </h:panelGrid>
+            </pe:blockUI>
+         </h:form>
+
+      </p:panel>
+   </ui:define>
+
+</ui:composition>

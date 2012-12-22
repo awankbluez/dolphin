@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.letterOfOwnershipType}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="LetterOfOwnershipType">
+                <p:fieldset legend="#{msgs.add} #{msgs.letterOfOwnershipType}" toggleable="true" collapsed="#{letterofOwnershipTypeBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.collateralType}"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu id="dtCombobox" value="#{letterofOwnershipTypeBean.letterofOwnershipType.collateralparametername}" style="width: 160px">
+                            <f:selectItem itemLabel="Pilih Tipe Kolateral"/>
+                            <f:selectItem itemLabel="Rumah" itemValue="Rumah" />  
+                            <f:selectItem itemLabel="Komersial" itemValue="Komersial" />  
+                            <f:selectItem itemLabel="Tanah" itemValue="Tanah" />
+                            <f:selectItem itemLabel="Kas" itemValue="Kas" /> 
+                            <f:selectItem itemLabel="Emas" itemValue="Emas" />  
+                            <f:selectItem itemLabel="Kendaraan" itemValue="Kendaraan" />
+                        </p:selectOneMenu>
+                        <p:spacer width="10"/>
+
+                        <h:outputText value="#{msgs.letterOfOwnershipTypeName}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{letterofOwnershipTypeBean.letterofOwnershipType.letterofownershiptypename}" id="LetterOfOwnershipTypeName" required="true" requiredMessage="Harus diisi" validator="#{letterofOwnershipTypeBean.validateLetterofownershiptypeName}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="LetterOfOwnershipTypeName"/>
+
+                        <h:outputText value="#{msgs.bindingName}"/>
+                        <h:outputText value=":"/>
+                        <h:dataTable value="#{letterofOwnershipTypeBean.dtChecklistBinding}" var="item" id="dtCheck">
+                            <h:column><p:selectBooleanCheckbox value="#{letterofOwnershipTypeBean.cekBinding[item.indexNum]}"><p:ajax update="inputcheck"/></p:selectBooleanCheckbox>#{item.bindingguaranteesname}</h:column>
+                            <h:column><p:inputText id="inputcheck" value="#{letterofOwnershipTypeBean.nilaiPPAP[item.indexNum]}" disabled="#{letterofOwnershipTypeBean.cekBinding[item.indexNum] == false}" ><f:convertNumber pattern="###.#####" /></p:inputText></h:column>
+                        </h:dataTable>
+                        <p:spacer width="10"/>                     
+
+                        <p:spacer width="10"/>                     
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelLetterOfOwnershipTypeName:tabelLetterOfOwnershipTypeName" actionListener="#{letterofOwnershipTypeBean.add()}" rendered="#{letterofOwnershipTypeBean.status == 'insert'}"/>
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{letterofOwnershipTypeBean.reset()}" rendered="#{letterofOwnershipTypeBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelLetterOfOwnershipTypeName:tabelLetterOfOwnershipTypeName" actionListener="#{letterofOwnershipTypeBean.update()}" rendered="#{letterofOwnershipTypeBean.status == 'update'}" process="@this dtCombobox dtCheck"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{letterofOwnershipTypeBean.reset()}" rendered="#{letterofOwnershipTypeBean.status == 'update'}" update="@form" process="@this" action="#{letterofOwnershipTypeBean.setFieldsetCollapse(true)}"/>
+                    </h:panelGrid>
+                </p:fieldset>
+
+                <p:dialog widgetVar="testing" modal="true">
+                    <p:dataTable value="#{letterofOwnershipTypeBean.tempdtChecklistBinding}" 
+                                 var="CheckLetterofOwnershipType" 
+                                 id="tabelCheckLetterofOwnershipType"
+                                 paginator="true"
+                                 paginatorPosition="top"
+                                 rows="20"
+                                 rowsPerPageTemplate="5,10,20,25"
+                                 sortOrder="descending">
+                        
+                        <p:column headerText="#{msgs.bindingName}">
+                            <h:outputText value="#{CheckLetterofOwnershipType.bindingguaranteesname}"/>
+                        </p:column>
+                        <p:column headerText="#{msgs.ppapValue}">
+                            <h:outputText value="#{CheckLetterofOwnershipType.inputPPAP}"/>
+                        </p:column>
+                    </p:dataTable> 
+                </p:dialog>
+            </h:form>
+            <h:form id="formtabelLetterOfOwnershipTypeName">
+                <p:dataTable id="tabelLetterOfOwnershipTypeName" 
+                             value="#{letterofOwnershipTypeBean.letterofOwnershipTypeList}" 
+                             var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" 
+                             rowsPerPageTemplate="5,10,20,25"  
+                             selection="#{letterofOwnershipTypeBean.dialogLetterofownershiptypeSelected}" selectionMode="single" rowKey="#{o.letterofownershiptypeid}">
+                    
+                    <p:ajax event="rowSelect" update=":LetterOfOwnershipType:tabelCheckLetterofOwnershipType" listener="#{letterofOwnershipTypeBean.edit(letterofOwnershipTypeBean.dialogLetterofownershiptypeSelected)}" oncomplete="testing.show()"/>  
+                    
+                    <p:column sortBy="#{o.collateralparametername}" filterBy="#{o.collateralparametername}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.collateralType}</f:facet>
+                        #{o.collateralparametername}
+                    </p:column>
+                    <p:column sortBy="#{o.letterofownershiptypename}" filterBy="#{o.letterofownershiptypename}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.letterOfOwnershipTypeName}</f:facet>
+                        #{o.letterofownershiptypename}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.letterofownershiptypename}" action="#{letterofOwnershipTypeBean.edit(o)}" update=":LetterOfOwnershipType"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.letterofownershiptypename}"  update="@form" action="#{letterofOwnershipTypeBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

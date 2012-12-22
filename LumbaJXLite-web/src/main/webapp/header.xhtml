@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <div class="topheader">
+        <div class="left">
+            <a href="#{root}"><h1 class="logo">LUMBA<span> JX</span></h1></a>
+            <div class="search">
+                <h:form>
+                    <p:autoComplete minQueryLength="3" completeMethod="#{customerviewBean.complete}" value="#{customerviewBean.name}" required="true" id="keyword">  
+                        <f:ajax event="itemSelect" execute="@this" render="@form"/>  
+                    </p:autoComplete>
+                    <p:commandLink action="/modul/view/CustomerView.xhtml" styleClass="submitbutton">
+                        <f:param name="faces-redirect" value="true"/>
+                        <f:param name="idC" value="#{customerviewBean.id}"/>
+                    </p:commandLink>
+
+                    <p:watermark value="#{msgs['lumbajx.customerView']}" for="keyword"/>
+                </h:form>
+            </div><!--search-->
+            <br clear="all" />
+        </div><!--left-->
+
+        <div class="right">
+            <h:form>                
+                <div class="notification">
+                    <a class="count" href="#{root}/notifications.xhtml"><span>9</span></a>
+                </div>
+                <div class="userinfo">
+                    <img src="#{resource['images:thumbs/avatar.png']}"/>
+                    <span>#{loginBean.authenticatedUser.employeename}</span>
+                </div><!--userinfo-->
+
+                <div class="userinfodrop">
+                    <div class="avatar">
+                        <a href="#"><img src="#{resource['images:thumbs/avatar.png']}" class="gambar"/></a>
+                    </div><!--avatar-->
+                    <div class="userdata">
+                        <h4>#{loginBean.authenticatedUser.employeename}</h4>
+                        <span class="email">#{loginBean.authenticatedUser.email}</span>
+                        <ul>
+                            <li><a href="#{root}/user-profiles.html">Ganti Password</a></li>
+                            <li><a href="help.html">Bantuan</a></li>
+                            <li><p:commandLink value="Logout" action="#{loginBean.logout()}"/></li>
+                        </ul>
+                    </div><!--userdata-->
+                </div><!--userinfodrop-->
+            </h:form>
+        </div><!--right-->
+    </div><!--topheader-->
+
+    <div class="header">
+        <h:form prependId="false">
+            <div class="headermenu">
+                <p:commandButton id="menuButton" value="#{msgs['lumbajx.menu']}" type="button" styleClass="icon-flatscreen"/>
+                <p:tieredMenu overlay="true" trigger="menuButton" my="left top" at="left bottom" autoDisplay="true"  model="#{loginBean.menuMain}"/>  
+
+                <p:commandButton id="messButton" value="#{msgs['lumbajx.message']}" type="button" styleClass="icon-message"/>
+                <p:tieredMenu overlay="true" trigger="messButton" my="left top" at="left bottom" model="#{loginBean.menuPesan}"/>  
+
+                <p:commandButton id="laporanButton" value="#{msgs['lumbajx.reports']}" type="button" styleClass="icon-chart"/>
+                <p:tieredMenu overlay="true" trigger="laporanButton" my="left top" at="left bottom" model="#{loginBean.menuLaporan}"/>  
+            </div>
+        </h:form>
+
+        <div class="headerwidget">
+            <div class="earnings">
+                <div class="one_half">
+                    <h4>Kas Kecil</h4>
+                    <h5>
+                        <h:outputText value="#{headerBean.userCash}" id="userCash">
+                            <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency"/>
+                        </h:outputText>
+                    </h5>
+                </div><!--one_half-->
+                <div class="one_half last alignright">
+                    <h4>Session</h4>
+                    <h5>
+                        <h:outputText value="#{appBean.sessionday.sessiondate}">
+                            <f:convertDateTime pattern="dd MMM yyyy"/>
+                        </h:outputText>
+                    </h5>
+                    <h6>
+
+                    </h6>
+                </div>
+            </div><!--earnings-->
+        </div><!--headerwidget-->
+
+
+    </div><!--header-->
+</ui:composition>

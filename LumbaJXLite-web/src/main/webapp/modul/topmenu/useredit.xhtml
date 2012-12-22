@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+ 
+ 
+
+<ui:define name="content">
+    <h:form>
+    <h:panelGrid columns="2" cellpadding="5" cellspacing="2" rowClasses="transHead">  
+        #{msgs.email}
+        <h:panelGroup>:
+            <p:inputText value="yuliantofrandi@yahoo.co.id" size="40"/>
+        </h:panelGroup>
+        
+        #{msgs.username}
+        <h:panelGroup>:
+            <p:inputText value="vinno"/>
+        </h:panelGroup>
+        
+        #{msgs.password}
+        <h:panelGroup>:
+            <p:inputText value="vinno" type="password"/>
+        </h:panelGroup>
+        
+        #{msgs.language}
+        <h:panelGroup>:
+            <h:selectOneMenu value="#{userEdit.language}">
+                <f:selectItem itemValue="en_US" itemLabel="English" />
+                <f:selectItem itemValue="in_ID" itemLabel="Indonesia" />
+            </h:selectOneMenu>
+        </h:panelGroup>
+        
+        #{msgs.help}
+        <h:panelGroup><span class="spanOption">:</span>
+            <h:selectOneRadio value="NO" style="float: left;">
+                <f:selectItem itemValue="YES" itemLabel="#{msgs.yes}"/>
+                <f:selectItem itemValue="NO" itemLabel="#{msgs.no}"/>
+            </h:selectOneRadio>
+        </h:panelGroup>
+        
+        <h:outputFormat />
+        <h:outputFormat />
+        
+        <h:commandButton type="submit" value="#{msgs.saveButton}" styleClass="saveButton"/>
+        <h:outputFormat />
+    </h:panelGrid>  
+    </h:form>
+</ui:define>
+
+</ui:composition>

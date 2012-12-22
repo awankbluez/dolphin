@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:define name="content">
+        <p:panel id="PanelGLBank" header="GLBank" closable="true" toggleSpeed="500" closeSpeed="500">  
+            <h:form id="FormFieldGLBank">
+                <p:fieldset legend="Insert Bank" collapsed="#{BankManageBean.fieldset}" toggleable="true">
+                    <p:panel id="xcv">
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Nama Bank"/>
+                            <p:inputText value="#{BankManageBean.bank.bankname}"/>
+
+                            <h:outputText value="Alamat"/>
+                            <p:inputText value="#{BankManageBean.bank.address}"/>
+
+                            <p:commandButton value="Tambah" action="#{BankManageBean.create()}" update="@form :FormTabelGLBank" rendered="#{BankManageBean.status == 'insert'}"/>
+                            <p:commandButton value="Edit" action="#{BankManageBean.update}" update="@form :FormTabelGLBank" rendered="#{BankManageBean.status == 'edit'}"/>
+
+                        </h:panelGrid>
+                    </p:panel>
+                </p:fieldset>
+            </h:form>
+            <h:form id="FormTabelGLBank">
+                <p:dataTable
+                    
+                    id="tablelist"
+                    widgetVar="tableJournal"
+                    emptyMessage="#{msgs.norecordjournalentry}"
+                    value="#{BankManageBean.banklist}"
+                    var="entry"
+                    paginator="true"
+                    paginatorPosition="bottom"
+                    rows="10"
+                    rowsPerPageTemplate="10,20,50"
+
+                    >
+
+                    <p:column headerText="id" sortBy="#{entry.bankid}" filterBy="#{entry.bankid}" filterMatchMode="contains">
+                        <h:outputText value="#{entry.bankid}"/>
+                    </p:column>
+                    <p:column headerText="Nama Bank" sortBy="#{entry.bankname}" filterBy="#{entry.bankname}" filterMatchMode="contains">
+                        <h:outputText value="#{entry.bankname}"/>
+                    </p:column>
+                    <p:column headerText="Alamat" sortBy="#{entry.address}" filterBy="#{entry.address}" filterMatchMode="contains">
+                        <h:outputText value="#{entry.address}"/>
+                    </p:column>
+                    <p:column headerText="Action">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{BankManageBean.edit(entry)}" update="@form :FormFieldGLBank"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.delete}" oncomplete="confirmation.show()" update="@form">
+                            <f:setPropertyActionListener value="#{entry}" target="#{BankManageBean.selectedMsg}" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog id="confirmDialog" message="Are you sure to delete ?"  
+                                 header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                    <p:commandButton id="confirm" value="Yes" update="@form :FormFieldGLBank" oncomplete="confirmation.hide()"  
+                                     action="#{BankManageBean.delete(BankManageBean.selectedMsg)}" />  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>
+            </h:form>
+
+        </p:panel>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.1000000000000063"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement x="178" y="0" width="209" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SURAT PERJANJIAN KREDIT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="228" y="19" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="7" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="5" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="653" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="83" width="15" height="20"/>
+				<textElement/>
+				<text><![CDATA[2.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="465" width="536" height="72"/>
+				<textElement/>
+				<text><![CDATA[Sesuai keterangan dan pengakuan yang disampaikan Peminjam kepada Koperasi, uang yang dipinjam dari Koperasi hanya akan dipergunakan untuk keperluan ………………………………………………………………………………………;   Atas tujuan penggunaan fasilitas pinjaman tersebut, Koperasi mempercayakan sepenuhnya kepada Peminjam dan tidak bertanggung jawab atas penggunaan uang hasil pinjaman tersebut dan Koperasi sewaktu–waktu dapat meminta pelunasan pinjaman secara seketika apabila penggunaan uang hasil pinjaman diluar keperluan diatas;]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="465" width="15" height="20"/>
+				<textElement/>
+				<text><![CDATA[4.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="551" height="31"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[Pada hari ini… ………………………….. tanggal………………bulan……………………………………. tahun…….……….. (…………………………………………)   telah dibuat dan ditanda tangani perjanjian antara :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="34" width="536" height="49"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[…………………………………………………………… jabatan Pimpinan Koperasi, yang dalam hal ini bertindak untuk dan atas nama KOPERASI DELTA PRATAMA yang berkedudukan di Jl. Manukwari 36 Kanigoro Blitar, selanjutnya disebut KOPERASI, dengan :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="34" width="15" height="20"/>
+				<textElement/>
+				<text><![CDATA[1.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="83" width="536" height="86"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[		, beralamat di 	
+	yang dalam hal ini bertindak dan atas nama ……………………… 
+dan untuk tindakan tersebut telah mendapat persetujuan dari istri/suami/orang tua, nama ………………………………….. yang beralamat di ………………………………………………………………………………………………… selanjutnya disebut PEMINJAM.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="209" width="15" height="20"/>
+				<textElement/>
+				<text><![CDATA[1.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="172" width="551" height="33"/>
+				<textElement/>
+				<text><![CDATA[Kedua belah pihak setuju untuk mengadakan Perjanjian Kredit (selanjutnya disebut PERJANJIAN) dengan menggunakan syarat-syarat dan ketentuan-ketentuan sebagai berikut :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="209" width="536" height="103"/>
+				<textElement/>
+				<text><![CDATA[Peminjam mengakui menerima uang sebagai pinjaman atau kredit dari Koperasi sebagaimana oleh Koperasi telah diserahkan kepadanya uang sebesar Rp …………………………………………………………………………….    
+( …………………………………………………………………………………………………………………………………………………………………….) belum termasuk bunga dan biaya – biaya  lainnya dalam bentuk fasilitas Pinjaman …………………………….
+Jumlah Pinjaman yang diberikan Koperasi kepada Peminjam yang cukup dibuktikan dengan PERJANJIAN ini sebagai bukti / kwitansi tanda penerimaan atas jumlah pinjaman tersebut;
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="313" width="536" height="50"/>
+				<textElement/>
+				<text><![CDATA[Atas fasilitas pinjaman tersebut peminjam berkewajiban untuk membayar provisi kredit sebesar 
+          % dari pinjaman pokok, yang dipungut sekali dalam masa perjanjian kredit ini dan harus dibayar segera setelah perjanjian ini ditandatangani;
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="313" width="15" height="20"/>
+				<textElement/>
+				<text><![CDATA[2.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="365" width="536" height="98"/>
+				<textElement/>
+				<text><![CDATA[Pengembalian pinjaman atau kredit wajib dilakukan oleh peminjam dengan cara mengangsur bunga    dan/atau pokok pinjaman tiap bulan  dan dilakukan secara berturut-turut tanpa adanya suatu tunggakan atau penangguhan dengan jumlah angsuran per-bulan sebesar Rp.…………………            (………………………..             .…………………………………………… …………………………………………………………          …), dengan jangka waktu pinjaman    ….(                                   ) bulan sejak tanggal PERJANJIAN ini ditandatangani, dibayar 
+dalam            (                                    ) kali angsuran, pada tanggal …………(                                        ) setiap bulannya, pengembalian pinjaman atau kredit berlaku mulai bulan ………………………………… tahun ……………………… dan berakhir pada bulan ……………………………… tahun  ………………, hingga seluruh pinjaman baik berupa pokok, bunga maupun biaya-biaya lainnya telah lunas;
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="365" width="15" height="20"/>
+				<textElement/>
+				<text><![CDATA[3.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="570" width="536" height="57"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[PERJANJIAN ini mulai berlaku dan mengikat sejak tanggal ditanda tangani oleh kedua belah pihak dan berakhir sampai kewajiban PEMINJAM selesai dipenuhi seluruhnya. Kedua belah pihak telah sepakat untuk tunduk dan patuh kepada seluruh syarat perjanjian sebagaimana yang tertulis pada halaman dibalik PERJANJIAN ini yang juga merupakan satu kesatuan dari dan tidak terpisahkan dengan PERJANJIAN ini;]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="570" width="15" height="20"/>
+				<textElement/>
+				<text><![CDATA[6.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="539" width="15" height="20"/>
+				<textElement/>
+				<text><![CDATA[5.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="539" width="536" height="30"/>
+				<textElement/>
+				<text><![CDATA[Peminjam, oleh karena kredit yang diterimanya dengan ini menyerahkan sebagai jaminan barang – barang beserta surat – suratnya berupa (sesuai terlampir) :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="630" width="56" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[KOPERASI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="245" y="630" width="65" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MENYETUJUI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="378" y="630" width="57" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PEMINJAM]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="36" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="42" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

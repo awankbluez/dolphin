@@ -1,0 +1,333 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+     
+     
+    <ui:define name="content">
+        <p:panel id="panelSaving" header="Create Account Saving" closable="true">
+            <h:form id="fr-create" prependId="false">
+                <p:growl id="create" showDetail="true" sticky="true" life="5000"/>
+                <div class="makeBox">
+
+                    <h:panelGrid columns="4" cellpadding="5" cellspacing="2" columnClasses="evenColumns, oddColumns, evenColumns, oddColumns">
+                        <h:panelGroup>#{msgs.customerID} <span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>:
+                            <p:inputText  size="30" required="true" value="#{create.customerCode}" label="#{msgs.customerID}"/>
+                        </h:panelGroup>
+                        <span style="margin-left: 50px">#{msgs.productType}</span>
+                        <h:panelGroup><span class="spanOption">:</span>
+                            <p:selectOneMenu value="#{create.typeProduct}" style="width: 200px" disabled="#{create.statName}">
+                                <f:selectItem itemLabel="Choose Type Product" itemValue="---"/>
+                                <f:selectItems value="#{create.cmbTypeProduct}"/>
+                                <f:ajax render="@form" listener="#{create.chooseType()}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+
+                        <h:panelGroup>#{msgs.customerName} <span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>:
+                            <p:autoComplete minQueryLength="3" value="#{create.con1}" completeMethod="#{create.complete}" size="30" required="true" label="#{msgs.customerName}">
+                                <p:ajax event="itemSelect" update="@form"/>
+                            </p:autoComplete>
+                        </h:panelGroup>
+                        <span style="margin-left: 50px">#{msgs.product}</span>
+                        <h:panelGroup><span class="spanOption">:</span>
+                            <p:selectOneMenu value="#{create.product}" style="width: 200px" disabled="#{create.statName}">
+                                <f:selectItem itemLabel="Choose Product" itemValue="-1"/>
+                                <f:selectItems value="#{create.cmbProduct}"/>
+
+                                <p:ajax listener="#{create.chooseComboProduct}" update="@form :detail-create"/>
+                                <p:ajax listener="#{create.checkInteresetSettings}" update="@form :detail-create"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </div>
+            </h:form>
+            <h:form id="detail-create" prependId="false" >
+                <p:growl id="detailGrowl" showSummary="true" showDetail="true"/>
+                <p:panel rendered="#{create.pnlTab}">
+                    <p:tabView id="tab" >
+
+                        <p:tab title="General">
+                            <div class="cLeft">
+                                <div class="label w150">#{msgs.openDate}</div><h:inputText readonly="true" value="#{create.openDate}" styleClass="textShow"/>
+                                <div class="clear space"></div>
+                                <div class="label w150">
+                                    <h:outputText value="Nominal Pokok" rendered="#{create.typeProduct.equalsIgnoreCase('pokok')}"/>
+                                    <h:outputText value="Nominal Wajib" rendered="#{create.typeProduct.equalsIgnoreCase('wajib')}"/>
+                                    <h:outputText value="Nominal Deposito" rendered="#{create.typeProduct.equalsIgnoreCase('deposito')}"/>
+                                    <h:outputText value="Nominal Tabungan Berjangka" rendered="#{create.typeProduct.equalsIgnoreCase('tabungan berjangka')}"/>
+                                    <h:outputText value="Nominal Awal Kapital" rendered="#{create.typeProduct.equalsIgnoreCase('kapitalisasi')}"/>
+                                    <h:outputText value="Nominal Awal Reguler" rendered="#{create.typeProduct.equalsIgnoreCase('reguler')}"/>
+                                </div>
+                                <p:inputText value="#{create.ammount}" id="amountid" readonly="#{create.typeProduct=='pokok'}" disabled="#{create.statProduct}">
+                                    <p:ajax event="blur" process="amountid" listener="#{create.validasiAmount}" update="amountid,:detail-create"/>
+                                </p:inputText>
+                                <div class="clear space"></div>
+
+                                <h:panelGroup rendered="#{create.typeProduct=='deposito'}">
+                                    <div class="label w150">#{msgs.termLimit}</div>
+                                    <h:outputFormat value="{0} Months">
+                                        <f:param value="#{create.termLimit}"/>
+                                    </h:outputFormat>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{create.typeProduct=='tabungan berjangka'}">
+                                    <div class="label w150">#{msgs.termLimit}</div>
+                                    <p:inputText value="#{create.termLimit2}" id="termlimitid" disabled="#{create.statProduct}">
+                                        <p:ajax event="blur" process="termlimitid" listener="#{create.validasiTermLimit}" update="termlimitid,:detail-create"/>
+                                    </p:inputText>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{create.typeProduct=='tabungan berjangka'}">
+                                    <div class="label w150">Payment Periode</div>
+                                    #{create.paymentPeriodeValue} #{create.paymentPeriodeMethod}
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{create.typeProduct=='deposito'}">
+                                    <div class="label w150">#{msgs.manuturityDate}</div>
+                                    <h:outputFormat value="#{create.maturity}"/>
+                                    <div class="clear space"></div>
+
+                                    <div class="label w150">Rollover period</div>
+                                    <h:outputFormat value="{0} Day">
+                                        <f:param value="#{create.rolloverPeriode}"/>
+                                    </h:outputFormat>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{not create.typeProduct.equalsIgnoreCase('deposito')}">
+                                    <div class="label w150">#{msgs.overdraftLimit}</div>
+                                    <h:outputText value="#{create.overdraftLimit}">
+                                        <f:convertNumber type="currency" locale="in_ID" />
+                                    </h:outputText>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+                                <div class="label w150">#{msgs.portofolio}</div>
+                                <p:selectOneMenu style="width: 200px" value="#{create.accountOfficer}" disabled="#{create.statProduct}">
+                                    <f:selectItem itemLabel="#{msgs.noPortofolio}" itemValue="0"/>
+                                    <f:selectItems value="#{create.cmbAO}"/>
+                                    <f:ajax render="@this"/>
+                                </p:selectOneMenu>
+                                <div class="clear space"></div>
+
+                                <h:panelGroup id="interestField" rendered="#{create.typeProduct != 'wajib' and create.typeProduct != 'pokok' and not create.typeProduct.equalsIgnoreCase('kapitalisasi')}">
+                                    <div class="label w150">#{msgs.interestRate}</div>
+                                    <h:inputText readonly="true" value="#{create.interestRate} %" styleClass="textShow"/>
+                                    <div class="clear space"></div>
+                                    <div class="label w150">#{msgs.interestRateOffset}</div>
+                                    <p:inputText styleClass="numeric" id="interestOffset" maxlength="2" size="4" value="#{create.interestRateOffset}" disabled="#{create.statProduct}" >
+                                        <p:ajax event="blur" listener="#{create.validateInterest}" update="interestField :detail-create:detailGrowl"/>
+                                    </p:inputText>%
+                                    <p:message for="interestOffset" id="messageInterestOffset"/>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{not create.typeProduct.equalsIgnoreCase('wajib') and not create.typeProduct.equalsIgnoreCase('kapitalisasi')}">
+                                    <div class="label w150">#{msgs.withholdingTax}</div>
+                                    <h:inputText readonly="true" value="#{create.withholdingTax} %" styleClass="textShow" />
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+                                <div class="label w150">#{msgs.note}</div>
+                                <p:inputText size="45" value="#{create.noteSaving}" disabled="#{create.statProduct}"/>
+                                <div class="clear space"></div>
+                            </div>
+
+                            <div class="cRight w400">
+                                <h:panelGroup rendered="#{create.typeProduct=='deposito'}">
+                                    <div class="label w150">ARO</div>
+                                    <h:selectOneRadio value="#{create.rollover}" style="float: left">
+                                        <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                        <f:selectItem itemValue="false" itemLabel="Tidak"/>
+                                        <f:ajax execute="@this" render="@form"/>
+                                    </h:selectOneRadio>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{create.rollover == true and create.typeProduct=='deposito'}">
+                                    <div class="label w150">Komponen ARO</div>
+                                    <h:selectOneRadio value="#{create.compoundRollover}" style="float: left">
+                                        <f:selectItem itemValue="PI" itemLabel="Pokok, Bunga"/>
+                                        <f:selectItem itemValue="P" itemLabel="Pokok"/>
+                                        <f:ajax execute="@this" render="@form"/>
+                                    </h:selectOneRadio>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{create.compoundRollover=='P'}">
+                                    <div class="label w150">Komponen Pencairan</div>
+                                    <h:outputFormat value="#{create.compoundWithdrawal}"/>
+                                    <div class="clear space"></div>
+
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{create.rollover == false}">
+                                    <div class="label w150">Komponen Cash</div>
+                                    <p:selectOneMenu value="#{create.cash}">
+                                        <f:selectItem itemValue="NC" itemLabel="No Cash"/>
+                                        <f:selectItem itemValue="P" itemLabel="Principal"/>
+                                        <f:selectItem itemValue="I" itemLabel="Interest"/>
+                                        <f:selectItem itemValue="PI" itemLabel="Principal, Interest"/>
+                                        <f:ajax execute="@this" render="@form"/>
+                                    </p:selectOneMenu>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{create.cash != 'PI'}">
+                                    <div class="label w150">Komponen Overbooking</div>
+                                    <h:outputFormat value="#{create.compoundOverbooking}"/>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+
+                                <h:panelGroup rendered="#{create.compoundRollover=='P' or create.cash=='NC' or create.cash=='P' or create.cash=='I'}">
+                                    <div class="label w150">Cara Pencairan</div>
+                                    <h:selectOneRadio value="#{create.withdrawalMethod}" style="float: left">
+                                        <f:selectItems value="#{create.dtWithDrawalMethod}"/>
+                                        <f:ajax execute="@this" render="@form"/>
+                                    </h:selectOneRadio>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{create.withdrawalMethod=='B'}">
+                                    <div class="label w150">Nama Bank Tujuan</div>
+                                    <p:inputText />
+                                    <div class="clear space"></div>
+                                    <div class="label w150">No Rekening</div>
+                                    <p:inputText />
+                                    <div class="clear space"></div>
+                                    <div class="label w150">Atas Nama</div>
+                                    <p:inputText />
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{create.withdrawalMethod=='O'}">
+                                    <div class="label w150">#{msgs.overBookingTarget}</div>
+                                    <p:inputText value="#{create.overbookingTargetCode}"/>
+                                    <p:commandButton icon="ui-icon-search" oncomplete="advSearch.show()" update="@form" process="@this" action="#{create.advSearch()}">
+
+                                    </p:commandButton>
+                                    <div class="clear space"></div>
+                                </h:panelGroup>
+                            </div>
+                            <div class="clear space"></div>
+
+
+                        </p:tab>
+                        <p:tab title="Transaction" rendered="false">
+                            <h:panelGroup rendered="#{create.typeProduct=='reguler'}">
+                                <div class="label w150">Initial Minimum Deposit</div>
+                                <h:outputText value="#{create.initMinDeposit}">
+                                    <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                                </h:outputText>
+                                <div class="clear space"></div>
+                                <div class="label w150">Initial Maximum Deposit</div>
+                                <h:outputText value="#{create.initMaxDeposit}">
+                                    <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                                </h:outputText>
+                                <div class="clear space"></div>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{create.typeProduct=='tabungan berjangka' || create.typeProduct=='deposito'}">
+                                <div class="label w150">Minimum Required Deposit</div>
+                                <h:outputText value="#{create.requiredDeposit}">
+                                    <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                                </h:outputText>
+                                <div class="clear space"></div>
+                            </h:panelGroup>
+                            <div class="label w150">Daftar Biaya</div>
+                            <p:dataTable var="f"
+                                         value="#{create.dtFee}"
+                                         emptyMessage="No Data Retrived"
+                                         style="float: left" styleClass="w400">
+                                <p:column headerText="Nama Biaya">
+                                    <h:outputText value="#{f.feename}"/>
+                                </p:column>
+                                <p:column headerText="Jumlah">
+                                    <h:outputText value="#{f.amount}">
+                                        <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                            <div class="clear space"></div>
+                        </p:tab>
+                        <p:tab title="Schedule" rendered="#{create.typeProduct == 'tabungan berjangka'}">
+
+                            <p:dataTable var="s"
+                                         value="#{create.dtSchedule}"
+                                         emptyMessage="No Data Retrived"
+                                         style="float: left" styleClass="w400">
+                                <p:column headerText="Periode">
+                                    <h:outputText value="#{s.period}"/>
+                                </p:column>
+                                <p:column headerText="Tanggal Pembayaran">
+                                    <h:outputText value="#{s.paymentDate}">
+                                        <f:convertDateTime pattern="EEE, dd MMMMM YYYY"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                            <div class="clear space"></div>
+                        </p:tab>
+                    </p:tabView>
+
+                    <div class="buttonGroup">
+                        <p:commandButton value="#{msgs.resetButton}" styleClass="resetButton" update="@form" process="@this" action="#{create.reset}"/>
+                        <p:commandButton id="saveButton" value="#{msgs.saveButton}" styleClass="saveButton" update="@form :fr-create" process="@this" action="#{create.save}" disabled="#{create.statAction}"/>
+                    </div>
+                </p:panel>
+                <p:dialog widgetVar="valAmount" modal="true" id="dlgValAmount">
+                    <center>
+                        <h:outputText value="#{create.warningText}"/><br/>
+                        <p:commandButton value="OK" onclick="valAmount.hide();"/>
+                    </center>
+                </p:dialog>
+                <p:dialog widgetVar="advSearch" modal="true" id="dlgAdvSearch">
+                    <p:dataTable var="c"
+                                 value="#{create.dtCustomer}"
+                                 emptyMessage="No Data Retrived"
+                                 style="float: left"
+                                 paginator="true"
+                                 paginatorPosition="bottom"
+                                 rows="10"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,20,50"
+                                 sortBy="#{c.customerName}"
+                                 widgetVar="wvC"
+                                 sortOrder="ascending">
+                        <f:facet name="header">
+                            <p:outputPanel style="float:right">
+                                <h:outputText value="Search : " />
+                                <p:inputText id="globalFilter" onkeyup="wvC.filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="Account Code" filterBy="#{c.accountCode}"  filterStyle="display:none;">
+                            <h:outputText value="#{c.accountCode}"/>
+                        </p:column>
+                        <p:column headerText="Customer Name" filterBy="#{c.customerName}"  filterStyle="display:none;">
+                            <h:outputText value="#{c.customerName}"/>
+                        </p:column>
+                        <p:column headerText="Product Type" filterBy="#{c.productType}"  filterStyle="display:none;">
+                            <h:outputText value="#{c.productType}"/>
+                        </p:column>
+                        <p:column headerText="Product" filterBy="#{c.productName}"  filterStyle="display:none;">
+                            <h:outputText value="#{c.productName}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="ui-icon-check" oncomplete="advSearch.hide()" update="@form" process="@this" action="#{create.selOverbookingTarget()}" >
+                                <f:setPropertyActionListener value="#{c}" target="#{create.selCustomer}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+
+                <pe:keyFilter mask="num" forSelector=".numeric"/>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

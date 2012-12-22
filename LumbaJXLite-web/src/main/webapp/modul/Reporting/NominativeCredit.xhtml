@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel id="nominativecredit" header="Nominative Credit" closable="true" collapsed="false" toggleable="true">
+            <h:form id="searchnominativecredit" target="_blank">
+                <p:panel style="border-color: white">
+                    <h:panelGrid columns="6">
+                        <p:outputLabel value="Tanggal jatuh tempo" for="jatuhtempo"/>                    
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{nominativeCredit.tipejatuhtempo}" style="width: 150px" id="jatuhtempo" required="true">
+                            <f:selectItem itemLabel="Pilih jatuh tempo" itemValue=""/>
+                            <f:selectItem itemLabel="Hari ini" itemValue="H"/>
+                            <p:ajax update="btnsearch"/>
+                        </p:selectOneMenu>                    
+
+                        <p:outputLabel value="Tipe nasabah" for="customertype"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{nominativeCredit.loanapplication.customer.customerType}" style="width: 150px" id="customertype" required="true">
+                            <f:selectItem itemLabel="Pilih tipe nasabah" itemValue=""/>
+                            <f:selectItem itemLabel="All" itemValue="0"/>
+                            <f:selectItem itemLabel="Individu" itemValue="1"/>
+                            <f:selectItem itemLabel="Kelompok" itemValue="2"/>
+                            <f:selectItem itemLabel="Perusahaan" itemValue="3"/>
+                            <f:selectItem itemLabel="Lainnya" itemValue="4"/>
+                            <p:ajax update="btnsearch"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Account officer" for="ao"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{nominativeCredit.loanapplication.operatorUser.userid}" style="width: 150px" id="ao" required="true">
+                            <f:selectItem itemLabel="Pilih account officer" itemValue=""/>
+                            <f:selectItems value="#{nominativeCredit.comboAO}" var="accountofficer" itemLabel="#{accountofficer.employeename}" itemValue="#{accountofficer.userid}"/>
+                            <p:ajax update="btnsearch"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Produk" for="produk"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{nominativeCredit.loanapplication.loan.loan_id}" style="width: 150px" id="produk" required="true">
+                            <f:selectItem itemLabel="Pilih produk" itemValue=""/>
+                            <f:selectItem itemLabel="All" itemValue="0"/>
+                            <f:selectItems value="#{nominativeCredit.comboproduct}" var="product" itemLabel="#{product.loanname}" itemValue="#{product.loanid}"/>
+                            <p:ajax update="btnsearch"/>
+                        </p:selectOneMenu>                    
+                    </h:panelGrid>
+                    <p:commandButton value="Search" actionListener="#{nominativeCredit.search()}" id="btnsearch" ajax="false"
+                                     disabled="#{nominativeCredit.loanapplication.customer.customerType==null and nominativeCredit.loanapplication.operatorUser.userid==null and nominativeCredit.loanapplication.loan.loanid==null and nominativeCredit.tipejatuhtempo==null}"/>
+                </p:panel>
+            </h:form>
+        </p:panel>
+    </ui:define>
+</ui:composition>

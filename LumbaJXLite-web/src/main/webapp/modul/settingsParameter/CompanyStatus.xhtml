@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+
+        <p:panel header="#{msgs.companyStatus}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="formStatusPerusahaan">
+                <p:fieldset legend="#{msgs.add} #{msgs.companyStatus}" toggleable="true" collapsed="#{companyStatusBean.fieldsetCollapse}" id="fieldsetStatusPerusahaan" >
+                    <h:panelGrid columns="4" id="wewe">
+                        
+                        <h:outputText value="#{msgs.companyType}"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{companyStatusBean.parameter.parametercode}" style="width: 160px">
+                            <f:selectItem itemLabel="Pilih Tipe Perusahaan" />
+                            <f:selectItem itemLabel="Perusahaan" itemValue="Perusahaan" />  
+                            <f:selectItem itemLabel="Badan Hukum" itemValue="Badan Hukum" />  
+                            <f:selectItem itemLabel="Institusi" itemValue="Institusi" />
+                            <f:selectItem itemLabel="Institusi Lain" itemValue="Institusi Lain" />
+                        </p:selectOneMenu>
+                        <p:spacer width="10"/>
+                        <h:outputText value="#{msgs.company}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{companyStatusBean.parameter.name}" id="NameType" required="true" requiredMessage="Harus diisi" validator="#{companyStatusBean.validateAddressStatusDescribe}" style="width: 155px">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="NameType"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelformStatusPerusahaan:tabelformStatusPerusahaan" actionListener="#{companyStatusBean.add()}" rendered="#{companyStatusBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{companyStatusBean.reset()}" rendered="#{companyStatusBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelformStatusPerusahaan:tabelformStatusPerusahaan" actionListener="#{companyStatusBean.update()}" rendered="#{companyStatusBean.status == 'update'}"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{companyStatusBean.reset()}" rendered="#{companyStatusBean.status == 'update'}" update="@form" action="#{companyStatusBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelformStatusPerusahaan">
+                <p:dataTable id="tabelformStatusPerusahaan" value="#{companyStatusBean.companyStatusList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.parametercode}" filterBy="#{o.parametercode}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.companyType}</f:facet>
+                        #{o.parametercode}
+                    </p:column>
+                    <p:column sortBy="#{o.name}" filterBy="#{o.name}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.company}</f:facet>
+                        #{o.name}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.Edit} #{o.name}" action="#{companyStatusBean.edit(o)}" update=":formStatusPerusahaan"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.Delete} #{o.name}"  update="@form" action="#{companyStatusBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

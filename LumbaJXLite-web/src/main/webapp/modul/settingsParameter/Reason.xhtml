@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+   <ui:define name="content">
+      <p:panel header="#{msgs.companyStatus}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+         <h:form id="Reason">
+            <p:fieldset legend="Add Reason" toggleable="true" collapsed="#{reasonBean.fieldsetCollapse}" id="fieldset">
+               <h:panelGrid columns="4">
+                  <h:outputText value="Reason Type"/>
+                  <h:outputText value=":"/>
+                  <p:selectOneMenu id="ReasonType" value="#{reasonBean.reason.reasontype}" style="width: 300px">
+                     <f:selectItem itemLabel="Pilih Salah Satu" />
+                     <f:selectItem itemLabel="Tutup CIF" itemValue="Tutup CIF" />
+                     <f:selectItem itemLabel="Buka Kembali CIF" itemValue="Buka Kembali CIF" />
+                     <f:selectItem itemLabel="Tutup Kelompok" itemValue="Tutup Kelompok" />
+                     <f:selectItem itemLabel="Buka Kembali Kelompok" itemValue="Buka Kembali Kelompok" />
+                     <f:selectItem itemLabel="Hapus Kelompok" itemValue="Hapus Kelompok" /> 
+                     <f:selectItem itemLabel="Hapus Anggota Kelompok" itemValue="Hapus Aggota Kelompok" />
+                     <f:selectItem itemLabel="Alasan Pinjaman" itemValue="Alasan Pinjaman" />
+                     <f:selectItem itemLabel="Membatalkan Pinjaman" itemValue="Membatalkan Pinjaman" />
+                     <f:selectItem itemLabel="Alasan Dibekukan" itemValue="Alasan Dibekukan" />
+                     <f:selectItem itemLabel="Tutup Simpanan Sementara" itemValue="Tutup Simpanan Sementara" />
+                     <f:selectItem itemLabel="Tutup Simpanan Permanen" itemValue="Tutup Simpanan Permanen" />
+                     <f:selectItem itemLabel="Buka Kembali Simpanan Yang Ditutup Sementara" itemValue="Buka Kembali Simpanan Yang Ditutup Sementara" />
+                     <f:selectItem itemLabel="Buka Kembali Simpanan Yang Dibekukan" itemValue="Buka Kembali Simpanan Yang Dibekukan" />
+                     <f:selectItem itemLabel="Pembiayaan Kembali" itemValue="Pembiayaan Kembali" />
+                     <f:selectItem itemLabel="Transfer Antar Cabang" itemValue="Transfer Antar Cabang" />
+                     <f:selectItem itemLabel="Pembukaan Rekening" itemValue="Pembukaan Rekening" />
+                  </p:selectOneMenu>
+                  <p:spacer width="10"/>
+
+                  <h:outputText value="Reason"/>
+                  <h:outputText value=":"/>
+                  <p:inputText value="#{reasonBean.reason.reason}" id="ReasonDescribe" style="width: 290px" required="true" requiredMessage="Harus diisi" >
+                     <p:ajax event="blur" update="ReasonDescribeValidasi"/>
+                  </p:inputText>
+                  <p:message id="ReasonDescribeValidasi" for="ReasonDescribe"/>
+
+                  <p:spacer width="10"/>
+                  <p:spacer width="10"/>
+                  <p:commandButton value="Simpan" update="@form :tabelReason:reasontabel" actionListener="#{reasonBean.add()}" rendered="#{reasonBean.status == 'insert'}" />
+                  <p:commandButton value="Reset"  actionListener="#{reasonBean.reset()}" rendered="#{reasonBean.status == 'insert'}" update="@form" process="@this"/>
+
+                  <p:commandButton value="Edit" update="@form :tabelReason:reasontabel" actionListener="#{reasonBean.update()}" rendered="#{reasonBean.status == 'update'}" process="@this"/>
+                  <p:commandButton value="Cancel"  actionListener="#{reasonBean.reset()}" rendered="#{reasonBean.status == 'update'}" update="@form" action="#{reasonBean.setFieldsetCollapse(true)}" process="@this"/>
+               </h:panelGrid>
+            </p:fieldset>
+         </h:form>
+         <h:form id="tabelReason">
+            <p:dataTable value="#{reasonBean.reasonList}" id="reasontabel" var="o" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25">
+
+               <p:column sortBy="#{o.reasontype}" filterBy="#{o.reasontype}" filterMatchMode="contains">
+                  <f:facet name="header">Reason Type</f:facet>
+                  #{o.reasontype}
+               </p:column>
+               <p:column sortBy="#{o.reason}" filterBy="#{o.reason}" filterMatchMode="contains">
+                  <f:facet name="header">Reason</f:facet>
+                  #{o.reason}
+               </p:column>
+               <p:column style="width: 100px;">
+                  <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.reason}" action="#{reasonBean.edit(o)}" update=":Reason:fieldset"/>
+                  <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.reason}"  update="@form" action="#{reasonBean.delete(o)}"/>
+               </p:column>
+            </p:dataTable>
+         </h:form>
+      </p:panel>
+   </ui:define>
+
+</ui:composition>

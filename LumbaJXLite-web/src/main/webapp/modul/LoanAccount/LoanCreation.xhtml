@@ -1,0 +1,1111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="menuBar">
+        menuBar
+    </ui:define>
+
+    <ui:define name="content">
+        <p:panel header="Pengajuan Pinjaman" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" >
+            <p:panel id="LoanCreationAwal" header="" toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" >
+                <h:form prependId="false" id="pinjaman" >
+                    <h:panelGrid columns="4" styleClass="grid" >
+                        <h:outputText value="Pilihan Pengajuan" />
+                        <p:selectOneMenu id="pilihanpengajuan" value="#{loanaccountBean.filingOption}" style="width: 180px" disabled="#{loanaccountBean.panelLoanCreation==1}" >
+                            <f:selectItem itemValue="" itemLabel="Pilih Pengajuan" />
+                            <f:selectItem itemValue="1" itemLabel="Pinjaman Baru" />
+                            <f:selectItem itemValue="2" itemLabel="Pinjaman Aktif" />
+                            <f:selectItem itemValue="3" itemLabel="Simpan Sementara" />
+                            <p:ajax update=":pinjaman"/>
+                        </p:selectOneMenu>
+
+                        <h:outputText id="jenispinjaman" value="Jenis Pinjaman" />
+                        <p:selectOneMenu id="jenispinjamandropdown"  value="#{loanaccountBean.loanType}" style="width: 180px" disabled="#{loanaccountBean.panelLoanCreation==1}">
+                            <f:selectItem itemValue="0" itemLabel="Pilih Jenis Pinjaman" />
+                            <f:selectItem itemValue="individu" itemLabel="Individu" />
+                            <f:selectItem itemValue="kelompok" itemLabel="Kelompok" />
+                            <f:selectItem itemValue="perusahaan" itemLabel="Perusahaan" />
+                            <p:ajax update=":pinjaman"/>
+                        </p:selectOneMenu>
+
+                        <h:outputText id="labelRestructure" value="Pilihan" rendered="#{loanaccountBean.filingOption == '2'}" />
+                        <p:selectOneRadio id="typeRestructure" value="#{loanaccountBean.restructure}" style="width: 180px" rendered="#{loanaccountBean.filingOption == '2'}" disabled="#{loanaccountBean.panelLoanCreation==1}">
+                            <f:selectItem itemValue="true" itemLabel="Restructure"/>
+                            <f:selectItem itemValue="false" itemLabel="Tambah Plafon" />
+                        </p:selectOneRadio>
+                        <h:outputText rendered="#{loanaccountBean.filingOption == '2'}" />
+                        <h:outputText rendered="#{loanaccountBean.filingOption == '2'}" />
+                        <h:outputText id="labelsementara" value="Pilihan" rendered="#{loanaccountBean.filingOption == '3'}" />
+                        <p:selectOneRadio id="typeSementara" value="#{loanaccountBean.hold}" style="width: 180px" rendered="#{loanaccountBean.filingOption == '3'}" disabled="#{loanaccountBean.panelLoanCreation==1}">
+                            <f:selectItem itemValue="1" itemLabel="Baru"/>
+                            <f:selectItem itemValue="2" itemLabel="Restructure"/>
+                            <f:selectItem itemValue="3" itemLabel="Tambah Plafon" />
+                        </p:selectOneRadio>
+                        <h:outputText rendered="#{loanaccountBean.filingOption == '3'}" />
+                        <h:outputText rendered="#{loanaccountBean.filingOption == '3'}" />
+                        <h:outputText value="Jenis Kelompok" rendered="#{loanaccountBean.loanType == 'kelompok'}" />
+                        <p:selectOneMenu id="jeniskelompok" value="#{loanaccountBean.grouptype}" style="width: 180px" rendered="#{loanaccountBean.loanType == 'kelompok'}" disabled="#{loanaccountBean.panelLoanCreation==1}">
+                            <f:selectItem itemValue="" itemLabel="Pilih Jenis Kelompok" />
+                            <f:selectItems value="#{loanaccountBean.listParameter}" var="grouptype" itemLabel="#{grouptype.name}" itemValue="#{grouptype.parameterid}" />
+                            <p:ajax update="namakelompok" />
+                        </p:selectOneMenu>
+                        <h:outputText value="Nama Kelompok" rendered="#{loanaccountBean.loanType == 'kelompok'}" />
+                        <p:selectOneMenu id="namakelompok" value="#{loanaccountBean.grouping.groupingid}" style="width: 180px" rendered="#{loanaccountBean.loanType == 'kelompok'}" disabled="#{loanaccountBean.panelLoanCreation==1}" >
+                            <f:selectItem itemValue="0" itemLabel="Pilih Nama kelompok" />
+                            <f:selectItems value="#{loanaccountBean.listGrouping}" var="grouping" itemLabel="#{grouping.groupname}" itemValue="#{grouping.groupingid}" />
+                        </p:selectOneMenu>
+
+                        <p:commandButton oncomplete="nasabah2.show()" update=":viewDialog,:pinjaman" process=":pinjaman" value="Nama Nasabah" rendered="#{(loanaccountBean.loanType == 'individu' or loanaccountBean.loanType == 'perusahaan' or loanaccountBean.grouptype == 86) and loanaccountBean.filingOption != '1'}" disabled="#{loanaccountBean.panelLoanCreation==1}" />                            
+                        <p:commandButton oncomplete="nasabah.show()" update=":viewDialog,:pinjaman" process=":pinjaman" value="Nama Nasabah" rendered="#{(loanaccountBean.loanType == 'individu' or loanaccountBean.loanType == 'perusahaan' or loanaccountBean.grouptype == 86) and loanaccountBean.filingOption == '1'}" disabled="#{loanaccountBean.panelLoanCreation==1}" />                            
+                        <p:inputText disabled="true" style="width: 180px" value="#{loanaccountBean.customer.customername}"  rendered="#{loanaccountBean.loanType == 'individu' or loanaccountBean.loanType == 'perusahaan' or loanaccountBean.grouptype == 86}" />
+
+                        <h:outputText value="Nomor CIF" rendered="#{loanaccountBean.loanType == 'individu' or loanaccountBean.loanType == 'perusahaan' or loanaccountBean.grouptype == 86}" />
+                        <p:inputText id="nomorcif" value="#{loanaccountBean.customer.customerCode}" disabled="true" style="width: 150px" rendered="#{loanaccountBean.loanType == 'individu' or loanaccountBean.loanType == 'perusahaan' or loanaccountBean.grouptype == 86}" />
+
+                        <h:outputText value="Nama Pinjaman"/>
+                        <p:selectOneMenu id="namapinjaman" style="width: 180px" value="#{loanaccountBean.loan.loanid}" disabled="#{loanaccountBean.panelLoanCreation==1 || loanaccountBean.filingOption == '3'}" >
+                            <f:selectItem itemValue="0" itemLabel="Pilih Nama Pinjaman" />
+                            <f:selectItems value="#{loanaccountBean.listLoanname}" var="loan" itemLabel="#{loan.loanname}" itemValue="#{loan.loanid}" />
+                            <p:ajax update=":tableLoanCreation" />
+                        </p:selectOneMenu><h:outputText /><h:outputText />
+                        <h:outputText />
+                        <p:commandButton rendered="#{loanaccountBean.filingOption == '1'}" value="Lanjut" actionListener="#{loanaccountBean.retrieve_account()}" update="@this,:pinjaman,:tableLoanCreation,:viewDialog:warn,:tableLoanCreation:panelSubmitMaker" disabled="#{loanaccountBean.panelLoanCreation==1}" immediate="true" /><h:outputText /><h:outputText />
+                    </h:panelGrid>
+                </h:form>
+
+                <h:form prependId="false" id="viewDialog">
+                    <p:dialog header="Daftar Nasabah" widgetVar="nasabah" id="daftarnasabah" modal="true" showEffect="explode" hideEffect="explode" >
+                        <p:dataTable
+                            id="nasabahlist"
+                            emptyMessage="Nasabah Tidak Ditemukan"
+                            value="#{loanaccountBean.listCustomer}"
+                            var="customerlist"
+                            paginator="true"
+                            paginatorPosition="bottom"
+                            rows="10"
+                            rowsPerPageTemplate="10,20,50"
+                            sortOrder="descending"
+                            >
+                            <f:facet name="header">Daftar Nasabah</f:facet>
+
+                            <p:column sortBy="#{customerlist.customerCode}" filterBy="#{customerlist.customerCode}" filterMatchMode="contains" >
+                                <f:facet name="header"><h:outputText value="Nomor CIF"/></f:facet>
+                                <h:outputText value="#{customerlist.customerCode}"/>
+                            </p:column>
+
+                            <p:column sortBy="#{customerlist.customername}" filterBy="#{customerlist.customername}" filterMatchMode="contains"  >
+                                <f:facet name="header"><h:outputText value="Nama Nasabah"/></f:facet>
+                                <h:outputText value="#{customerlist.customername}"/>
+                            </p:column>
+
+                            <p:column style="width: 70px;">
+                                <p:commandButton action="#{loanaccountBean.customeridtemp(customerlist)}" update=":viewDialog,:pinjaman,:tableLoanCreation:pengajuanpinjaman:pengisianpenjamin" icon="ui-icon ui-icon-search" onclick="nasabah.hide();"/>
+                            </p:column>
+                        </p:dataTable>   
+                    </p:dialog>
+                    <p:dialog header="Daftar Nasabah" widgetVar="nasabah2" id="daftarnasabah2" modal="true" showEffect="explode" hideEffect="explode" >
+                        <p:dataTable
+                            id="nasabahlist2"
+                            emptyMessage="Nasabah Tidak Ditemukan"
+                            value="#{loanaccountBean.listCustomer2}"
+                            var="customerlist2"
+                            paginator="true"
+                            paginatorPosition="bottom"
+                            rows="10"
+                            rowsPerPageTemplate="10,20,50"
+                            sortOrder="descending"
+                            >
+                            <f:facet name="header">Daftar Nasabah</f:facet>
+
+                            <p:column sortBy="#{customerlist2.customer.customerCode}" filterBy="#{customerlist2.customer.customerCode}" filterMatchMode="contains" >
+                                <f:facet name="header"><h:outputText value="Nomor CIF"/></f:facet>
+                                <h:outputText value="#{customerlist2.customer.customerCode}"/>
+                            </p:column>
+
+                            <p:column sortBy="#{customerlist2.customer.customername}" filterBy="#{customerlist2.customer.customername}" filterMatchMode="contains"  >
+                                <f:facet name="header"><h:outputText value="Nama Nasabah"/></f:facet>
+                                <h:outputText value="#{customerlist2.customer.customername}"/>
+                            </p:column>
+
+                            <p:column sortBy="#{customerlist2.loan.loanname}" filterBy="#{customerlist2.loan.loanname}" filterMatchMode="contains"  >
+                                <f:facet name="header"><h:outputText value="Nama Produk"/></f:facet>
+                                <h:outputText value="#{customerlist2.loan.loanname}"/>
+                            </p:column>
+
+                            <p:column sortBy="#{customerlist2.loan.loantype}" filterBy="#{customerlist2.loan.loantype}" filterMatchMode="contains"  >
+                                <f:facet name="header"><h:outputText value="Jenis Pinjaman"/></f:facet>
+                                <h:outputText value="#{customerlist2.loan.loantype}"/>
+                            </p:column>
+
+                            <p:column sortBy="#{customerlist2.dramount}" filterBy="#{customerlist2.dramount}" filterMatchMode="contains"  >
+                                <f:facet name="header"><h:outputText value="Plafon"/></f:facet>
+                                <h:outputText value="#{customerlist2.dramount}">
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column style="width: 70px;">
+                                <p:commandButton actionListener="#{loanaccountBean.retrieveHold(customerlist2)}" update=":viewDialog,:pinjaman,:tableLoanCreation,:tableLoanCreation:panelSubmitMaker" icon="ui-icon ui-icon-search" onclick="nasabah.hide();"/>
+                            </p:column>
+                        </p:dataTable>   
+                    </p:dialog>
+                    <p:dialog header="Pengikatan" widgetVar="binding" id="binding" modal="true" showEffect="explode" hideEffect="explode" >
+                        <center>
+                            <h:outputText value="#{loanaccountBean.warningText}"/>
+                            <br/>
+                            <p:commandButton value="OK" oncomplete="binding.hide()" />
+                        </center>
+                    </p:dialog>
+                    <p:dialog header="Warning" widgetVar="warn" id="warn" modal="true" showEffect="explode" hideEffect="explode" >
+                        <center>
+                            <h:outputText value="#{loanaccountBean.warningText}"/>
+                            <h:outputText value="#{loanaccountBean.warningDecimal}">
+                                <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                            </h:outputText>
+                            <br/>
+                            <p:commandButton value="OK" oncomplete="warn.hide()" />
+                        </center>
+                    </p:dialog>
+                    <p:dialog header="Warning" widgetVar="warned" id="warned" modal="true" showEffect="explode" hideEffect="explode" >
+                        <center>
+                            <h:outputText value="#{loanaccountBean.warningText}"/>
+                            <br/>
+                            <p:commandButton value="OK" oncomplete="warned.hide()" />
+                        </center>
+                    </p:dialog>
+                    <p:dialog header="Tambah Catatan" widgetVar="addNote" id="NoteAdd" modal="true" showEffect="explode" hideEffect="explode" >
+                        <center>
+                            <p:inputTextarea value="#{loanaccountBean.ntRouting}" autoResize="true" style="width: 400px"/>
+                            <br/>
+                            <p:commandButton value="OK" process="NoteAdd" oncomplete="addNote.hide()" />
+                        </center>
+                    </p:dialog>
+                    <p:dialog header="Info" widgetVar="succes" id="succes" modal="true" showEffect="explode" hideEffect="explode" >
+                        <center>
+                            <h:outputText value="#{loanaccountBean.warningText}"/>
+                            <p:commandButton value="OK" oncomplete="succes.hide()"/>
+                        </center>
+                    </p:dialog>
+                </h:form>    
+            </p:panel>
+            <h:form id="tableLoanCreation" prependId="false">
+                <p:panel id="panelLoanCreation" toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" visible="#{loanaccountBean.cekPanelCreation()}" >
+
+                    <p:tabView id="pengajuanpinjaman" activeIndex="#{loanaccountBean.tabNext.indexTab}">
+                        <p:tab title="General" id="aplikasipinjaman" >
+                            <h:panelGrid columns="3" styleClass="grid" >
+
+                                <h:outputText value="Nomor Rekening Pinjaman"/>
+                                <p:inputText value="#{loanaccountBean.account.accountcode}" style="width: 150px" disabled="true" /><h:outputText />
+
+                                <h:outputText value="Bunga"/>
+                                <p:inputText style="width: 50px" value="#{loanaccountBean.interest.baseinterest}" disabled="true" />%
+
+                                <h:outputText value="Rekening Tujuan"/>
+                                <p:selectOneMenu value="#{loanaccountBean.loanapplication.transferto}" style="width: 190px">
+                                    <f:selectItems value="#{loanaccountBean.listSavingAccount}" var="saving" itemLabel="#{saving.accountcode}" itemValue="#{saving.accountid}" />
+                                    <p:ajax update="@this" />
+                                </p:selectOneMenu><h:outputText />
+
+                                <h:outputText value="Gunakan Asuransi" />
+                                <p:selectOneRadio value="#{loanaccountBean.loan.isinsurancerequired}" disabled="true" >
+                                    <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                </p:selectOneRadio>
+
+                                #{loanaccountBean.setHeadofficeid(loginBean.authenticatedUser.masterOperational.headOffice.headofficeid)}
+                                #{loanaccountBean.setRegionid(loginBean.authenticatedUser.masterOperational.region.regionID)}
+                                #{loanaccountBean.setBranchid(loginBean.authenticatedUser.masterOperational.branch.branchid)}
+                                #{loanaccountBean.setSubbranchunitcoid(loginBean.authenticatedUser.masterOperational.subBranchUnitCo.subbranchunitcoid)}
+                                <h:outputText value="Account Officer"/>
+                                <p:selectBooleanCheckbox itemLabel="Pilihan Berdasarkan Kantor" value="#{loanaccountBean.officebased}">
+                                    <p:ajax listener="#{loanaccountBean.testing()}" update="loanao,listao"/>
+                                </p:selectBooleanCheckbox>
+                                <p:selectOneMenu id="loanao" value="#{loanaccountBean.account.accountofficer}" style="width: 180px">
+                                    <f:selectItems id="listao" value="#{loanaccountBean.listOperatorUser}" var="operatoruser" itemLabel="#{operatoruser.employeename}" itemValue="#{operatoruser.userid}" />
+                                    <p:ajax update="@this" />
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Alasan Pengajuan Pinjaman"/>
+                                <p:selectOneMenu value="#{loanaccountBean.loanapplication.loanreason}" style="width: 190px">
+                                    <!-- <f:selectItem itemValue="" itemLabel="Pilih Alasan" /> -->
+                                    <f:selectItem itemValue="0" itemLabel="Tanpa Alasan" />
+                                    <f:selectItems value="#{loanaccountBean.listLoanReason}" var="loanreason" itemLabel="#{loanreason.reason}" itemValue="#{loanreason.reasonid}" />    
+                                    <p:ajax update="@this" />
+                                </p:selectOneMenu><h:outputText />
+
+                                <h:outputText value="Gunakan Jaminan" />
+                                <p:selectOneRadio value="#{loanaccountBean.loan.usecollateral}" disabled="true" >
+                                    <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                </p:selectOneRadio><h:outputText />
+
+                                <h:outputText value="Gunakan Penjamin" />
+                                <p:selectOneRadio value="#{loanaccountBean.loanapplication.useguarantor}" >
+                                    <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                    <p:ajax update="@form" />
+                                </p:selectOneRadio><h:outputText /> 
+
+                                <h:outputText value="Sumber Pendanaan" />
+                                <p:selectOneRadio value="#{loanaccountBean.loanapplication.sourceoffund}" >
+                                    <f:selectItem itemValue="pooling fund" itemLabel="Pooling Fund" />                            
+                                    <f:selectItem itemValue="chanelling" itemLabel="Chanelling"/>
+                                    <p:ajax update="nilaisumberpendanaan"/>
+                                </p:selectOneRadio>
+                                <p:selectOneMenu id="nilaisumberpendanaan" value="#{loanaccountBean.loanapplication.sourceoffundvalue}" style="width: 180px" disabled="#{loanaccountBean.loanapplication.sourceoffund == 'pooling fund'}" >
+                                    <f:selectItem itemValue="0" itemLabel="Pilih Sumber Pendanaan" />
+                                    <f:selectItems value="#{loanaccountBean.listFundingsource}" var="fundingsource" itemLabel="#{fundingsource.fundingsourcename}" itemValue="#{fundingsource.fundingsourceid}" />
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Alasan Pembiayaan Kembali"/>
+                                <p:selectOneMenu style="width: 190px" value="#{loanaccountBean.loanapplication.refinancereason}" >
+                                    <!--<f:selectItem itemValue="" itemLabel="Pilih Alasan " />-->
+                                    <f:selectItem itemValue="0" itemLabel="Tanpa Alasan" />
+                                    <p:ajax update="@this" />
+                                    <f:selectItems value="#{loanaccountBean.listRefinancingReason}" var="refinancingreason" itemLabel="#{refinancingreason.reason}" itemValue="#{refinancingreason.reasonid}"  />
+                                </p:selectOneMenu>
+                                <h:outputText />
+
+                            </h:panelGrid>
+
+                            <p:commandButton value="Lanjut" process="aplikasipinjaman" action="#{loanaccountBean.create()}" update=":viewDialog:warn,pengajuanpinjaman" />
+                        </p:tab>
+                        <!-- masih bermasalah angsuran pokok, saldo akhir,  -->
+                        <p:tab title="Perhitungan" id="perhitungan" disabled="#{loanaccountBean.tabNext.CekTab(1) and (loanaccountBean.filingOption != '2' and not loanaccountBean.stsRouting)}">
+                            <h:panelGrid columns="6" styleClass="grid" >
+
+                                <h:outputText value="Saldo Pinjaman Awal"/>
+                                <p:inputText value="#{loanaccountBean.loanapplication.openbalance}" disabled="true" style="width: 150px">
+                                    <p:ajax event="blur" listener="#{loanaccountBean.closebalance()}" update="closebalance"/>
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                </p:inputText><h:outputText />
+
+                                <h:outputText value="Saldo Pinjaman Akhir"/>
+                                <p:inputText id="closebalance" value="#{loanaccountBean.loanapplication.closebalance}" disabled="true" style="width: 150px">
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                </p:inputText><h:outputText />
+
+                                <h:outputText value="Jumlah Plafon"/>
+                                <p:inputText value="#{loanaccountBean.loanapplication.loanamount}" id="jumlahpinjaman" style="width: 150px" disabled="#{(not loanaccountBean.account.loanapplication.loan.allowloantopups) and loanaccountBean.filingOption == '2'}" >
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}" />
+                                    <p:ajax event="keyup" process="@this" listener="#{loanaccountBean.closebalance()}" update="closebalance,jangkawaktu"/>
+                                </p:inputText><h:outputText />
+
+                                <h:outputText value="Jangka Waktu" />
+                                <p:inputText id="jangkawaktu" style="width: 150px" value="#{loanaccountBean.loanapplication.loantermvalue}" disabled="#{loanaccountBean.restructure == false and loanaccountBean.filingOption == '2'}">
+                                    <p:ajax event="keyup" update="jatuhtempo,jumlahpinjaman"/>
+                                </p:inputText>
+                                <p:selectOneMenu value="#{loanaccountBean.loan.defaultloanterm}" disabled="true" id="jangkawaktucombobox" style="width: 80px">
+                                    <f:selectItem itemValue="hari" itemLabel="Hari" />
+                                    <f:selectItem itemValue="minggu" itemLabel="Minggu" />
+                                    <f:selectItem itemValue="bulan" itemLabel="Bulan" />
+                                    <f:selectItem itemValue="tahun" itemLabel="Tahun" />
+                                    <f:ajax execute="@this" />
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Angsuran Pertama Saat Pencairan" />
+                                <p:selectOneRadio value="#{loanaccountBean.loanapplication.calculateinitialpaymentdate}"  >
+                                    <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                    <p:ajax listener="#{loanaccountBean.changeDate()}" update="tanggalangsuranpertama,jatuhtempo"/>
+                                </p:selectOneRadio>
+                                <h:outputText />
+
+                                <h:outputText value="Tanggal Pencairan"/>
+                                <p:calendar id="tanggalpencairan" mindate="#{loanaccountBean.today}" value="#{loanaccountBean.loanapplication.initialissuedate}" pattern="#{loanaccountBean.patterndate}" navigator="true" style="width: 150px" effect="explode" >
+                                    <p:ajax event="dateSelect" listener="#{loanaccountBean.changeDate()}" update=":viewDialog:warned,tanggalpencairan,tanggalangsuranpertama,jatuhtempo"/>
+                                </p:calendar><h:outputText />
+
+                                <h:outputText value="Tanggal Angsuran Pertama"/>                                
+                                <p:calendar id="tanggalangsuranpertama" disabled="true" value="#{loanaccountBean.loanapplication.initialpaymentdate}" pattern="#{loanaccountBean.patterndate}" navigator="true" style="width: 150px" effect="explode" />
+                                <h:outputText />
+
+                                <h:outputText value="Tanggal Jatuh Tempo"/>
+                                <p:calendar id="jatuhtempo" disabled="true" pattern="#{loanaccountBean.patterndate}" navigator="true" value="#{loanaccountBean.loanapplication.jatuhtempo}" style="width: 150px" effect="explode" />
+                                <h:outputText />
+
+                                <h:outputText value="Perhitung Hari" />
+                                <p:selectOneMenu id="aktual" value="#{loanaccountBean.loanapplication.dayaccountfraction}" style="width: 150px" disabled="#{loanaccountBean.restructure == false and loanaccountBean.filingOption == '2'}">
+                                    <f:selectItem itemValue="30/360" itemLabel="30/360" />
+                                    <f:selectItem itemValue="30/365" itemLabel="30/365" />
+                                    <f:selectItem itemValue="aktual/360" itemLabel="Aktual/360" />
+                                    <f:selectItem itemValue="aktual/365" itemLabel="Aktual/365" />
+                                    <f:selectItem itemValue="aktual/365.25" itemLabel="Aktual/365.25" />
+                                </p:selectOneMenu><h:outputText />
+
+                                <h:outputText value="Tipe Penangguhan" />
+                                <p:selectOneMenu value="#{loanaccountBean.loanapplication.periodedeffered}"  style="width: 250px" disabled="#{(loanaccountBean.restructure == false and loanaccountBean.filingOption == '2') or (not loanaccountBean.loan.allowdeferredpayment)}">
+                                    <f:selectItem itemValue="0" itemLabel="Pilih Grace Periode" />
+                                    <f:selectItem itemValue="1" itemLabel="Penangguhan Pinjaman dengan Grace Periode" />
+                                    <f:selectItem itemValue="2" itemLabel="Penangguhan Pinjaman tanpa Grace Periode" />
+                                    <f:selectItem itemValue="3" itemLabel="Penangguhan Angsuran dengan Grace Periode" />
+                                    <f:selectItem itemValue="4" itemLabel="Penangguhan Angsuran tanpa Grace Periode" />
+                                    <p:ajax update="periodepenangguhan" ></p:ajax>
+                                </p:selectOneMenu><h:outputText />
+
+
+                                <h:outputText value="Periode Penangguhan"/>
+                                <p:inputText id="periodepenangguhan" value="#{loanaccountBean.loanapplication.periodedefferedvalue}" disabled="#{(loanaccountBean.loanapplication.periodedeffered == '0') or (not loanaccountBean.loan.allowdeferredpayment)}"  style="width: 150px">
+                                    <p:ajax update="periodepenangguhan" ></p:ajax></p:inputText><h:outputText />
+
+                                <h:outputText value="Uang Muka"/>
+                                <p:inputText value="#{loanaccountBean.loanapplication.downpayment}" style="width: 150px" disabled="#{loanaccountBean.restructure == false and loanaccountBean.filingOption == '2'}">
+                                    <p:ajax event="keyup" listener="#{loanaccountBean.closebalance()}" update="closebalance"/>
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                </p:inputText><h:outputText />
+
+                                <h:outputText value="Gunakan Simpanan Kapitalisasi" />
+                                <p:selectOneRadio value="#{loanaccountBean.loanapplication.usecapitalization}"  disabled="true">
+                                    <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                    <p:ajax  process="@form" update="pembayaransimpanankapitalisasi" />
+                                </p:selectOneRadio>
+                                <p:inputText id="capitalizationvalue" style="width: 150px" value="#{loanaccountBean.loan.capitalizationsavingvalue}" rendered="#{not loanaccountBean.typeCapital()}" disabled="true" >
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                </p:inputText>
+                                
+                                <pe:inputNumber symbol=" %" symbolPosition="right" value="#{loanaccountBean.loan.capitalizationsavingvalue}" style="width: 150px" rendered="#{loanaccountBean.typeCapital()}" disabled="true" />
+
+                                <h:outputText value="Pembayaran Simpanan Kapitalisasi" />
+                                <p:selectOneMenu id="pembayaransimpanankapitalisasi" value="#{loanaccountBean.loanapplication.capitalizationpayment}" style="width: 220px">
+                                    <f:selectItem itemValue="saat pencairan" itemLabel="Saat Pencairan" />
+                                    <!-- <f:selectItem itemValue="saat pembayaran angsuran" itemLabel="Saat Pembayaran Angsuran" /> -->
+                                </p:selectOneMenu>
+                                <h:outputText />
+
+                                <h:outputText value="Rekening Simpanan Kapitalisasi"/>
+                                <p:selectOneMenu id="rekeningsimpananwajib" value="#{loanaccountBean.loanapplication.capitalizationaccount}" style="width: 150px" >
+                                    <f:selectItems value="#{loanaccountBean.listSavingAccountKapitalisasi}" var="savingKapitalisasi" itemLabel="#{savingKapitalisasi.accountcode}" itemValue="#{savingKapitalisasi.accountid}" />
+                                </p:selectOneMenu><h:outputText />
+                                <h:outputText value="Bunga"/>
+                                <p:inputText style="width: 50px" value="#{loanaccountBean.interest.baseinterest} %" disabled="true" /><h:outputText />
+
+                            </h:panelGrid>
+                            <p:fieldset collapsed="true" toggleable="true" legend="Daftar Biaya">
+                                <p:dataTable value="#{loanaccountBean.listFeedetail}" var="ListFeeVal">
+                                    <f:facet name="header">Daftar Biaya</f:facet>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Nama Biaya"/></f:facet>
+                                        <h:outputText value="#{ListFeeVal.fee.feename}"/>
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Nilai"/></f:facet>
+                                        <h:outputText value="#{ListFeeVal.fee.feevalue}">
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:fieldset>
+                            <h:panelGrid columns="2" styleClass="grid" > 
+                                <p:commandButton value="Hitung" action="#{loanaccountBean.hitung()}" update=":viewDialog:warn,jumlahpinjaman,hasilperhitungan,closebalance,jangkawaktu" />
+                            </h:panelGrid>
+                            <p:dataTable
+                                id="hasilperhitungan"
+                                value="#{loanaccountBean.listCalculate}"
+                                var="perhitungan"
+                                >
+                                <f:facet name="header">Jadwal Pembayaran Pinjaman</f:facet>
+                                <p:column>
+                                    <f:facet name="header"><h:outputText value="Periode"/></f:facet>
+                                    <h:outputText value="#{perhitungan.periode_tampil}"/>
+                                </p:column>
+
+                                <p:column>
+                                    <f:facet name="header"><h:outputText value="Tanggal Pembayaran"/></f:facet>
+                                    <h:outputText value="#{perhitungan.tanggal_angsuran}"/>
+                                </p:column>
+
+                                <p:column>
+                                    <f:facet name="header"><h:outputText value="Jumlah Angsuran"/></f:facet>
+                                    <h:outputText value="Rp. "/>
+                                    <h:outputText value="#{perhitungan.jumlah_angsuran_dec}">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column>
+                                    <f:facet name="header"><h:outputText value="Pokok"/></f:facet>
+                                    <h:outputText value="Rp. "/>
+                                    <h:outputText value="#{perhitungan.angsuran_pokok_dec}">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </h:outputText>
+
+                                </p:column>
+
+                                <p:column >
+                                    <f:facet name="header"><h:outputText value="Bunga"/></f:facet>
+                                    <h:outputText value="Rp. "/>
+                                    <h:outputText value="#{perhitungan.angsuran_bunga_dec}">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column >
+                                    <f:facet name="header"><h:outputText value="Saldo"/></f:facet>
+                                    <h:outputText value="Rp. "/>
+                                    <h:outputText value="#{perhitungan.saldo_dec}">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>   
+
+                            <p:commandButton value="Lanjut" process="perhitungan,rekeningsimpananwajib" action="#{loanaccountBean.update_calculate()}" actionListener="#{loanaccountBean.tabNext.nextTab(1)}" update="pengajuanpinjaman" />
+                        </p:tab>
+
+                        <p:tab title="Asuransi" id="asuransi" disabled="#{loanaccountBean.tabNext.CekTab(2) and (loanaccountBean.filingOption != '2' and not loanaccountBean.stsRouting)}" rendered="#{loanaccountBean.loan.isinsurancerequired == 'true'}" >
+                            <h:panelGrid columns="6" styleClass="grid" >
+
+                                <h:outputText value="Jenis Asuransi"/>
+                                <p:selectOneMenu value="#{loanaccountBean.loanapplication.insurancetype}" style="width: 180px">
+                                    <!--<f:selectItem itemValue="" itemLabel="Pilih Jenis Asuransi" />
+                                    <f:selectItem itemValue="0" itemLabel="Tanpa Jenis Asuransi" />-->
+                                    <f:selectItems value="#{loanaccountBean.listInsuranceType}" var="asuransi" itemLabel="#{asuransi.insurancetype}" itemValue="#{asuransi.insurancetype}" />
+                                    <p:ajax update="insuranceprovider"/>
+                                </p:selectOneMenu><h:outputText />
+
+                                <h:outputText value="Nomer Polis"/>
+                                <p:inputText value="#{loanaccountBean.loanapplication.polisnumber}" style="width: 180px"/><h:outputText />
+
+                                <h:outputText value="Nama Perusahaan"/>
+                                <p:selectOneMenu id="insuranceprovider" value="#{loanaccountBean.loanapplication.insuranceprovider}" style="width: 180px">
+                                    <!--<f:selectItem itemValue="" itemLabel="Pilih Lembaga Asuransi" />-->
+                                    <f:selectItem itemValue="0" itemLabel="Tanpa Lembaga Asuransi" />
+                                    <f:selectItems value="#{loanaccountBean.listInsuranceName}" var="asuransi" itemLabel="#{asuransi.insurancename}" itemValue="#{asuransi.insuranceid}" />
+                                </p:selectOneMenu><h:outputText />
+
+                                <h:outputText value="Tanggal Mulai Pertanggungan"/>
+                                <p:calendar id="insurancedate" value="#{loanaccountBean.loanapplication.insurancedate}" pattern="#{loanaccountBean.patterndate}" navigator="true"  style="width: 180px" effect="explode" >
+                                </p:calendar><h:outputText />
+
+                                <h:outputText value="Nilai Premi yang dibayar"/>
+                                <p:selectOneMenu id="insurancevaluetype" value="#{loanaccountBean.loanapplication.insurancevaluetype}" style="width: 180px">
+                                    <f:selectItem itemValue="0" itemLabel="Pilih Nilai" />
+                                    <f:selectItem itemValue="nominal" itemLabel="Nominal" />
+                                    <f:selectItem itemValue="prosentase" itemLabel="Prosentase" />
+                                    <p:ajax update="insurancevalue"></p:ajax>
+                                </p:selectOneMenu>
+                                <p:inputText id="insurancevalue" value="#{loanaccountBean.loanapplication.insurancevalue}" disabled="#{loanaccountBean.loanapplication.insurancevaluetype == '0'}" style="width: 150px">
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                </p:inputText>
+
+                                <h:outputText value="Tanggal Jatuh Tempo Pertanggungan"/>
+                                <p:calendar id="maturityinsurance" value="#{loanaccountBean.loanapplication.maturityinsurance}" pattern="#{loanaccountBean.patterndate}" navigator="true"  style="width: 180px" effect="explode" /><h:outputText />
+
+                                <h:outputText value="Keterangan"/>
+                                <p:inputText id="description" value="#{loanaccountBean.loanapplication.description}" style="width: 180px"/><h:outputText />
+
+                            </h:panelGrid>
+                            <p:commandButton value="Lanjut" process="asuransi" action="#{loanaccountBean.update_insurance()}" actionListener="#{loanaccountBean.tabNext.nextTab(2)}" update="pengajuanpinjaman" />
+                        </p:tab>
+
+                        <p:tab title="Data Keuangan" id="datakeuangan" disabled="#{loanaccountBean.tabNext.CekTab(loanaccountBean.tabAktif(3)) and (loanaccountBean.filingOption != '2' and not loanaccountBean.stsRouting)}">
+                            <p:panel id="datakeuanganindividu" header="Data Keuangan Individu" rendered="#{loanaccountBean.loanType == 'individu'}" >
+                                <h:panelGrid columns="3" styleClass="grid" >
+
+                                    <h:outputText value="Rata-rata penghasilan/sales/omzet usaha per bulan"/>
+                                    <p:inputText value="#{loanaccountBean.individualdatafinace.averageIncomePerMonth}" id="rata2penghasilan" style="width: 150px">
+                                        <p:ajax event="keyup" listener="#{loanaccountBean.averageincomeafterdiscount()}" update="total_biaya, penghasilan_perbulan, kekayaanbersih, averageincomeafterdiscount"/>
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText>
+                                    <h:outputText />
+
+                                    <h:outputText value="Potongan-potongan per bulan/angsuran pinjaman lainnya"/>
+                                    <p:inputText value="#{loanaccountBean.individualdatafinace.monthlyDiscountPayment}" id="potonganperbulan" style="width: 150px">
+                                        <p:ajax event="keyup" listener="#{loanaccountBean.averageincomeafterdiscount()}" update="total_biaya, penghasilan_perbulan, kekayaanbersih, averageincomeafterdiscount"/>
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                    <h:outputText value="Rata-rata Penghasilan per Bulan setelah potongan per bulan"/>
+                                    <p:inputText id="averageincomeafterdiscount" value="#{loanaccountBean.individualdatafinace.monthlyAverageIncomeAfterDiscount}" disabled="true" style="width: 150px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+
+                                    <h:outputText value="Biaya Rumah Tangga"/>
+                                    <p:inputText id="brt" value="#{loanaccountBean.individualdatafinace.householdExpense}" style="width: 150px">
+                                        <p:ajax event="keyup" listener="#{loanaccountBean.averageincomeafterdiscount()}" update="total_biaya, penghasilan_perbulan, kekayaanbersih, averageincomeafterdiscount"/>
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                    <h:outputText value="Biaya Sekolah Anak"/>
+                                    <p:inputText id="biayasekolah" value="#{loanaccountBean.individualdatafinace.childernEducationExpenditures}" style="width: 150px">
+                                        <p:ajax event="keyup" listener="#{loanaccountBean.averageincomeafterdiscount()}" update="total_biaya, penghasilan_perbulan, kekayaanbersih, averageincomeafterdiscount"/>
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                    <h:outputText value="Biaya Lain-lain"/>
+                                    <p:inputText id="biaya_lainlain" value="#{loanaccountBean.individualdatafinace.miscelleneousExpenditures}" style="width: 150px">
+                                        <p:ajax event="keyup" listener="#{loanaccountBean.averageincomeafterdiscount()}" update="total_biaya, penghasilan_perbulan, kekayaanbersih, averageincomeafterdiscount"/>
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                    <h:outputText value="Total Biaya"/>
+                                    <p:inputText id="total_biaya" value="#{loanaccountBean.individualdatafinace.totalExpenditures}" style="width: 150px" disabled="true">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                    <h:outputText /><h:outputText /><h:outputText />
+
+                                    <h:outputText value="Penghasilan/Sales/Omzet Usaha Bersih per Bulan"/>
+                                    <p:inputText disabled="true" id="penghasilan_perbulan" value="#{loanaccountBean.individualdatafinace.monthlyNetBusinessTurnover}" style="width: 150px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                    <h:outputText value="Penghasilan/Pendapatan Lainnya (Pemohon)"/>
+                                    <p:inputText id="pendapatan_pemohon" value="#{loanaccountBean.individualdatafinace.otherRevenues}" style="width: 150px">
+                                        <p:ajax event="keyup" listener="#{loanaccountBean.averageincomeafterdiscount()}" update="total_biaya, penghasilan_perbulan, kekayaanbersih, averageincomeafterdiscount"/>
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                    <h:outputText value="Penghasilan/Pendapatan Lainnya (Suami/Istri)"/>
+                                    <p:inputText id="penghasilan_suami" value="#{loanaccountBean.individualdatafinace.otherRevenuesHusbandWife}" style="width: 150px">
+                                        <p:ajax event="keyup" listener="#{loanaccountBean.averageincomeafterdiscount()}" update="total_biaya, penghasilan_perbulan, kekayaanbersih, averageincomeafterdiscount"/>
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                    <h:outputText value="Kekayaan Bersih (Net Worth)"/>
+                                    <p:inputText id="kekayaanbersih" disabled="true" value="#{loanaccountBean.individualdatafinace.netWorth}" style="width: 150px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+
+                                </h:panelGrid>
+                            </p:panel>
+
+                            <p:commandButton process="datakeuangan" action="#{loanaccountBean.create_datafinance()}" value="Lanjut" actionListener="#{loanaccountBean.tabNext.nextTab(loanaccountBean.tabAktif(3))}" update="pengajuanpinjaman" />
+                        </p:tab>
+
+                        <p:tab title="Dokumen" id="dokumen" disabled="#{loanaccountBean.tabNext.CekTab(loanaccountBean.tabAktif(4)) and (loanaccountBean.filingOption != '2' and not loanaccountBean.stsRouting)}">
+                            <h:panelGrid columns="2" styleClass="grid" >
+                                <p:selectManyCheckbox value="#{loanaccountBean.documentCheckList}" layout="pageDirection">
+                                    <f:selectItems value="#{loanaccountBean.listDocument}" var="document" itemLabel="#{document.title}" itemValue="#{document.documentid}" />
+                                </p:selectManyCheckbox><h:outputText />
+                            </h:panelGrid>
+                            <p:commandButton process="dokumen" action="#{loanaccountBean.update_document()}" value="Lanjut" actionListener="#{loanaccountBean.tabNext.nextTab(loanaccountBean.tabAktif(4))}" update="pengajuanpinjaman" />
+                        </p:tab>
+
+                        <p:tab title="Penjamin" id="penjamin" disabled="#{loanaccountBean.tabNext.CekTab(loanaccountBean.tabAktif(5)) and (loanaccountBean.filingOption != '2' and not loanaccountBean.stsRouting)}" rendered="#{loanaccountBean.loanapplication.useguarantor == true}" >
+                            <p:panel id="Panelguarantortype" >
+                                <h:panelGrid columns="2" columnClasses="label, value=" styleClass="grid" >
+                                    <h:outputText value="Pilihan Jenis Penjamin" />
+                                    <p:selectOneMenu id="pilihjenispenjamin" value="#{loanaccountBean.guarantor.type}" style="width: 180px" disabled="#{loanaccountBean.panelguarantortype == 1 || loanaccountBean.statusGuarantor == 'view'}" >
+                                        <f:selectItem itemValue="0" itemLabel="Pilih Jenis Penjamin" />
+                                        <f:selectItem itemValue="N" itemLabel="Nasabah" />
+                                        <f:selectItem itemValue="B" itemLabel="Bukan Nasabah" />
+                                        <p:ajax update="Panelguarantordetail" />
+                                    </p:selectOneMenu>
+
+                                    <p:commandButton value="Pilih" actionListener="#{loanaccountBean.TombolGuarantor(1)}" update="@this,Panelguarantordetail,pilihjenispenjamin" disabled="#{loanaccountBean.panelguarantortype==1 || loanaccountBean.statusGuarantor == 'view'}" />
+                                    <p:commandButton value="Batal" actionListener="#{loanaccountBean.TombolBatalGuarantor()}" update="Panelguarantordetail,Panelguarantortype"/>
+                                </h:panelGrid>
+                            </p:panel>    
+                            <p:panel id="Panelguarantordetail" toggleable="true" >
+                                <p:fieldset collapsed="false" toggleable="true" legend="Detail Penjamin">
+                                    <p:tabView id="pengisianpenjamin" activeIndex="#{loanaccountBean.tabNextGuarantor.indexTab}" rendered="#{loanaccountBean.guarantor.type != '0' and loanaccountBean.panelguarantortype == 1}">
+                                        <p:tab title="Data Pribadi" id="datapribadi" disabled="#{loanaccountBean.tabNextGuarantor.CekTab(0) and (loanaccountBean.statusGuarantor!='view')}">
+                                            <p:panel id="data_pribadi_nasabah" header="Data Pribadi Nasabah" rendered="#{loanaccountBean.guarantor.type == 'N' and loanaccountBean.panelguarantortype == 1}">
+                                                <h:panelGrid columns="6" columnClasses="label, value=" styleClass="grid" >
+                                                    <p:commandButton actionListener="#{loanaccountBean.setIsCustomerGuarantor(true)}" oncomplete="nasabah.show()" update=":viewDialog,@this" process=":viewDialog,@this" value="Nama Nasabah" disabled="false" />
+                                                    <p:inputText value="#{loanaccountBean.guarantor.name}"  style="width: 150px" disabled="true"/>
+                                                    <h:outputText />
+                                                    <h:outputText value="Nomor CIF"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.cifnumber}"  style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Nomor KTP"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.socialsecuritynumber}"  style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Alamat"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.address}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Provinsi"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.provincename}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Kabupaten"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.districtname}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Kecamatan"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.subdistrictname}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Kelurahan"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.villagename}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Kode Pos"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.postcode}" style="width: 150px" disabled="true"/><h:outputText />                               
+                                                    <h:outputText value="Kode Area"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.phonearea}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Nomor Telepon"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.phonenumber}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Kode Fax"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.faximilearea}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Nomor Fax"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.faximilenumber}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Nomor Handphone"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.mobilenumber}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Email"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.email}" style="width: 150px" disabled="true"/><h:outputText />
+                                                    <h:outputText value="Hubungan"/>
+                                                    <p:inputText  value="#{loanaccountBean.guarantor.relation}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Jumlah Nominal"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.nominal}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Deskripsi"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.description}" style="width: 150px"/><h:outputText />
+                                                </h:panelGrid>
+                                            </p:panel>
+
+                                            <p:panel id="data_pribadi_bukan_nasabah" header="Data Pribadi Bukan Nasabah" rendered="#{loanaccountBean.guarantor.type == 'B' and loanaccountBean.panelguarantortype == 1}" >
+                                                <h:panelGrid columns="6" columnClasses="label, value=" styleClass="grid" >
+                                                    <h:outputText value="Nama Nasabah"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.name}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Nomor KTP"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.socialsecuritynumber}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Alamat"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.address}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Provinsi"/>
+                                                    <p:selectOneMenu style="width: 150px" value="#{loanaccountBean.provinceid}" >
+                                                        <f:selectItem itemValue="" itemLabel="Pilih Provinsi" />
+                                                        <f:selectItems value="#{loanaccountBean.listProvince}" var="province" itemLabel="#{province.provincename}" itemValue="#{province.provinceid}" />
+                                                        <p:ajax update="district" listener="#{loanaccountBean.render()}"/>
+                                                    </p:selectOneMenu><h:outputText />
+                                                    <h:outputText value="Kabupaten"/>
+                                                    <p:selectOneMenu id="district" value="#{loanaccountBean.districtid}" style="width: 150px">
+                                                        <f:selectItem itemValue="" itemLabel="Pilih Kabupaten" />
+                                                        <f:selectItems value="#{loanaccountBean.listDistrict}" var="district" itemLabel="#{district.districtname}" itemValue="#{district.districtid}" />
+                                                        <p:ajax update="subdistrict" listener="#{loanaccountBean.render()}"/>
+                                                    </p:selectOneMenu><h:outputText />
+                                                    <h:outputText value="Kecamatan"/>
+                                                    <p:selectOneMenu id="subdistrict" value="#{loanaccountBean.subdistrictid}" style="width: 150px">
+                                                        <f:selectItem itemValue="" itemLabel="Pilih Kecamatan" />
+                                                        <f:selectItems value="#{loanaccountBean.listSubDistrict}" var="subdistrict" itemLabel="#{subdistrict.subdistrictname}" itemValue="#{subdistrict.subdistrictid}" />
+                                                        <p:ajax update="village" listener="#{loanaccountBean.render()}"/>
+                                                    </p:selectOneMenu><h:outputText />
+                                                    <h:outputText value="Kelurahan"/>
+                                                    <p:selectOneMenu id="village" value="#{loanaccountBean.guarantor.villageid}" style="width: 150px">
+                                                        <f:selectItem itemValue="" itemLabel="Pilih Kelurahan" />
+                                                        <f:selectItems value="#{loanaccountBean.listVillage}" var="village" itemLabel="#{village.villagename}" itemValue="#{village.villageid}" />
+                                                        <p:ajax listener="#{loanaccountBean.render()}"/>
+                                                    </p:selectOneMenu><h:outputText />
+                                                    <h:outputText value="Kode Pos"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.postcode}" style="width: 150px"/><h:outputText />                               
+                                                    <h:outputText value="Kode Area"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.phonearea}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Nomor Telepon"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.phonenumber}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Kode Fax"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.faximilearea}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Nomor Fax"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.faximilenumber}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Nomor Handphone"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.mobilenumber}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Email"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.email}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Hubungan"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.relation}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Jumlah Nominal"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.nominal}" style="width: 150px"/><h:outputText />
+                                                    <h:outputText value="Deskripsi"/>
+                                                    <p:inputText value="#{loanaccountBean.guarantor.description}" style="width: 150px"/><h:outputText />
+                                                </h:panelGrid>
+                                            </p:panel>
+                                            <p:commandButton value="Lanjut" actionListener="#{loanaccountBean.tabNextGuarantor.nextTab(0)}" update="pengisianpenjamin" />
+                                        </p:tab>
+
+                                        <p:tab title="Tanda Tangan" id="tandatangan" disabled="#{loanaccountBean.tabNextGuarantor.CekTab(1) and (loanaccountBean.statusGuarantor!='view')}">
+                                            <p:fieldset collapsed="true" toggleable="true" legend="Tanda Tangan Digital">
+                                                <h:panelGrid columns="2">
+                                                    <p:panel header="Hasil Yang Disimpan">
+                                                        <p:inputTextarea disabled="true" />                                            
+                                                    </p:panel>
+                                                    <p:panel header="Buat Baru">
+                                                        <p:inputTextarea />                                            
+                                                    </p:panel>
+                                                    <h:outputText /><p:commandButton value="Simpan" />
+                                                </h:panelGrid>
+                                            </p:fieldset>
+                                            <p:fieldset collapsed="true" toggleable="true" legend="Upload Tanda Tangan">
+
+                                            </p:fieldset>            
+                                            <p:commandButton value="Lanjut" actionListener="#{loanaccountBean.tabNextGuarantor.nextTab(1)}" update="pengisianpenjamin" />    
+                                        </p:tab>
+
+                                        <p:tab title="Dokumen" id="dokumenguarantor" disabled="#{loanaccountBean.tabNextGuarantor.CekTab(2) and (loanaccountBean.statusGuarantor!='view')}">
+                                            <h:panelGrid columns="2" styleClass="grid" >
+                                                <p:selectManyCheckbox value="#{loanaccountBean.documentGuarantorCheckList}" layout="pageDirection">
+                                                    <f:selectItems value="#{loanaccountBean.listDocumentGuarantor}" var="dokumenguarantor" itemLabel="#{dokumenguarantor.title}" itemValue="#{dokumenguarantor.documentid}" />
+                                                </p:selectManyCheckbox><h:outputText />
+                                            </h:panelGrid>
+                                            <p:commandButton value="Simpan" action="#{loanaccountBean.insert_guarantor()}" update=":tableLoanCreation:pengajuanpinjaman:tabelguarantor, :tableLoanCreation:pengajuanpinjaman:Panelguarantortype, :tableLoanCreation:pengajuanpinjaman:Panelguarantordetail" />    
+                                        </p:tab>
+                                    </p:tabView>
+                                </p:fieldset>
+                            </p:panel> 
+
+                            <h:panelGroup id="pnltabelguarantor">
+                                <p:dataTable 
+                                    value="#{loanaccountBean.listCustomerGuarantor}" 
+                                    id="tabelguarantor" 
+                                    widgetVar="tabel" 
+                                    emptyMessage="Data Masih Kosong"
+                                    var="guarantorlist" >
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Tipe Penjamin"/></f:facet>
+                                        <h:outputText value="#{loanaccountBean.typeNasabah(guarantorlist.type)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Nama"/></f:facet>
+                                        <h:outputText value="#{guarantorlist.name}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Nomor KTP"/></f:facet>
+                                        <h:outputText value="#{guarantorlist.socialsecuritynumber}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Nominal"/></f:facet>
+                                        <h:outputText value="#{guarantorlist.nominal}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Hapus Penjamin"/></f:facet>
+                                        <p:commandButton icon="ui-icon ui-icon-trash" actionListener="#{loanaccountBean.deleteGuarantor(guarantorlist)}" process="@this" title="Hapus" update=":tableLoanCreation:pengajuanpinjaman:pnltabelguarantor" />
+                                        <p:commandButton icon="ui-icon ui-icon-edit" actionListener="#{loanaccountBean.loadGuarantor(guarantorlist)}" process="@this" title="Edit" update=":tableLoanCreation:pengajuanpinjaman:Panelguarantordetail" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+
+                            <p:commandButton value="Lanjut" process="penjamin" actionListener="#{loanaccountBean.tabNext.nextTab(loanaccountBean.tabAktif(5))}" update="pengajuanpinjaman" />
+                        </p:tab>
+
+                        <p:tab title="Jaminan" id="jaminan" disabled="#{loanaccountBean.tabNext.CekTab(loanaccountBean.tabAktif(6)) and (loanaccountBean.filingOption != '2' and not loanaccountBean.stsRouting)}" rendered="#{loanaccountBean.loan.usecollateral  == 'true'}" >
+                            <h:panelGroup id="panelJaminan">
+                                <h:panelGrid columns="6" styleClass="grid" >
+                                    <h:outputText value="Tipe Jaminan" />
+                                    <p:selectOneMenu value="#{loanaccountBean.tipejaminan}" style="width: 150px">
+                                        <!-- <f:selectItem itemValue="Perumahan" itemLabel="Perumahan" /> -->
+                                        <f:selectItem itemValue="Rumah" itemLabel="Tempat Tinggal" />
+                                        <f:selectItem itemValue="Tanah" itemLabel="Tanah" />
+                                        <f:selectItem itemValue="Komersial" itemLabel="Komersial" />
+                                        <f:selectItem itemValue="Kas" itemLabel="Kas" />
+                                        <f:selectItem itemValue="Asuransi" itemLabel="Asuransi" />
+                                        <f:selectItem itemValue="Emas" itemLabel="Emas" />
+                                        <f:selectItem itemValue="Kendaraan" itemLabel="Kendaraan" />
+                                        <f:selectItem itemValue="Surat Berharga" itemLabel="Surat Berharga" />
+                                        <p:ajax update="detailJaminan,srtkepemilikan"/>
+                                    </p:selectOneMenu><h:outputText />
+
+                                    <h:outputText value="Detail Jaminan" />
+                                    <p:selectOneMenu value="#{loanaccountBean.collateral.collateralParameter.collateralparameterid}" id="detailJaminan" style="width: 150px">
+                                        <f:selectItem itemValue="0" itemLabel="Pilih Detail Jaminan" />
+                                        <f:selectItems value="#{loanaccountBean.collateralParameters}" var="jaminan" itemValue="#{jaminan.collateralparameterid}" itemLabel="#{jaminan.collateralparameterdetail}" />
+                                    </p:selectOneMenu><h:outputText />
+
+                                    <h:outputText value="Surat Kepemilikan" />
+                                    <p:selectOneMenu  value="#{loanaccountBean.collateral.letterofownershiptype.letterofownershiptypeid}" id="srtkepemilikan" style="width: 150px">
+                                        <f:selectItem itemValue="0" itemLabel="Pilih Surat Kepemilikan" />
+                                        <f:selectItems value="#{loanaccountBean.letterofownershiptypes}" var="sKepemilikan" itemValue="#{sKepemilikan.letterofownershiptypeid}" itemLabel="#{sKepemilikan.letterofownershiptypename}" />
+                                    </p:selectOneMenu><h:outputText />
+                                    <h:outputText value="Nama Pemilik"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.collateralOwnershipletter.ownername}" style="width: 150px"/><h:outputText />
+                                    <h:outputText value="Nilai Pasar Wajar Agunan"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.realizationfairmarketvalue}" style="width: 150px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+                                    <h:outputText value="Rasio NPW terhadap Plafon"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.ratiofairmarketvalueandplafond}" style="width: 150px"/><h:outputText />
+                                    <h:outputText value="Nilai Taksir Sementara"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.collateralAppraisal.appraisedvalue}" style="width: 150px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+                                    <h:outputText value="Nilai Realisasi"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.realizationvalue}" style="width: 150px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+                                    <h:outputText value="Biaya Tetap"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.fixedfee}" style="width: 150px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+                                    <h:outputText value="Nilai Bersih"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.netvalue}" style="width: 150px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText />
+                                    <h:outputText value="Nilai Jual Objek Pajak (NJOP)" rendered="#{loanaccountBean.tipejaminan=='Rumah' or loanaccountBean.tipejaminan=='Tanah' or loanaccountBean.tipejaminan=='Komersial'}"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.taxobjectsalevalue}" style="width: 150px" rendered="#{loanaccountBean.tipejaminan=='Rumah' or loanaccountBean.tipejaminan=='Tanah' or loanaccountBean.tipejaminan=='Komersial'}">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText><h:outputText rendered="#{loanaccountBean.tipejaminan=='Rumah' or loanaccountBean.tipejaminan=='Tanah' or loanaccountBean.tipejaminan=='Komersial'}"/>
+                                    <h:outputText value="Tanggal Penilaian"/>
+                                    <p:calendar value="#{loanaccountBean.collateral.collateralAppraisal.appraisaldate}" pattern="#{loanaccountBean.patterndate}" navigator="true"  style="width: 150px"/><h:outputText />
+                                    <h:outputText value="Tanggal Habis Penilaian"/>
+                                    <p:calendar value="#{loanaccountBean.collateral.collateralAppraisal.expirationdateofappraisal}" pattern="#{loanaccountBean.patterndate}" navigator="true"  style="width: 150px"/><h:outputText />
+
+                                    <h:outputText value="Gunakan Asuransi" />
+                                    <p:selectOneRadio value="#{loanaccountBean.collateral.useinsurance}" >
+                                        <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                        <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                    </p:selectOneRadio>
+                                    <h:outputText />
+                                    <h:outputText value="Appraisal" />
+                                    <p:selectOneRadio value= "#{loanaccountBean.collateral.collateralAppraisal.appraisaltype}" >
+                                        <f:selectItem itemValue="D" itemLabel="Dependent"/>
+                                        <f:selectItem itemValue="I" itemLabel="Independent" />
+                                    </p:selectOneRadio>
+                                    <h:outputText />
+                                    <h:outputText value="Gunakan Paripasu" />
+                                    <p:selectOneRadio value="#{loanaccountBean.collateral.useparipasu}" >
+                                        <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                        <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                    </p:selectOneRadio>
+                                    <h:outputText />
+
+                                    <h:outputText value="Nama Apraisal"/>
+                                    <p:inputText value="#{loanaccountBean.collateral.collateralAppraisal.appraisalname}" style="width: 150px"/><h:outputText />
+                                    <h:outputText /><h:outputText /><h:outputText />
+                                    <p:commandButton value="#{msgs.edit}" rendered="#{loanaccountBean.statusCollateral == 'edit'}" action="#{loanaccountBean.insert_collateral()}" update="pnlgrpTblCollateral,panelJaminan"/><h:outputText /><h:outputText />
+                                    <p:commandButton value="#{msgs.add}" rendered="#{loanaccountBean.statusCollateral != 'edit'}" action="#{loanaccountBean.insert_collateral()}" update="pnlgrpTblCollateral,panelJaminan"/><h:outputText /><h:outputText />
+                                </h:panelGrid>
+                            </h:panelGroup>
+                            <p:separator />
+                            <h:panelGrid columns="2" id="minBind">
+                                <h:outputText value="Minimum Pengikatan : "/>
+                                <h:outputText value="#{loanaccountBean.minimumBinding}">
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                </h:outputText>
+                                <h:outputText value="Total Pengikatan : "/>
+                                <h:outputText value="#{loanaccountBean.totalBinding}" id="totalBinding">
+                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                </h:outputText>
+                            </h:panelGrid>
+                            <p:separator />
+                            <h:panelGroup id="pnlgrpTblCollateral" >
+                                <p:dataTable id="tblCollateral"
+                                             value="#{loanaccountBean.listCollateral}" 
+                                             widgetVar="tabelCollateral" 
+                                             emptyMessage="Data Masih Kosong"
+                                             var="collaterallist" >
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value=""/></f:facet>
+
+                                        <p:commandButton icon="ui-icon ui-icon-edit" process="@this" disabled="#{collaterallist.binding}" 
+                                                         value="Edit" actionListener="#{loanaccountBean.editCollateral(collaterallist)}" update="@this,:tableLoanCreation:pengajuanpinjaman:panelJaminan" />
+                                    </p:column> 
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Detail Jaminan"/></f:facet>
+                                        <h:outputText value="#{loanaccountBean.showTblColateral(1, collaterallist.collateralParameter.collateralparameterid)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Surat Kepemilikan"/></f:facet>
+                                        <h:outputText value="#{loanaccountBean.showTblColateral(2, collaterallist.letterofownershiptype.letterofownershiptypeid)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="NPW Agunan"/></f:facet>
+                                        <h:outputText value="#{collaterallist.realizationfairmarketvalue}">
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Nilai Bersih"/></f:facet>
+                                        <h:outputText value="#{collaterallist.netvalue}">
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Sisa Nilai Bersih"/></f:facet>
+                                        <h:outputText value="#{collaterallist.netvaluebalance}">
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Nilai Pengikatan"/></f:facet>
+                                        <h:outputText value="#{collaterallist.bindingvalue}">
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="Form Pengikatan"/></f:facet>
+                                        <p:commandButton icon="ui-icon ui-icon-edit" process="@this" 
+                                                         value="Bind" actionListener="#{loanaccountBean.panelPengikatan(collaterallist)}" update=":tableLoanCreation:pengajuanpinjaman:panelPengikatan" />
+                                    </p:column> 
+                                </p:dataTable>
+                            </h:panelGroup>
+                            <p:panel id="panelPengikatan" visible="#{loanaccountBean.pnlPengikatan}">
+                                <h:panelGroup>
+                                    <h:panelGrid id="panelgridpengikatanagunan" columns="2">
+                                        <h:panelGroup>
+                                            <h:panelGrid columns="2">
+                                                <h:outputText value="Jenis Pengikatan"/>
+                                                <p:selectOneMenu value="#{loanaccountBean.collateral.collateralBinding.bindingguaranteesid}" >
+                                                    <f:selectItem itemLabel="Pilih jenis pengikatan" itemValue=""/>
+                                                    <f:selectItems value="#{loanaccountBean.listbindingguaranteeses}" var="bindinglist" itemValue="#{bindinglist.bindingguaranteesid}" itemLabel="#{bindinglist.bindingguaranteesname}" />
+                                                    <p:ajax update="panelgridpengikatanagunan" listener="#{loanaccountBean.nilai}" />
+                                                </p:selectOneMenu>
+
+                                                <h:outputText value="Urutan Hak Tanggungan" rendered="#{loanaccountBean.collateral.collateralBinding.bindingguaranteesid == '2'}" />
+                                                <p:inputText value="#{loanaccountBean.collateral.collateralBinding.sequencemortgage}" rendered="#{loanaccountBean.collateral.collateralBinding.bindingguaranteesid == '2'}" >
+                                                    <p:ajax update="bindingRank" event="blur" listener="#{loanaccountBean.check}"/>
+                                                </p:inputText>
+
+                                                <h:outputLabel for="bindingRank" value="Peringkat Pengikatan Agunan" rendered="#{loanaccountBean.collateral.collateralBinding.bindingguaranteesid == '2'}"/>
+                                                <p:inputText id="bindingRank" value="#{loanaccountBean.collateral.collateralBinding.bindingrank}" rendered="#{loanaccountBean.collateral.collateralBinding.bindingguaranteesid == '2'}" disabled="#{loanaccountBean.sequenceBindingEnable}"/>
+
+                                                <h:outputText value="Nilai Hak Tanggungan"/>
+                                                <p:inputText value="#{loanaccountBean.collateral.collateralBinding.mortgagevalue}">
+                                                    <p:ajax event="keyup" update="nilaiPengikatan" listener="#{loanaccountBean.nilai}" />
+                                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}" />
+                                                </p:inputText>
+
+                                                <h:outputText value="Tanggal Pengikatan Agunan"/>
+                                                <p:calendar id="tanggalpengikatanagunan" value="#{loanaccountBean.collateral.collateralBinding.bindingdate}" pattern="#{loanaccountBean.patterndate}" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true"/>
+
+                                                <h:outputText value="Nomor Pengikatan Agunan"/>
+                                                <p:inputText value="#{loanaccountBean.collateral.collateralBinding.bindingnumber}"/>
+
+                                                <h:outputText value="Keterangan"/>
+                                                <p:inputText value="#{loanaccountBean.collateral.collateralBinding.description}"/>
+                                            </h:panelGrid>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="hjk">
+                                            <h:panelGrid columns="2">
+
+                                                <h:outputText value="Nilai PPAP (%)"/>
+                                                <p:inputText value="#{loanaccountBean.collateral.collateralBinding.ppapvalue}">
+                                                    <p:ajax update="reducingofprovisioningvalue" event="keyup" listener="#{loanaccountBean.reducingofprovisioningvalue}"/>
+                                                </p:inputText>
+
+                                                <h:outputText value="Nilai Pengikatan"/>
+                                                <p:inputText id="nilaiPengikatan" value="#{loanaccountBean.collateral.collateralBinding.bindingvalue}">
+                                                    <p:ajax update="reducingofprovisioningvalue " event="keyup" listener="#{loanaccountBean.reducingofprovisioningvalue}"/>
+                                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}" />
+                                                </p:inputText>
+
+                                                <h:outputText value="Pengali Jangka waktu (%)"/>
+                                                <p:inputText value="#{loanaccountBean.collateral.collateralBinding.termmultiplayerpercentage}">
+                                                    <p:ajax update="reducingofprovisioningvalue" event="keyup" listener="#{loanaccountBean.reducingofprovisioningvalue}"/>
+                                                </p:inputText>
+
+                                                <h:outputText value="Nilai pengurang PPAP"/>
+                                                <p:inputText id="reducingofprovisioningvalue" value="#{loanaccountBean.collateral.collateralBinding.reducingofprovisioningvalue}">
+                                                    <f:convertNumber pattern="#{loanaccountBean.patternNominal}" />
+                                                </p:inputText>
+
+                                            </h:panelGrid>
+                                        </h:panelGroup>
+
+                                    </h:panelGrid>
+                                </h:panelGroup>
+                                <p:commandButton value="Simpan" process="panelPengikatan" actionListener="#{loanaccountBean.calcBinding()}" update=":viewDialog:binding,:tableLoanCreation:pengajuanpinjaman:panelPengikatan,:tableLoanCreation:pengajuanpinjaman:pnlgrpTblCollateral,:tableLoanCreation:pengajuanpinjaman:minBind"/>
+                            </p:panel>
+                            <p:commandButton value="Lanjut" process="@this" rendered="#{loanaccountBean.statusUserButton != 'maker'}" actionListener="#{loanaccountBean.tabNext.nextTab(loanaccountBean.tabAktif(6))}" update="pengajuanpinjaman" />
+                        </p:tab>
+                        <p:tab title="Daftar Pengecekan" id="daftarpengecekan" rendered="#{loanaccountBean.stsRouting and loanaccountBean.statusUserButton != 'maker'}">
+                            <h:panelGrid columns="2" styleClass="grid" >
+                                <p:panel header="Daftar Pengecekan Checker" >
+                                    <p:selectManyCheckbox id="checklistcheker" layout="pageDirection" value="#{loanaccountBean.documentCheckListChecker}">
+                                        <f:selectItems value="#{loanaccountBean.listConditionalrole}" var="role" itemLabel="#{role.conditionalrole}" itemValue="#{role.conditionalroleid}" />
+                                    </p:selectManyCheckbox><h:outputText /> 
+                                </p:panel>
+                                <p:panel header="Daftar Pengecekan Approval" rendered="#{loanaccountBean.statusUserButton == 'approval'}" >
+                                    <p:selectManyCheckbox id="checklistapproval" layout="pageDirection" value="#{loanaccountBean.documentCheckListApproval}">
+                                        <f:selectItems value="#{loanaccountBean.listConditionalrole}" var="role" itemLabel="#{role.status}" itemValue="#{role.conditionalroleid}" />
+                                    </p:selectManyCheckbox><h:outputText /> 
+                                </p:panel>
+                            </h:panelGrid>     
+                            <h:panelGroup  rendered="#{loanaccountBean.statusUserButton == 'approval'}">
+                                <p:panel header="Jumlah yang Disetujui" >
+                                    <h:panelGrid columns="6">
+                                        <h:outputText value="Jumlah Plafon Pinjaman"/>
+                                        <p:inputText value="#{loanaccountBean.loanapplication.closebalance}" style="width: 150px" disabled="true" >
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </p:inputText><h:outputText />
+                                        <h:outputText value="Bunga"/>
+                                        <p:inputText style="width: 150px" value="#{loanaccountBean.interest.baseinterest}" disabled="true" />%
+                                        <h:outputText value="Jangkah Waktu"/>
+                                        <p:inputText style="width: 150px" value="#{loanaccountBean.loanapplication.loantermvalue}" disabled="true" /><p:inputText style="width: 50px" value="#{loanaccountBean.loan.defaultloanterm}" disabled="true" />
+                                        <h:outputText value="Uang Muka"/>
+                                        <p:inputText disabled="true" value="#{loanaccountBean.loanapplication.downpayment}" style="width: 150px">
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </p:inputText><h:outputText />
+                                        <h:outputText value="Jumlah Biaya"/>
+                                        <p:inputText style="width: 150px" disabled="true" >
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </p:inputText><h:outputText />
+                                        <h:outputText value="Tanggal Pencairan"/>
+                                        <p:calendar pattern="#{loanaccountBean.patterndate}" navigator="true" style="width: 150px" value="#{loanaccountBean.loanapplication.initialissuedate}" disabled="true" /><h:outputText />
+                                        <h:outputText value="Tanggal Angsuran Pertama"/>
+                                        <p:calendar pattern="#{loanaccountBean.patterndate}" navigator="true" style="width: 150px" value="#{loanaccountBean.loanapplication.initialpaymentdate}" disabled="true" /><h:outputText />
+                                        <h:outputText value="Tanggal Jatuh Tempoh"/>
+                                        <p:calendar pattern="#{loanaccountBean.patterndate}" navigator="true" style="width: 150px"  value="#{loanaccountBean.loanapplication.jatuhtempo}" disabled="true" /><h:outputText />
+                                        <h:outputText value="Nilai Pertanggungan Asuransi"/>
+                                        <p:inputText id="nilaipertangguhan" style="width: 150px" disabled="true" value="#{loanaccountBean.loanapplication.insurancevalue}" >
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </p:inputText><h:outputText />
+                                        <h:outputText value="Simpanan Kapitalisasi Pertama"/>
+                                        <p:inputText style="width: 150px" disabled="true" value="#{loanaccountBean.loanapplication.capitalizationvalue/loanaccountBean.loanapplication.loantermvalue}" >
+                                            <p:ajax event="keyup" listener="#{loanaccountBean.insurancevalue()}" update="nilaipertangguhan"/>
+                                            <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                        </p:inputText><h:outputText />
+                                        <h:outputText value="Pembayaran Angsuran Pertama"/>
+                                        <p:calendar pattern="#{loanaccountBean.patterndate}" navigator="true" style="width: 150px" id="pembayaranangsuranpertama" value="#{loanaccountBean.loanapplication.initialpaymentdate}" disabled="true" /><h:outputText />
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:separator />
+                                <h:panelGrid id="panelloanissueschedule" columns="4">
+                                    <h:outputText value="Jumlah Yang Dicairkan"/>
+                                    <p:inputText id="issueamount"  disabled="#{loanaccountBean.issued}" value="#{loanaccountBean.loanissueschedule.issueamount}" style="width: 180px">
+                                        <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Tanggal Pencairan"/>
+                                    <p:calendar id="issuedate" pattern="#{loanaccountBean.patterndate}" navigator="true" disabled="#{loanaccountBean.issuedate}" mindate="#{loanaccountBean.loanapplication.initialissuedate}" value="#{loanaccountBean.loanissueschedule.issuedate}" style="width: 180px" effect="explode" />
+                                    <h:outputText /><p:commandButton value="Tambah" disabled="#{loanaccountBean.issued}" process="panelloanissueschedule" actionListener="#{loanaccountBean.create_loanissue_schedule()}" update="@this,tabelschedulepencairan, issueamount, issuedate" />
+                                </h:panelGrid>
+                                <h:panelGroup id="tabelscheduleissued">
+                                    <p:dataTable 
+                                        value="#{loanaccountBean.listLoanissueschedule}" 
+                                        id="tabelschedulepencairan" 
+                                        widgetVar="tabel" 
+                                        emptyMessage="Data Masih Kosong"
+                                        var="schedulepencairan" >
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Tanggal Pencairan"/></f:facet>
+                                            <h:outputText value="#{schedulepencairan.loanissueapproval.issuedate}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Jumlah Yang Dicairkan"/></f:facet>
+                                            <h:outputText value="#{schedulepencairan.loanissueapproval.issueamount}">
+                                                <f:convertNumber pattern="#{loanaccountBean.patternNominal}"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Hapus Jadwal Pencairan"/></f:facet>
+                                            <p:commandButton icon="ui-icon ui-icon-trash" process="@this" actionListener="#{loanaccountBean.del_loanissue_schedule(schedulepencairan)}" title="Hapus" update=":tableLoanCreation:pengajuanpinjaman:tabelscheduleissued,:tableLoanCreation:pengajuanpinjaman:panelloanissueschedule" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </p:tab>
+                    </p:tabView>
+                </p:panel>
+                <p:panel id="panelSubmitMaker" visible="#{loanaccountBean.panelLoanCreation==1 and loanaccountBean.loan.loanid != 0}">
+                    <p:commandButton value="#{msgs.addNote}" onclick="addNote.show()"/>
+                    <p:commandButton value="#{msgs.Hold}" actionListener="#{loanaccountBean.loan_hold()}" update=":tableLoanCreation,:viewDialog"/>
+                    <p:commandButton value="#{msgs.Submit}" rendered="#{loanaccountBean.statusUserButton != 'approval'}" actionListener="#{loanaccountBean.loan_submit_maker()}" update=":tableLoanCreation,:viewDialog"/>&nbsp;&nbsp;&nbsp;
+                    <p:commandButton value="#{msgs.Approve}" rendered="#{loanaccountBean.statusUserButton == 'approval'}" actionListener="#{loanaccountBean.loan_approve()}" update=":tableLoanCreation,:viewDialog"/>&nbsp;&nbsp;&nbsp;
+                    <p:commandButton value="#{msgs.Reject}" rendered="#{loanaccountBean.statusUserButton == 'approval'}" actionListener="#{loanaccountBean.loan_reject()}" update=":tableLoanCreation,:viewDialog"/>
+                    <p:commandButton value="#{msgs.Cancel}" actionListener="#{loanaccountBean.setPanelLoanCreation(0)}"  update=":pinjaman,:tableLoanCreation:panelSubmitMaker,:tableLoanCreation"/>
+                </p:panel>
+                <fieldset class="fieldsetBox">
+                    <legend>Next Routing Approval</legend>
+                    <div class="label w150">Note Routing</div>:  
+                    <h:outputFormat value="This form application will approved" rendered="#{loanaccountBean.targetPositionName==''}"></h:outputFormat>
+                    <h:outputFormat value="Agreement, This form will send to {0} : {1}" rendered="#{loanaccountBean.targetPositionName!=''}">
+                        <f:param value="#{loanaccountBean.targetPositionName}"/>
+                        <f:param value="#{loanaccountBean.targetEmployeeName}"/>
+                    </h:outputFormat>. #{loanaccountBean.noteRouting}
+                </fieldset>
+            </h:form>
+        </p:panel>
+    </ui:define>
+    <ui:define name="bottom">
+        bottom
+    </ui:define>
+
+</ui:composition>

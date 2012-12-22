@@ -1,0 +1,252 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+     
+     
+    <ui:define name="content">
+        <p:panel id="panelSaving" header="Reopen Account Saving" closable="true">
+            <h:form id="fr-reopen" prependId="false">
+                <h:panelGroup id="contSaving">
+                <p:growl id="messages" showDetail="true" sticky="true" life="5000"/>  
+                <div class="makeBox">
+
+                    <h:panelGrid columns="4" cellpadding="5" cellspacing="2" columnClasses="evenColumns, oddColumns, evenColumns, oddColumns">
+                        #{msgs.accountSavingNumber}
+                        <h:panelGroup>: 
+                            <p:autoComplete minQueryLength="3" value="#{reopen.con1}" completeMethod="#{reopen.complete}" size="30" required="true" label="#{msgs.accountSavingNumber}">  
+                                <p:ajax event="itemSelect" update="@form"/>
+                            </p:autoComplete>
+                        </h:panelGroup>
+                        <span style="margin-left: 50px">#{msgs.customerID}</span>
+                        <h:panelGroup>: <p:inputText size="30" disabled="true" value="#{reopen.customerID}"/></h:panelGroup>
+
+                        #{msgs.product}
+                        <h:panelGroup>: 
+                            <p:inputText size="30" disabled="true" value="#{reopen.product}"/>  
+                        </h:panelGroup>
+                        <span style="margin-left: 50px">#{msgs.customerName}</span>
+                        <h:panelGroup>: 
+                            <p:inputText size="30" disabled="true" value="#{reopen.customerName}"/>  
+                        </h:panelGroup>     
+                    </h:panelGrid>
+                </div>
+
+                <h:panelGroup rendered="#{reopen.statAccount=='Freeze'}">
+                    <fieldset class="fieldsetBox">
+                        <legend>#{msgs.freezeDetail}</legend>
+                        <h:panelGrid columns="4" cellpadding="5" cellspacing="2" columnClasses="evenColumns,oddColumns, evenColumns, oddColumns">  
+                            #{msgs.requesterName}
+                            <h:panelGroup>: #{reopen.viewRequestername} </h:panelGroup>
+                            #{msgs.institution}
+                            <h:panelGroup>: #{reopen.viewInstitution}
+                            </h:panelGroup>
+
+                            #{msgs.requesterPosition}
+                            <h:panelGroup>: #{reopen.viewRequesterposition}
+                            </h:panelGroup>
+                            #{msgs.detailInstitution}
+                            <h:panelGroup>: #{reopen.viewDetailinstitution}
+                            </h:panelGroup>
+
+                            #{msgs.requesterAddress}
+                            <h:panelGroup>: #{reopen.viewRequesteraddress}
+                            </h:panelGroup>
+                            #{msgs.addressInstitution}
+                            <h:panelGroup>: #{reopen.viewAddressinstitution}
+                            </h:panelGroup>
+
+                            #{msgs.requesterPhone}
+                            <h:panelGroup>: #{reopen.viewRequesterphone}
+                            </h:panelGroup>
+                            <h:outputFormat />
+                            <h:outputFormat />
+
+                            #{msgs.requesterMobilePhone}
+                            <h:panelGroup>: #{reopen.viewRequestermobilephone}
+                            </h:panelGroup>
+                            <h:outputFormat />
+                            <h:outputFormat />
+
+                            <h:panelGroup>Freeze Date</h:panelGroup>
+                            <h:panelGroup>: #{reopen.viewOpenDate}</h:panelGroup>
+                            <h:outputFormat />
+                            <h:outputFormat />
+
+                            #{msgs.reason}
+                            <h:panelGroup>: #{reopen.viewReason}
+                            </h:panelGroup>
+                            <h:outputFormat />
+                            <h:outputFormat />
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" cellpadding="5" cellspacing="2" columnClasses="evenColumns,oddColumns">  
+                            #{msgs.note}
+                            <h:panelGroup>: #{reopen.viewNote} </h:panelGroup>
+                        </h:panelGrid>
+                    </fieldset>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{reopen.statAccount=='Temporary Close'}">
+                    <fieldset class="fieldsetBox">
+                        <legend>#{msgs.tempCloseDetail}</legend>
+                        <h:panelGrid columns="2" cellpadding="5" cellspacing="2" columnClasses="evenColumns,oddColumns">  
+                            #{msgs.tempCloseDate}
+                            <h:panelGroup>: #{reopen.openDate}</h:panelGroup>
+
+                            #{msgs.note}
+                            <h:panelGroup>: <h:outputFormat value="Ini adalah catatan temporary close"/></h:panelGroup>
+                        </h:panelGrid>
+                    </fieldset>
+                </h:panelGroup>
+                <br class="clear" />
+                <h:panelGroup rendered="#{reopen.statAccount=='Freeze'}">
+                    <fieldset class="fieldsetBox">
+                        <legend>#{msgs.reopenDetail}</legend>
+                        <h:panelGrid columns="4" cellpadding="5" cellspacing="2" columnClasses="evenColumns,oddColumns, evenColumns, oddColumns">  
+                            #{msgs.requesterName}
+                            <h:panelGroup>:
+                                <p:inputText style="margin-right: 50px" disabled="#{reopen.statAction}" value="#{reopen.requestername}"/>
+                            </h:panelGroup>
+                            #{msgs.institution}
+                            <h:panelGroup><span class="spanOption">:</span>  
+                                <p:selectOneMenu disabled="#{reopen.statAction}" value="#{reopen.requestid}">
+                                    <f:selectItems value="#{reopen.cmbInstitution}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+
+                            #{msgs.requesterPosition}
+                            <h:panelGroup>:
+                                <p:inputText disabled="#{reopen.statAction}" value="#{reopen.requesterposition}"/>
+                            </h:panelGroup>
+                            #{msgs.detailInstitution}
+                            <h:panelGroup>: 
+                                <p:inputText disabled="#{reopen.statAction}" value="#{reopen.detailinstitution}"/>
+                            </h:panelGroup>
+
+                            #{msgs.requesterAddress}
+                            <h:panelGroup>:
+                                <p:inputText disabled="#{reopen.statAction}" value="#{reopen.requesteraddress}"/>
+                            </h:panelGroup>
+                            #{msgs.addressInstitution}
+                            <h:panelGroup>: 
+                                <p:inputText disabled="#{reopen.statAction}" value="#{reopen.addressinstitution}"/>
+                            </h:panelGroup>
+
+                            #{msgs.requesterPhone}
+                            <h:panelGroup>:
+                                <p:inputText disabled="#{reopen.statAction}" value="#{reopen.requesterphone}"/>
+                            </h:panelGroup>
+                            <h:outputFormat />
+                            <h:outputFormat />
+
+                            #{msgs.requesterMobilePhone}
+                            <h:panelGroup>:
+                                <p:inputText disabled="#{reopen.statAction}" value="#{reopen.requestermobilephone}"/>
+                            </h:panelGroup>
+                            <h:outputFormat />
+                            <h:outputFormat />
+
+                            #{msgs.reopenDate}
+                            <h:panelGroup>: #{reopen.openDate}</h:panelGroup>
+                            <h:outputFormat />
+                            <h:outputFormat />
+
+                            #{msgs.reason}
+                            <h:panelGroup><span class="spanOption">:</span> 
+                                <p:selectOneMenu value="#{reopen.reasonid}" disabled="#{reopen.statAction}" style="width: 200px">
+                                    <f:selectItems value="#{reopen.cmbReason}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:outputFormat />
+                            <h:outputFormat />
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" cellpadding="5" cellspacing="2" columnClasses="evenColumns,oddColumns">  
+                            #{msgs.note}
+                            <h:panelGroup>: <p:inputText size="70" disabled="#{reopen.statAction}" value="#{reopen.note}"/></h:panelGroup>
+                        </h:panelGrid>
+                    </fieldset>
+                    <fieldset class="fieldsetBox">
+                        <legend>Next Routing Approval</legend>
+                        <div class="label w150">Note Routing</div>:  
+                        <h:outputFormat value="This form application will approved" rendered="#{reopen.targetPositionName==''}"></h:outputFormat>
+                        <h:outputFormat value="Agreement, This form will send to {0} : {1}" rendered="#{reopen.targetPositionName!=''}">
+                            <f:param value="#{reopen.targetPositionName}"/>
+                            <f:param value="#{reopen.targetEmployeeName}"/>
+                        </h:outputFormat>. #{reopen.noteRouting}
+                    </fieldset>
+                </h:panelGroup>
+
+                <!-- Start Button Routing -->
+                <h:panelGroup styleClass="buttonGroup" layout="block" rendered="#{reopen.stsMessages != 'OB' and !(reopen.statAction) and reopen.statAccount=='Freeze'}">
+                    <h:panelGroup rendered="#{loginBean.routing.get(1).getMaker()}">
+                        <p:commandButton value="Submit" styleClass="button" disabled="#{reopen.statAction}" oncomplete="confirmation.show()" update="confirmDialog" icon="ui-icon-disk" process="@this">
+                            <f:setPropertyActionListener value="makerSubmit" target="#{reopen.actButton}" /> 
+                        </p:commandButton>
+                        <p:commandButton value="Hold " styleClass="button" update="@form messages" action="#{reopen.process}" disabled="#{reopen.statAction}"  icon="ui-icon-bookmark">
+                            <f:setPropertyActionListener value="makerHold" target="#{reopen.actButton}" /> 
+                        </p:commandButton>
+                        <p:commandButton value="#{msgs.resetButton}" styleClass="resetButton" update="@form" process="@this" action="#{reopen.reset}"/>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{loginBean.routing.get(1).getApproval()}">
+                        <p:commandButton value="Approve" styleClass="button" oncomplete="confirmation.show()" process="@this" update="confirmDialog">
+                            <f:setPropertyActionListener value="approvalApprove" target="#{reopen.actButton}" /> 
+                        </p:commandButton>
+                        <p:commandButton value="Hold" styleClass="button" update="@form messages" action="#{reopen.process}" icon="ui-icon-bookmark">
+                            <f:setPropertyActionListener value="approvalHold" target="#{reopen.actButton}" /> 
+                        </p:commandButton>
+                        <p:commandButton value="Reject" styleClass="button" oncomplete="confirmation.show()" update="confirmDialog" process="@this">
+                            <f:setPropertyActionListener value="approvalReject" target="#{reopen.actButton}" /> 
+                        </p:commandButton>
+                    </h:panelGroup>
+                </h:panelGroup>
+                <!-- End Routing -->
+                <h:panelGroup styleClass="buttonGroup" layout="block" rendered="#{!(reopen.statAction) and reopen.statAccount!='Freeze'}">
+                    <p:commandButton value="#{msgs.resetButton}" styleClass="resetButton" update="@form" process="@this" action="#{reopen.reset}"/>
+                    <p:commandButton value="#{msgs.saveButton}" styleClass="saveButton" disabled="#{reopen.statAction}" oncomplete="dlg.show()"/>
+                </h:panelGroup>
+                
+                <p:confirmDialog id="confirmDialog" message="Are you sure to #{reopen.actButton} this account ?"  header="Initiating Submit Routing" severity="info" widgetVar="confirmation">  
+                    <div class="label w100">Note Routing</div>
+                    <p:inputText value="#{reopen.noteRouting}" styleClass="w400"/> 
+                    <div class="clear space"></div>
+                    <p:commandButton value="Yes" oncomplete="confirmation.hide()" update="@form messages" actionListener="#{reopen.process}"/>  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>  
+                </h:panelGroup>
+                <p:dialog id="dialog" header="#{msgs.confDialog}" widgetVar="dlg" modal="true">  
+
+                    <h:panelGrid columns="2" cellpadding="5">  
+                        <h:outputLabel for="username" value="#{msgs.username}: *" />  
+                        <p:inputText value="#{reopen.username}"   
+                                     id="username" label="username" />  
+
+                        <h:outputLabel for="password" value="#{msgs.password}: * " />  
+                        <h:inputSecret value="#{reopen.password}"   
+                                       id="password" label="password" />  
+
+                        <f:facet name="footer">  
+                            <p:commandButton value="#{msgs.accept}" update="contSaving" action="#{reopen.login()}" oncomplete="handleLoginRequest(xhr, status, args)"/>  
+                        </f:facet>  
+                    </h:panelGrid>  
+
+                </p:dialog> 
+            </h:form>
+        </p:panel>
+        <script type="text/javascript">  
+        function handleLoginRequest(xhr, status, args) {  
+            if(args.validationFailed || !args.loggedIn) {  
+                $('#dialog').effect("shake", { times:3 }, 100);  
+            } else {  
+                dlg.hide();  
+                /*jQuery('.linkConfirm').html('Confirmed');  
+                jQuery('.linkConfirm').css('color','green');  
+                jQuery('.linkConfirm').attr('onclick',false);  */
+            }  
+        }  
+        </script>  
+    </ui:define>
+
+</ui:composition>

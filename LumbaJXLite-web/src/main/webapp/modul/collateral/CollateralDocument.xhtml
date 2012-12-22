@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+
+        <p:panel id="panelcollateral" header="Collateral Dokumen" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000">
+            <h:form id="qwerty" prependId="true">
+                <h:panelGrid id="panelgridcollateral" columns="2" columnClasses="label, value" styleClass="grid" >
+
+                    <h:outputText value="Nama Nasabah"/>
+                    <p:inputText value="#{collateralDocumentManagedBean.customer.customername}"/>
+
+                    <h:outputText value="CIF"/>
+                    <p:inputText value="#{collateralDocumentManagedBean.customer.customerCode}"/>
+
+                    <p:commandButton action="#{collateralDocumentManagedBean.search}" value="Cari" update=":formcollateral2" onclick="dlg2.show();"/>
+
+                </h:panelGrid>
+            </h:form>
+
+            <p:dialog id="modalDialog" header="Modal Dialog" widgetVar="dlg2" modal="true" > 
+                <h:form id="formcollateral2">
+
+                    <p:dataTable style="text-align: center" 
+                                 value="#{collateralDocumentManagedBean.customerSearch}" 
+                                 sortOrder="desc" 
+                                 emptyMessage="#{msgs.emptymessage}" 
+                                 var="searchcustomer" 
+                                 paginator="true" 
+                                 paginatorPosition="top" 
+                                 rows="5" 
+                                 rowsPerPageTemplate="5,10,20,25">
+
+
+                        <p:column headerText="Customer Name">
+                            <p:commandLink value="#{searchcustomer.customername}" actionListener="#{collateralDocumentManagedBean.selected(searchcustomer)}"  update=":panelcollateral, :qwerty , :formtabcollateral" onclick="dlg2.hide();"/>
+                        </p:column>
+                        <p:column headerText="Customer Code">
+                            <p:commandLink value="#{searchcustomer.customerCode}" actionListener="#{collateralDocumentManagedBean.selected(searchcustomer)}" update=":panelcollateral, :qwerty, :formtabcollateral" onclick="dlg2.hide();"/>
+                        </p:column>
+                    </p:dataTable>   
+                </h:form>
+            </p:dialog>
+
+            <h:form id="formtabcollateral" enctype="multipart/form-data">
+                <p:growl id="statuscollateraldocument" sticky="false" life="5000"/>
+                <p:panel >
+                    <p:fieldset id="fieldsetpenyimpanandokumen" legend="Penyimpanan Dokumen" collapsed="#{collateralDocumentManagedBean.fieldset}" toggleable="true" widgetVar="fieldsetDocument">
+                        <h:panelGrid id="panelgridpenyimpanandokumen" columns="2" style="width: 100%">
+
+                            <h:panelGroup id="panelgroupx">
+                                <h:panelGrid id="leftdocument" columns="2">
+
+
+                                    <h:outputText value="Tanggal"/>
+                                    <p:calendar id="tanggaldocument" value="#{collateralDocumentManagedBean.collateralDocument.date}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralDocumentManagedBean.status == 'view'}" />
+
+                                    <h:outputText value="Type"/>
+                                    <p:selectOneMenu value="#{collateralDocumentManagedBean.collateralDocument.type}"  disabled="#{collateralDocumentManagedBean.status == 'view'}">
+                                        <f:selectItem itemValue="S" itemLabel="Penyimpanan"/>
+                                        <f:selectItem itemValue="L" itemLabel="Peminjaman"/>
+                                        <f:selectItem itemValue="P" itemLabel="Penarikan"/>
+                                        <f:selectItem itemValue="M" itemLabel="Pemindahan"/>
+                                        <f:selectItem itemValue="R" itemLabel="Pengembalian"/>
+
+                                        <p:ajax update="panelgroupx"/>
+                                    </p:selectOneMenu>
+
+                                    <h:outputText value="Penerima" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'S' or collateralDocumentManagedBean.collateralDocument.type == 'R'}"/>
+                                    <p:inputText  value="#{collateralDocumentManagedBean.collateralDocument.receivingofficername}" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'S' or collateralDocumentManagedBean.collateralDocument.type == 'R'}" disabled="#{collateralDocumentManagedBean.status == 'view' or collateralDocumentManagedBean.status == 'insert'}"/>
+
+                                    <h:outputText  value="Penerima" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'L' or collateralDocumentManagedBean.collateralDocument.type == 'P' }"/>
+                                    <p:inputText  value="#{collateralDocumentManagedBean.collateralDocument.receivingcustomer}" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'L' or collateralDocumentManagedBean.collateralDocument.type == 'P'}" disabled="#{collateralDocumentManagedBean.status == 'view'}"/>
+
+                                    <h:outputText  value="Yang menyerahkan" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'S' or collateralDocumentManagedBean.collateralDocument.type == 'R' }"/>
+                                    <p:inputText  value="#{collateralDocumentManagedBean.collateralDocument.submissioncustomer}" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'S' or collateralDocumentManagedBean.collateralDocument.type == 'R' }" disabled="#{collateralDocumentManagedBean.status == 'view'}"/>
+
+                                    <h:outputText  value="Yang menyerahkan" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'L' or collateralDocumentManagedBean.collateralDocument.type == 'P' }"/>
+                                    <p:inputText  value="#{collateralDocumentManagedBean.collateralDocument.submissionofficername}" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'L' or collateralDocumentManagedBean.collateralDocument.type == 'P' }" disabled="#{collateralDocumentManagedBean.status == 'view' or collateralDocumentManagedBean.status == 'insert'}"/>
+
+                                    <h:outputText  value="Yang Memindahkan" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'M'}"/>
+                                    <p:inputText  value="#{collateralDocumentManagedBean.collateralDocument.transferingofficername}" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'M'}" disabled="#{collateralDocumentManagedBean.status == 'view' or collateralDocumentManagedBean.status == 'insert'}"/>
+
+                                    <h:outputText value="Nomor Dokumen"/>
+                                    <p:selectOneMenu id="documentnumber" value="#{collateralDocumentManagedBean.collateralDocument.collateraldocumentid}" disabled="#{collateralManagedBean.statusview == 'view' or collateralDocumentManagedBean.collateralDocument.type == 'S'}">
+                                        <f:selectItem itemLabel="silahkan pilih" itemValue=""/>
+                                        <f:selectItems value="#{collateralDocumentManagedBean.documentsnumberlist}" var="dokumentnumber" itemValue="#{dokumentnumber.collateraldocumentid}" itemLabel="nomor #{dokumentnumber.documentnumber}" />
+                                        <p:ajax update="panelgroupy" listener="#{collateralDocumentManagedBean.setcode()}"/>
+                                    </p:selectOneMenu>
+
+                                    <h:outputText value="Butuh Pengingat"/>
+                                    <p:selectOneRadio  value="#{collateralDocumentManagedBean.collateralDocument.needreminder}"  disabled="#{collateralDocumentManagedBean.status == 'view'}">
+                                        <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                        <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                    </p:selectOneRadio>
+
+                                    <h:outputText id="f" value="Tanggal Pengembalian" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'L'}"/>
+                                    <p:calendar id="ff" value="#{collateralDocumentManagedBean.collateralDocument.returndate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'L'}"  disabled="#{collateralDocumentManagedBean.status == 'view'}"/>
+
+                                    <h:outputText id="g" value="Tanggal Penarikan" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'P'}"/>
+                                    <p:calendar id="gg" value="#{collateralDocumentManagedBean.collateralDocument.withdrawaldate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" rendered="#{collateralDocumentManagedBean.collateralDocument.type == 'P'}"  disabled="#{collateralDocumentManagedBean.status == 'view'}"/>
+                                </h:panelGrid>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="panelgroupy">
+                                <h:panelGrid id="righdocument" columns="2">
+
+
+                                    <h:outputText value="Kode Vault"/>
+                                    <p:inputText value="#{collateralDocumentManagedBean.collateralDocument.vaultcode}"  disabled="#{collateralDocumentManagedBean.status == 'view'}"/>
+
+                                    <h:outputText value="No Vault"/>
+                                    <p:inputText value="#{collateralDocumentManagedBean.collateralDocument.vaultnumber}"  disabled="#{collateralDocumentManagedBean.status == 'view'}"/>
+
+                                    <h:outputText value="No Label"/>
+                                    <p:inputText value="#{collateralDocumentManagedBean.collateralDocument.labelnumber}"  disabled="#{collateralDocumentManagedBean.status == 'view'}"/>
+
+                                    <h:outputText value="Keterangan"/>
+                                    <p:inputText value="#{collateralDocumentManagedBean.collateralDocument.description}"  disabled="#{collateralDocumentManagedBean.status == 'view'}"/>
+                                </h:panelGrid>
+                            </h:panelGroup>
+
+                        </h:panelGrid>
+                        <p:commandButton value="Create" actionListener="#{collateralDocumentManagedBean.createbutton}" update="@form" rendered="#{collateralDocumentManagedBean.status == 'view'}"/>
+                        <p:commandButton value="Tambah" actionListener="#{collateralDocumentManagedBean.createdocument}" update=":formtabelcollateral  panelgridpenyimpanandokumen :panelcollateral" rendered="#{collateralDocumentManagedBean.status == 'insert'}"/>
+                        <p:commandButton value="Edit" actionListener="#{collateralDocumentManagedBean.updatedocument}" update=":formtabelcollateral  panelgridpenyimpanandokumen :panelcollateral" rendered="#{collateralDocumentManagedBean.status == 'update'}" />
+                    </p:fieldset>
+
+                </p:panel>
+            </h:form>
+
+            <h:form id="formtabelcollateral" enctype="multipart/form-data">
+
+
+                <p:dataTable id="tablecollateraldocument" style="text-align: center" value="#{collateralDocumentManagedBean.collateralDocumentlist}" sortOrder="desc" emptyMessage="#{msgs.emptymessage}" var="adddocument" paginator="true" paginatorPosition="top" rows="5" rowsPerPageTemplate="5,10,20,25">
+
+                    <p:column headerText="Tanggal">
+                        <h:outputText value="#{adddocument.date}"/>
+                    </p:column>
+                    <p:column headerText="Type">
+                        <h:outputText value="#{adddocument.typename}"/>
+                    </p:column>
+                    <p:column headerText="Penerima">
+                        <h:outputText value="#{adddocument.employeename}"/>
+                    </p:column>
+                    <p:column headerText="Nomor Dokumen">
+                        <h:outputText value="#{adddocument.documentnumber}"/>
+                    </p:column>
+
+
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.view}" action="#{collateralDocumentManagedBean.viewdocument(adddocument)}" update=":formtabcollateral"/>
+                    </p:column> 
+                </p:dataTable> 
+
+                <p:confirmDialog id="confirmDialog" message="Are you sure to move trash messages with title [ #{collateralManagedBean.selectedMsgowner.typename} ] ?"  
+                                 header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                    <p:commandButton id="confirm" value="Yes" update="@form" oncomplete="confirmation.hide()"  
+                                     action="#{collateralDocumentManagedBean.deletedocument(collateralDocumentManagedBean.selectedMsg)}" />  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>
+            </h:form>
+
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

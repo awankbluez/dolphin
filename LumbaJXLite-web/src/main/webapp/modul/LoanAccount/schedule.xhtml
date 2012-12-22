@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="menuBar">
+        menuBar
+    </ui:define>
+
+    <ui:define name="content">
+        <p:panel id="simulasiSchedule" header="Pinjaman" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" >
+            <h:form id="dataSchedule" prependId="false">
+                <p:panel id="pnSchedule" header="Simulasi" toggleable="true" toggleSpeed="500">
+                    <h:panelGrid columns="6" styleClass="grid" >
+
+                        <h:outputText value="Metode"/>
+                        <p:selectOneRadio value="#{simulationSchedule.interestmethod}"  >
+                            <f:selectItem itemValue="flat" itemLabel="flat"/>
+                            <f:selectItem itemValue="efektif" itemLabel="efektif" />
+                            <f:selectItem itemValue="anuitas" itemLabel="anuitas" />
+                            <f:ajax execute="@this" />
+                        </p:selectOneRadio>
+                        <h:outputText />
+                        <h:outputText /><h:outputText /><h:outputText />
+                        <h:outputText value="Saldo Pinjaman Awal"/>
+                        <p:inputText value="#{simulationSchedule.loanapplication.openbalance}" disabled="true" style="width: 150px">
+                            <p:ajax event="blur" listener="#{simulationSchedule.closebalance()}" update="closebalance"/>
+                        </p:inputText><h:outputText />
+
+                        <h:outputText value="Saldo Pinjaman Akhir"/>
+                        <p:inputText id="closebalance" value="#{simulationSchedule.loanapplication.closebalance}" disabled="true" style="width: 150px">
+                            <f:convertNumber pattern="#{simulationSchedule.patternNominal}"/>
+                        </p:inputText><h:outputText />
+
+                        <h:outputText value="Jumlah Plafon"/>
+                        <p:inputText value="#{simulationSchedule.loanapplication.loanamount}" id="jumlahpinjaman" style="width: 150px" disabled="#{(not simulationSchedule.account.loanapplication.loan.allowloantopups) and simulationSchedule.filingOption == '2'}" >
+                            <f:convertNumber pattern="#{simulationSchedule.patternNominal}" />
+                            <p:ajax event="keyup" process="@this" listener="#{simulationSchedule.closebalance()}" update="closebalance,jangkawaktu"/>
+                            <p:ajax event="blur" process="@this" listener="#{simulationSchedule.closebalance()}" update="closebalance,jangkawaktu"/>
+                        </p:inputText><h:outputText />
+
+                        <h:outputText value="Jangka Waktu" />
+                        <p:inputText id="jangkawaktu" style="width: 150px" value="#{simulationSchedule.loanapplication.loantermvalue}" disabled="#{simulationSchedule.restructure == false and simulationSchedule.filingOption == '2'}">
+                            <p:ajax event="keyup" update="jatuhtempo"/>
+                        </p:inputText>
+                        <p:selectOneMenu value="#{simulationSchedule.loan.defaultloanterm}" id="jangkawaktucombobox" style="width: 80px">
+                            <f:selectItem itemValue="hari" itemLabel="Hari" />
+                            <f:selectItem itemValue="minggu" itemLabel="Minggu" />
+                            <f:selectItem itemValue="bulan" itemLabel="Bulan" />
+                            <f:selectItem itemValue="tahun" itemLabel="Tahun" />
+                            <f:ajax execute="@this" />
+                        </p:selectOneMenu>
+
+                        <h:outputText value="Angsuran Pertama Saat Pencairan" />
+                        <p:selectOneRadio value="#{simulationSchedule.loanapplication.calculateinitialpaymentdate}"  >
+                            <f:selectItem itemValue="true" itemLabel="Ya"/>
+                            <f:selectItem itemValue="false" itemLabel="Tidak" />
+                            <p:ajax listener="#{simulationSchedule.changeDate()}" update="tanggalangsuranpertama,jatuhtempo"/>
+                        </p:selectOneRadio>
+                        <h:outputText />
+
+                        <h:outputText value="Tanggal Pencairan"/>
+                        <p:calendar id="tanggalpencairan" mindate="#{simulationSchedule.today}" value="#{simulationSchedule.loanapplication.initialissuedate}" pattern="#{simulationSchedule.patterndate}" navigator="true" style="width: 150px" effect="explode" >
+                            <p:ajax event="dateSelect" listener="#{simulationSchedule.changeDate()}" update=":viewDialog:warned,tanggalpencairan,tanggalangsuranpertama,jatuhtempo"/>
+                        </p:calendar><h:outputText />
+
+                        <h:outputText value="Tanggal Angsuran Pertama"/>                                
+                        <p:calendar id="tanggalangsuranpertama" disabled="true" value="#{simulationSchedule.loanapplication.initialpaymentdate}" pattern="#{simulationSchedule.patterndate}" navigator="true" style="width: 150px" effect="explode" />
+                        <h:outputText />
+
+                        <h:outputText value="Tanggal Jatuh Tempo"/>
+                        <p:calendar id="jatuhtempo" disabled="true" pattern="#{simulationSchedule.patterndate}" navigator="true" value="#{simulationSchedule.loanapplication.jatuhtempo}" style="width: 150px" effect="explode" />
+                        <h:outputText />
+
+                        <h:outputText value="Perhitung Hari" />
+                        <p:selectOneMenu id="aktual" value="#{simulationSchedule.loanapplication.dayaccountfraction}" style="width: 150px" disabled="#{simulationSchedule.restructure == false and simulationSchedule.filingOption == '2'}">
+                            <f:selectItem itemValue="30/360" itemLabel="30/360" />
+                            <f:selectItem itemValue="30/365" itemLabel="30/365" />
+                            <f:selectItem itemValue="aktual/360" itemLabel="Aktual/360" />
+                            <f:selectItem itemValue="aktual/365" itemLabel="Aktual/365" />
+                            <f:selectItem itemValue="aktual/365.25" itemLabel="Aktual/365.25" />
+                        </p:selectOneMenu><h:outputText />
+
+                        <h:outputText value="Tipe Penangguhan" />
+                        <p:selectOneMenu value="#{simulationSchedule.loanapplication.periodedeffered}"  style="width: 250px" disabled="#{(simulationSchedule.restructure == false and simulationSchedule.filingOption == '2') or (not simulationSchedule.loan.allowdeferredpayment)}">
+                            <f:selectItem itemValue="0" itemLabel="Pilih Grace Periode" />
+                            <f:selectItem itemValue="1" itemLabel="Penangguhan Pinjaman dengan Grace Periode" />
+                            <f:selectItem itemValue="2" itemLabel="Penangguhan Pinjaman tanpa Grace Periode" />
+                            <f:selectItem itemValue="3" itemLabel="Penangguhan Angsuran dengan Grace Periode" />
+                            <f:selectItem itemValue="4" itemLabel="Penangguhan Angsuran tanpa Grace Periode" />
+                            <p:ajax update="periodepenangguhan" ></p:ajax>
+                        </p:selectOneMenu><h:outputText />
+
+
+                        <h:outputText value="Periode Penangguhan"/>
+                        <p:inputText id="periodepenangguhan" value="#{simulationSchedule.loanapplication.periodedefferedvalue}" disabled="#{(simulationSchedule.loanapplication.periodedeffered == '0') or (not simulationSchedule.loan.allowdeferredpayment)}"  style="width: 150px">
+                            <p:ajax update="periodepenangguhan" ></p:ajax></p:inputText><h:outputText />
+
+                        <h:outputText value="Uang Muka"/>
+                        <p:inputText value="#{simulationSchedule.loanapplication.downpayment}" style="width: 150px" disabled="#{simulationSchedule.restructure == false and simulationSchedule.filingOption == '2'}">
+                            <p:ajax event="keyup" listener="#{simulationSchedule.closebalance()}" update="closebalance"/>
+                            <f:convertNumber pattern="#{simulationSchedule.patternNominal}"/>
+                        </p:inputText><h:outputText />
+                        <h:outputText value="Bunga"/>
+                        <p:inputText style="width: 50px" value="#{simulationSchedule.interest.baseinterest}" /><h:outputText />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" styleClass="grid" > 
+                        <p:commandButton value="Hitung" action="#{simulationSchedule.hitung()}" update=":viewDialog:warn,jumlahpinjaman,hasilperhitungan,closebalance,jangkawaktu" />
+                    </h:panelGrid>
+                    <h:panelGroup id="tableSchedule">
+                        <p:dataTable
+                            id="hasilperhitungan"
+                            value="#{simulationSchedule.listCalculate}"
+                            var="perhitungan"
+                            >
+                            <f:facet name="header">Jadwal Pembayaran Pinjaman</f:facet>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Periode"/></f:facet>
+                                <h:outputText value="#{perhitungan.periode_tampil}"/>
+                            </p:column>
+
+                            <p:column style="text-align: center">
+                                <f:facet name="header"><h:outputText value="Tanggal Pembayaran"/></f:facet>
+                                <h:outputText value="#{perhitungan.tanggal_angsuran}">
+                                    <f:convertDateTime pattern="#{simulationSchedule.patterndate}"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Jumlah Angsuran"/></f:facet>
+                                <h:outputText value="Rp. "/>
+                                    <h:outputText value="#{perhitungan.jumlah_angsuran_dec}">
+                                    <f:convertNumber pattern="#{simulationSchedule.patternNominal}"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Pokok"/></f:facet>
+                                <h:outputText value="Rp. "/>
+                                <h:outputText value="#{perhitungan.angsuran_pokok_dec}">
+                                    <f:convertNumber pattern="#{simulationSchedule.patternNominal}"/>
+                                </h:outputText>
+
+                            </p:column>
+
+                            <p:column >
+                                <f:facet name="header"><h:outputText value="Bunga"/></f:facet>
+                                <h:outputText value="Rp. "/>
+                                <h:outputText value="#{perhitungan.angsuran_bunga_dec}">
+                                    <f:convertNumber pattern="#{simulationSchedule.patternNominal}"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column >
+                                <f:facet name="header"><h:outputText value="Saldo"/></f:facet>
+                                <h:outputText value="Rp. "/>
+                                <h:outputText value="#{perhitungan.saldo_dec}">
+                                    <f:convertNumber pattern="#{simulationSchedule.patternNominal}"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable> 
+                    </h:panelGroup>
+                </p:panel>
+            </h:form>         
+        </p:panel>
+        <h:form prependId="false" id="viewDialog">
+            <p:dialog header="Warning" widgetVar="warn" id="warn" modal="true" showEffect="explode" hideEffect="explode" >
+                <center>
+                    <h:outputText value="#{simulationSchedule.warningText}"/>
+                    <h:outputText value="#{simulationSchedule.warningDecimal}">
+                        <f:convertNumber pattern="#{simulationSchedule.patternNominal}"/>
+                    </h:outputText>
+                    <br/>
+                    <p:commandButton value="OK" oncomplete="warn.hide()" />
+                </center>
+            </p:dialog>
+            <p:dialog header="Warning" widgetVar="warned" id="warned" modal="true" showEffect="explode" hideEffect="explode" >
+                <center>
+                    <h:outputText value="#{simulationSchedule.warningText}"/>
+                    <br/>
+                    <p:commandButton value="OK" oncomplete="warned.hide()" />
+                </center>
+            </p:dialog>
+            <p:dialog header="Info" widgetVar="succes" id="succes" modal="true" showEffect="explode" hideEffect="explode" >
+                <center>
+                    <h:outputText value="#{simulationSchedule.warningText}"/>
+                    <p:commandButton value="OK" oncomplete="succes.hide()"/>
+                </center>
+            </p:dialog>
+        </h:form>  
+    </ui:define>
+    <ui:define name="bottom">
+        bottom
+    </ui:define>
+
+</ui:composition>

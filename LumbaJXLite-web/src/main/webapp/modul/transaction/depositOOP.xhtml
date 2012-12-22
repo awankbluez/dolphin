@@ -1,0 +1,275 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+
+        <p:panel header="#{msgs.deposit}" closable="true" toggleSpeed="500" closeSpeed="500">            
+            <!-- cari nasabah -->
+            <h:form id="transactiondepositsearch">                 
+                <h:panelGrid columns="2">
+                    <h:panelGrid columns="4">                    
+                        <h:outputText value="#{msgs.acccountnumber}"/>
+                        <h:outputText value=" : "/>                        
+                        <p:autoComplete minQueryLength="5" value="#{bean_deposit.accountcode}" id="account" completeMethod="#{bean_deposit.complete}"  disabled="#{bean_deposit.accountcode!=null}">  
+                            <f:ajax event="itemSelect" execute="@this" render="@form :transactiondepositsearch :transactiondepositform"/>
+                        </p:autoComplete>
+                        <h:outputText/>
+                        <h:outputText value="#{msgs.customerName}*"/>
+                        <h:outputText value=" : "/>
+                        <p:inputText value="#{bean_deposit.transaction.customer.customername}" id="name" disabled="#{bean_deposit.accountcode!=null}" required="true">
+                            <p:ajax event="keyup" update="btnsearch"/>
+                        </p:inputText>
+                        <p:commandButton icon="ui-icon ui-icon-search" id="btnsearch"
+                                         actionListener="#{bean_deposit.findAll()}"
+                                         update=":transactiondepositsearchlist:tabelsearchlist"
+                                         onclick="vardialogsearchlist.show()" process="@this"
+                                         disabled="#{bean_deposit.transaction.account.accountid!=null or bean_deposit.transaction.customer.customername==''}"/>
+                        <h:outputText value="#{msgs.socialsecuritynumber}"/>
+                        <h:outputText value=" : "/>
+                        <p:inputText value="#{bean_deposit.transaction.person.socialsecuritynumber}" disabled="true"/><h:outputText/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="3">
+                        <h:outputText value="#{msgs.office}"/>
+                        <h:outputText value=" : "/>
+                        <p:inputText value="#{bean_deposit.transaction.customer.customeroffice}" disabled="true"/>
+                        <h:outputText value="#{msgs.transactiondate}"/>
+                        <h:outputText value=" : "/>
+                        <p:calendar pattern="#{bean_deposit.applicationManagedBean.systemGlobal.siteFormatdate}" disabled="true" value="#{bean_deposit.applicationManagedBean.sessionday.sessiondate}"/>                        
+                        <h:outputText value="#{msgs.product}"/>
+                        <h:outputText value=" : "/>
+                        <p:inputText value="#{bean_deposit.transaction.saving.savingname}" disabled="true"/>
+                    </h:panelGrid>                    
+                </h:panelGrid>
+                <p:blockUI block="transactiondepositsearch" trigger=":dialog:btndepositpost" />
+            </h:form>            
+
+            <!-- form dialog hasil search -->
+            <h:form id="transactiondepositsearchlist">
+                <p:dialog widgetVar="vardialogsearchlist" id="iddialogsearchlist" modal="true" position="top">
+                    <p:dataTable value="#{bean_deposit.listsearch}" var="tabellist"
+                                 id="tabelsearchlist" style="text-align: center; width: 1000px" paginator="true" rows="10" sortOrder="descending">
+                        <p:column headerText="Account Code" filterBy="#{tabellist.account.accountcode}" filterMatchMode="contains" sortBy="#{tabellist.account.accountcode}">
+                            #{tabellist.account.accountcode}
+                        </p:column>
+                        <p:column headerText="#{msgs.product}" filterBy="#{tabellist.saving.savingtype}" filterMatchMode="contains" sortBy="#{tabellist.saving.savingtype}">
+                            #{tabellist.saving.savingtype}
+                        </p:column>
+                        <p:column headerText="#{msgs.productname}" filterBy="#{tabellist.saving.savingname}" filterMatchMode="contains" sortBy="#{tabellist.saving.savingname}">
+                            #{tabellist.saving.savingname}
+                        </p:column>
+                        <p:column headerText="#{msgs.customername}" filterBy="#{tabellist.customer.customername}" filterMatchMode="contains" sortBy="#{tabellist.customer.customername}">
+                            #{tabellist.customer.customername}
+                        </p:column>
+                        <p:column headerText="#{msgs.socialsecuritynumber}" filterBy="#{tabellist.person.socialsecuritynumber}" filterMatchMode="contains" sortBy="#{tabellist.person.socialsecuritynumber}">
+                            #{tabellist.person.socialsecuritynumber}
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.Search}"
+                                             actionListener="#{bean_deposit.check_list(tabellist.account.accountid)}"                                             
+                                             update=":transactiondepositsearch :transactiondepositform"
+                                             onclick="vardialogsearchlist.hide()"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+            </h:form>
+
+            <!-- form transaksi utama -->
+            <h:form id="transactiondepositform">
+                <p:panel visible="#{bean_deposit.formtransaksi}">
+                    <p:growl id="transactionsuccess" sticky="false" life="10000"/>
+                    <h:panelGrid columns="2">
+                        <h:panelGroup>
+                            <h:panelGrid columns="4">
+                                <h:outputText value="#{msgs.ammount}"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_deposit.transaction.amount}" id="amount" label="#{msgs.ammount}" style="width: 200px" disabled="#{bean_deposit.transaction.saving.savingtype=='tabungan berjangka' or bean_deposit.transaction.saving.savingtype=='wajib' or (bean_deposit.transaction.saving.savingtype=='reguler' and bean_deposit.transaction.account.lasttransaction==null) or (bean_deposit.transaction.saving.savingtype=='deposito' and bean_deposit.transaction.account.lasttransaction==null) or (bean_deposit.transaction.saving.savingtype=='kapitalisasi' and bean_deposit.transaction.account.lasttransaction==null)}" symbol="#{bean_deposit.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," validator="#{bean_deposit.validateInitialDepositoKapitalisasi}" maxValue="999999999999">
+                                    <p:ajax update=":transactiondepositform :transactiondepositform:totalpayment :transactiondepositform:amountarreas :transactiondepositform:msgamount :transactiondepositform:numberofinstallments :transactiondepositform:cashh" process="@this" partialSubmit="false"/>
+                                </pe:inputNumber><p:message id="msgamount" for="amount"/>                            
+
+                                <h:outputText value="#{msgs.numberofinstallments}" 
+                                              rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib' or bean_deposit.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+                                <h:outputText value=" : " 
+                                              rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib' or bean_deposit.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+                                <p:inputText value="#{bean_deposit.transaction.numberofinstallments}" id="numberofinstallments" disabled="false" style="width: 200px" 
+                                             rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib' or bean_deposit.transaction.saving.savingtype == 'tabungan berjangka'}">
+                                    <p:ajax listener="#{bean_deposit.count_totalpayment(bean_deposit.transaction.numberofinstallments)}" update=":transactiondepositform :transactiondepositform:amount :transactiondepositform:cashh"/>
+                                </p:inputText>
+                                <h:outputText rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib' or bean_deposit.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+
+                                <h:outputText value="#{msgs.penalty}" 
+                                              rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib'}"/>
+                                <h:outputText value=" : " 
+                                              rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib'}"/>
+                                <pe:inputNumber value="#{bean_deposit.transaction.saving.penalty}" disabled="true" style="width: 200px" 
+                                                rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib'}"
+                                                symbol="#{bean_deposit.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib'}"/>
+
+                                <h:outputText value="#{msgs.theamountofarrears}" 
+                                              rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib' or bean_deposit.transaction.saving.savingtype == 'pokok' or bean_deposit.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+                                <h:outputText value=" : " 
+                                              rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib' or bean_deposit.transaction.saving.savingtype == 'pokok' or bean_deposit.transaction.saving.savingtype == 'tabungan berjangka'}"/>
+                                <pe:inputNumber value="#{bean_deposit.transaction.account.savingarrears}" id="amountarreas" disabled="true" style="width: 200px" 
+                                                rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib' or bean_deposit.transaction.saving.savingtype == 'pokok' or bean_deposit.transaction.saving.savingtype == 'tabungan berjangka'}"
+                                                symbol="#{bean_deposit.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib' or bean_deposit.transaction.saving.savingtype == 'pokok' or bean_deposit.transaction.saving.savingtype == 'tabungan berjangka'}"/> 
+
+                                <h:outputText value="#{msgs.fee}"/>
+                                <h:outputText value=" : "/>
+                                <p:selectOneMenu value="#{bean_deposit.transaction.transactionlist.feeid}" id="combobiaya" style="width: 200px">
+                                    <f:selectItem itemLabel="#{msgs.chooseonefee}" itemValue="0"/>
+                                    <f:selectItems value="#{bean_deposit.listfee}" var="biaya"
+                                                   itemLabel="#{biaya.feename}" itemValue="#{biaya.feeid}"/>
+                                    <p:ajax listener="#{bean_deposit.addfee(bean_deposit.transaction.transactionlist.feeid)}"
+                                            update=":transactiondepositform:biaya 
+                                            @this 
+                                            :transactiondepositform:totalbiaya
+                                            :transactiondepositform:totalpayment
+                                            :transactiondepositform:cashh
+                                            :transactiondepositform:changes" 
+                                            process="@this"/>
+                                </p:selectOneMenu><h:outputText/>
+
+                                <h:outputText value="#{msgs.totalfee}"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_deposit.transaction.totalfee}" id="totalbiaya" disabled="true" style="width: 200px" symbol="#{bean_deposit.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <h:panelGrid columns="4">
+                                <h:outputText value="#{msgs.latestmonthpaid}"
+                                              rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib'}"/>
+                                <h:outputText value=" : "
+                                              rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib'}"/>                                
+                                <p:calendar value="#{bean_deposit.transaction.latestmonthpaid}" disabled="true" style="width: 200px" rendered="#{bean_deposit.transaction.saving.savingtype == 'wajib'}" pattern="#{bean_deposit.applicationManagedBean.systemGlobal.siteFormatdate}"/>
+                                <h:outputText/>
+
+                                <h:outputText value="#{msgs.totalpayment}"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_deposit.transaction.totalpayment}" id="totalpayment" disabled="true" style="width: 200px" symbol="#{bean_deposit.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText/>
+
+                                <h:outputText value="#{msgs.tendered}"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_deposit.transaction.cash}" id="cashh" label="#{msgs.tendered}" style="width: 200px" symbol="#{bean_deposit.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <p:ajax event="blur" listener="#{bean_deposit.count_changes(bean_deposit.transaction.cash)}" update=":transactiondepositform:changes :transactiondepositform:msgcash :transactiondepositform:btndeposit" process="@this" partialSubmit="false"/>                                    
+                                </pe:inputNumber>                            
+                                <p:message id="msgcash" for="cashh"/>
+
+                                <h:outputText value="#{msgs.change}"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{bean_deposit.transaction.changes}" id="changes" style="width: 200px" disabled="true" symbol="#{bean_deposit.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <pe:keyFilter for="numberofinstallments" mask="num"/>
+                    <!-- tabel list biaya -->
+                    <p:panel style="border: white" id="panelfee">
+                        <p:dataTable value="#{bean_deposit.tabelfee}" var="tabelbiaya" id="biaya" style="text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="#{msgs.listfee}"/>
+                            </f:facet>
+                            <p:column headerText="Autodebet">
+                                <p:selectBooleanCheckbox value="#{tabelbiaya.cash}" disabled="#{bean_deposit.biayarekeningbaru==true or tabelbiaya.feepayment!='Auto Debet dan Tunai'}">
+                                    <p:ajax listener="#{bean_deposit.hitung_biaya_cash_autodebet(tabelbiaya.feevalue,tabelbiaya.cash)}"
+                                            update=":transactiondepositform:totalpayment :transactiondepositform:totalbiaya :transactiondepositform:cashh"/>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+                            <p:column headerText="#{msgs.feeName}">
+                                #{tabelbiaya.feename}
+                            </p:column>
+                            <p:column headerText="#{msgs.feeValue}">
+                                #{tabelbiaya.feevalue}
+                            </p:column>
+                            <p:column headerText="Fee Payment">
+                                #{tabelbiaya.feepayment}
+                            </p:column>
+                            <p:column headerText="#{msgs.deletefee}">
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deletefee}"
+                                                 update=":transactiondepositform:panelfee, 
+                                                 :transactiondepositform:totalbiaya, 
+                                                 :transactiondepositform:combobiaya,
+                                                 :transactiondepositform:totalpayment,
+                                                 :transactiondepositform:cashh,
+                                                 :transactiondepositform:changes"
+                                                 action="#{bean_deposit.deletefee(tabelbiaya.feevalue, tabelbiaya.feeid)}"
+                                                 process="@this"
+                                                 disabled="#{bean_deposit.biayarekeningbaru==true}">
+                                    <p:collector value="#{tabelbiaya}" addTo="#{bean_deposit.listfee}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                    <p:commandButton value="#{msgs.posting}" disabled="#{bean_deposit.transaction.cash==0.0}" id="btndeposit" actionListener="#{bean_deposit.check_tabelfee()}"/>
+                    <p:spacer width="20"/>
+                    <p:commandButton value="#{msgs.cancel}" onclick="cancel.show()"/>
+                    <p:blockUI block="transactiondepositform" trigger=":dialog:btndepositpost" />
+                </p:panel>
+            </h:form>
+
+            <h:form id="dialog">
+                <p:dialog widgetVar="accountauto" id="accountautodebet" closable="false" modal="true" header="Choose Account to Autodebet">
+                    <h:panelGrid columns="3">
+                        <h:outputText value="Pilih rekening"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{bean_deposit.accountid_autodebet}">
+                            <f:selectItem itemLabel="Pilih rekening" itemValue="0"/>
+                            <f:selectItems value="#{bean_deposit.listaccountautodebet}" var="acc" 
+                                           itemLabel="#{acc.account.accountcode}" itemValue="#{acc.account.accountid}"/>
+                            <p:ajax listener="#{bean_deposit.balance_account_autodebet(bean_deposit.accountid_autodebet)}" process="@this"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:confirmDialog message="Saldo rekening tidak cukup untuk autodebet" header="Error balance" widgetVar="errbalance" closable="false">
+                    <p:commandButton value="Close" onclick="errbalance.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to post this transaction ?" header="Posting" widgetVar="post" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{bean_deposit.execute_transaction()}" process="@this" id="btndepositpost">
+                        <f:actionListener binding="#{headerBean.retrieveUserCashAmount()}"/>
+                    </p:commandButton>
+                    <p:commandButton value="No" onclick="post.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to cancel this transaction ?" header="Cancel" widgetVar="cancel" closable="false">
+                    <p:commandButton value="Yes" update=":transactiondepositform :transactiondepositsearchlist :transactiondepositsearch :transactiondepositsearch:account :transactiondepositsearch:name"
+                                     action="#{bean_deposit.reset_form()}" immediate="true"/>
+                    <p:commandButton value="No" onclick="cancel.hide()"/>
+                </p:confirmDialog>
+                <p:dialog header="Warning" widgetVar="varWarning" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="You have deposited"/>
+                        <p:commandButton value="OK" onclick="varWarning.hide()" actionListener="#{bean_deposit.reset_form()}"
+                                         update=":transactiondepositform :transactiondepositsearchlist :transactiondepositsearch"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varFail" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction fail"/>
+                        <p:commandButton value="OK" onclick="varFail.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varLunas" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Pembayaran telah lunas"/>
+                        <p:commandButton value="OK" onclick="varLunas.hide()" actionListener="#{bean_deposit.reset_form()}"
+                                         update=":transactiondepositform :transactiondepositsearchlist :transactiondepositsearch"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varCash" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Cash kurang dari total pembayaran"/>
+                        <p:commandButton value="OK" onclick="varCash.hide()" process="@this" update=":transactiondepositform:cashh :transactiondepositform:btndeposit"/>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+        </p:panel>
+    </ui:define>
+</ui:composition>

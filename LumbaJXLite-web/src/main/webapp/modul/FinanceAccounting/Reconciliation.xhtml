@@ -1,0 +1,258 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.reconciliation}" closable="true" toggleable="true">
+
+            <h:form id="formChooseOfficetoReconciliation">
+
+                <h:panelGrid columns="4">
+                    <h:outputLabel for="Period" value="#{msgs.period}"/>
+                    <p:selectOneMenu id="Period" style="width: 100px;" value="#{reconcilBean.period}">
+                        <f:selectItem itemValue="" itemLabel="Choose Period"/>
+                        <f:selectItem itemValue="daily" itemLabel="Daily"/>
+                        <f:selectItem itemValue="monthly" itemLabel="Monthly"/>
+                        <f:selectItem itemValue="annual" itemLabel="Annual"/>
+                        <p:ajax update="@form"/>
+                    </p:selectOneMenu>
+                    <p:message for="Period"/>
+                    <p:spacer/>
+
+                    <h:outputLabel for="periodDailyfrom" value="Date" rendered="#{reconcilBean.period == 'daily'}"/>
+                    <p:calendar id="periodDailyfrom" style="width: 100px;" rendered="#{reconcilBean.period == 'daily'}"/>
+                    <h:outputLabel for="periodDaily" value="To" rendered="#{reconcilBean.period == 'daily'}"/>
+                    <p:calendar id="periodDaily" style="width: 100px;" rendered="#{reconcilBean.period == 'daily'}"/>
+
+                    <h:outputLabel for="periodMonth" value="#{msgs.month}" rendered="#{reconcilBean.period == 'daily' or reconcilBean.period == 'monthly'}"/>
+                    <p:selectOneMenu id="periodMonth" style="width: 100px;" rendered="#{reconcilBean.period == 'daily' or reconcilBean.period == 'monthly'}">
+                        <f:selectItem itemValue="jan" itemLabel="#{msgs.january}"/>
+                        <f:selectItem itemValue="feb" itemLabel="#{msgs.february}"/>
+                        <f:selectItem itemValue="mar" itemLabel="#{msgs.march}"/>
+                        <f:selectItem itemValue="apr" itemLabel="#{msgs.april}"/>
+                        <f:selectItem itemValue="mei" itemLabel="#{msgs.may}"/>
+                        <f:selectItem itemValue="jun" itemLabel="#{msgs.june}"/>
+                        <f:selectItem itemValue="jul" itemLabel="#{msgs.july}"/>
+                        <f:selectItem itemValue="aug" itemLabel="#{msgs.august}"/>
+                        <f:selectItem itemValue="sep" itemLabel="#{msgs.september}"/>
+                        <f:selectItem itemValue="oct" itemLabel="#{msgs.october}"/>
+                        <f:selectItem itemValue="nov" itemLabel="#{msgs.november}"/>
+                        <f:selectItem itemValue="des" itemLabel="#{msgs.december}"/>
+                    </p:selectOneMenu>
+                    <h:outputLabel for="periodYear" value="#{msgs.year}" rendered="#{reconcilBean.period == 'daily' or reconcilBean.period == 'monthly' or reconcilBean.period == 'annual'}"/>
+                    <p:selectOneMenu id="periodYear" rendered="#{reconcilBean.period == 'daily' or reconcilBean.period == 'monthly' or reconcilBean.period == 'annual'}">
+                        <f:selectItem itemValue="2005" itemLabel="2005"/>
+                        <f:selectItem itemValue="2006" itemLabel="2006"/>
+                        <f:selectItem itemValue="2007" itemLabel="2007"/>
+                        <f:selectItem itemValue="2008" itemLabel="2008"/>
+                        <f:selectItem itemValue="2009" itemLabel="2009"/>
+                        <f:selectItem itemValue="2010" itemLabel="2010"/>
+                    </p:selectOneMenu>
+
+                </h:panelGrid>
+
+            </h:form>
+
+            <h:form id="formReconciliation">
+
+                <p:panel header="New Reconciliation">
+
+                    <h:panelGrid columns="3">
+                        <h:outputLabel for="thirdpartybank" value="#{msgs.thirdpartybank}"/>
+                        <p:selectOneMenu id="thirdpartybank">
+                            <f:selectItem itemLabel="Third Party Bank"/>
+                        </p:selectOneMenu>
+                        <p:message for="thirdpartybank"/>
+
+                        <h:outputLabel for="subject" value="#{msgs.subject}"/>
+                        <p:selectOneMenu id="subject">
+                            <f:selectItem itemLabel="Generate Database"/>
+                        </p:selectOneMenu>
+                        <p:message for="subject"/>
+
+                        <h:outputLabel for="Description" value="#{msgs.description}"/>
+                        <p:inputTextarea id="Description" />
+                        <p:message for="Description"/>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" style="width: 100%;">
+                        <h:panelGroup id="reconPerBook">
+                            <p:panel header="#{msgs.perbook}">
+                                <h:panelGrid columns="3">
+                                    <h:outputLabel for="perbookDate" value="#{msgs.date}"/>
+                                    <p:calendar id="perbookDate" style="width: 200px;"/>
+                                    <p:message for="perbookDate"/>
+
+                                    <h:outputLabel for="perbookCurrency" value="#{msgs.currency}"/>
+                                    <p:selectOneMenu id="perbookCurrency" style="width: 200px;">
+                                        <f:selectItem itemLabel="IDR | Rupiah"/>
+                                        <f:selectItem itemValue="1" itemLabel="Generate DB"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="perbookCurrency"/>
+
+                                    <h:outputLabel for="perbookAmount" value="#{msgs.ammount}"/>
+                                    <p:inputText id="perbookAmount"/>
+                                    <p:message for="perbookAmount"/>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:panelGroup>
+
+                        <h:panelGroup id="reconPerBank">
+                            <p:panel header="#{msgs.perbank}">
+                                <h:panelGrid columns="3">
+                                    <h:outputLabel for="perbankDate" value="#{msgs.date}"/>
+                                    <p:calendar id="perbankDate" style="width: 200px;"/>
+                                    <p:message for="perbankDate"/>
+
+                                    <h:outputLabel for="perbankCurrency" value="#{msgs.currency}"/>
+                                    <p:selectOneMenu id="perbankCurrency" style="width: 200px;">
+                                        <f:selectItem itemLabel="IDR | Rupiah"/>
+                                        <f:selectItem itemValue="1" itemLabel="Generate DB"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="perbankCurrency"/>
+
+                                    <h:outputLabel for="perbankAmount" value="#{msgs.ammount}"/>
+                                    <p:inputText id="perbankAmount"/>
+                                    <p:message for="perbankAmount"/>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="#{msgs.delete}"/>
+                        <p:commandButton value="#{msgs.saveButton}"/>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+
+            <h:form id="formListReconciliation">
+                <p:dataTable
+                    id="tableJournal"
+                    widgetVar="tableJournal"
+                    emptyMessage="#{msgs.norecordjournalentry}"
+                    var="entry"
+                    paginator="true"
+                    paginatorPosition="bottom"
+                    rows="10"
+                    rowsPerPageTemplate="10,20,50"
+                    sortOrder="descending">
+                    <f:facet name="header">
+                        <h:outputText value="Reconciliation List"/>
+                    </f:facet>
+
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="2" headerText="REF"/>
+                            <p:column rowspan="2" headerText="#{msgs.subject}"/>
+                            <p:column colspan="3" headerText="#{msgs.perbook}"/>
+                            <p:column colspan="3" headerText="#{msgs.perbank}"/>
+                        </p:row>
+
+                        <p:row>
+                            <p:column headerText="#{msgs.date}"/>
+                            <p:column headerText="Amount (Foreign Currency)"/>
+                            <p:column headerText="Amount"/>
+                            <p:column headerText="#{msgs.date}"/>
+                            <p:column headerText="Amount (Foreign Currency)"/>
+                            <p:column headerText="Amount"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="form">
+                <p:fieldset collapsed="true" legend="Reconciliation Journal" toggleable="true">
+                    <h:panelGrid columns="3">
+                        <h:outputLabel for="newDescription" value="#{msgs.description}"/>
+                        <p:inputText id="newDescription"/>
+                        <p:message for="newDescription"/>
+
+                        <h:outputLabel for="newDate" value="#{msgs.date}"/>
+                        <p:calendar id="newDate" pattern="YYYY-MM-dd" navigator="true" readOnlyInputText="true" yearRange="1945-2020"/>
+                        <p:message for="newDate"/>
+
+                        <h:outputLabel for="newCOA" value="#{msgs.coa}"/>
+                        <p:selectOneMenu id="newCOA">
+                            <f:selectItem itemLabel="Auto Complete"/>
+                        </p:selectOneMenu>
+                        <p:message for="newCOA"/>
+
+                        <h:outputLabel for="newKreditDebet" value="#{msgs.coadebetcredit}"/>
+                        <p:selectOneMenu id="newKreditDebet">
+                            <f:selectItem itemLabel="#{msgs.credit}"/>
+                            <f:selectItem itemLabel="#{msgs.debit}"/>
+                        </p:selectOneMenu>
+                        <p:message for="newKreditDebet"/>
+
+                        <h:outputLabel for="newAmount" value="#{msgs.ammount}"/>
+                        <p:inputText id="newAmount"/>
+                        <p:message for="newAmount"/>
+
+                        <p:commandButton value="#{msgs.saveButton}"/>
+                        <p:commandButton value="#{msgs.delete}"/>
+                    </h:panelGrid>
+
+                </p:fieldset>
+
+                <p:dataTable
+                    id="tableJournalReconciliation"
+                    widgetVar="tableJournalReconciliation"
+                    emptyMessage="No Reconciliation Journal Record"
+                    var="entry"
+                    paginator="true"
+                    paginatorPosition="bottom"
+                    rows="10"
+                    rowsPerPageTemplate="10,20,50"
+                    sortOrder="descending"
+                    >
+                    <f:facet name="header">
+                        <h:outputText value="Reconciliation Journal List"/>
+                    </f:facet>
+
+                    <p:column headerText="Ref">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.description}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.date}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.coa}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.debit} (Foreign Currency)">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.credit} (Foreign Currency)">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.debit}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.credit}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.edit} | #{msgs.delete}">
+
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="Print Journal" icon="ui-icon ui-icon-print"/>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

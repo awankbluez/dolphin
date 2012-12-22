@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+
+        <p:panel header="#{msgs.request}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="Request">
+                <p:fieldset legend="#{msgs.add} #{msgs.request}" toggleable="true" id="fieldset" collapsed="#{requestBean.fieldsetCollapse}" >
+
+                    <h:panelGrid columns="4" >
+                        <h:outputText value="#{msgs.requestType}"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu id="RequestType" value="#{requestBean.request.requesttype}" style="width: 160px">
+                            <f:selectItem itemLabel="#{msgs.freeze}" itemValue="Freeze" />  
+                            <f:ajax execute="@this" />
+                        </p:selectOneMenu>
+                        <p:spacer width="10"/>
+
+                        <h:outputText value="#{msgs.requestFrom}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{requestBean.request.requestfrom}" id="requestfrom" required="true" requiredMessage="Harus diisi" validator="#{requestBean.validateRequest}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="requestfrom"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton value="Simpan" update="@form :formtabelRequest:tabelRequest" actionListener="#{requestBean.add()}" rendered="#{requestBean.status == 'insert'}" />
+                        <p:commandButton value="Reset"  actionListener="#{requestBean.reset()}" rendered="#{requestBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton value="Edit" update="@form :formtabelRequest:tabelRequest" actionListener="#{requestBean.update()}" rendered="#{requestBean.status == 'update'}"/>
+                        <p:commandButton value="Cancel"  actionListener="#{requestBean.reset()}" rendered="#{requestBean.status == 'update'}" update="@form" action="#{requestBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelRequest">
+                <p:dataTable id="tabelRequest" value="#{requestBean.requestList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.requesttype}" filterBy="#{o.requesttype}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.requestType}</f:facet>
+                        #{o.requesttype}
+                    </p:column>
+                    <p:column sortBy="#{o.requestfrom}" filterBy="#{o.requestfrom}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.requestFrom}</f:facet>
+                        #{o.requestfrom}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.Edit} #{o.requestfrom}" action="#{requestBean.edit(o)}" update=":Request" />
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.Delete} #{o.requestfrom}"  update="@form" action="#{requestBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

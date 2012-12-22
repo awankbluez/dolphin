@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel header="Rasio" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000">
+            <h:form id="Rasio">
+                <p:growl id="growl" life="5000"/>
+                <h:panelGrid columns="4" id="bikin">
+                    <p:outputLabel value="Financial performance ratio" for="fpr"/>
+                    <h:outputText value=":"/>
+                    <p:selectOneMenu id="fpr" value="#{fpratio.fpr}" required="true">
+                        <f:selectItem itemLabel="Pilih fpr"/>
+                        <f:selectItems value="#{fpratio.listCmbFPRName}" var="name" itemLabel="#{name.financialperformancename}" itemValue="#{name.systemreportFpid}"/>
+                        <p:ajax process="@this"/>
+                    </p:selectOneMenu>
+                    <p:commandButton icon="ui-icon-circle-plus" value="Buat baru" title="Tambah" onclick="tambahfpr.show()" style="padding:0"/>
+
+                    <p:outputLabel value="Pembilang financial performance" for="pbl"/>
+                    <h:outputText value=":"/>
+                    <p:selectOneMenu id="pbl" value="#{fpratio.pbfr}" required="true">
+                        <f:selectItem itemLabel="Pilih pembilang"/>
+                        <f:selectItems value="#{fpratio.listCmbPembilang}" var="pembilang" itemValue="#{pembilang.manualparameterFpid}" itemLabel="#{pembilang.parametername}"/>
+                        <p:ajax process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer/>
+
+                    <p:outputLabel value="Penyebut financial performance" for="pyt"/>
+                    <h:outputText value=":"/>
+                    <p:selectOneMenu id="pyt" value="#{fpratio.pyfr}" required="true">
+                        <f:selectItem itemLabel="Pilih penyebut"/>
+                        <f:selectItems value="#{fpratio.listCmbPenyebut}" var="penyebut" itemValue="#{penyebut.manualparameterFpid}" itemLabel="#{penyebut.parametername}"/>
+                        <p:ajax process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer/>
+                </h:panelGrid>
+                <p:commandButton value="Simpan" title="Simpan" actionListener="#{fpratio.perbaruiFPR()}" update=":Rasio:fpr,:Rasio:pbl,:Rasio:pyt" process="@this"/>
+                <p:commandButton value="Batal" title="Batal" actionListener="#{fpratio.batalperbaruiFPR()}" immediate="true"/>
+
+                <p:dataTable value="#{fpratio.listAllFPR}" var="pempen" style="text-align: center" id="alltable" paginator="true" rows="5" rowsPerPageTemplate="5,10,25,50">
+                    <p:column headerText="Financial Performance Ratio" sortBy="#{pempen.financialperformancename}" filterBy="#{pempen.financialperformancename}" filterMatchMode="contains">
+                        #{pempen.financialperformancename}
+                    </p:column>
+                    <p:column headerText="Pembilang" sortBy="#{pempen.pembilang}" filterBy="#{pempen.pembilang}" filterMatchMode="contains">
+                        #{pempen.pembilang}
+                    </p:column>
+                    <p:column headerText="Penyebut" sortBy="#{pempen.penyebut}" filterBy="#{pempen.penyebut}" filterMatchMode="contains">
+                        #{pempen.penyebut}
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog widgetVar="tambahfpr" header="Tambah Financial Performance Ratio" closable="false" modal="true">
+                    <h:panelGrid columns="3" id="create">
+                        <p:outputLabel value="Nama financial performance ratio" for="nfp"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{fpratio.namafpr}" id="nfp" required="true">
+                            <p:ajax process="@this" event="keyup"/>
+                        </p:inputText>                        
+                    </h:panelGrid>
+                    <p:commandButton value="Simpan" title="Simpan" actionListener="#{fpratio.bikinFPRbaru()}" update="create" process="@this"/>
+                    <p:commandButton value="Batal" title="Batal" actionListener="#{fpratio.batalTambahFPRnama()}" process="@this" immediate="true"/>
+                </p:dialog>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

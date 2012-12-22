@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.occupation}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="Pekerjaan">
+                <p:fieldset legend="#{msgs.add} #{msgs.occupation}" toggleable="true" collapsed="#{occupationBean.fieldsetCollapse}" >
+
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.occupationName}"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu id="paramCode" value="#{occupationBean.occupationparameter.occupationparametercode}" style="width: 160px">
+                            <f:selectItem itemLabel="Pilih Salah Satu" itemValue="Pilih"/>  
+                            <f:selectItem itemLabel="#{msgs.employeeOccupation}" itemValue="Pegawai" />  
+                            <f:selectItem itemLabel="#{msgs.pensionaryOccupation}" itemValue="Pensiun" />  
+                            <f:selectItem itemLabel="#{msgs.entrepeneurOccupation}" itemValue="Wiraswasta" />  
+                            <f:selectItem itemLabel="#{msgs.profesionalOccupation}" itemValue="Profesional" />  
+                            <f:selectItem itemLabel="#{msgs.otherOccupation}" itemValue="Pekerjaan Lainnya" /> 
+                            <p:ajax update="panelgroup" />
+                        </p:selectOneMenu>
+                        <p:spacer width="10"/>
+                        <h:outputText value="#{msgs.occupationType}" />
+                        <h:outputText value=":"/>
+                        <h:panelGroup id="panelgroup">
+                            <p:selectOneMenu id="pilih" disabled="true" rendered="#{occupationBean.occupationparameter.occupationparametercode=='Pilih'}" style="width: 160px">
+                                <f:selectItem itemLabel="Pilih Salah Satu" itemValue=""/>  
+                            </p:selectOneMenu>
+                            <p:selectOneMenu id="menuEmployeeOccupation" value="#{occupationBean.occupationparameter.type}" rendered="#{occupationBean.occupationparameter.occupationparametercode=='Pegawai'}" style="width: 160px">
+                                <f:selectItem itemLabel="Pilih Salah Satu" itemValue=""/> 
+                                <f:selectItem itemLabel="#{msgs.incomepermonth}" itemValue="Penghasilan Per Bulan" />  
+                                <f:selectItem itemLabel="#{msgs.lineofbusiness}" itemValue="Bidang Usaha" />  
+                                <f:selectItem itemLabel="#{msgs.employeeStatus}" itemValue="Status Pegawai" />  
+                                <f:ajax execute="menuEmployeeOccupation" render="menuEmployeeOccupation"/>  
+                            </p:selectOneMenu>
+                            <p:selectOneMenu id="menuPensionaryOccupation" value="#{occupationBean.occupationparameter.type}"  rendered="#{occupationBean.occupationparameter.occupationparametercode=='Pensiun'}" style="width: 160px">
+                                <f:selectItem itemLabel="Pilih Salah Satu" itemValue=""/> 
+                                <f:selectItem itemLabel="#{msgs.incomepermonth}" itemValue="Penghasilan Per Bulan" />  
+                                <f:selectItem itemLabel="#{msgs.lineofbusiness}" itemValue="Bidang Usaha" />  
+                                <f:selectItem itemLabel="#{msgs.payingPensionInstitution}" itemValue="Lembaga Pembayar Pensiun" /> 
+                                <f:ajax execute="menuPensionaryOccupation" render="menuPensionaryOccupation"/>  
+                            </p:selectOneMenu>
+                            <p:selectOneMenu id="menuEntrepreneurOccupation" value="#{occupationBean.occupationparameter.type}" rendered="#{occupationBean.occupationparameter.occupationparametercode=='Wiraswasta'}" style="width: 160px">
+                                <f:selectItem itemLabel="Pilih Salah Satu" itemValue=""/> 
+                                <f:selectItem itemLabel="#{msgs.incomepermonth}" itemValue="Penghasilan Per Bulan" />  
+                                <f:selectItem itemLabel="#{msgs.lineofbusiness}" itemValue="Bidang Usaha" /> 
+                                <f:ajax execute="menuEntrepreneurOccupation" render="menuEntrepreneurOccupation"/>
+                            </p:selectOneMenu>
+                            <p:selectOneMenu id="menuProfesionalOccupation" value="#{occupationBean.occupationparameter.type}" rendered="#{occupationBean.occupationparameter.occupationparametercode=='Profesional'}" style="width: 160px">
+                                <f:selectItem itemLabel="Pilih Salah Satu" itemValue=""/> 
+                                <f:selectItem itemLabel="#{msgs.incomepermonth}" itemValue="Penghasilan Per Bulan" />  
+                                <f:selectItem itemLabel="#{msgs.lineofbusiness}" itemValue="Bidang Usaha" /> 
+                                <f:ajax execute="menuProfesionalOccupation" render="menuProfesionalOccupation"/>
+                            </p:selectOneMenu>
+                            <p:selectOneMenu id="menuOtherOccupation" value="#{occupationBean.occupationparameter.type}" rendered="#{occupationBean.occupationparameter.occupationparametercode=='Pekerjaan Lainnya'}" style="width: 160px">
+                                <f:selectItem itemLabel="Pilih Salah Satu" itemValue=""/> 
+                                <f:selectItem itemLabel="#{msgs.incomepermonth}" itemValue="Penghasilan Per Bulan" />  
+                                <f:selectItem itemLabel="#{msgs.lineofbusiness}" itemValue="Bidang Usaha" /> 
+                                <f:ajax execute="menuOtherOccupation" render="menuOtherOccupation"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <p:spacer width="10"/>
+                        <h:outputText value="#{msgs.occupationDescribe}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{occupationBean.occupationparameter.value}" id="valueOccupation" required="true" requiredMessage="Harus diisi" style="width: 150px"/>
+                        <p:message for="valueOccupation"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelPekerjaan:tabelPekerjaan" actionListener="#{occupationBean.add()}" rendered="#{occupationBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{occupationBean.reset()}" rendered="#{occupationBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelPekerjaan:tabelPekerjaan" actionListener="#{occupationBean.update()}" rendered="#{occupationBean.status == 'update'}" process="@this"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{occupationBean.reset()}" rendered="#{occupationBean.status == 'update'}" update="@form" action="#{occupationBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelPekerjaan">
+                <p:dataTable id="tabelPekerjaan" value="#{occupationBean.occupationList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.occupationparametercode}" filterBy="#{o.occupationparametercode}">
+                        <f:facet name="header">#{msgs.occupationName}</f:facet>
+                        #{o.occupationparametercode}
+                    </p:column>
+                    <p:column sortBy="#{o.type}" filterBy="#{o.type}">
+                        <f:facet name="header">#{msgs.occupationType}</f:facet>
+                        #{o.type}
+                    </p:column>
+                    <p:column sortBy="#{o.value}" filterBy="#{o.value}">
+                        <f:facet name="header">#{msgs.occupationDescribe}</f:facet>
+                        #{o.value}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.value}" action="#{occupationBean.edit(o)}" update=":Pekerjaan" />
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.value}"  update="@form" action="#{occupationBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

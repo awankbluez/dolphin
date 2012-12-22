@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.document}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="Dokumen">
+                <p:fieldset legend="#{msgs.add} #{msgs.document}" toggleable="true" collapsed="#{dokumenBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.documentType}"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu id="TipeDokumen" value="#{dokumenBean.document.type}" style="width: 255px"> 
+                            <f:selectItem itemLabel="Pilih Tipe Dokumen" />
+                            <f:selectItem itemLabel="CIF" itemValue="CIF" />  
+                            <f:selectItem itemLabel="Pinjaman Personal" itemValue="Pinjaman Personal" /> 
+                            <f:selectItem itemLabel="Pinjaman Kelompok" itemValue="Pinjaman Kelompok" />
+                            <f:selectItem itemLabel="Pinjaman Perusahaan" itemValue="Pinjaman Perusahaan" />
+                            <f:selectItem itemLabel="Simpanan Reguler" itemValue="Simpanan Reguler" />
+                            <f:selectItem itemLabel="Simpanan Anak" itemValue="Simpanan Anak" />
+                            <f:selectItem itemLabel="Simpanan Bayi" itemValue="Simpanan Bayi" />
+                        </p:selectOneMenu>
+                        <p:spacer width="10"/>
+                        <h:outputText value="#{msgs.documentTitle}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{dokumenBean.document.title}" style="width: 250px" id="JudulDokumen" required="true" requiredMessage="Harus diisi" validator="#{dokumenBean.validateDocument}" >
+                            <p:ajax event="blur" update="documentValidasi"/>
+                        </p:inputText>
+                        <p:message id="documentValidasi" for="JudulDokumen"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelDokumen:tabelDokumen" actionListener="#{dokumenBean.add()}" rendered="#{dokumenBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{dokumenBean.reset()}" rendered="#{dokumenBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelDokumen:tabelDokumen" actionListener="#{dokumenBean.update()}" rendered="#{dokumenBean.status == 'update'}"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{dokumenBean.reset()}" rendered="#{dokumenBean.status == 'update'}" update="@form" action="#{dokumenBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelDokumen">
+                <p:dataTable id="tabelDokumen" value="#{dokumenBean.documentList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.type}" filterBy="#{o.type}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.documentType}</f:facet>
+                        #{o.type}
+                    </p:column>
+                    <p:column sortBy="#{o.title}" filterBy="#{o.title}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.documentTitle}</f:facet>
+                        #{o.title}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.title}" action="#{dokumenBean.edit(o)}" update=":Dokumen"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.title}"  update="@form" action="#{dokumenBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

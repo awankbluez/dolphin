@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.bankLinkages}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="KelompokBank">
+                <p:fieldset legend="#{msgs.add} #{msgs.bankLinkages}" toggleable="true" collapsed="#{banklinkagesBean.fieldsetCollapse}" >
+
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.banklinkagesdescribe}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{banklinkagesBean.banklinkages.banklinkagesdescribe}" id="BanklinkagesDescribe" required="true" requiredMessage="Harus diisi" validator="#{banklinkagesBean.validateBanklinkagesDescribe}">
+                            <p:ajax event="blur" update="BanklinkagesDescribeValidasi"/>
+                        </p:inputText>
+                        <p:message id="BanklinkagesDescribeValidasi" for="BanklinkagesDescribe"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :tabelKelompokBank:TabelKelompokBank" actionListener="#{banklinkagesBean.add()}" rendered="#{banklinkagesBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{banklinkagesBean.reset()}" rendered="#{banklinkagesBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :tabelKelompokBank:TabelKelompokBank" actionListener="#{banklinkagesBean.update()}" rendered="#{banklinkagesBean.status == 'update'}" process="@this"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{banklinkagesBean.reset()}" rendered="#{banklinkagesBean.status == 'update'}" update="@form" action="#{banklinkagesBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="tabelKelompokBank">
+                <p:dataTable id="TabelKelompokBank" value="#{banklinkagesBean.banklinkagesList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.banklinkagesdescribe}" filterBy="#{o.banklinkagesdescribe}">
+                        <f:facet name="header">#{msgs.banklinkagesdescribe}</f:facet>
+                        #{o.banklinkagesdescribe}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.banklinkagesdescribe}" action="#{banklinkagesBean.edit(o)}" update=":KelompokBank"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash"  title="#{msgs.deleteButton} #{o.banklinkagesdescribe}" update="@form" oncomplete="confirmation.show()">
+                            <f:setPropertyActionListener value="#{o}" target="#{banklinkagesBean.selectedMsg}" />  
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>   
+                <p:confirmDialog id="confirmDialog" message="Are you sure to move trash messages with title [ #{banklinkagesBean.selectedMsg.banklinkagesdescribe} ] ?"  
+                                 header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                    <p:commandButton id="confirm" value="Yes" update="@form" oncomplete="confirmation.hide()"  
+                                     action="#{banklinkagesBean.delete(banklinkagesBean.selectedMsg)}" />  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

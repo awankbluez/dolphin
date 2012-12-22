@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.currency}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="MataUang">
+                <p:fieldset legend="#{msgs.add} #{msgs.currency}" toggleable="true" collapsed="#{currencyBean.fieldsetCollapse}" >
+
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.currencyID}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{currencyBean.currency.currencyCode}" id="CurrencyCode" required="true" requiredMessage="Harus diisi" validator="#{currencyBean.validateCurrencyCode}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="CurrencyCode"/>
+
+                        <h:outputText value="#{msgs.currencyDescribe}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{currencyBean.currency.currencyDescribe}" id="CurrencyDescribe" required="true" requiredMessage="Harus diisi" validator="#{currencyBean.validateCurrencyDescribe}">
+                            <p:ajax event="blur" update="Validasi1"/>
+                        </p:inputText>
+                        <p:message id="Validasi1" for="CurrencyDescribe"/>
+
+                        <h:outputText value="#{msgs.currencySymbol}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{currencyBean.currency.currencySymbol}" />
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form tabelMataUang" actionListener="#{currencyBean.add()}" rendered="#{currencyBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{currencyBean.reset()}" rendered="#{currencyBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form tabelMataUang" actionListener="#{currencyBean.update()}" rendered="#{currencyBean.status == 'update'}" process="@this"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{currencyBean.reset()}" rendered="#{currencyBean.status == 'update'}" update="@form" action="#{currencyBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="tabelMataUang">
+                <p:dataTable value="#{currencyBean.currencyList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.currencyCode}" filterBy="#{o.currencyCode}">
+                        <f:facet name="header">#{msgs.currencyID}</f:facet>
+                        #{o.currencyCode}
+                    </p:column>
+                    <p:column sortBy="#{o.currencyDescribe}" filterBy="#{o.currencyDescribe}">
+                        <f:facet name="header">#{msgs.currencyDescribe}</f:facet>
+                        #{o.currencyDescribe}
+                    </p:column>
+                    <p:column sortBy="#{o.currencySymbol}" filterBy="#{o.currencySymbol}">
+                        <f:facet name="header">#{msgs.currencySymbol}</f:facet>
+                        #{o.currencySymbol}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.currencyDescribe}" actionListener="#{currencyBean.edit(o)}" update="MataUang" />
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.currencyDescribe}" actionListener="#{currencyBean.delete(o)}"  update="@form"/>
+                    </p:column>
+
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+</ui:composition>

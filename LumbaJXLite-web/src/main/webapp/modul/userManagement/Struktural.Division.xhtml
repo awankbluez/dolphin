@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+   <ui:define name="top">
+      top
+   </ui:define>
+
+   <ui:define name="menuBar">
+      menuBar
+   </ui:define>
+
+   <ui:define name="content">
+      <p:panel closable="true" toggleable="true" header="Divisi">
+         <h:form id="formFieldsetDivision">
+            <p:fieldset legend="Tambah Divisi"
+                        toggleable="TRUE"
+                        collapsed="#{divisionBean.fieldsetCollapse}"
+                        toggleSpeed="500">
+
+               <h:panelGrid columns="3">
+                  <p:outputLabel for="DirectorateName" value="Direktorat"/>
+                  <p:selectOneMenu id="DirectorateName" value="#{divisionBean.division.directorate.directorateid}" required="true" label="Direktorat" style="width: 150px;">
+                     <f:selectItem itemValue="" itemLabel="Pilih Direktorat"/>
+                     <f:selectItems value="#{divisionBean.directorateList}" var="directorate" itemLabel="#{directorate.directoratename}" itemValue="#{directorate.directorateid}"/>
+                  </p:selectOneMenu>
+                  <p:message for="DirectorateName"/>
+
+                  <p:outputLabel for="DivisionID" value="Kode Divisi*"/>
+                  <p:inputText id="DivisionID" value="#{divisionBean.division.divisioncode}" maxlength="4" required="true" label="Kode Divisi"/>
+                  <p:message for="DivisionID"/>
+
+                  <p:outputLabel for="DivisionName" value="Nama Divisi*"/>
+                  <p:inputText id="DivisionName" value="#{divisionBean.division.divisionname}" maxlength="40" required="true" label="Nama Divisi"/>
+                  <p:message for="DivisionName"/>
+
+                  <p:outputLabel for="DivisionStatus" value="Status Divisi"/>
+                  <p:selectOneRadio id="DivisionStatus" value="#{divisionBean.division.divisionstatus}">
+                     <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                     <f:selectItem itemValue="false" itemLabel="Tidak Aktif"/>
+                  </p:selectOneRadio>
+
+                  <p:spacer/>
+                  <p:commandButton value="Simpan" actionListener="#{divisionBean.add()}" update="@form :formTableDivision:tableDivision" rendered="#{divisionBean.status == 'insert'}"/>
+                  <p:commandButton value="Reset" rendered="#{divisionBean.status.equalsIgnoreCase('insert')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+                  <p:commandButton value="Rubah" actionListener="#{divisionBean.update()}" update="@form :formTableDivision:tableDivision" rendered="#{divisionBean.status == 'update'}"/>
+                  <p:commandButton value="Cancel" rendered="#{divisionBean.status.equalsIgnoreCase('update')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+               </h:panelGrid>
+            </p:fieldset>
+         </h:form>
+
+         <p:spacer/><p:spacer/>
+
+         <h:form id="formTableDivision">
+            <p:dataTable
+               id="tableDivision"
+               widgetVar="tableDivision"
+               emptyMessage="Tidak Ada Divisi"
+               value="#{divisionBean.divisionList}"
+               var="division"
+               sortOrder="descending">
+
+               <pe:paginator
+                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                  rows="10"
+                  rowsPerPageTemplate="5,10,15"
+                  />
+
+               <f:facet name="header">Daftar Divisi</f:facet>
+
+               <p:column sortBy="#{division.directorate.directoratename}" filterBy="#{division.directorate.directoratename}" filterMatchMode="contains" headerText="Nama Direktorat">
+                  <h:outputText value="#{division.directorate.directoratename}"/>
+               </p:column>
+
+               <p:column sortBy="#{division.divisioncode}" filterBy="#{division.divisioncode}" filterMatchMode="contains" headerText="Kode">
+                  <h:outputText value="#{division.divisioncode}"/>
+               </p:column>
+
+               <p:column sortBy="#{division.divisionname}" filterBy="#{division.divisionname}" filterMatchMode="contains" headerText="Nama">
+                  <h:outputText value="#{division.divisionname}"/>
+               </p:column>
+
+               <p:column style="width: 80px; text-align: center;" headerText="Status">
+                  <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{division.divisionstatus == true}"/>
+                  <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{division.divisionstatus == false}"/>
+               </p:column>
+
+               <p:column style="width: 80px; text-align: center;">
+                  <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{division.divisionname}" actionListener="#{divisionBean.edit(division)}" update=":formFieldsetDivision"/>
+                  <p:commandButton icon="ui-icon ui-icon-trash" title="Delete #{division.divisionname}" actionListener="#{divisionBean.delete(division)}" update="@form"/>
+               </p:column>
+            </p:dataTable>
+         </h:form>
+      </p:panel>
+   </ui:define>
+
+   <ui:define name="bottom">
+      bottom
+   </ui:define>
+
+</ui:composition>

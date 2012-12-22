@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.addressStatus}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="StatusTempatTinggal">
+                <p:growl id="growl" showDetail="false"/>
+                <p:fieldset legend="#{msgs.add} #{msgs.addressStatus}" toggleable="true" collapsed="#{addressStatusBean.fieldsetCollapse}">
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.addressstatusdescribe}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{addressStatusBean.addressstatus.addressstatusdescribe}" id="AddressStatusDescribe" required="true" requiredMessage="Harus diisi" validator="#{addressStatusBean.validateAddressStatusDescribe}">
+                            <p:ajax event="blur" update="addressstatusdescribeValidasi"/>
+                        </p:inputText>
+                        <p:message id="addressstatusdescribeValidasi" for="AddressStatusDescribe"/>
+                        
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :tabelStatusTempatTinggal" actionListener="#{addressStatusBean.add()}" rendered="#{addressStatusBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{addressStatusBean.reset()}" rendered="#{addressStatusBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :tabelStatusTempatTinggal" actionListener="#{addressStatusBean.update()}" rendered="#{addressStatusBean.status == 'update'}"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{addressStatusBean.reset()}" rendered="#{addressStatusBean.status == 'update'}" update="@form" action="#{addressStatusBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="tabelStatusTempatTinggal">
+                <p:dataTable value="#{addressStatusBean.addressstatusList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.addressstatusdescribe}" filterBy="#{o.addressstatusdescribe}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.addressstatusdescribe}</f:facet>
+                        #{o.addressstatusdescribe}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.addressstatusdescribe}" action="#{addressStatusBean.edit(o)}" update=":StatusTempatTinggal" />
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.addressstatusdescribe}"  update="@form" action="#{addressStatusBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+</ui:composition>

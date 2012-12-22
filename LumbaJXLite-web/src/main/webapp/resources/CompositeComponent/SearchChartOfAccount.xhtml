@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      >
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="ActionListenerSelectedCOA" method-signature="java.lang.String action()"/>
+        <cc:attribute name="DialogWidgetVarName" type="java.lang.String"/>
+        <cc:attribute name="UpdateClientScoop" type="java.lang.String"/>
+        <cc:attribute name="bean" type="java.lang.Object" />
+        <cc:attribute name="action" type="java.lang.String"/>
+        <cc:attribute name="property" type="java.lang.Object"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:form id="formsearchcoa">
+            <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+
+                <h:outputLabel for="Category" value="Category"/>
+                <p:selectManyCheckbox id="Category" value="#{chartofaccountBean.selectedCategory}" style="width: 150px;" required="true" >
+                    <f:selectItems value="#{chartofaccountBean.categorys}" var="category" itemLabel="#{category.categoryname}" itemValue="#{category.categoryid}"/>
+                </p:selectManyCheckbox>
+
+                <p:outputLabel for="coaNumber" value="Chart of Account Number"/>
+                <p:inputText id="coaNumber" value="#{chartofaccountBean.chartofaccountNumber}"/>
+
+                <p:outputLabel for="coaName" value="Chart of Account Name"/>
+                <p:inputText id="coaName" value="#{chartofaccountBean.chartofaccountName}"/>
+
+                <p:commandButton value="Search" action="#{chartofaccountBean.searchChartOfAccount()}" update="@form"/>
+
+            </h:panelGrid>
+
+            <p:dataTable style="text-align: center"
+                         value="#{chartofaccountBean.chartofaccounts}"
+                         sortOrder="desc"
+                         emptyMessage="#{msgs[cc.attrs.DataTableEmptyMessage]}"
+                         var="coa"
+                         paginator="true"
+                         paginatorPosition="top"
+                         rows="15"
+                         rowsPerPageTemplate="5,10,20,25"
+                         rendered="#{chartofaccountBean.chartofaccounts != null}"
+                         >
+
+                <p:column headerText="Number">
+                    <h:outputText value="#{coa.generalaccountnumber}"/>
+                </p:column>
+                <p:column headerText="Name" filterBy="#{coa.chartofaccountname}" filterMatchMode="contains">
+                    <p:commandLink value="#{coa.chartofaccountname}" update="#{cc.attrs.UpdateClientScoop}" onclick="#{cc.attrs.DialogWidgetVarName}.hide();">
+                        <f:setPropertyActionListener target="#{cc.attrs.bean[cc.attrs.property]}" value="coa"/>
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+
+            <o:validateOneOrMore id="oneOrMore" components="coaNumber coaName" />
+        </h:form>
+    </cc:implementation>
+</html>

@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:define name="content">
+        <p:panel header="TAB" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelSemua">
+
+            <p:tabView id="tabSemua">
+                <p:tab id="TabManagement"  title="#{msgs.management}">
+                    <p:panel header="#{msgs.management}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelManagementType">
+                        <h:form id="Management">
+                            <p:fieldset legend="#{msgs.add} #{msgs.management}" toggleable="true" collapsed="#{occupationTabBean.fieldsetCollapseManagementtype}" id="fieldsetManagementType">
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.managementType}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{occupationTabBean.managementtype.managementtype}" id="ManagementType" required="true" requiredMessage="Harus diisi" validator="#{scoringTabBean.validateVariabelscoringName}">
+                                        <p:ajax event="blur" update="ManagementTypeValidasi"/>
+                                    </p:inputText>                                                                                                     
+                                    <p:message id="ManagementTypeValidasi" for="ManagementType"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:Management:fieldsetManagementType :tabSemua:FormtabelManagement:tabelManagement" actionListener="#{occupationTabBean.addManagementType()}" rendered="#{occupationTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{occupationTabBean.resetManagementType()}" rendered="#{occupationTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:Management:fieldsetManagementType :tabSemua:FormtabelManagement:tabelManagement" actionListener="#{occupationTabBean.updateManagementType()}" rendered="#{occupationTabBean.status == 'update'}" />
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{occupationTabBean.resetManagementType()}" rendered="#{occupationTabBean.status == 'update'}" update="@form" action="#{occupationTabBean.setFieldsetCollapseManagementtype(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="FormtabelManagement">
+                            <p:dataTable id="tabelManagement" value="#{occupationTabBean.managementtypeList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                                <p:column sortBy="#{o.managementtype}" filterBy="#{o.managementtype}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.managementType}</f:facet>
+                                    #{o.managementtype}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.managementtype}" action="#{occupationTabBean.editManagementType(o)}" update=":tabSemua:Management:fieldsetManagementType"/>
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.managementtype}"  update="@form" action="#{occupationTabBean.deleteManagementType(o)}"/>
+                                </p:column>
+                            </p:dataTable>   
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="TabOccupationManagement"  title="#{msgs.occupationManagement}">
+                    <p:panel header="#{msgs.occupationManagement}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelParameter">
+                        <h:form id="OccupationManagement">
+                            <p:fieldset legend="#{msgs.add} #{msgs.occupationManagement}" toggleable="true" collapsed="#{occupationTabBean.fieldsetCollapseOccupationmanagement}" id="fieldsetOccupationManagement">
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.occupationManagementType}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneRadio id="OccupationManagementType" value="#{occupationTabBean.occupationmanagement.occupationmanagementtype}" style="width: 400px" >
+                                        <f:selectItem itemLabel="Pengurus - Pemilik" itemValue="true"/>
+                                        <f:selectItem itemLabel="Pengurus - Bukan Pemilik" itemValue="false" />  
+                                    </p:selectOneRadio>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.occupationManagementCode}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{occupationTabBean.occupationmanagement.occupationmanagementcode}" id="OccupationManagementCode" required="true" requiredMessage="Harus diisi" style="width: 390px">
+                                        <p:ajax event="blur" update="ValidasiOccupationManagementCode"/>
+                                    </p:inputText>
+                                    <p:message id="ValidasiOccupationManagementCode" for="OccupationManagementCode"/>
+                                    
+                                    <h:outputText value="#{msgs.occupationManagementName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{occupationTabBean.occupationmanagement.occupationmanagementname}" id="OccupationManagementName" required="true" requiredMessage="Harus diisi" style="width: 390px">
+                                        <p:ajax event="blur" update="ValidasiOccupationManagementName"/>
+                                    </p:inputText>
+                                    <p:message id="ValidasiOccupationManagementName" for="OccupationManagementName"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:OccupationManagement:fieldsetOccupationManagement :tabSemua:FormtabelOccupationManagement:tabelOccupationManagement" actionListener="#{occupationTabBean.addOccupationManagement()}" rendered="#{occupationTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{occupationTabBean.resetOccupationManagement()}" rendered="#{occupationTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:OccupationManagement:fieldsetOccupationManagement :tabSemua:FormtabelOccupationManagement:tabelOccupationManagement" actionListener="#{occupationTabBean.updateOccupationManagement()}" rendered="#{occupationTabBean.status == 'update'}" process=":tabSemua:OccupationManagement:fieldsetOccupationManagement"/>
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{occupationTabBean.resetOccupationManagement()}" rendered="#{occupationTabBean.status == 'update'}" update="@form" action="#{occupationTabBean.setFieldsetCollapseOccupationmanagement(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="FormtabelOccupationManagement">
+                            <p:dataTable id="tabelOccupationManagement" value="#{occupationTabBean.occupationmanagementList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                                <p:column headerText="#{msgs.occupationManagementType}" sortBy="#{o.occupationmanagementtype}" filterBy="#{o.occupationmanagementtype}">
+                                    <h:outputText value="Pengurus - Pemilik" rendered="#{o.occupationmanagementtype==true}"/>
+                                    <h:outputText value="Pengurus - Bukan Pemilik" rendered="#{o.occupationmanagementtype==false}"/>
+                                </p:column>
+                                <p:column sortBy="#{o.occupationmanagementcode}" filterBy="#{o.occupationmanagementcode}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.occupationManagementCode}</f:facet>
+                                    #{o.occupationmanagementcode}
+                                </p:column>
+                                <p:column sortBy="#{o.occupationmanagementname}" filterBy="#{o.occupationmanagementname}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.occupationManagementName}</f:facet>
+                                    #{o.occupationmanagementname}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.occupationmanagementname}" action="#{occupationTabBean.editOccupationManagement(o)}" update=":tabSemua:OccupationManagement:fieldsetOccupationManagement"/>
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.occupationmanagementname}"  update="@form" action="#{occupationTabBean.deleteOccupationManagement(o)}"/>
+                                </p:column>
+                            </p:dataTable>    
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+            </p:tabView>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

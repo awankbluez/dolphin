@@ -1,0 +1,281 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel id="panelAdjustment" header="Adjustment" closable="true" collapsed="false" toggleable="true">
+            <h:form id="searchadjusment">
+                <p:panel style="border-color: white">
+                    <h:panelGrid columns="3" id="grid1">
+                        <h:outputLabel value="#{msgs.receiptNumber}"/>
+                        <h:outputLabel value=" : "/>
+                        <p:autoComplete minQueryLength="1" value="#{journalofadjusment.receiptnumber}" id="rn" completeMethod="#{journalofadjusment.complete}" disabled="#{journalofadjusment.transaction.transactionid!=null}">  
+                            <f:ajax event="itemSelect" execute="@this" render="@form :Adjusment :Adjusment:feeDetailDialog :Adjusment:different"/>                            
+                        </p:autoComplete>
+
+                        <h:outputLabel value="#{msgs.acccountnumber}"/>
+                        <h:outputLabel value=" : "/>
+                        <p:inputText value="#{journalofadjusment.transaction.account.accountcode}" disabled="true"/>                    
+
+                        <h:outputLabel value="#{msgs.customername}"/>
+                        <h:outputLabel value=" : "/>
+                        <p:inputText value="#{journalofadjusment.transaction.customer.customername}" disabled="true"/>                                                                               
+                    </h:panelGrid>
+                </p:panel>
+                <pe:keyFilter for="rn" mask="num"/> 
+            </h:form>
+
+            <p:separator/>
+
+            <h:form id="Adjusment">
+                <p:growl id="transactionsuccess" sticky="false" life="10000"/>
+                <p:panel style="border-color: white" visible="#{journalofadjusment.form}">
+                    <h:panelGrid columns="3" id="grid2">
+                        <h:panelGroup>
+                            <h:panelGrid columns="3">
+                                <h:outputLabel for="transactiondate" value="Date"/>
+                                <h:outputText value=" : "/>
+                                <p:calendar id="transactiondate" pattern="#{appBean.systemGlobal.siteFormatdate}" readonlyInput="true" disabled="true" value="#{journalofadjusment.transaction.transactiondate}"/>
+
+                                <h:outputLabel for="productName" value="Product Name"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText id="productName" value="#{journalofadjusment.transaction.saving.savingname}" disabled="true"/>
+
+                                <h:outputLabel for="transactionType" value="Transaction Type"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText id="transactionType" value="#{journalofadjusment.transaction.transactiontype}" disabled="true"/>
+
+                                <h:outputLabel for="totalCost" value="Total Fee" rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>
+                                <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>
+                                <pe:inputNumber id="totalCost" value="#{journalofadjusment.transaction.totalfee}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>
+
+                                <h:outputLabel for="ammount" value="Amount"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber id="ammount" value="#{journalofadjusment.transaction.amount}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+
+                                <h:outputLabel for="pokok" value="Pokok" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <pe:inputNumber id="pokok" value="#{journalofadjusment.transaction.loanschedule.principle}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+
+                                <h:outputLabel for="bunga" value="Bunga" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <pe:inputNumber id="bunga" value="#{journalofadjusment.transaction.loanschedule.interest}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+
+                                <h:outputLabel for="penalty" value="Penalty"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber id="penalty" value="#{journalofadjusment.transaction.penalty}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+
+                                <h:outputLabel for="titipan" value="Titipan" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <pe:inputNumber id="titipan" value="#{journalofadjusment.transaction.loanschedule.partialdeposit}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+
+                                <h:outputLabel for="totalAmmount" value="Total Payment"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber id="totalAmmount" value="#{journalofadjusment.transaction.totalpayment}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>                                
+                            </h:panelGrid>
+                        </h:panelGroup>                    
+                        <h:panelGroup>
+                            <h:panelGrid columns="4">
+                                <h:outputLabel for="newTrancactiondate" value="Date"/>
+                                <h:outputText value=" : "/>
+                                <p:calendar id="newTrancactiondate" pattern="#{appBean.systemGlobal.siteFormatdate}" readonlyInput="true" value="#{journalofadjusment.transaction.transactiondate}" disabled="true"/>
+                                <p:spacer/>
+
+                                <h:outputLabel for="newProductName" value="Product Name"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText id="newProductName" value="#{journalofadjusment.transaction.saving.savingname}" disabled="true"/>
+                                <p:spacer/>
+
+                                <h:outputLabel for="newTransactionType" value="Transaction Type"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText id="newTransactionType" value="#{journalofadjusment.transaction.transactiontype}" disabled="true"/>
+                                <p:spacer/>
+
+                                <h:outputLabel for="newTotalCost" value="Total Fee" rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>
+                                <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>
+                                <pe:inputNumber id="newTotalCost" value="#{journalofadjusment.transaction.totalfeenew}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>
+                                <p:commandButton value="Detail" onclick="feedetaildialog.show()" rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>                            
+
+                                <h:outputLabel for="newAmmount" value="Amount"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber id="newAmmount" value="#{journalofadjusment.transaction.amountnew}" disabled="#{journalofadjusment.amountedit}" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=",">
+                                    <p:ajax event="blur" listener="#{journalofadjusment.different()}" update=":Adjusment :Adjusment:different :Adjusment:editamount @this" process="@this" partialSubmit="false"/>
+                                </pe:inputNumber>
+                                <p:commandButton icon="ui-icon ui-icon-pencil" id="editamount" actionListener="#{journalofadjusment.setAmountedit(false)}" update="newAmmount,@this" disabled="#{journalofadjusment.amountedit==false}"/>
+
+                                <h:outputLabel for="newpokok" value="Pokok" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <pe:inputNumber id="newpokok" value="#{journalofadjusment.transaction.loanschedule.principlenew}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <p:spacer rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+
+                                <h:outputLabel for="newbunga" value="Bunga" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <pe:inputNumber id="newbunga" value="#{journalofadjusment.transaction.loanschedule.interestnew}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <p:spacer rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+
+                                <h:outputLabel for="newPenalty" value="Penalty"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber id="newPenalty" value="#{journalofadjusment.transaction.penaltynew}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.delete}" action="#{journalofadjusment.different()}" actionListener="#{journalofadjusment.transaction.setPenaltynew(0.0)}" update=":Adjusment :Adjusment:different" process="@this" disabled="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2 or journalofadjusment.transaction.penaltynew==0.0}"/>
+
+                                <h:outputLabel for="newTitipan" value="Titipan" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <pe:inputNumber id="newTitipan" value="#{journalofadjusment.transaction.loanschedule.partialdepositnew}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                <p:spacer rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+
+                                <h:outputLabel for="newTotalAmmount" value="Total Payment"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber id="newTotalAmmount" value="#{journalofadjusment.transaction.totalpaymentnew}" disabled="true" symbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <p:spacer/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:panel header="Different" id="different">
+                                <h:panelGrid columns="3">
+                                    <h:outputText value="Total Fee" rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>
+                                    <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}"/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.totalfeedifferent}" rendered="#{journalofadjusment.transaction.transactiontypeid==1 or journalofadjusment.transaction.transactiontypeid==2}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Pokok" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                    <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.loanschedule.principledifferent}" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Bunga" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                    <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.loanschedule.interestdifferent}" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Penalty"/>
+                                    <h:outputText value=" : "/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.penaltydifferent}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Titipan" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                    <h:outputText value=" : " rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}"/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.loanschedule.partialdepositdifferent}" rendered="#{journalofadjusment.transaction.transactiontypeid!=1 and journalofadjusment.transaction.transactiontypeid!=2}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Total Payment"/>
+                                    <h:outputText value=" : "/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.totalpaymentdifferent}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Amount"/>
+                                    <h:outputText value=" : "/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.amountdifferent}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Total kekurangan"/>
+                                    <h:outputText value=" : "/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.cashdifferent}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Total kelebihan"/>
+                                    <h:outputText value=" : "/>
+                                    <p:inputText disabled="true" value="#{journalofadjusment.transaction.changesdifferent}">
+                                        <f:convertNumber type="currency" currencySymbol="#{journalofadjusment.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                    </p:inputText>                                                                    
+                                </h:panelGrid>                            
+                            </p:panel>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <p:commandButton value="Post" actionListener="#{journalofadjusment.check_tabelfee()}"/>
+                    <p:commandButton value="Cancel" onclick="cancel.show()"/>
+                </p:panel>
+                <p:dialog id="feeDetailDialog" widgetVar="feedetaildialog" modal="true">            
+                    <p:fieldset collapsed="true" legend="Add Fee" toggleable="true">
+                        <h:panelGrid columns="3">
+                            <h:outputText value="Fee"/>
+                            <h:outputText value=" : "/>
+                            <p:selectOneMenu style="width: 200px" value="#{journalofadjusment.transaction.transactionlist.feeid}" id="combofee">
+                                <f:selectItem itemLabel="Choose One Fee" itemValue=""/>
+                                <f:selectItems value="#{journalofadjusment.combofee}" var="combofee" itemLabel="#{combofee.feename}" itemValue="#{combofee.feeid}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Add Fee" actionListener="#{journalofadjusment.validation(journalofadjusment.transaction.transactionlist.feeid)}"
+                                             update="combofee,tabelfee,newTotalCost,different,newTotalAmmount"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+
+                    <p:panel id="panelfee" style="border-color: white">
+                        <p:dataTable value="#{journalofadjusment.listfee}" var="fees" style="text-align: center" id="tabelfee">
+                            <f:facet name="header">
+                                <h:outputText value="Fee List"/>
+                            </f:facet>                    
+                            <p:column headerText="Autodebet">
+                                <p:selectBooleanCheckbox value="#{fees.cash}" disabled="#{fees.feepayment!='Auto Debet dan Tunai'}">
+                                    <p:ajax listener="#{journalofadjusment.hitung_biaya_cash_autodebet(fees.feevalue,fees.cash)}" update=":Adjusment:newTotalCost,:Adjusment:newTotalAmmount,:Adjusment:different"/>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+                            <p:column headerText="#{msgs.feeName}">
+                                #{fees.feename}
+                            </p:column>
+                            <p:column headerText="#{msgs.feeValue}">
+                                #{fees.feevalue}
+                            </p:column>
+                            <p:column headerText="#{msgs.feePayment}">
+                                #{fees.feepayment}
+                            </p:column>
+                            <p:column headerText="#{msgs.deletefee}">
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deletefee}"  actionListener="#{journalofadjusment.remove_fee(fees.feeid)}"
+                                                 update=":Adjusment:panelfee,:Adjusment:newTotalCost,:Adjusment:newTotalAmmount,:Adjusment:different,:Adjusment:combofee">
+                                    <p:collector value="#{fees}" addTo="#{journalofadjusment.combofee}"/>
+                                </p:commandButton>                                
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="dialog">
+                <p:confirmDialog message="Saldo rekening tidak cukup untuk autodebet" header="Error balance" widgetVar="errbalance" closable="false">
+                    <p:commandButton value="Close" onclick="errbalance.hide()"/>
+                </p:confirmDialog>
+                <p:dialog widgetVar="accountauto" id="accountautodebet" closable="false" modal="true" header="Choose Account to Autodebet">
+                    <h:panelGrid columns="3">
+                        <h:outputText value="Pilih rekening"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{journalofadjusment.transaction.autodebetaccountid}">
+                            <f:selectItem itemLabel="Pilih rekening" itemValue="0"/>
+                            <f:selectItems value="#{journalofadjusment.listaccountautodebet}" var="acc" 
+                                           itemLabel="#{acc.account.accountcode}" itemValue="#{acc.account.accountid}"/>
+                            <p:ajax listener="#{journalofadjusment.balance_account_autodebet(journalofadjusment.transaction.autodebetaccountid)}" process="@this"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:confirmDialog message="Are you sure to post this transaction ?" header="Posting" widgetVar="post" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{journalofadjusment.insert()}"  process="@this" id="btnadjuspost">
+                        <f:actionListener binding="#{headerBean.retrieveUserCashAmount()}"/>
+                    </p:commandButton>
+                    <p:commandButton value="No" onclick="post.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to cancel this transaction ?" header="Cancel" widgetVar="cancel" closable="false">
+                    <p:commandButton value="Yes"
+                                     action="#{journalofadjusment.reset_form()}"
+                                     update=":Adjusment :searchadjusment"/>
+                    <p:commandButton value="No" onclick="cancel.hide()"/>
+                </p:confirmDialog>
+                <p:dialog widgetVar="varFeeExist" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputText value="Fee Exist"/>
+                        <p:commandButton value="OK" onclick="varFeeExist.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varFail" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction fail"/>
+                        <p:commandButton value="OK" onclick="varFail.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+        </p:panel>        
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">  
+        <p:panel header="Sumber Pendanaan" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="SumberPendanaan">
+                <p:fieldset legend="Tambah Sumber Pendanaan" toggleable="true" collapsed="#{fundingsourceBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="Nama Sumber Pendanaan"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{fundingsourceBean.fundingsource.fundingsourcename}" id="NamaSumberPendanaan" required="true" requiredMessage="Harus diisi" validator="#{fundingsourceBean.validateFundingsource}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="NamaSumberPendanaan"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton value="Simpan" actionListener="#{fundingsourceBean.add()}" update="@form tabelAgama"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="tabelAgama">
+                <p:dataTable value="#{fundingsourceBean.fundingsourceList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.fundingsourcename}" filterBy="#{o.fundingsourcename}">
+                        <f:facet name="header">Nama Sumber Pendanaan</f:facet>
+                        #{o.fundingsourcename}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.fundingsourcename}" action="#{fundingsourceBean.edit(o)}" update="panelDetail" oncomplete="updateDlg.show();"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.fundingsourcename}"  update="@form" action="#{fundingsourceBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+        <p:dialog header="Agama Detail" widgetVar="updateDlg" resizable="false" id="updateDialog" showEffect="fade" modal="true">
+            <h:form id="formUpdateDialog" prependId="false">
+                <h:panelGrid id="panelDetail" columns="4" cellpadding="2" >
+                    <h:outputText value="Nama Sumber Pendanaan"/>
+                    <h:outputText value=":"/>
+                    <p:inputText value="#{fundingsourceBean.selectedFundingsource.fundingsourcename}" id="NamaSumberPendanaan1" required="true" requiredMessage="Harus diisi"/>
+                    <p:message for="NamaSumberPendanaan1"/>
+
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:commandButton value="Simpan" actionListener="#{fundingsourceBean.update()}" update="@form tabelAgama" oncomplete="updateDlg.hide()"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>

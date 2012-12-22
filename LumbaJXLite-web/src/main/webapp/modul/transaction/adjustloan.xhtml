@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel id="panelAdjustment" header="Adjustment" closable="true" collapsed="false" toggleable="true">
+            <h:form id="searchadjusment">
+                <h:panelGrid columns="3" id="grid1">
+                    <h:outputLabel value="#{msgs.receiptNumber}"/>
+                    <h:outputLabel value=" : "/>
+                    <p:autoComplete minQueryLength="1" value="#{adjustloan.receiptnumber}" id="rn" completeMethod="#{adjustloan.complete}" disabled="#{adjustloan.transaction.transactionid!=null}">  
+                        <f:ajax event="itemSelect" execute="@this" render="@form :Adjusment :Adjusment:different"/>                            
+                    </p:autoComplete>
+                    
+                    <h:outputLabel value="#{msgs.acccountnumber}"/>
+                    <h:outputLabel value=" : "/>
+                    <p:inputText value="#{adjustloan.transaction.account.accountcode}" disabled="true"/>                    
+
+                    <h:outputLabel value="#{msgs.customername}"/>
+                    <h:outputLabel value=" : "/>
+                    <p:inputText value="#{adjustloan.transaction.customer.customername}" disabled="true"/>                                                                               
+                </h:panelGrid>
+                <pe:keyFilter for="rn" mask="num"/> 
+            </h:form>
+            
+            <p:separator/>
+            
+            <h:form id="Adjusment">
+                <p:growl id="transactionsuccess" sticky="false" life="10000"/>
+                <h:panelGrid columns="3" id="grid2">
+                    <h:panelGroup>
+                        <h:panelGrid columns="3">
+                            <h:outputLabel for="transactiondate" value="Date"/>
+                            <h:outputText value=" : "/>
+                            <p:calendar id="transactiondate" pattern="#{appBean.systemGlobal.siteFormatdate}" readonlyInput="true" disabled="true" value="#{adjustloan.transaction.transactiondate}"/>
+
+                            <h:outputLabel for="productName" value="Product Name"/>
+                            <h:outputText value=" : "/>
+                            <p:inputText id="productName" value="#{adjustloan.transaction.saving.savingname}" disabled="true"/>
+
+                            <h:outputLabel for="transactionType" value="Transaction Type"/>
+                            <h:outputText value=" : "/>
+                            <p:inputText id="transactionType" value="#{adjustloan.transaction.transactiontype}" disabled="true"/>
+
+                            <h:outputLabel for="ammount" value="Amount"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="ammount" value="#{adjustloan.transaction.amount}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            
+                            <h:outputLabel for="pokok" value="Pokok"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="pokok" value="#{adjustloan.transaction.loanschedule.principle}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            
+                            <h:outputLabel for="bunga" value="Bunga"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="bunga" value="#{adjustloan.transaction.loanschedule.interest}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+
+                            <h:outputLabel for="penalty" value="Penalty"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="penalty" value="#{adjustloan.transaction.penalty}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            
+                            <h:outputLabel for="titipan" value="Titipan"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="titipan" value="#{adjustloan.transaction.loanschedule.partialdeposit}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+
+                            <h:outputLabel for="totalAmmount" value="Total Payment"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="totalAmmount" value="#{adjustloan.transaction.totalpayment}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                        </h:panelGrid>
+                    </h:panelGroup>                    
+                    <h:panelGroup>
+                        <h:panelGrid columns="4">
+                            <h:outputLabel for="newTrancactiondate" value="Date"/>
+                            <h:outputText value=" : "/>
+                            <p:calendar id="newTrancactiondate" pattern="#{appBean.systemGlobal.siteFormatdate}" readonlyInput="true" value="#{adjustloan.transaction.transactiondate}" disabled="true"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="newProductName" value="Product Name"/>
+                            <h:outputText value=" : "/>
+                            <p:inputText id="newProductName" value="#{adjustloan.transaction.saving.savingname}" disabled="true"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="newTransactionType" value="Transaction Type"/>
+                            <h:outputText value=" : "/>
+                            <p:inputText id="newTransactionType" value="#{adjustloan.transaction.transactiontype}" disabled="true"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="newAmmount" value="Amount"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="newAmmount" value="#{adjustloan.transaction.amountnew}" disabled="#{adjustloan.amountedit}" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=",">
+                                <p:ajax event="blur" listener="#{adjustloan.different()}" update=":Adjusment" process="@this" partialSubmit="false"/>
+                            </pe:inputNumber>
+                            <p:commandButton icon="ui-icon ui-icon-pencil" id="editamount" actionListener="#{adjustloan.setAmountedit(false)}" update="newAmmount,@this" disabled="#{adjustloan.amountedit==false}"/>
+
+                            <h:outputLabel for="newpokok" value="Pokok"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="newpokok" value="#{adjustloan.transaction.loanschedule.principlenew}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            <p:spacer/>
+                            
+                            <h:outputLabel for="newbunga" value="Bunga"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="newbunga" value="#{adjustloan.transaction.loanschedule.interestnew}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            <p:spacer/>
+                            
+                            <h:outputLabel for="newPenalty" value="Penalty"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="newPenalty" value="#{adjustloan.transaction.penaltynew}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="newTitipan" value="Titipan"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="newTitipan" value="#{adjustloan.transaction.loanschedule.partialdepositnew}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            <p:spacer/>
+                            
+                            <h:outputLabel for="newTotalAmmount" value="Total Payment"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber id="newTotalAmmount" value="#{adjustloan.transaction.totalpaymentnew}" disabled="true" symbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            <p:spacer/>                            
+                        </h:panelGrid>
+                    </h:panelGroup>
+                    
+                    <h:panelGroup>
+                        <p:panel header="Different" id="different">
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Pokok"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{adjustloan.transaction.loanschedule.principledifferent}">
+                                    <f:convertNumber type="currency" currencySymbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                </p:inputText>
+                                <h:outputText value="Bunga"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{adjustloan.transaction.loanschedule.interestdifferent}">
+                                    <f:convertNumber type="currency" currencySymbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                </p:inputText>
+                                <h:outputText value="#{msgs.penalty}"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{adjustloan.transaction.penaltydifferent}">
+                                    <f:convertNumber type="currency" currencySymbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                </p:inputText>
+                                <h:outputText value="#{msgs.amount}"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{adjustloan.transaction.amountdifferent}">
+                                    <f:convertNumber type="currency" currencySymbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                </p:inputText>                                
+                                <h:outputText value="Total perbedaan"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{adjustloan.transaction.differenttotal}">
+                                    <f:convertNumber type="currency" currencySymbol="#{adjustloan.applicationManagedBean.systemGlobal.currency.currencySymbol}"/>
+                                </p:inputText>                                
+                            </h:panelGrid>                            
+                        </p:panel>
+                    </h:panelGroup>
+                </h:panelGrid>
+                <p:commandButton value="Post" actionListener="#{adjustloan.insert()}"/>
+                <p:commandButton value="Cancel" actionListener="#{adjustloan.reset_form()}" update=":searchadjusment :Adjusment"/>
+                <p:dialog widgetVar="varFail" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction fail"/>
+                        <p:commandButton value="OK" onclick="varFail.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+        </p:panel>        
+
+    </ui:define>
+</ui:composition>

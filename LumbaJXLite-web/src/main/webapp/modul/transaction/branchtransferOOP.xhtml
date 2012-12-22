@@ -1,0 +1,276 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.branchtransfer}" closable="true" toggleSpeed="500" closeSpeed="500">
+            <h:form id="transaksibranchtransfer" prependId="false">                
+                <p:outputPanel>
+                    <p:growl id="transactionsuccess" sticky="false" life="10000"/>
+                    <h:panelGrid columns="2">
+                        <p:panel header="#{msgs.from}" id="branchtransferfrom">
+                            <h:panelGrid columns="4">                            
+                                <h:outputText value="#{msgs.acccountnumber}*"/>
+                                <h:outputText value=" : "/>
+                                <p:autoComplete minQueryLength="5" value="#{branchtransfer.accountcodesource}" completeMethod="#{branchtransfer.complete}"  disabled="#{branchtransfer.transaction.transfercustomer.accountidsource!=null}">  
+                                    <f:ajax event="itemSelect" execute="@this" render="@form :transaksibranchtransfer"/>                            
+                                </p:autoComplete><p:spacer/>    
+                                <h:outputText value="#{msgs.customername}"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="#{branchtransfer.transaction.transfercustomer.accountidsource!=null}" value="#{branchtransfer.transaction.transfercustomer.customernamesource}">
+                                    <p:ajax event="keyup" update="btnsearch1"/>
+                                </p:inputText>
+                                <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.Search}" process="@this"
+                                                 oncomplete="vardialogsearchlist1.show()" id="btnsearch1"
+                                                 actionListener="#{branchtransfer.call_SP('source')}"
+                                                 update=":transfersearchlist1:iddialogsearchlist1"
+                                                 disabled="#{branchtransfer.transaction.transfercustomer.accountidsource!=null or branchtransfer.transaction.transfercustomer.customernamesource==null}"/>
+                                <h:outputText value="#{msgs.product}"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{branchtransfer.transaction.transfercustomer.savingnamesource}"/><p:spacer/>
+                                <h:outputText value="#{msgs.office}"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{branchtransfer.transaction.transfercustomer.officesource}"/><p:spacer/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel header="#{msgs.to}" id="branchtransferto">
+                            <h:panelGrid columns="4">
+                                <h:outputText value="#{msgs.acccountnumber}*"/>
+                                <h:outputText value=" : "/>
+                                <p:autoComplete minQueryLength="5" value="#{branchtransfer.accountcodedestination}" completeMethod="#{branchtransfer.complete2}" id="accdes"  disabled="#{branchtransfer.transaction.transfercustomer.accoutiddestination!=null or branchtransfer.transaction.transfercustomer.accountidsource==null}">  
+                                    <f:ajax event="itemSelect" execute="@this" render="@form :transaksibranchtransfer"/>                            
+                                </p:autoComplete><p:spacer/>                                
+                                <h:outputText value="#{msgs.customername}"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="#{branchtransfer.transaction.transfercustomer.accoutiddestination!=null or branchtransfer.transaction.transfercustomer.accountidsource==null}" value="#{branchtransfer.transaction.transfercustomer.customernamedestination}" id="namedes">
+                                    <p:ajax event="keyup" update="btnsearch2"/>
+                                </p:inputText>
+                                <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.Search}" process="@this"
+                                                 oncomplete="vardialogsearchlist2.show()" id="btnsearch2"
+                                                 actionListener="#{branchtransfer.call_SP('destination')}"
+                                                 update=":transfersearchlist2:iddialogsearchlist2"
+                                                 disabled="#{branchtransfer.transaction.transfercustomer.accoutiddestination!=null or branchtransfer.transaction.transfercustomer.customernamedestination==null}"/>
+                                <h:outputText value="#{msgs.product}"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{branchtransfer.transaction.transfercustomer.savingnamedestination}"/><p:spacer/>
+                                <h:outputText value="#{msgs.office}"/>
+                                <h:outputText value=" : "/>
+                                <p:inputText disabled="true" value="#{branchtransfer.transaction.transfercustomer.officedestination}"/><p:spacer/>                                                                                               
+                            </h:panelGrid>
+                        </p:panel>                        
+                    </h:panelGrid>
+                    <p:panel visible="#{branchtransfer.formtransaction}" header="#{msgs.value}" id="formtransaction">
+                        <h:panelGrid columns="2">
+                            <h:panelGrid columns="3">
+                                <h:outputText value="#{msgs.ammount}*"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber id="ammount" value="#{branchtransfer.transaction.amount}" symbol="#{branchtransfer.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <p:ajax event="blur" update=":transaksibranchtransfer:btntransfer"
+                                            listener="#{branchtransfer.check_balance(branchtransfer.transaction.amount)}" process="@this" partialSubmit="false"/>                                    
+                                </pe:inputNumber>
+
+                                <h:outputText value="#{msgs.fee}"/>
+                                <h:outputText value=" : "/>
+                                <p:selectOneMenu style="width: 130px" value="#{branchtransfer.transaction.transactionlist.feeid}" id="listfee">
+                                    <f:selectItem itemLabel="#{msgs.chooseonefee}" itemValue="0"/>
+                                    <f:selectItems value="#{branchtransfer.listFee}" var="fee" itemLabel="#{fee.feename}" itemValue="#{fee.feeid}"/>
+                                    <p:ajax update=":transaksibranchtransfer:tablefee :transaksibranchtransfer:listfee :transaksibranchtransfer:feevalue1 :transaksibranchtransfer:totalpayment" 
+                                            listener="#{branchtransfer.addfee(branchtransfer.transaction.transactionlist.feeid)}" process="@this"/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="#{msgs.totalfee}"/><h:outputText value=" : "/>
+                                <pe:inputNumber id="feevalue1" disabled="true" value="#{branchtransfer.transaction.totalfee}" symbol="#{branchtransfer.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>                            
+                            </h:panelGrid>
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Total Pembayaran"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{branchtransfer.transaction.totalpayment}" id="totalpayment" disabled="true" symbol="#{branchtransfer.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                                <h:outputText value="Tunai"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{branchtransfer.transaction.cash}" id="cash" symbol="#{branchtransfer.applicationManagedBean.systemGlobal.currency.currencySymbol} " thousandSeparator="." decimalSeparator="," minValue="#{branchtransfer.transaction.totalpayment}" maxValue="999999999999">
+                                    <p:ajax event="blur" listener="#{branchtransfer.count_changes()}" partialSubmit="false" process="@this"
+                                            update=":transaksibranchtransfer:changes"/>
+                                </pe:inputNumber>
+                                <h:outputText value="Kembalian"/>
+                                <h:outputText value=" : "/>
+                                <pe:inputNumber value="#{branchtransfer.transaction.changes}" id="changes" disabled="true" symbol="#{branchtransfer.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <p:panel style="border: white" id="panelfee">
+                            <p:dataTable id="tablefee" value="#{branchtransfer.tabelFee}" var="tabelfee" style="text-align: center; width: 500px">
+                                <p:column headerText="Cash">
+                                    <p:selectBooleanCheckbox value="#{tabelfee.cash}" disabled="#{tabelfee.feepayment!='Auto Debet dan Tunai'}">
+                                        <p:ajax listener="#{branchtransfer.check_fee(tabelfee.cash, tabelfee.feevalue)}" update=":transaksibranchtransfer:totalpayment"/>
+                                    </p:selectBooleanCheckbox>
+                                </p:column>
+                                <p:column headerText="#{msgs.feeName}">
+                                    #{tabelfee.feename}
+                                </p:column>
+                                <p:column headerText="#{msgs.fee}">
+                                    #{tabelfee.feevalue}
+                                </p:column>
+                                <p:column headerText="Fee Payment">
+                                    #{tabelfee.feepayment}
+                                </p:column>
+                                <p:column headerText="#{msgs.deletefee}">
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deletefee}"
+                                                     update=":transaksibranchtransfer:listfee 
+                                                     :transaksibranchtransfer:feevalue1 
+                                                     :transaksibranchtransfer:panelfee @this"
+                                                     action="#{branchtransfer.deletefee(tabelfee.feevalue, tabelfee.feeid)}"
+                                                     process="@this">
+                                        <p:collector value="#{tabelfee}" addTo="#{branchtransfer.listFee}"/>    
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                        <p:commandButton icon="ui-icon ui-icon-transferthick-e-w" title="#{msgs.transfer}" value="#{msgs.transfer}" 
+                                         actionListener="#{branchtransfer.check_tabelfee()}"
+                                         disabled="#{branchtransfer.transaction.transfercustomer.accountidsource==null 
+                                                     or branchtransfer.transaction.transfercustomer.accoutiddestination==null
+                                                     or branchtransfer.transaction.amount == 0.0}"
+                                         update=":transaksibranchtransfer:branchtransferfrom,
+                                         :transaksibranchtransfer:branchtransferto"
+                                         id="btntransfer"/>
+                        <h:outputText/>
+                        <p:commandButton value="#{msgs.cancel}" onclick="cancel.show()"/>
+                    </p:panel>
+                </p:outputPanel>              
+
+                <p:dialog widgetVar="accountauto" id="accountautodebet" closable="false" modal="true" header="Choose Account to Autodebet">
+                    <h:panelGrid columns="3">
+                        <h:outputText value="Pilih rekening"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{branchtransfer.accountid_autodebet}">
+                            <f:selectItem itemLabel="Pilih rekening" itemValue="0"/>
+                            <f:selectItems value="#{branchtransfer.listaccountautodebet}" var="acc" 
+                                           itemLabel="#{acc.account.accountcode}" itemValue="#{acc.account.accountid}"/>
+                            <p:ajax listener="#{branchtransfer.balance_account_autodebet(branchtransfer.accountid_autodebet)}" process="@this"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <p:confirmDialog message="Are you sure to post this transaction ?" header="Posting" widgetVar="post" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{branchtransfer.insert()}"  process="@this" id="btntransferbranch">
+                        <f:actionListener binding="#{headerBean.retrieveUserCashAmount()}"/>
+                    </p:commandButton>
+                    <p:commandButton value="No" onclick="post.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to cancel this transaction ?" header="Cancel" widgetVar="cancel" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{branchtransfer.reset_form()}" process="@this"
+                                     update=":transaksibranchtransfer :transfersearchlist1 :transfersearchlist2"/>
+                    <p:commandButton value="No" onclick="cancel.hide()"/>
+                </p:confirmDialog>               
+                <p:blockUI block="transaksibranchtransfer" trigger="btntransferbranch" />
+            </h:form>
+
+            <!-- form dialog hasil search -->
+            <h:form id="transfersearchlist1">
+                <p:dialog widgetVar="vardialogsearchlist1" id="iddialogsearchlist1" modal="true" position="top">
+                    <p:dataTable value="#{branchtransfer.list1}" var="tabellist"
+                                 id="tabelsearchlist" style="text-align: center; width: 1000px" paginator="true" rows="10" sortOrder="descending">
+                        <p:column headerText="Account Code" filterBy="#{tabellist.transfercustomer.accountcodesource}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.accountcodesource}">
+                            #{tabellist.transfercustomer.accountcodesource}
+                        </p:column>
+                        <p:column headerText="#{msgs.product}" filterBy="#{tabellist.transfercustomer.savingtypesource}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.savingtypesource}">
+                            #{tabellist.transfercustomer.savingtypesource}
+                        </p:column>
+                        <p:column headerText="#{msgs.productname}" filterBy="#{tabellist.transfercustomer.savingnamesource}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.savingnamesource}">
+                            #{tabellist.transfercustomer.savingnamesource}
+                        </p:column>
+                        <p:column headerText="#{msgs.customername}" filterBy="#{tabellist.transfercustomer.customernamesource}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.customernamesource}">
+                            #{tabellist.transfercustomer.customernamesource}
+                        </p:column>
+                        <p:column headerText="#{msgs.socialsecuritynumber}" filterBy="#{tabellist.transfercustomer.socialsecuritynumbersource}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.socialsecuritynumbersource}">
+                            #{tabellist.transfercustomer.socialsecuritynumbersource}
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.Search}"
+                                             actionListener="#{branchtransfer.check_list1(tabellist.transfercustomer.accountidsource)}"                                             
+                                             update=":transaksibranchtransfer:branchtransferfrom"
+                                             onclick="vardialogsearchlist.hide()"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+            </h:form>
+
+            <!-- form dialog hasil search -->
+            <h:form id="transfersearchlist2">
+                <p:dialog widgetVar="vardialogsearchlist2" id="iddialogsearchlist2" modal="true" position="top">
+                    <p:dataTable value="#{branchtransfer.list2}" var="tabellist"
+                                 id="tabelsearchlist" style="text-align: center; width: 1000px" paginator="true" rows="10" sortOrder="descending">
+                        <p:column headerText="Account Code" filterBy="#{tabellist.transfercustomer.accountcodedestination}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.accountcodedestination}">
+                            #{tabellist.transfercustomer.accountcodedestination}
+                        </p:column>
+                        <p:column headerText="#{msgs.product}" filterBy="#{tabellist.transfercustomer.savingtypedestination}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.savingtypedestination}">
+                            #{tabellist.transfercustomer.savingtypedestination}
+                        </p:column>
+                        <p:column headerText="#{msgs.productname}" filterBy="#{tabellist.transfercustomer.savingnamedestination}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.savingnamedestination}">
+                            #{tabellist.transfercustomer.savingnamedestination}
+                        </p:column>
+                        <p:column headerText="#{msgs.customername}" filterBy="#{tabellist.transfercustomer.customernamedestination}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.customernamedestination}">
+                            #{tabellist.transfercustomer.customernamedestination}
+                        </p:column>
+                        <p:column headerText="#{msgs.socialsecuritynumber}" filterBy="#{tabellist.transfercustomer.socialsecuritynumberdestination}" filterMatchMode="contains"
+                                  sortBy="#{tabellist.transfercustomer.socialsecuritynumberdestination}">
+                            #{tabellist.transfercustomer.socialsecuritynumberdestination}
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.Search}"
+                                             actionListener="#{branchtransfer.check_list2(tabellist.transfercustomer.accoutiddestination)}"                                             
+                                             update=":transaksibranchtransfer:branchtransferto :transaksibranchtransfer:formtransaction"
+                                             onclick="vardialogsearchlist.hide()"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="formdialoggagal">
+                <p:confirmDialog message="Saldo tidak mencukupi" widgetVar="vardialoggagal">
+                    <p:commandButton value="OK" onclick="vardialoggagal.hide()"
+                                     update=":transfersearchlist2 :transfersearchlist1 :transaksibranchtransfer"/>
+                </p:confirmDialog>
+                <p:dialog widgetVar="varSuccess" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction succes"/>
+                        <p:commandButton value="OK" onclick="varSuccess.hide()" actionListener="#{branchtransfer.reset_form()}"
+                                         update=":transaksibranchtransfer :transfersearchlist2 :transfersearchlist1"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varFail" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction fail"/>
+                        <p:commandButton value="OK" onclick="varFail.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varChangeAmount" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Saldo tidak mencukupi"/>
+                        <p:commandButton value="OK" onclick="varChangeAmount.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varCash" modal="true" closable="false">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Cash kurang dari total pembayaran"/>
+                        <p:commandButton value="OK" onclick="varCash.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+        </p:panel>
+    </ui:define>
+</ui:composition>

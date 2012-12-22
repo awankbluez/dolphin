@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Cash Flow Report">
+            <h:form id="formCashFlowReport" prependId="false">
+                <h:panelGrid columns="4" >
+                    <p:outputLabel for="Branch" value="#{msgs.branch}"/>
+                    <p:selectOneMenu id="Branch" style="width: 150px;" >
+                        <f:selectItem itemLabel="Select Branch" />
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Period" value="#{msgs.period}"/>
+                    <p:selectOneMenu id="Period" style="width: 150px;" >
+                        <f:selectItem itemLabel="Select Period" itemValue="-1"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Period3From" value="Period Three From"/>
+                    <p:calendar id="Period3From" pattern="yyyy-MM-dd" navigator="true" style="width: 150px" effect="explode" disabled="true" />
+                    <p:outputLabel for="Period3FromTo" value="#{msgs.to}"/>
+                    <p:calendar id="Period3FromTo" pattern="yyyy-MM-dd" navigator="true" style="width: 150px" effect="explode" />
+
+                    <p:outputLabel for="Period2From" value="Period Two From"/>
+                    <p:calendar id="Period2From" pattern="yyyy-MM-dd" navigator="true" style="width: 150px" effect="explode" disabled="true" />
+                    <p:outputLabel for="Period2FromTo" value="#{msgs.to}"/>
+                    <p:calendar id="Period2FromTo" pattern="yyyy-MM-dd" navigator="true" style="width: 150px" effect="explode" disabled="true" />
+
+                    <p:outputLabel for="Period1From" value="Period One From"/>
+                    <p:calendar id="Period1From" pattern="yyyy-MM-dd" navigator="true" style="width: 150px" effect="explode" disabled="true" />
+                    <p:outputLabel for="Period1FromTo" value="#{msgs.to}"/>
+                    <p:calendar id="Period1FromTo" pattern="yyyy-MM-dd" navigator="true" style="width: 150px" effect="explode" disabled="true" />
+
+                    <p:outputLabel for="Detail" value="Detail"/>
+                    <p:selectOneMenu id="Detail" style="width: 150px;" >
+                        <f:selectItem itemLabel="Select Detail" itemValue="-1"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Rounding" value="#{msgs.rounding}"/>
+                    <p:selectOneMenu id="Rounding" style="width: 150px;" >
+                        <f:selectItem itemLabel="Select Rounding" itemValue="-1"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:selectBooleanCheckbox itemLabel="Include Zero Balance Accounts" >
+                    </p:selectBooleanCheckbox>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+
+                    <p:commandButton value="Download Report" ajax="false"/>
+                </h:panelGrid>
+
+
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

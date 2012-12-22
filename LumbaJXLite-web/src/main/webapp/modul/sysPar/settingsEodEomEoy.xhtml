@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="menuBar">
+        menuBar
+    </ui:define>
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Settings EOD EOM EOY">
+            <h:form id="formTableSettings">
+                <!--Table seting eod-->
+                <p:dataTable value="#{settingsEodBean.systemEODs}"
+                             var="menueod"
+                             rendered="true">
+                    <f:facet name="header"><h:outputText value="Edit EOD EOM EOY Settings"/></f:facet>
+
+                    <p:column headerText="Nama Proses">
+                        <h:outputText value="#{menueod.menu.parentmenuname} | #{menueod.menu.menuname}"/>
+                    </p:column>
+
+                    <p:column headerText="Processed at" style="text-align: center;">
+                        <h:outputText value="#{menueod.nextprocess}" rendered="#{menueod.nextprocess != appBean.sessionday.sessiondate}">
+                            <f:convertDateTime pattern="EEE, dd MMM yyyy" />
+                        </h:outputText>
+
+                        <h:outputText value="Today" rendered="#{menueod.nextprocess == appBean.sessionday.sessiondate}" style="font-weight: bold;"/>
+                    </p:column>
+
+                    <p:column headerText="Last Process" style="text-align: center;">
+                        <h:outputText value="#{menueod.lastprocess}">
+                            <f:convertDateTime pattern="EEE, dd MMM yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="End Of Day" style="text-align: center; width: 100px;">
+                        <p:selectOneRadio id="radioChooseWhenProcessed" layout="custom" value="#{menueod.backofficeprocess}" disabled="#{settingsEodBean.status == 1}">
+                            <f:selectItem itemValue="1" />
+                            <f:selectItem itemValue="2" />
+                            <f:selectItem itemValue="3" />
+                        </p:selectOneRadio>
+
+                        <p:radioButton for="radioChooseWhenProcessed" id="optionEOD" itemIndex="0"/>
+                    </p:column>
+
+                    <p:column headerText="End Of Month" style="vertical-align: middle; width: 100px;">
+                        <p:radioButton for="radioChooseWhenProcessed" id="optionEOM" itemIndex="1"/>
+                    </p:column>
+
+                    <p:column headerText="End Of Year" style="text-align: center; width: 100px;">
+                        <p:radioButton for="radioChooseWhenProcessed" id="optionEOY" itemIndex="2"/>
+                    </p:column>
+
+                    <p:column headerText="Ordering" style="text-align: center; width: 50px;">
+                        <h:outputText value="#{menueod.ordering}" rendered="#{settingsEodBean.status == 1}"/>
+                        <p:inputText value="#{menueod.ordering}" rendered="#{settingsEodBean.status == 2}" style="text-align: center; width: 50px;"/>
+                    </p:column>
+
+                    <p:column headerText="Status">
+                        <p:selectBooleanCheckbox value="#{menueod.status}" disabled="#{settingsEodBean.status == 1}"/>
+                    </p:column>F
+                </p:dataTable>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Save" rendered="#{settingsEodBean.status == 2}" actionListener="#{settingsEodBean.save}" update="@form"/>
+                    <p:commandButton value="Edit" actionListener="#{settingsEodBean.edit}" update="@form" rendered="#{settingsEodBean.status == 1}"/>
+                    <p:commandButton value="cancel" actionListener="#{settingsEodBean.cancel}" update="@form" rendered="#{settingsEodBean.status == 2}"/>
+                </h:panelGrid>
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+    <ui:define name="bottom">
+        bottom
+    </ui:define>
+
+</ui:composition>

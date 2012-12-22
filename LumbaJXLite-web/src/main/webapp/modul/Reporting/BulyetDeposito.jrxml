@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0000000000000009"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="9" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="11" width="554" height="26"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPOSITO BERJANGKA]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="40" width="554" height="1"/>
+			</line>
+			<line>
+				<reportElement x="2" y="37" width="554" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="10" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="431" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="0" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[Nama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="0" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="25" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[Alamat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="0" width="85" height="20"/>
+				<textElement/>
+				<text><![CDATA[No. Rekening]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="0" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="25" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="81" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="81" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[Nominal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="105" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="105" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[Terbilang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="162" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="162" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[Jangka Waktu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="186" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="186" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[Tanggal Valuta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="210" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="210" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[Suku Bunga]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="234" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="234" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Pembayaran Bunga]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="25" width="7" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="25" width="107" height="20"/>
+				<textElement/>
+				<text><![CDATA[Sistem Perpanjangan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="210" width="12" height="20"/>
+				<textElement/>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="210" width="7" height="20"/>
+				<textElement/>
+				<text><![CDATA[(]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="326" y="206" width="70" height="20"/>
+				<textElement/>
+				<text><![CDATA[) per Tahun]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

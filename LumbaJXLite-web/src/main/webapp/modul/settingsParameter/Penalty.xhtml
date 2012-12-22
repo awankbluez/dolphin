@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.penalty}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="Denda">
+                <p:fieldset legend="#{msgs.add} #{msgs.penalty}" toggleable="true" collapsed="#{penaltyBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.penaltyname}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{penaltyBean.penalty.penaltyname}" id="NamaDenda" required="true" requiredMessage="Harus diisi" style="width: 150px" validator="#{penaltyBean.validatePenalty}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="NamaDenda"/>
+                        
+                        <h:outputText value="#{msgs.penaltyvalue}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{penaltyBean.penalty.penaltyvalue}" id="NilaiDenda" required="true" requiredMessage="Harus diisi" style="width: 150px"/>
+                        <p:message for="NilaiDenda"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelDenda:tabelDenda" actionListener="#{penaltyBean.add()}" rendered="#{penaltyBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{penaltyBean.reset()}" rendered="#{penaltyBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelDenda:tabelDenda" actionListener="#{penaltyBean.update()}" rendered="#{penaltyBean.status == 'update'}" process="@this"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{penaltyBean.reset()}" rendered="#{penaltyBean.status == 'update'}" update="@form" action="#{penaltyBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelDenda">
+                <p:dataTable id="tabelDenda" value="#{penaltyBean.penaltyList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.penaltyname}" filterBy="#{o.penaltyname}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.penaltyname}</f:facet>
+                        #{o.penaltyname}
+                    </p:column>
+                    <p:column sortBy="#{o.penaltyvalue}" filterBy="#{o.penaltyvalue}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.penaltyvalue}</f:facet>
+                        #{o.penaltyvalue}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.penaltyname}" action="#{penaltyBean.edit(o)}" update=":Denda"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.penaltyname}"  update="@form" action="#{penaltyBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

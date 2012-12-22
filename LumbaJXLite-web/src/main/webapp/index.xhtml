@@ -1,0 +1,19 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./template.xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="page">LUMBA JX Core Banking System</ui:define>
+    <ui:define name="title">Dashboard</ui:define>
+    <ui:define name="desk"><h:outputText value="#{msgs['lumbajx.welcome']}"/></ui:define>
+
+    <ui:define name="content">
+        <div class="notibar announcement">
+            <a class="close"></a>
+            <h3>#{msgs['lumbajx.announcement']}</h3>
+            <p>Bank of Indonesia issue new regulations for Microfinance Institutions...</p>
+        </div><!-- notification announcement -->
+    </ui:define>
+</ui:composition>

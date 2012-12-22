@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+              version="2.0">
+
+    <!--set locale-->
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>id</supported-locale>
+        </locale-config>
+
+        <resource-bundle>
+            <base-name>i18n.Messages</base-name>
+            <var>msgs</var>
+        </resource-bundle>
+    </application>
+
+    <!--phase listener-->
+    <lifecycle>
+        <phase-listener>com.vaia.lumbajxlite.web.util.AuthListener</phase-listener>
+    </lifecycle>
+
+
+    <!--    <factory>
+        <exception-handler-factory>
+            org.omnifaces.exceptionhandler.FullAjaxExceptionHandlerFactory
+        </exception-handler-factory>
+    </factory>
+    <application>
+        <resource-handler>org.omnifaces.resourcehandler.CombinedResourceHandler</resource-handler>
+    </application>-->
+</faces-config>

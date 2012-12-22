@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.subjectRecon}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="subjectReconciliation">
+                <p:fieldset legend="#{msgs.add} #{msgs.subjectRecon}" toggleable="true" collapsed="#{subjectreconciliationBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.subjectReconName}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{subjectreconciliationBean.subjectrecon.subjectReconname}" id="subjectReconName" required="true" requiredMessage="Harus diisi" validator="#{subjectreconciliationBean.validateLastEducation}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="subjectReconName"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelsubjectRecon:tabelsubjectRecon" actionListener="#{subjectreconciliationBean.add()}" rendered="#{subjectreconciliationBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{subjectreconciliationBean.reset()}" rendered="#{subjectreconciliationBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelsubjectRecon:tabelsubjectRecon" actionListener="#{subjectreconciliationBean.update()}" rendered="#{subjectreconciliationBean.status == 'update'}" />
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{subjectreconciliationBean.reset()}" rendered="#{subjectreconciliationBean.status == 'update'}" update="@form" action="#{subjectreconciliationBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelsubjectRecon">
+                <p:dataTable id="tabelsubjectRecon" value="#{subjectreconciliationBean.subjectreconList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.subjectReconname}" filterBy="#{o.subjectReconname}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.subjectReconName}</f:facet>
+                        #{o.subjectReconname}
+                    </p:column>
+                    <p:column style="width: 70px; text-align: center;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.subjectReconname}" action="#{subjectreconciliationBean.edit(o)}" update=":subjectReconciliation" />
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.subjectReconname}"  update="@form" action="#{subjectreconciliationBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

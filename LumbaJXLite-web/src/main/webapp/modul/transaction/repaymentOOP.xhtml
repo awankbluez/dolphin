@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.repayment}" closable="true" toggleSpeed="500" closeSpeed="500">
+            <h:form id="transactionrepaymentsearch">
+                <p:panel style="border-color: white">
+                    <h:panelGrid columns="2">
+                        <h:panelGrid columns="4">                    
+                            <h:outputText value="#{msgs.acccountnumber}"/>
+                            <h:outputText value=" : "/>
+                            <p:autoComplete minQueryLength="5" value="#{bean_repayment.account}" id="account" completeMethod="#{bean_repayment.complete}" disabled="#{bean_repayment.transaction.account.accountid!=null}">  
+                                <f:ajax event="itemSelect" execute="@this" render="@form transactionrepaymentsearch :transactionrepaymentform :transactionrepaymentform:btnrepayment"/>                            
+                            </p:autoComplete><h:outputText/>
+                            <h:outputText value="#{msgs.customerName}"/>
+                            <h:outputText value=" : "/>
+                            <p:inputText value="#{bean_repayment.transaction.customer.customername}" disabled="#{bean_repayment.transaction.account.accountid!=null}">
+                                <p:ajax process="@this" event="keyup" update="btnsearch"/>
+                            </p:inputText>
+                            <p:commandButton title="#{msgs.Search}" icon="ui-icon ui-icon-search"
+                                             actionListener="#{bean_repayment.findAll()}" id="btnsearch"
+                                             update=":transactionrepaymentsearchlist:tabelsearchlist" process="@this"                                    
+                                             disabled="#{bean_repayment.transaction.customer.customername==null or bean_repayment.transaction.account.accountid!=null}"/>
+                            <h:outputText value="#{msgs.socialsecuritynumber}"/>
+                            <h:outputText value=" : "/>
+                            <p:inputText value="#{bean_repayment.transaction.person.socialsecuritynumber}" disabled="true"/><h:outputText/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="3">
+                            <h:outputText value="#{msgs.office}"/>
+                            <h:outputText value=" : "/>
+                            <p:inputText value="#{bean_repayment.transaction.customer.customeroffice}" disabled="true"/>
+                            <h:outputText value="#{msgs.transactiondate}"/>
+                            <h:outputText value=" : "/>
+                            <p:calendar pattern="#{bean_repayment.applicationManagedBean.systemGlobal.siteFormatdate}" disabled="true" value="#{bean_repayment.systemdate}"/>                        
+                            <h:outputText value="#{msgs.product}"/>
+                            <h:outputText value=" : "/>
+                            <p:inputText value="#{bean_repayment.transaction.loan.loanname}" disabled="true"/>
+                        </h:panelGrid>                    
+                    </h:panelGrid>
+                    <p:blockUI block="transactionrepaymentsearch" trigger=":transactionrepaymentform:btnrepayment" />
+                </p:panel>
+            </h:form>
+
+            <h:form id="transactionrepaymentsearchlist">
+                <p:dialog widgetVar="vardialogsearchlist" id="iddialogsearchlist" modal="true" position="top">
+                    <p:dataTable id="tabelsearchlist" value="#{bean_repayment.listsearch}" var="tabellist"
+                                 style="text-align: center; width: 1000px" paginator="true" rows="10" sortOrder="descending">
+                        <p:column headerText="Account Code" filterBy="#{tabellist.account.accountcode}" filterMatchMode="contains" sortBy="#{tabellist.account.accountcode}">
+                            #{tabellist.account.accountcode}
+                        </p:column>
+                        <p:column headerText="#{msgs.productname}" filterBy="#{tabellist.loan.loanname}" filterMatchMode="contains" sortBy="#{tabellist.loan.loanname}">
+                            #{tabellist.loan.loanname}
+                        </p:column>
+                        <p:column headerText="#{msgs.customername}" filterBy="#{tabellist.customer.customername}" filterMatchMode="contains" sortBy="#{tabellist.customer.customername}">
+                            #{tabellist.customer.customername}
+                        </p:column>
+                        <p:column headerText="#{msgs.socialsecuritynumber}" filterBy="#{tabellist.person.socialsecuritynumber}" filterMatchMode="contains" sortBy="#{tabellist.person.socialsecuritynumber}">
+                            #{tabellist.person.socialsecuritynumber}
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.Search}"
+                                             actionListener="#{bean_repayment.check_list(tabellist.account.accountid)}"                                             
+                                             update=":transactionrepaymentform :transactionrepaymentsearch :transactionrepaymentform:btnrepayment"
+                                             onclick="vardialogsearchlist.hide()"/>
+                        </p:column>
+                    </p:dataTable>                    
+                </p:dialog>
+            </h:form>
+
+            <h:form id="transactionrepaymentform">
+                <p:panel visible="#{bean_repayment.panelutamarepayment}">
+                    <p:growl id="transactionsuccess" sticky="false" life="10000"/>
+                    <h:panelGrid columns="2">
+                        <h:panelGrid columns="3">
+                            <h:outputText value="Pokok"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber value="#{bean_repayment.transactionlist.loanschedule.principle+bean_repayment.transactionlist.loanschedule.principlepaid}" id="pokok" disabled="true" symbol="#{bean_repayment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            <h:outputText value="Bunga"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber value="#{bean_repayment.transactionlist.loanschedule.interest+bean_repayment.transactionlist.loanschedule.interestpaid}" id="bunga" disabled="true" symbol="#{bean_repayment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            <h:outputText value="Denda"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber value="#{bean_repayment.transactionlist.loanschedule.penalty+bean_repayment.transactionlist.loanschedule.penaltypaid}" id="penalty" disabled="true" symbol="#{bean_repayment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                            <h:outputText value="Titipan"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber value="#{bean_repayment.transactionlist.loanschedule.partialdeposit}" id="titipan" disabled="true" symbol="#{bean_repayment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="3">                                                        
+                            <h:outputText value="Amount"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber value="#{bean_repayment.transactionlist.amount}" symbol="#{bean_repayment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," id="amount" maxValue="999999999999">
+                                <p:ajax listener="#{bean_repayment.split_angsuran(bean_repayment.transactionlist.amount,bean_repayment.transactionlist.loanschedule.principle,bean_repayment.transactionlist.loanschedule.interest,bean_repayment.transactionlist.loanschedule.capitalizationsaving,bean_repayment.transactionlist.loanschedule.penalty)}" event="blur" 
+                                        process=":transactionrepaymentform:amount"
+                                        update="pokok,bunga,penalty,totalpayment,cash,titipan,changes"
+                                        partialSubmit="false"/>
+                            </pe:inputNumber>
+                            <h:outputText value="#{msgs.totalpayment}"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber value="#{bean_repayment.transactionlist.totalpayment}" id="totalpayment" disabled="true" symbol="Rp. " thousandSeparator="." decimalSeparator=","/>
+                            <h:outputText value="#{msgs.tendered}"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber value="#{bean_repayment.transactionlist.cash}" id="cash" symbol="#{bean_repayment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                <p:ajax listener="#{bean_repayment.changes(bean_repayment.transactionlist.cash)}"
+                                        event="blur" process="@this" update="changes,btnrepayment" partialSubmit="false"/>
+                            </pe:inputNumber>
+                            <h:outputText value="#{msgs.change}"/>
+                            <h:outputText value=" : "/>
+                            <pe:inputNumber value="#{bean_repayment.transactionlist.changes}" id="changes" disabled="true" symbol="#{bean_repayment.applicationManagedBean.systemGlobal.currency.currencySymbol}" thousandSeparator="." decimalSeparator=","/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                    <p:commandButton value="#{msgs.posting}" id="btnrepayment" onclick="post.show()"
+                                     disabled="#{bean_repayment.transactionlist.cash==0.0}"/>
+                    <p:commandButton value="#{msgs.cancel}" onclick="cancel.show()"/>
+                    <p:blockUI block="transactionrepaymentform" trigger=":dialog:btnrepaymentpost" />
+                </p:panel>
+            </h:form>
+
+            <h:form id="dialog">
+                <p:confirmDialog message="Are you sure to post this transaction ?" header="Posting" widgetVar="post" closable="false">
+                    <p:commandButton value="Yes"  actionListener="#{bean_repayment.insert()}"  process="@this" id="btnrepaymentpost">
+                        <f:actionListener binding="#{headerBean.retrieveUserCashAmount()}"/>
+                    </p:commandButton>
+                    <p:commandButton value="No" onclick="post.hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog message="Are you sure to cancel this transaction ?" header="Cancel" widgetVar="cancel" closable="false">
+                    <p:commandButton value="Yes" actionListener="#{bean_repayment.setPanelutamarepayment(false)}"
+                                     action="#{bean_repayment.reset_form()}"
+                                     update=":transactionrepaymentform :transactionrepaymentsearchlist :transactionrepaymentsearch"/>
+                    <p:commandButton value="No" onclick="cancel.hide()"/>
+                </p:confirmDialog>
+                <p:dialog widgetVar="varSuccess" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction succes"/>
+                        <p:commandButton value="OK" onclick="varSuccess.hide()" actionListener="#{bean_repayment.reset_form()}"
+                                         update=":transactionrepaymentsearch :transactionrepaymentsearchlist :transactionrepaymentform"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varFail" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Transaction fail"/>
+                        <p:commandButton value="OK" onclick="varFail.hide()"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog widgetVar="varCash" modal="true">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="Cash kurang dari total pembayaran"/>
+                        <p:commandButton value="OK" onclick="varCash.hide()" update=":transactionrepaymentform:cash"/>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+        </p:panel>
+    </ui:define>
+</ui:composition>

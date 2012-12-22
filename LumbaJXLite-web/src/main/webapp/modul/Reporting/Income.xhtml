@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Income Statement Report">
+            <h:form id="formIncomeStatementReport" prependId="false"  target="_blank">
+                <h:panelGrid columns="4" >
+                    <p:outputLabel for="Branch" value="#{msgs.branch}"/>
+                    <p:selectOneMenu id="Branch" style="width: 150px;" value="#{incomeBean.userID}" >
+                        <f:selectItem itemLabel="Select Branch" />
+                        <f:selectItems value="#{incomeBean.dtCmbBranch}"/>
+                        <p:ajax listener="#{incomeBean.listcomboBranch()}" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Period" value="#{msgs.period}" rendered="#{not incomeBean.usegl}"/>
+                    <p:selectOneMenu id="Period" style="width: 150px;" value="#{incomeBean.period}" rendered="#{not incomeBean.usegl}">
+                        <f:selectItem itemLabel="Days" itemValue="Days"/>
+                        <f:selectItem itemLabel="Weeks" itemValue="Weeks"/>
+                        <f:selectItem itemLabel="Months" itemValue="Months"/>
+                        <f:selectItem itemLabel="Years" itemValue="Years"/>
+                        <p:ajax listener="#{incomeBean.updatePattern()}" update=":formIncomeStatementReport"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10" rendered="#{not incomeBean.usegl}"/>
+                    <p:spacer width="10" rendered="#{not incomeBean.usegl}"/>
+
+                    <p:outputLabel for="Period3From" value="Period Three From" rendered="#{not incomeBean.usegl}"/>
+                    <p:calendar id="Period3From" value="#{incomeBean.period5}" pattern="#{incomeBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not incomeBean.usegl}"/>
+                    <p:outputLabel for="Period3FromTo" value="#{msgs.to}" rendered="#{not incomeBean.usegl}"/>
+                    <p:calendar id="Period3FromTo"  value="#{incomeBean.period6}" pattern="#{incomeBean.patternDate}" navigator="true" style="width: 150px" effect="explode" rendered="#{not incomeBean.usegl}">
+                        <p:ajax event="dateSelect" listener="#{incomeBean.generatePeriod()}" update="Period3FromTo,Period3From,Period2From,Period2FromTo,Period1From,Period1FromTo"/>
+                        <p:ajax event="keyup" listener="#{incomeBean.generatePeriod()}" update="Period3FromTo,Period3From,Period2From,Period2FromTo,Period1From,Period1FromTo"/>
+                    </p:calendar>
+
+                    <p:outputLabel for="Period2From" value="Period Two From" rendered="#{not incomeBean.usegl}"/>
+                    <p:calendar id="Period2From" value="#{incomeBean.period3}" pattern="#{incomeBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not incomeBean.usegl}"/>
+                    <p:outputLabel for="Period2FromTo" value="#{msgs.to}" rendered="#{not incomeBean.usegl}"/>
+                    <p:calendar id="Period2FromTo" value="#{incomeBean.period4}" pattern="#{incomeBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not incomeBean.usegl}"/>
+
+                    <p:outputLabel for="Period1From" value="Period One From" rendered="#{not incomeBean.usegl}"/>
+                    <p:calendar id="Period1From" value="#{incomeBean.period1}" pattern="#{incomeBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not incomeBean.usegl}"/>
+                    <p:outputLabel for="Period1FromTo" value="#{msgs.to}" rendered="#{not incomeBean.usegl}"/>
+                    <p:calendar id="Period1FromTo" value="#{incomeBean.period2}" pattern="#{incomeBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not incomeBean.usegl}"/>
+
+                    <p:outputLabel for="Detail" value="Detail"/>
+                    <p:selectOneMenu id="Detail" value="#{incomeBean.detail}" style="width: 150px;" >
+                        <f:selectItem itemLabel="Select Detail" itemValue="0"/>
+                        <f:selectItem itemLabel="Category" itemValue="Category"/>
+                        <f:selectItem itemLabel="Financial Category" itemValue="Financial Category"/>
+                        <f:selectItem itemLabel="Account Category" itemValue="Account Category"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Rounding" value="#{msgs.rounding}"/>
+                    <p:selectOneMenu id="Rounding" value="#{incomeBean.roundingID}" style="width: 150px;" required="true" >
+                        <f:selectItem itemLabel="Select Rounding" />
+                        <f:selectItem itemLabel="No Rounding" itemValue="1"/>
+                        <f:selectItem itemLabel="10" itemValue="10"/>
+                        <f:selectItem itemLabel="100" itemValue="100"/>
+                        <f:selectItem itemLabel="1000" itemValue="1000"/>
+                        <f:selectItem itemLabel="10000" itemValue="10000"/>
+                        <f:selectItem itemLabel="100000" itemValue="10000"/>
+                        <f:selectItem itemLabel="1000000" itemValue="100000"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:commandButton value="Download Report" actionListener="#{incomeBean.generateReport}" ajax="false"/>
+
+                </h:panelGrid>
+
+
+            </h:form>
+            <h:form id="dialog" >
+                <p:dialog header="Warning" widgetVar="warn" id="warn" modal="true" showEffect="explode" hideEffect="explode" >
+                    <center>
+                        <h:outputText value="This selected date is holiday"/>
+                        <br/>
+                        <p:commandButton value="OK" oncomplete="warn.hide()" />
+                    </center>
+                </p:dialog>
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

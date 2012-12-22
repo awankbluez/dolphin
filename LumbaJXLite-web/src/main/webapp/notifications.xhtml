@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ul class="notitab">
+        <li class="current"><a href="#messages">Routing (3)</a></li>
+        <li><a href="#activities">Private (6)</a></li>
+    </ul>
+    <div id="messages">
+        <ul class="msglist">
+            <li>
+                <a href="messages.html">
+                    <span class="msgdetails">
+                        <span class="time">Tanggal</span>
+                        <span class="name">Nama</span>
+                    </span><!--msgdetails-->
+                </a>
+            </li>
+        </ul>
+        <div class="msgbutton">
+            <a href="#">Lihat Semua Routing</a>
+        </div><!--msgbutton-->
+    </div>
+
+    <div id="activities" class="activities" style="display: none">
+        <ul class="msglist">
+            <li>
+                <a href="messages.html">
+                    <span class="msgdetails">
+                        <span class="time">Tanggal</span>
+                        <span class="name">Nama</span>
+                    </span><!--msgdetails-->
+                </a>
+            </li>
+        </ul>
+        <div class="msgbutton">
+            <a href="#">Lihat Semua Pesan</a>
+            <a href="/cbsBromoBPR/create-message.html">Kirim Pesan</a>
+        </div>
+
+    </div>
+</ui:composition>

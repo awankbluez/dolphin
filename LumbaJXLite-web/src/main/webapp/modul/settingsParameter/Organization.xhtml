@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.organization}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="Organisasi">
+                <p:fieldset legend="#{msgs.add} #{msgs.organization}" toggleable="true" collapsed="#{organisasiBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.organizationName}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{organisasiBean.organization.organizationname}" id="NamaPosisiOrganisasi" required="true" requiredMessage="Harus diisi" validator="#{organisasiBean.validateLastEducation}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="NamaPosisiOrganisasi"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelOrganisasi:tabelOrganisasi" actionListener="#{organisasiBean.add()}" rendered="#{organisasiBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{organisasiBean.reset()}" rendered="#{organisasiBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelOrganisasi:tabelOrganisasi" actionListener="#{organisasiBean.update()}" rendered="#{organisasiBean.status == 'update'}" />
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{organisasiBean.reset()}" rendered="#{organisasiBean.status == 'update'}" update="@form" action="#{organisasiBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelOrganisasi">
+                <p:dataTable id="tabelOrganisasi" value="#{organisasiBean.organizationList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.organizationname}" filterBy="#{o.organizationname}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.organizationName}</f:facet>
+                        #{o.organizationname}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.organizationname}" action="#{organisasiBean.edit(o)}" update=":Organisasi"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.organizationname}"  update="@form" action="#{organisasiBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

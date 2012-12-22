@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Balance Sheet" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty">
+	<property name="ireport.zoom" value="1.6105100000000068"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="loggedUser" class="java.lang.String"/>
+	<parameter name="loggedBranch" class="java.lang.String"/>
+	<parameter name="siteBisnis" class="java.lang.String"/>
+	<parameter name="siteName" class="java.lang.String"/>
+	<parameter name="todayDate" class="java.util.Date"/>
+	<parameter name="sessionDate" class="java.util.Date"/>
+	<parameter name="branchName" class="java.lang.String"/>
+	<parameter name="roundingString" class="java.lang.String"/>
+	<field name="code" class="java.lang.String"/>
+	<field name="account" class="java.lang.String"/>
+	<field name="aboveaccount" class="java.lang.String"/>
+	<field name="creditamount" class="java.lang.Double"/>
+	<field name="debitamount" class="java.lang.Double"/>
+	<variable name="balance_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="balance_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="creditamount_1" class="java.lang.Double" resetType="Group" resetGroup="aboveAcount" calculation="Sum">
+		<variableExpression><![CDATA[$F{creditamount}]]></variableExpression>
+	</variable>
+	<variable name="creditamount_2" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{creditamount}]]></variableExpression>
+	</variable>
+	<variable name="debitacount_1" class="java.lang.Double" resetType="Group" resetGroup="aboveAcount" calculation="Sum">
+		<variableExpression><![CDATA[$F{debitamount}]]></variableExpression>
+	</variable>
+	<variable name="debitacount_2" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{debitamount}]]></variableExpression>
+	</variable>
+	<group name="aboveAcount">
+		<groupExpression><![CDATA[$F{aboveaccount}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="35" y="3" width="520" height="18" forecolor="#FFFFFF" backcolor="#808080"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{aboveaccount}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement x="0" y="3" width="35" height="18" forecolor="#FFFFFF" backcolor="#808080"/>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<staticText>
+					<reportElement mode="Transparent" x="0" y="0" width="224" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="444" y="0" width="111" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[new DecimalFormat("###,##0.00").format(Double.valueOf($V{creditamount_1}))]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="336" y="0" width="109" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[new DecimalFormat("###,##0.00").format(Double.valueOf($V{debitacount_1}))]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="224" y="0" width="100" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{aboveaccount}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="52" splitType="Stretch">
+			<textField>
+				<reportElement x="122" y="0" width="311" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{siteBisnis}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="142" y="26" width="271" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{siteName}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement mode="Opaque" x="0" y="1" width="100" height="50"/>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="200" y="0" width="153" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Today Balance Sheet]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="277" y="20" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{todayDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="177" y="20" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{branchName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="337" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Acount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="336" y="0" width="42" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Debit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="443" y="0" width="40" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Credit]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="377" y="0" width="67" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{roundingString}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="483" y="0" width="72" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{roundingString}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="336" y="0" width="109" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,##0.00").format(Double.valueOf($F{debitamount}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="444" y="0" width="111" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,##0.00").format(Double.valueOf($F{creditamount}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="35" y="0" width="302" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{account}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="324" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Total Equitas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="444" y="0" width="111" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,##0.00").format(Double.valueOf($V{creditamount_2}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="0" width="109" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,##0.00").format(Double.valueOf($V{debitacount_2}))]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="10" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{loggedUser}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="10" width="40" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="10" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{loggedBranch}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="10" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sessionDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="10" width="60" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch"/>
+	</summary>
+</jasperReport>

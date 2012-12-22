@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../templateLeft.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="page">Tempat Sampah Pesan</ui:define>
+    <ui:define name="title">Tempat Sampah Pesan</ui:define>
+    <ui:define name="desk">Tempat sampah untuk pesan yang terecord</ui:define>
+    <ui:define name="content">
+
+        <h:form id="frmInbox" prependId="false">
+            <p:dataTable id="datainboxTable" var="datainbox" 
+                         value="#{messagesTrash.dataInbox}"  
+                         paginator="true" 
+                         paginatorPosition="bottom"
+                         rows="10"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="10,20,50"
+                         sortOrder="descending" 
+                         widgetVar="datainboxTable"   
+                         emptyMessage="No Data Retrived">  
+                <f:facet name="header">  
+                    <p:outputPanel style="float:right">  
+                        <h:outputText value="Search : " />  
+                        <p:inputText id="globalFilter" onkeyup="datainboxTable.filter()" style="width:150px" />  
+                    </p:outputPanel>  
+                </f:facet>  
+
+                <p:column headerText="From" sortBy="#{datainbox.fromname}" filterBy="#{datainbox.fromname}"  filterStyle="display:none;" style="width:120px">  
+                    <h:outputText value="#{datainbox.fromname}"/>  
+                </p:column>  
+
+                <p:column headerText="Title" sortBy="#{datainbox.title}" filterBy="#{datainbox.title}"  filterStyle="display:none;" style="width:450px">  
+                    <h:outputText value="#{datainbox.title}" />  
+                </p:column>  
+
+                <p:column headerText="Date" sortBy="#{datainbox.creationdate}" filterBy="#{datainbox.creationdate}"  filterStyle="display:none;">  
+                    <h:outputText value="#{datainbox.creationdate}"> 
+                        <f:convertDateTime type="date" pattern="dd MMM yyyy, HH:mm"/>
+                    </h:outputText>
+                </p:column>  
+
+                <p:column style="width: 20px;">
+                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" title="Open"/>
+                </p:column>
+
+                <p:column style="width: 20px;">
+                    <p:commandButton icon="ui-icon-circle-close" update="@form" title="Delete" oncomplete="confirmation.show()">
+                        <f:setPropertyActionListener value="#{datainbox}" target="#{messagesTrash.selectedMsg}" />  
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:confirmDialog id="confirmDialog" message="Are you sure to move trash messages with title [ #{messagesTrash.selectedMsg.title} ] ?"  
+                             header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                <p:commandButton id="confirm" value="Yes" update="@form" oncomplete="confirmation.hide()"  
+                                 action="#{messagesTrash.delete(messagesTrash.selectedMsg.routinglogid)}" />  
+                <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+            </p:confirmDialog>  
+        </h:form>
+
+    </ui:define>
+</ui:composition>

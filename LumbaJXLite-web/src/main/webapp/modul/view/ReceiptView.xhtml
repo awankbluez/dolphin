@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extension">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.formReceipt}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="receipt1">
+                <h:panelGrid columns="4" id="panelgrid2">
+                    <h:outputText value="#{msgs.receiptNumber}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{receiptviewBean.param}" style="width: 200px;" id="ReceiptNumber" required="true" requiredMessage="Harus diisi" />
+                    <p:message for="ReceiptNumber"/>
+
+                    <h:outputText value="#{msgs.customerName}" rendered="#{receiptviewBean.statusSama==false}"/>
+                    <h:outputText value=":" rendered="#{receiptviewBean.statusSama==false}"/>
+                    <h:inputText value="#{receiptviewBean.customername}" style="width: 200px;" id="CustomerName" readonly="true" rendered="#{receiptviewBean.statusSama==false}"/>
+                    <p:spacer width="10" rendered="#{receiptviewBean.statusSama==false}"/>
+
+                    <h:outputText value="#{msgs.customerName} Pengirim" rendered="#{receiptviewBean.statusSama==true}"/>
+                    <h:outputText value=":" rendered="#{receiptviewBean.statusSama==true}"/>
+                    <h:inputText value="#{receiptviewBean.pengirim}" style="width: 200px;" id="CustomerNamePengirim" readonly="true" rendered="#{receiptviewBean.statusSama==true}"/>
+                    <p:spacer width="10" rendered="#{receiptviewBean.statusSama==true}"/>
+
+                    <h:outputText value="#{msgs.customerName} Penerima" rendered="#{receiptviewBean.statusSama==true}"/>
+                    <h:outputText value=":" rendered="#{receiptviewBean.statusSama==true}"/>
+                    <h:inputText value="#{receiptviewBean.penerima}" style="width: 200px;" id="CustomerNamePenerima" readonly="true" rendered="#{receiptviewBean.statusSama==true}"/>
+                    <p:spacer width="10" rendered="#{receiptviewBean.statusSama==true}"/>
+
+                    <h:outputText value="#{msgs.receiptDate}"/>
+                    <h:outputText value=":"/>
+                    <h:inputText value="#{receiptviewBean.receiptdate}" style="width: 200px;" id="ReceiptDate" readonly="true"/>
+                    <p:spacer width="10"/>
+
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:commandButton id="cari" value="#{msgs.searchButton}" update="@form " action="#{receiptviewBean.search()}" process="@this ReceiptNumber"/>
+                    <p:commandButton id="reset" value="#{msgs.resetButton}"  action="#{receiptviewBean.reset()}" update="@form " process="@this"/>
+                    <p:spacer width="10"/>
+                </h:panelGrid>
+                <br/>
+                <p:dataTable value="#{receiptviewBean.dtListReceipt2}" 
+                             var="receipt" 
+                             id="tabelReceiptView"
+                             paginator="true"
+                             paginatorPosition="top"
+                             rows="5"
+                             rowsPerPageTemplate="5,10,20,25"
+                             sortOrder="descending">
+                    <p:column >
+                        <f:facet name="header">#{msgs.accNumber}</f:facet>
+                        #{receipt.accnumber}
+                    </p:column>
+                    <p:column >
+                        <f:facet name="header">#{msgs.product}</f:facet>
+                        #{receipt.product}
+                    </p:column>
+                    <p:column >
+                        <f:facet name="header">#{msgs.description}</f:facet>
+                        #{receipt.description}
+                    </p:column>
+                    <p:column > 
+                        <f:facet name="header">#{msgs.DRAccount}</f:facet>
+                        #{receipt.draccount}
+                    </p:column>
+                    <p:column >
+                        <f:facet name="header">#{msgs.CRAccount}</f:facet>
+                        #{receipt.craccount}
+                    </p:column>
+                    <p:column headerText="#{msgs.amount}">
+                        <h:outputText value="#{receipt.amount}">
+                            <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>   
+                <br/>
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+</ui:composition>

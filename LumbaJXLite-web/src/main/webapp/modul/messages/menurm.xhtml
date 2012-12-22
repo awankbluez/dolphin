@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+
+    
+    <h:form id="frmRM" prependId="false">
+        <h2 class="title">Messages</h2>
+        <div class="cont">
+            <ul>
+                <li><a href="info-previlages.html">Info Previlage</a></li>
+                <li>
+                
+                </li>
+                <li><a href="create-message.html">Create Message</a></li>
+            </ul> 
+        </div>
+        <h2 class="title">Inbox</h2>
+        <div class="cont">
+            <ul>
+                <ui:repeat value="#{messages.menuRM}" var="RM">
+                    <!--<p:commandLink id="RM#{RM.menuid}" action="msginbox" ajax="false">  
+                        <f:param name="mod" value="#{RM.alias}" />
+                        <h:outputText value="[0] #{RM.menuname}" />  
+                    </p:commandLink>  -->
+                    <li><a href="inbox-messages.html?mod=#{RM.alias}">[#{RM.countIB}] #{RM.menuname}</a></li>
+                </ui:repeat>
+            </ul>
+        </div>
+
+        <h2 class="title">Hold</h2>
+        <div class="cont">
+            <ul>
+                <ui:repeat value="#{messages.menuRM}" var="RM">
+                    <li><a href="hold-messages.html?mod=#{RM.alias}">[#{RM.countHD}] #{RM.menuname}</a></li>
+                </ui:repeat>
+            </ul>
+        </div>
+
+        <h2 class="title">Outbox</h2>
+        <div class="cont">
+            <ul>
+                <ui:repeat value="#{messages.menuRM}" var="RM">
+                    <li><a href="outbox-messages.html?mod=#{RM.alias}">[#{RM.countOB}] #{RM.menuname}</a></li>
+                </ui:repeat>
+            </ul>
+        </div>
+        
+        <h2 class="title">Trash</h2>
+        <div class="cont">
+            <ul>
+                <ui:repeat value="#{messages.menuRM}" var="RM">
+                    <li><a href="trash-messages.html?mod=#{RM.alias}">[#{RM.countTR}] #{RM.menuname}</a></li>
+                </ui:repeat>
+            </ul>
+        </div>
+    </h:form>
+</ui:composition>

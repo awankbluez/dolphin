@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel id="collection" header="Collection" closable="true" collapsed="false" toggleable="true">
+            <h:form id="searchcollection">
+                <p:panel style="border-color: white">
+                    <h:panelGrid columns="6">
+                        <h:outputText value="Tipe collection"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu value="#{collection.tipe_collection}" disabled="#{collection.tipe_collection=='tagihan' or collection.tipe_collection=='hasiltagih'}" style="width: 150px">
+                            <f:selectItem itemLabel="Pilih tipe" itemValue=""/>
+                            <f:selectItem itemLabel="Cetak Tagihan" itemValue="tagihan"/>
+                            <f:selectItem itemLabel="Report Tagihan" itemValue="hasiltagih"/>
+                            <p:ajax update="@form"/>
+                        </p:selectOneMenu>
+                        <h:outputText/><h:outputText/><h:outputText/>
+                        <p:outputLabel value="Tanggal jatuh tempo" for="jatuhtempo" rendered="#{collection.tipe_collection=='tagihan'}"/>                    
+                        <h:outputText value=":" rendered="#{collection.tipe_collection=='tagihan'}"/>
+                        <p:selectOneMenu value="#{collection.tipejatuhtempo}" style="width: 150px" id="jatuhtempo" required="true" rendered="#{collection.tipe_collection=='tagihan'}">
+                            <f:selectItem itemLabel="Pilih jatuh tempo" itemValue=""/>
+                            <f:selectItem itemLabel="Hari ini" itemValue="H"/>
+                            <f:selectItem itemLabel="Minggu ini" itemValue="M"/>
+                            <f:selectItem itemLabel="Bulan ini" itemValue="B"/>
+                            <p:ajax update="btnsearch"/>
+                        </p:selectOneMenu>                    
+
+                        <p:outputLabel value="Tipe nasabah" for="customertype" rendered="#{collection.tipe_collection=='tagihan'}"/>
+                        <h:outputText value=":" rendered="#{collection.tipe_collection=='tagihan'}"/>
+                        <p:selectOneMenu value="#{collection.loanapplication.customer.customerType}" style="width: 150px" id="customertype" required="true" rendered="#{collection.tipe_collection=='tagihan'}">
+                            <f:selectItem itemLabel="Pilih tipe nasabah" itemValue=""/>
+                            <f:selectItem itemLabel="All" itemValue="0"/>
+                            <f:selectItem itemLabel="Individu" itemValue="1"/>
+                            <f:selectItem itemLabel="Kelompok" itemValue="2"/>
+                            <f:selectItem itemLabel="Perusahaan" itemValue="3"/>
+                            <f:selectItem itemLabel="Lainnya" itemValue="4"/>
+                            <p:ajax update="btnsearch"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Account officer" for="ao" rendered="#{collection.tipe_collection=='tagihan' or collection.tipe_collection=='hasiltagih'}"/>
+                        <h:outputText value=":" rendered="#{collection.tipe_collection=='tagihan' or collection.tipe_collection=='hasiltagih'}"/>
+                        <p:selectOneMenu value="#{collection.loanapplication.operatorUser.userid}" style="width: 150px" id="ao" required="true" rendered="#{collection.tipe_collection=='tagihan' or collection.tipe_collection=='hasiltagih'}">
+                            <f:selectItem itemLabel="Pilih account officer" itemValue=""/>
+                            <f:selectItems value="#{collection.comboAO}" var="accountofficer" itemLabel="#{accountofficer.employeename}" itemValue="#{accountofficer.userid}"/>
+                            <p:ajax update="btnsearch"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Produk" for="produk" rendered="#{collection.tipe_collection=='tagihan'}"/>
+                        <h:outputText value=":" rendered="#{collection.tipe_collection=='tagihan'}"/>
+                        <p:selectOneMenu value="#{collection.loanapplication.loan.loan_id}" style="width: 150px" id="produk" required="true" rendered="#{collection.tipe_collection=='tagihan'}">
+                            <f:selectItem itemLabel="Pilih produk" itemValue=""/>
+                            <f:selectItem itemLabel="All" itemValue="0"/>
+                            <f:selectItems value="#{collection.comboproduct}" var="product" itemLabel="#{product.loanname}" itemValue="#{product.loanid}"/>
+                            <p:ajax update="btnsearch"/>
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel value="Kolektor" for="kolektor" rendered="#{collection.tipe_collection=='hasiltagih'}"/>
+                        <h:outputText value=":" rendered="#{collection.tipe_collection=='hasiltagih'}"/>
+                        <p:inputText value="#{collection.kolektor}" id="kolektor" rendered="#{collection.tipe_collection=='hasiltagih'}"/>
+                    </h:panelGrid>
+                    <p:commandButton value="Search" actionListener="#{collection.search_arrears_allcustomer()}" id="btnsearch" update=":listtanggungan :searchcollection :datatanggungan :listtanggungan:btnprintlist" process=":searchcollection"
+                                     disabled="#{collection.loanapplication.customer.customerType==null and collection.loanapplication.operatorUser.userid==null and collection.loanapplication.loan.loanid==null and collection.tipejatuhtempo==null}"
+                                     rendered="#{collection.tipe_collection=='tagihan'}"/>
+                    <p:commandButton value="Search Tagihan" actionListener="#{collection.report_tagihan(collection.tipe_collection)}" rendered="#{collection.tipe_collection=='hasiltagih'}" update=":listtanggungan :searchcollection :datatanggungan :listtanggungan:btnprintlist" process=":searchcollection"/>
+                </p:panel>
+            </h:form>
+
+            <p:separator/>
+
+            <h:form id="listtanggungan" target="_blank">                
+                <p:panel visible="#{collection.list}" style="border-color: white">
+                    <p:dataTable value="#{collection.allcustomer}" var="arrearsallcustomer" style="text-align: center; width: 50000" scrollable="true" scrollWidth="950">
+                        <p:column headerText="BAS" width="50" rendered="#{collection.tipe_collection=='hasiltagih'}">
+                            <p:selectBooleanCheckbox value="#{arrearsallcustomer.return_bas}"/>
+                        </p:column>
+                        <p:column headerText="Ditagih" width="50" rendered="#{collection.tipe_collection=='tagihan'}">
+                            <p:selectBooleanCheckbox value="#{arrearsallcustomer.check_bas}"/>
+                        </p:column>
+                        <p:column headerText="Schedule" width="50" rendered="#{collection.tipe_collection=='tagihan'}">
+                            <p:commandButton icon="ui-icon ui-icon-search" title="View" actionListener="#{collection.member_detail(arrearsallcustomer.accountid)}"/>
+                        </p:column>
+                        <p:column headerText="Nomor CIF" width="100">#{arrearsallcustomer.customer.customercode}</p:column>
+                        <p:column headerText="Nama Nasabah" width="100">#{arrearsallcustomer.customer.customername}</p:column>
+                        <p:column headerText="Rekening/Produk" width="150">#{arrearsallcustomer.concat_produkandrekening}</p:column>
+                        <p:column headerText="JT Angsuran" width="80" rendered="#{collection.tipe_collection=='tagihan'}">#{arrearsallcustomer.loanschedule.repaymentdate}</p:column>                        
+                        <p:column headerText="Sisa Angsuran" width="80" rendered="#{collection.tipe_collection=='tagihan'}">#{arrearsallcustomer.loanschedule.sisaangsuran}</p:column>
+                        <p:column headerText="Tunggakan Hari" width="100" rendered="#{collection.tipe_collection=='tagihan'}">#{arrearsallcustomer.loanschedule.tunggakanhari}</p:column>
+                        <p:column headerText="No. Kwitansi" width="80" rendered="#{collection.tipe_collection=='hasiltagih'}">#{arrearsallcustomer.receipt_bak}</p:column>
+                        <p:column headerText="Amount" width="150" rendered="#{collection.tipe_collection=='hasiltagih'}">
+                            <pe:inputNumber value="#{arrearsallcustomer.loanschedule.totalbayar}" symbol="#{collection.applicationManagedBean.systemGlobal.currency.currencySymbol}" decimalSeparator="," thousandSeparator="."/>                        
+                        </p:column>
+                        <p:column headerText="Tunggakan Pokok" width="150">
+                            <pe:inputNumber value="#{arrearsallcustomer.loanschedule.principle}" symbol="#{collection.applicationManagedBean.systemGlobal.currency.currencySymbol}" decimalSeparator="," thousandSeparator="." disabled="true"/>                        
+                        </p:column>
+                        <p:column headerText="Tunggakan Bunga" width="150">
+                            <pe:inputNumber value="#{arrearsallcustomer.loanschedule.interest}" symbol="#{collection.applicationManagedBean.systemGlobal.currency.currencySymbol}" decimalSeparator="," thousandSeparator="." disabled="true"/>                        
+                        </p:column>
+                        <p:column headerText="Tunggakan Denda" width="150">
+                            <pe:inputNumber value="#{arrearsallcustomer.loanschedule.penalty}" symbol="#{collection.applicationManagedBean.systemGlobal.currency.currencySymbol}" decimalSeparator="," thousandSeparator="." disabled="true"/>                        
+                        </p:column>
+                        <p:column headerText="Total Kewajiban" width="150">
+                            <pe:inputNumber value="#{arrearsallcustomer.loanschedule.totalkewajiban}" symbol="#{collection.applicationManagedBean.systemGlobal.currency.currencySymbol}" decimalSeparator="," thousandSeparator="." disabled="true"/>                        
+                        </p:column>
+                        <p:column headerText="Titipan" width="150">
+
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:commandButton icon="ui-icon ui-icon-print" title="Cetak Hasil Tagihan" value="Cetak Hasil Tagihan" id="btnupdate" actionListener="#{collection.update_billing()}" rendered="#{collection.tipe_collection=='hasiltagih'}" ajax="false" process="@form"/>
+                    <p:commandButton icon="ui-icon ui-icon-print" title="Cetak List" value="Cetak List" id="btnprintlist" disabled="#{collection.btnprintlist}" actionListener="#{collection.nasabah_ditagih()}" ajax="false" rendered="#{collection.tipe_collection=='tagihan'}"/>
+                    <p:commandButton icon="ui-icon ui-icon-print" title="Cetak BAS" value="Cetak BAS" id="btnprintbas" disabled="#{collection.btnprintbas}" ajax="false" process="@form" rendered="#{collection.tipe_collection=='tagihan'}"/>
+
+                </p:panel>
+            </h:form>
+
+            <p:separator/>
+
+            <h:form id="datatanggungan">
+                <p:panel visible="#{collection.tanggungannasabah}" style="border-color: white">
+                    <h:panelGrid columns="6">
+                        <h:outputText value="Nomor CIF"/>
+                        <h:outputText value=":"/>
+                        <p:inputText disabled="true" value="#{collection.member.loanapplication.customer.customercode}"/>
+                        <h:outputText value="Tipe Nasabah"/>
+                        <h:outputText value=":"/>
+                        <p:inputText disabled="true" value="#{collection.member.loanapplication.customer.memberType}"/>
+                        <h:outputText value="Nomor Rekening"/>
+                        <h:outputText value=":"/>
+                        <p:inputText disabled="true" value="#{collection.member.accountcode}"/>
+                        <h:outputText value="Produk"/>
+                        <h:outputText value=":"/>
+                        <p:inputText disabled="true" value="#{collection.member.loanapplication.loan.loanname}"/>
+                        <h:outputText value="Nama Nasabah"/>
+                        <h:outputText value=":"/>
+                        <p:inputText disabled="true" value="#{collection.member.loanapplication.customer.customername}"/>
+                        <h:outputText value="Nama AO"/>
+                        <h:outputText value=":"/>
+                        <p:inputText disabled="true" value="#{collection.member.loanapplication.operatorUser.employeename}"/>
+                    </h:panelGrid>
+                    <p:spacer width="100" height="10" />
+                    <p:dataTable value="#{collection.customer_schedule}" var="schedule" scrollable="true" scrollWidth="800" style="text-align: center; width: 50000">
+                        <p:column headerText="Periode" width="50">
+                            #{schedule.loanschedule.periode}
+                        </p:column>
+                        <p:column headerText="Pokok" width="150">                            
+                            <pe:inputNumber value="#{schedule.loanschedule.principle}" symbol="Rp. " decimalSeparator="," thousandSeparator="." disabled="true"/>
+                        </p:column>
+                        <p:column headerText="Bunga" width="150">                            
+                            <pe:inputNumber value="#{schedule.loanschedule.interest}" symbol="Rp. " decimalSeparator="," thousandSeparator="." disabled="true"/>
+                        </p:column>
+                        <p:column headerText="Denda" width="150">                            
+                            <pe:inputNumber value="#{schedule.loanschedule.penalty}" symbol="Rp. " decimalSeparator="," thousandSeparator="." disabled="true"/>
+                        </p:column>
+                        <p:column headerText="Total Kewajiban" width="150">                            
+                            <pe:inputNumber value="#{schedule.loanschedule.totalkewajiban}" symbol="Rp. " decimalSeparator="," thousandSeparator="." disabled="true"/>
+                        </p:column>
+                        <p:column headerText="Tanggal Jatuh Tempo" width="150">
+                            #{schedule.loanschedule.repaymentdate}
+                        </p:column>
+                        <p:column headerText="Tanggal Bayar" width="150">
+                            #{schedule.loanschedule.editdate}
+                        </p:column>
+                        <p:column headerText="Pokok Terbayar" width="150">                            
+                            <pe:inputNumber value="#{schedule.loanschedule.principlepaid}" symbol="Rp. " decimalSeparator="," thousandSeparator="." disabled="true"/>
+                        </p:column>
+                        <p:column headerText="Bunga Terbayar" width="150">                            
+                            <pe:inputNumber value="#{schedule.loanschedule.interestpaid}" symbol="Rp. " decimalSeparator="," thousandSeparator="." disabled="true"/>
+                        </p:column>
+                        <p:column headerText="Denda Terbayar" width="150">                            
+                            <pe:inputNumber value="#{schedule.loanschedule.penaltypaid}" symbol="Rp. " decimalSeparator="," thousandSeparator="." disabled="true"/>
+                        </p:column>
+                        <p:column headerText="Total Bayar" width="150">                            
+                            <pe:inputNumber value="#{schedule.loanschedule.totalbayar}" symbol="Rp. " decimalSeparator="," thousandSeparator="." disabled="true"/>
+                        </p:column>
+                        <p:column headerText="Status" width="50">
+                            #{schedule.loanschedule.paidstatus}
+                        </p:column>
+                        <p:column headerText="Tunggakan Hari" width="50">
+                            #{schedule.loanschedule.tunggakanhari}
+                        </p:column>
+                        <p:column headerText="Coll" width="50">
+                            #{schedule.collectabilityname}
+                        </p:column>
+                    </p:dataTable>
+                    <h:panelGrid columns="1">
+                        <p:spacer width="100" height="10" />
+                        <p:commandButton value="Close" icon="ui-icon ui-icon-eject" title="Close" action="#{collection.setTanggungannasabah(false)}" update=":datatanggungan"/>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </p:panel>        
+    </ui:define>
+</ui:composition>

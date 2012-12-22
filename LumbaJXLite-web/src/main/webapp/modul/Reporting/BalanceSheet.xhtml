@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Balance Sheet Report">
+            <h:form id="formIncomeStatementReport" prependId="false" target="_blank">
+                <h:panelGrid columns="4" >
+                    <p:outputLabel for="Branch" value="#{msgs.branch}"/>
+                    <p:selectOneMenu id="Branch" style="width: 150px;" value="#{balanceBean.userID}" >
+                        <f:selectItem itemLabel="Select Branch" />
+                        <f:selectItems value="#{balanceBean.dtCmbBranch}"/>
+                        <p:ajax listener="#{balanceBean.listcomboBranch()}" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Period" value="#{msgs.period}" rendered="#{not balanceBean.usegl}"/>
+                    <p:selectOneMenu id="Period" style="width: 150px;" value="#{balanceBean.period}" rendered="#{not balanceBean.usegl}">
+                        <f:selectItem itemLabel="Days" itemValue="Days"/>
+                        <f:selectItem itemLabel="Weeks" itemValue="Weeks"/>
+                        <f:selectItem itemLabel="Months" itemValue="Months"/>
+                        <f:selectItem itemLabel="Years" itemValue="Years"/>
+                        <p:ajax listener="#{balanceBean.updatePattern()}" update=":formIncomeStatementReport"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10" rendered="#{not balanceBean.usegl}"/>
+                    <p:spacer width="10" rendered="#{not balanceBean.usegl}"/>
+
+                    <p:outputLabel for="Period3From" value="Period Three From" rendered="#{not balanceBean.usegl}"/>
+                    <p:calendar id="Period3From" value="#{balanceBean.period5}" pattern="#{balanceBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not balanceBean.usegl}"/>
+                    <p:outputLabel for="Period3FromTo" value="#{msgs.to}" rendered="#{not balanceBean.usegl}"/>
+                    <p:calendar id="Period3FromTo" value="#{balanceBean.period6}" pattern="#{balanceBean.patternDate}" navigator="true" style="width: 150px" effect="explode" rendered="#{not balanceBean.usegl}">
+                        <p:ajax event="dateSelect" listener="#{balanceBean.generatePeriod()}" update="Period3From,Period2From,Period2FromTo,Period1From,Period1FromTo"/>
+                        <p:ajax event="keyup" listener="#{balanceBean.generatePeriod()}" update="Period3From,Period2From,Period2FromTo,Period1From,Period1FromTo"/>
+                    </p:calendar>
+
+                    <p:outputLabel for="Period2From" value="Period Two From" rendered="#{not balanceBean.usegl}"/>
+                    <p:calendar id="Period2From" value="#{balanceBean.period3}" pattern="#{balanceBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not balanceBean.usegl}"/>
+                    <p:outputLabel for="Period2FromTo" value="#{msgs.to}" rendered="#{not balanceBean.usegl}"/>
+                    <p:calendar id="Period2FromTo" value="#{balanceBean.period4}" pattern="#{balanceBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not balanceBean.usegl}"/>
+
+                    <p:outputLabel for="Period1From" value="Period One From" rendered="#{not balanceBean.usegl}"/>
+                    <p:calendar id="Period1From" value="#{balanceBean.period1}" pattern="#{balanceBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not balanceBean.usegl}"/>
+                    <p:outputLabel for="Period1FromTo" value="#{msgs.to}" rendered="#{not balanceBean.usegl}"/>
+                    <p:calendar id="Period1FromTo" value="#{balanceBean.period2}" pattern="#{balanceBean.patternDate}" navigator="true" style="width: 150px" effect="explode" disabled="true" rendered="#{not balanceBean.usegl}"/>
+
+                    <p:outputLabel for="Detail" value="Detail"/>
+                    <p:selectOneMenu id="Detail" value="#{balanceBean.detail}" style="width: 150px;" >
+                        <f:selectItem itemLabel="Select Detail" itemValue="0"/>
+                        <f:selectItem itemLabel="Category" itemValue="Category"/>
+                        <f:selectItem itemLabel="Financial Category" itemValue="Financial Category"/>
+                        <f:selectItem itemLabel="Account Category" itemValue="Account Category"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Rounding" value="#{msgs.rounding}"/>
+                    <p:selectOneMenu id="Rounding" value="#{balanceBean.roundingID}" style="width: 150px;" required="true" >
+                        <f:selectItem itemLabel="Select Rounding" />
+                        <f:selectItem itemLabel="No Rounding" itemValue="1"/>
+                        <f:selectItem itemLabel="10" itemValue="10"/>
+                        <f:selectItem itemLabel="100" itemValue="100"/>
+                        <f:selectItem itemLabel="1000" itemValue="1000"/>
+                        <f:selectItem itemLabel="10000" itemValue="10000"/>
+                        <f:selectItem itemLabel="100000" itemValue="10000"/>
+                        <f:selectItem itemLabel="1000000" itemValue="100000"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:commandButton value="Download Report" actionListener="#{balanceBean.generateReport}" ajax="false"/>
+
+                </h:panelGrid>
+
+
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../templateLeft.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+     
+     <ui:define name="page">Inbox : #{messagesInbox.header}</ui:define>
+    <ui:define name="title">Inbox : #{messagesInbox.header}</ui:define>
+    <ui:define name="desk">Pesan yang masuk routing</ui:define>
+    <ui:define name="content">
+            <h:form id="frmInbox" prependId="false">
+                <p:dataTable id="datainboxTable" var="datainbox" 
+                             value="#{messagesInbox.dataInbox}"  
+                             paginator="true" 
+                             paginatorPosition="bottom"
+                             rows="10"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="10,20,50"
+                             sortBy="#{datainbox.creationdate}"
+                             sortOrder="descending" 
+                             widgetVar="datainboxTable"   
+                             emptyMessage="No Data Retrived">  
+                    <f:facet name="header">  
+                        <p:outputPanel style="float:right">  
+                            <h:outputText value="Search : " />  
+                            <p:inputText id="globalFilter" onkeyup="datainboxTable.filter()" style="width:150px" />  
+                        </p:outputPanel>  
+                    </f:facet>  
+
+                    <p:column headerText="From" sortBy="#{datainbox.fromname}" filterBy="#{datainbox.fromname}"  filterStyle="display:none;" style="width:120px">  
+                        <h:outputText value="#{datainbox.fromname}"/>  
+                    </p:column>  
+
+                    <p:column headerText="Title" sortBy="#{datainbox.title}" filterBy="#{datainbox.title}"  filterStyle="display:none;" style="width:450px">  
+                        <h:outputText value="#{datainbox.title}" />  
+                    </p:column>  
+
+                    <p:column headerText="Date" sortBy="#{datainbox.creationdate}" filterBy="#{datainbox.creationdate}" filterStyle="display:none;">  
+                        <h:outputText value="#{datainbox.creationdate}"> 
+                            <f:convertDateTime type="date" pattern="dd MMM yyyy, HH:mm"/>
+                        </h:outputText>
+                    </p:column>  
+
+                    <p:column style="width: 20px;">
+                        <ul id="icons" class="ui-widget ui-helper-clearfix">
+                            <li class="ui-state-default ui-corner-all">
+                            <h:outputLink value="create-message.html?pid=#{datainbox.usermessages}" rendered="#{messagesInbox.module=='PM'}">
+                                <h:panelGroup rendered="#{datainbox.isread==false}"><span class="ui-icon ui-icon-mail-closed" style="margin: 5px"></span></h:panelGroup>
+                                <h:panelGroup rendered="#{datainbox.isread}"><span class="ui-icon ui-icon-mail-open" style="margin: 5px"></span></h:panelGroup>
+                            </h:outputLink>
+                            <h:outputLink value="freeze.html?msg=#{datainbox.usermessages}" rendered="#{messagesInbox.module=='SF'}">
+                                <h:panelGroup rendered="#{datainbox.isread==false}"><span class="ui-icon ui-icon-mail-closed" style="margin: 5px"></span></h:panelGroup>
+                                <h:panelGroup rendered="#{datainbox.isread}"><span class="ui-icon ui-icon-mail-open" style="margin: 5px"></span></h:panelGroup>
+                            </h:outputLink>
+                            <h:outputLink value="cif-edit.html?msg=#{datainbox.usermessages}" rendered="#{messagesInbox.module=='CE'}">
+                                <h:panelGroup rendered="#{datainbox.isread==false}"><span class="ui-icon ui-icon-mail-closed" style="margin: 5px"></span></h:panelGroup>
+                                <h:panelGroup rendered="#{datainbox.isread}"><span class="ui-icon ui-icon-mail-open" style="margin: 5px"></span></h:panelGroup>
+                            </h:outputLink>
+                            <h:outputLink value="cif-management.html?msg=#{datainbox.usermessages}" rendered="#{messagesInbox.module=='CC'}">
+                                <h:panelGroup rendered="#{datainbox.isread==false}"><span class="ui-icon ui-icon-mail-closed" style="margin: 5px"></span></h:panelGroup>
+                                <h:panelGroup rendered="#{datainbox.isread}"><span class="ui-icon ui-icon-mail-open" style="margin: 5px"></span></h:panelGroup>
+                            </h:outputLink>
+                            <h:outputLink value="reopen.html?msg=#{datainbox.usermessages}" rendered="#{messagesInbox.module=='SU'}">
+                                <h:panelGroup rendered="#{datainbox.isread==false}"><span class="ui-icon ui-icon-mail-closed" style="margin: 5px"></span></h:panelGroup>
+                                <h:panelGroup rendered="#{datainbox.isread}"><span class="ui-icon ui-icon-mail-open" style="margin: 5px"></span></h:panelGroup>
+                            </h:outputLink>
+                            <h:outputLink value="loan-creation.html?msg=#{datainbox.usermessages}" rendered="#{messagesInbox.module=='LC'}">
+                                <h:panelGroup rendered="#{datainbox.isread==false}"><span class="ui-icon ui-icon-mail-closed" style="margin: 5px"></span></h:panelGroup>
+                                <h:panelGroup rendered="#{datainbox.isread}"><span class="ui-icon ui-icon-mail-open" style="margin: 5px"></span></h:panelGroup>
+                            </h:outputLink>                           
+                            </li>
+                        </ul>
+                    </p:column>
+
+                    <p:column style="width: 20px;">
+                        <p:commandButton icon="ui-icon-trash" update=":frmInbox:confirmDialog" title="Delete" oncomplete="confirmation.show()">
+                            <f:setPropertyActionListener value="#{datainbox}" target="#{messagesInbox.selectedMsg}" />  
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog id="confirmDialog" message="Are you sure to move trash messages with title [ #{messagesInbox.selectedMsg.title} ] ?"  
+                                 header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                    <p:commandButton id="confirm" value="Yes" oncomplete="confirmation.hide()" action="#{messagesInbox.delete('IB')}" update="datainboxTable"/>  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>  
+            </h:form>
+
+    </ui:define>
+</ui:composition>

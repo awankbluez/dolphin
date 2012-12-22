@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.fundingsource}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="SumberPendanaan">
+                <p:fieldset legend="#{msgs.add} #{msgs.fundingsource}" toggleable="true" collapsed="#{fundingsourceBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.fundingsourcename}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{fundingsourceBean.fundingsource.fundingsourcename}" id="NamaSumberPendanaan" required="true" requiredMessage="Harus diisi" validator="#{fundingsourceBean.validateFundingsource}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="NamaSumberPendanaan"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelFundingsource:tabelFundingsource" actionListener="#{fundingsourceBean.add()}" rendered="#{fundingsourceBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{fundingsourceBean.reset()}" rendered="#{fundingsourceBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelFundingsource:tabelFundingsource" actionListener="#{fundingsourceBean.update()}" rendered="#{fundingsourceBean.status == 'update'}"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{fundingsourceBean.reset()}" rendered="#{fundingsourceBean.status == 'update'}" update="@form" action="#{fundingsourceBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelFundingsource">
+                <p:dataTable id="tabelFundingsource" value="#{fundingsourceBean.fundingsourceList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.fundingsourcename}" filterBy="#{o.fundingsourcename}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.fundingsourcename}</f:facet>
+                        #{o.fundingsourcename}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.fundingsourcename}" action="#{fundingsourceBean.edit(o)}" update=":SumberPendanaan" />
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.fundingsourcename}"  update="@form" action="#{fundingsourceBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

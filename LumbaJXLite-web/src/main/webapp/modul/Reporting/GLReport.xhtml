@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="GL Report">
+            <h:form id="formGLReport" prependId="false"  target="_blank">
+                <h:panelGrid columns="4" >
+                    <p:outputLabel for="Branch" value="#{msgs.branch}"/>
+                    <p:selectOneMenu id="Branch" value="#{glreportBean.userID}" style="width: 150px;" required="true" >
+                        <f:selectItem itemLabel="Select Branch" />
+                        <f:selectItems value="#{glreportBean.dtCmbBranch}"/>
+                        <p:ajax listener="#{glreportBean.listcomboBranch()}" update="Category" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                   
+                    <p:outputLabel for="Category" value="#{msgs.category}"/>
+                    <p:selectOneMenu id="Category" value="#{glreportBean.categoryID}" style="width: 150px;" required="true" >
+                        <f:selectItem itemLabel="Select Category" itemValue="-1"/>
+                        <f:selectItem itemLabel="All Category" itemValue="0"/>
+                        <f:selectItems value="#{glreportBean.dtCmbCatagory}"/>
+                        <p:ajax listener="#{glreportBean.show_combo3()}" update="Account" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    
+                    <p:outputLabel for="Account" value="#{msgs.account}"/>
+                    <p:selectOneMenu id="Account" value="#{glreportBean.accountID}" style="width: 250px;" required="true" >
+                        <f:selectItem itemLabel="Select Account" />
+                        <f:selectItems value="#{glreportBean.dtCmbAccount}" />
+                        <p:ajax  process="@this" listener="#{glreportBean.listcomboAccount()}"/>
+                        <p:ajax  process="@this" listener="#{glreportBean.listOpeningBalance()}"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    
+                    <p:outputLabel for="Currency" value="#{msgs.currency}"/>
+                    <p:selectOneMenu id="Currency" value="#{glreportBean.currencyID}" style="width: 150px;" required="true" >
+                        <f:selectItem itemLabel="Select Currency" />
+                        <f:selectItem itemLabel="Home Currency" itemValue="1" />
+                        <f:selectItem itemLabel="Foreign Currency" itemValue="2" />
+                        <f:selectItem itemLabel="Both Currency" itemValue="3" />
+                        <p:ajax update="@form" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    
+                    <p:outputLabel for="Foreign" value="#{msgs.chooseForeignCurrency}" rendered="#{glreportBean.currencyID == 2 || glreportBean.currencyID == 3}"/>
+                    <p:selectOneMenu id="Foreign" value="#{mutationaccountBean.accountid}" style="width: 150px;" required="true" rendered="#{glreportBean.currencyID == 2 || glreportBean.currencyID == 3}" >
+                        <f:selectItem itemLabel="Select Foreign Currency" />
+                        <f:selectItems value="#{mutationaccountBean.dtCmbMutationAccount}"/>
+                        <p:ajax update="Rounding" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10" rendered="#{glreportBean.currencyID == 2 || glreportBean.currencyID == 3}"/>
+                    <p:spacer width="10" rendered="#{glreportBean.currencyID == 2 || glreportBean.currencyID == 3}"/>
+                    
+                    <p:outputLabel for="Rounding" value="#{msgs.rounding}"/>
+                    <p:selectOneMenu id="Rounding" value="#{glreportBean.roundingID}" style="width: 150px;" required="true" >
+                        <f:selectItem itemLabel="Select Rounding" />
+                        <f:selectItem itemLabel="No Rounding" itemValue="1"/>
+                        <f:selectItem itemLabel="10" itemValue="100"/>
+                        <f:selectItem itemLabel="100" itemValue="1000"/>
+                        <f:selectItem itemLabel="1000" itemValue="10000"/>
+                        <f:selectItem itemLabel="10000" itemValue="100000"/>
+                        <f:selectItem itemLabel="100000" itemValue="100000"/>
+                        <f:selectItem itemLabel="1000000" itemValue="1000000"/>
+                        <p:ajax listener="#{mutationaccountBean.product()}" update="Currency" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    
+                    <p:outputLabel for="DateFrom" value="#{msgs.dateFrom}"/>
+                    <p:calendar id="DateFrom" value="#{glreportBean.dateFrom}" yearRange="c-120:c+20" navigator="true" readOnlyInputText="true" pattern="yyyy-MM-dd" >
+                        <p:ajax process="@this"/>
+                    </p:calendar>
+                    <p:outputLabel for="DateTo" value="To"/>
+                    <p:calendar id="DateTo" value="#{glreportBean.dateTo}" yearRange="c-120:c+20" navigator="true" readOnlyInputText="true" pattern="yyyy-MM-dd" >
+                        <p:ajax process="@this"/>
+                    </p:calendar>
+                    
+                    <p:commandButton value="Download Report" actionListener="#{glreportBean.generateReport}" ajax="false"/>
+                </h:panelGrid>
+
+              
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

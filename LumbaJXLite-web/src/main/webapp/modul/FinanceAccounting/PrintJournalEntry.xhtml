@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="Printing Journal" closable="true" toggleable="true">
+            <h:form id="formChooseJournal" target="_blank">
+
+                <p:growl id="poststatus" sticky="false" life="5000"/>
+                <h:panelGrid columns="2" id="panelgridprint">
+
+                    <h:outputLabel for="postJournal" value="Journal That will be posted"/>
+                    <p:selectOneMenu id="postJournal" value="#{printJournalBean.journaltobeposted}">
+                        <f:selectItem itemLabel="Select Journal" itemValue=""/>
+                        <f:selectItem itemLabel="Single Journal Entry" itemValue="entrysingle"/>
+                        <f:selectItem itemLabel="Batch Journal Entry" itemValue="entrybatch"/>
+                        <p:ajax update="panelgridprint"/>
+                    </p:selectOneMenu>
+
+                    <h:outputText value="post type" rendered="#{printJournalBean.journaltobeposted == 'entrybatch'}"/>
+                    <p:selectOneMenu id="totalPostJournalEntry" value="#{printJournalBean.postjournaltype}" rendered="#{printJournalBean.journaltobeposted == 'entrybatch'}">
+                        <f:selectItem itemValue="" itemLabel="Choose Post Type"/>
+                        <f:selectItem itemValue="all" itemLabel="All Batch"/>
+                        <f:selectItem itemValue="perbatch" itemLabel="Per Batch"/>
+                        <p:ajax update="panelgridprint"/>
+                    </p:selectOneMenu>
+
+                    <h:outputLabel value="Subject" rendered="#{printJournalBean.postjournaltype == 'perbatch' and printJournalBean.journaltobeposted == 'entrybatch'}"/>
+                    <p:selectOneMenu id="EntrySubject" value="#{printJournalBean.journalEntryHeader.batch.batchid}" rendered="#{printJournalBean.postjournaltype == 'perbatch' and printJournalBean.journaltobeposted == 'entrybatch'}">
+                        <f:selectItem itemLabel="Pilih Subject"/>
+                        <f:selectItems value="#{printJournalBean.batchs}" var="listbatch" itemLabel="#{listbatch.subject}" itemValue="#{listbatch.batchid}"/>
+                    </p:selectOneMenu>
+                    
+                    <p:commandButton value="Priview" actionListener="#{printJournalBean.generateReport}" ajax="false"/>
+
+                </h:panelGrid>
+
+            </h:form>
+        </p:panel>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,397 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:o="http://omnifaces.org/ui">
+
+   <ui:define name="top">
+      top
+   </ui:define>
+
+   <ui:define name="menuBar">
+      menuBar
+   </ui:define>
+
+   <ui:define name="content">
+      <p:panel closable="true" header="Manajemen User" toggleable="true">
+         <h:form id="formFieldsetUserManagement" >
+            <!--<p:messages showDetail="true" id="msg"/>-->
+            <p:growl severity="info, error" showDetail="true" showSummary="true" escape="false" id="growl"/>
+            <!-- <p:log/> -->
+            <p:fieldset legend="Tambah User"
+                        toggleable="TRUE"
+                        collapsed="#{userBean.fieldsetCollapse}"
+                        toggleSpeed="500">
+               <h:panelGrid columns="2" styleClass="verticalAlignTop">
+                  <h:panelGroup id="panelGroup">
+                     <h:panelGrid columns="2" id="panelGriduserLocation">
+
+                        <p:outputLabel for="UserManagementPosition" value="Posisi Kantor"/>
+                        <p:selectOneMenu id="UserManagementPosition" value="#{userBean.operatorUser.masterOperational.officetype}" label="Posisi" style="width: 200px;"  required="true">
+                           <f:selectItem itemValue="none" itemLabel="Pilih Posisi"/>
+                           <f:selectItem itemValue="H" itemLabel="Kantor Pusat"/>
+                           <f:selectItem itemValue="R" itemLabel="Regional"/>
+                           <f:selectItem itemValue="B" itemLabel="Cabang"/>
+                           <f:selectItem itemValue="S" itemLabel="Sub Cabang"/>
+                           <p:ajax update="panelGroup" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="UserManagementHeadOffice" value="Kantor Pusat" rendered="#{userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('H') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('R') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('B') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('S')}"/>
+                        <p:selectOneMenu id="UserManagementHeadOffice" value="#{userBean.operatorUser.masterOperational.headOffice.headofficeid}" label="Kantor Pusat" style="width: 200px;" rendered="#{userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('H') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('R') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('B') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('S')}" required="true">
+                           <f:selectItem  itemLabel="Pilih Kantor Pusat"/>
+                           <f:selectItems value="#{userBean.headOffices}" var="headOffice" itemLabel="#{headOffice.headOffice.headofficename}" itemValue="#{headOffice.headOffice.headofficeid}"/>
+                           <p:ajax update="UserManagementRegion" process="@this"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="UserManagementRegion" value="Regional" rendered="#{userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('R') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('B') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('S')}"/>
+                        <p:selectOneMenu id="UserManagementRegion" value="#{userBean.operatorUser.masterOperational.region.regionID}" label="Regional" style="width: 200px;" rendered="#{userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('R') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('B') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('S')}" required="true">
+                           <f:selectItem  itemLabel="Pilih Regional"/>
+                           <f:selectItems value="#{userBean.regions}" var="region" itemLabel="#{region.region.regionName}" itemValue="#{region.region.regionID}"/>
+                           <p:ajax update="UserManagementBranch" process="@this"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="UserManagementBranch" value="Cabang" rendered="#{userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('B') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('S')}"/>
+                        <p:selectOneMenu id="UserManagementBranch" value="#{userBean.operatorUser.masterOperational.branch.branchid}" label="Cabang" style="width: 200px;" rendered="#{userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('B') or userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('S')}" required="true">
+                           <f:selectItem  itemLabel="Pilih Cabang"/>
+                           <f:selectItems value="#{userBean.branchs}" var="branch" itemLabel="#{branch.branch.branchname}" itemValue="#{branch.branch.branchid}"/>
+                           <p:ajax update="UserManagementSubBranch" process="@this"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="UserManagementSubBranch" value="Sub Cabang" rendered="#{userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('S')}"/>
+                        <p:selectOneMenu id="UserManagementSubBranch" value="#{userBean.operatorUser.masterOperational.subBranchUnitCo.subbranchunitcoid}" label="Sub Cabang" style="width: 200px;" rendered="#{userBean.operatorUser.masterOperational.officetype.equalsIgnoreCase('S')}" required="true">
+                           <f:selectItem  itemLabel="Pilih Sub Cabang"/>
+                           <f:selectItems value="#{userBean.subBranchUnitCos}" var="subbranch" itemLabel="#{subbranch.subBranchUnitCo.subbranchunitconame}" itemValue="#{subbranch.subBranchUnitCo.subbranchunitcoid}"/>
+                        </p:selectOneMenu>
+                     </h:panelGrid>
+
+                     <p:separator/>
+
+                     <h:panelGrid columns="2" id="directorateanddivision">
+                        <p:outputLabel for="UserManagementDirectorate" value="Direktorat"/>
+                        <p:selectOneMenu id="UserManagementDirectorate" value="#{userBean.operatorUser.directorate.directorateid}" style="width: 150px;" disabled="#{userBean.userManagementDivisionEnable}">
+                           <f:selectItem itemLabel="Pilih Satu Direktorate"/>
+                           <f:selectItems value="#{userBean.directorates}" var="directoratee" itemValue="#{directoratee.directorateid}" itemLabel="#{directoratee.directoratename}"/>
+                        </p:selectOneMenu>
+
+                        <h:panelGrid columns="2">
+                           <p:selectBooleanCheckbox value="#{userBean.userManagementDivisionEnable}" label="Division">
+                              <p:ajax process="@this" update="division, UserManagementDirectorate"/>
+                           </p:selectBooleanCheckbox>
+                           <h:outputText value="Divisi"/>
+                        </h:panelGrid>
+
+                        <h:panelGroup id="division">
+                           <h:outputText id="spacerDivision" rendered="#{not userBean.userManagementDivisionEnable}"/>
+                           <p:selectOneMenu id="UserManagementDivision" rendered="#{userBean.userManagementDivisionEnable}" value="#{userBean.operatorUser.division.divisionid}">
+                              <f:selectItem itemLabel="Pilih Divisi"/>
+                              <f:selectItems value="#{userBean.divisions}" var="division" itemLabel="#{division.directorate.directoratename} | #{division.divisionname}" itemValue="#{division.divisionid}"/>
+                           </p:selectOneMenu>
+                        </h:panelGroup>
+
+                        <p:outputLabel for="UserManagementDivisionPosition" value="Jabatan" />
+                        <p:selectOneMenu id="UserManagementDivisionPosition" style="width: 100px;" value="#{userBean.operatorUser.position}" converter="positionConverter" required="true">
+                           <f:selectItem itemLabel="Pilih Jabatan"/>
+                           <f:selectItems value="#{userBean.positions}" var="position" itemLabel="#{position.positioncode} | #{position.positionname}" itemValue="#{position}"/>
+                           <p:ajax update="tabView, growl"/>
+                        </p:selectOneMenu>
+
+                        <o:validateOneOrMore id="oneOrMore" components="UserManagementDivision UserManagementDirectorate" />
+                     </h:panelGrid>
+
+                     <p:separator/>
+
+                     <h:panelGrid columns="2">
+                        <p:outputLabel for="UserManagementEmployeeID" value="ID Karyawan"/>
+                        <p:inputText id="UserManagementEmployeeID" value="#{userBean.operatorUser.employeeid}" label="ID Karyawan" required="true"/>
+
+                        <p:outputLabel for="UserManagementEmployeeName" value="Nama Karyawan"/>
+                        <p:inputText id="UserManagementEmployeeName" value="#{userBean.operatorUser.employeename}" label="Nama Karyawan" required="true"/>
+
+                        <p:outputLabel for="UserManagementEmployeeEmail" value="Email Karyawan"/>
+                        <p:inputText id="UserManagementEmployeeEmail" value="#{userBean.operatorUser.email}" label="Email Karyawan" required="true">
+                           <f:validator validatorId="com.vinno.cbs.validator.EmailValidator"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="UserManagementEmployeeUserName" value="User Name Karyawan" rendered="#{userBean.status.equalsIgnoreCase('insert')}"/>
+                        <p:inputText id="UserManagementEmployeeUserName" value="#{userBean.operatorUser.username}" label="User Name Karyawan" validator="#{userBean.validateUsername}" required="true" rendered="#{userBean.status.equalsIgnoreCase('insert')}">
+                           <p:ajax event="blur" update="growl"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="UserManagementEmployeePassword" value="Password Karyawan" rendered="#{userBean.status.equalsIgnoreCase('insert')}"/>
+                        <p:password id="UserManagementEmployeePassword" value="#{userBean.operatorUser.password}" required="true" label="Password Karyawan" feedback="false" match="UserManagementEmployeePasswordRetype" rendered="#{userBean.status.equalsIgnoreCase('insert')}"/>
+
+                        <h:outputText value="Reset Password Karyawan" rendered="#{userBean.status.equalsIgnoreCase('update')}"/>
+                        <p:commandButton id="btnResetPassword" value="Reset"  type="button" rendered="#{userBean.status.equalsIgnoreCase('update')}" onclick="resetPasswordDialog.show()"/>
+
+                        <p:outputLabel for="UserManagementEmployeePasswordRetype" value="Tulis Ulang Password" rendered="#{userBean.status.equalsIgnoreCase('insert')}"/>
+                        <p:password id="UserManagementEmployeePasswordRetype" value="#{userBean.userManagementEmployeePasswordRetype}" label="Tulis Ulang Password" feedback="false" required="true" rendered="#{userBean.status.equalsIgnoreCase('insert')}"/>
+
+                        <p:outputLabel for="UserManagementStatus" value="Status"/>
+                        <p:selectOneRadio id="UserManagementStatus" value="#{userBean.operatorUser.userstatus}">
+                           <f:selectItem itemValue="true" itemLabel="Active"/>
+                           <f:selectItem itemValue="false" itemLabel="Inactive"/>
+                        </p:selectOneRadio>
+
+                        <p:outputLabel for="UserManagementHelp" value="Use Help"/>
+                        <p:selectOneRadio id="UserManagementHelp" value="#{userBean.operatorUser.help}">
+                           <f:selectItem itemValue="true" itemLabel="Yes"/>
+                           <f:selectItem itemValue="false" itemLabel="No"/>
+                        </p:selectOneRadio>
+
+                        <p:outputLabel for="UserManagementRulesStatus" value="Gunakan Peranan"/>
+                        <p:selectOneRadio id="UserManagementRulesStatus" value="#{userBean.userManagementRulesStatus}">
+                           <f:selectItem itemValue="true" itemLabel="Yes"/>
+                           <f:selectItem itemValue="false" itemLabel="No"/>
+                           <p:ajax update="tabView" process="@this" partialSubmit="true"/>
+                        </p:selectOneRadio>
+                     </h:panelGrid>
+
+
+
+                     <p:commandButton value="Simpan" actionListener="#{userBean.create()}" rendered="#{userBean.status.equalsIgnoreCase('insert')}" update="@form :formTableUserManagement:tableUserManagement" icon="ui-icon ui-icon-check"/>
+                     <p:commandButton value="Reset" rendered="#{userBean.status.equalsIgnoreCase('insert')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                        <pe:resetInput for="@form"/>
+                     </p:commandButton>
+                     <p:commandButton value="Rubah" actionListener="#{userBean.update()}" rendered="#{userBean.status.equalsIgnoreCase('update')}" update="@form :formTableUserManagement:tableUserManagement" icon="ui-icon ui-icon-check" process="@form"/>
+                     <p:commandButton value="Cancel" rendered="#{userBean.status.equalsIgnoreCase('update')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                        <pe:resetInput for="@form"/>
+                     </p:commandButton>
+                  </h:panelGroup>
+
+                  <h:panelGroup id="panelCheckbox">
+                     <p:tabView id="tabView">
+                        <p:tab title="Hak Akses Menu">
+                           <p:tree value="#{userBean.treeMenu}" var="menutree" selectionMode="checkbox" selection="#{userBean.selectedMenu}" id="treeUserMenuAccess" style="width: 100%;">
+
+                              <p:treeNode>
+                                 <h:outputText value="#{msgs[menutree.menuname]}"/>
+                              </p:treeNode>
+
+                           </p:tree>
+                        </p:tab>
+
+                        <p:tab title="Process Confirmation" id="tabConfirmation">
+                           <p:dataTable value="#{userBean.userconfirmations}" var="confirmationMenu" id="tableConfirmationMenu">
+                              <p:column headerText="Confirmation ?" style="width: 100px;">
+                                 <p:selectBooleanCheckbox value="#{confirmationMenu.needconfirmation}" style="width: 100px;"/>
+                              </p:column>
+
+                              <p:column headerText="Process ?">
+                                 <h:outputText value="#{confirmationMenu.menu.menuname}"/>
+                              </p:column>
+
+                              <p:column headerText="Confirmation to" id="tabUserConfirmation" >
+                                 <p:selectOneMenu value="#{confirmationMenu.confirmationUser.userid}" id="compDropdownConfirmationUser" style="width: 150px;">
+                                    <f:selectItem itemLabel="Select one user"/>
+                                    <f:selectItems value="#{userBean.operatorUsers}" var="confirmationUser" itemLabel="#{confirmationUser.username}" itemValue="#{confirmationUser.userid}"/>
+                                 </p:selectOneMenu>
+                              </p:column>
+                           </p:dataTable>
+                        </p:tab>
+
+                        <p:tab title="Hak Akses Kantor">
+                           <p:dataTable value="#{userBean.privilageaccesses}" var="privilageaccess" rowKey="#{privilageaccess.masterOperational.masteroperationalid}" selection="#{userBean.selectedPrivilageaccesses}">
+
+                              <p:column headerText="Selected" selectionMode="multiple" style="width: 18px;"/>
+
+                              <p:column headerText="Offices Name">
+                                 <h:outputText value="#{privilageaccess.masterOperational.headOffice.headofficename}"/>
+                                 <h:outputText value="#{privilageaccess.masterOperational.region.regionName}"/>
+                                 <h:outputText value="#{privilageaccess.masterOperational.branch.branchname}"/>
+                                 <h:outputText value="#{privilageaccess.masterOperational.subBranchUnitCo.subbranchunitconame}"/>
+                              </p:column>
+
+                              <p:column headerText="Office Code">
+                                 <h:outputText value="#{privilageaccess.masterOperational.headOffice.headofficecode}"/>
+                                 <h:outputText value="#{privilageaccess.masterOperational.region.regionCode}"/>
+                                 <h:outputText value="#{privilageaccess.masterOperational.branch.branchcode}"/>
+                                 <h:outputText value="#{privilageaccess.masterOperational.subBranchUnitCo.subbranchunitcocode}"/>
+                              </p:column>
+
+                              <p:column headerText="Level">
+                                 <h:outputText value="Head Office" rendered="#{privilageaccess.masterOperational.officetype.equalsIgnoreCase('h')}"/>
+                                 <h:outputText value="Region" rendered="#{privilageaccess.masterOperational.officetype.equalsIgnoreCase('r')}"/>
+                                 <h:outputText value="Branch" rendered="#{privilageaccess.masterOperational.officetype.equalsIgnoreCase('b')}"/>
+                                 <h:outputText value="Sub Branch" rendered="#{privilageaccess.masterOperational.officetype.equalsIgnoreCase('s')}"/>
+                              </p:column>
+                           </p:dataTable>
+
+                        </p:tab>
+
+                        <p:tab title="Pengaturan GL" >
+                           <h:panelGrid columns="2" columnClasses="label, value">
+
+                              <h:outputText value="GLType" style="font-weight: bold"/>
+                              <h:outputText value="GLAccount" style="font-weight: bold"/>
+
+                              <p:outputLabel for="UserTerminalContra" value="User Terminal Contra"/>
+                              <p:selectOneMenu id="UserTerminalContra" value="#{userBean.operatorUser.userTerminalContra}" style="width: 300px" required="true">
+                                 <f:selectItem itemLabel="Pilih Satu COA"/>
+                                 <f:selectItems value="#{userBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.chartofaccountname} | #{coa.generalaccountnumber}" />
+                              </p:selectOneMenu>
+
+                              <h:outputText value="User Terminal Cheque Contra"/>
+                              <p:selectOneMenu id="UserTerminalChequeContra" value="#{userBean.operatorUser.userTerminalChequeContra}" style="width: 300px">
+                                 <f:selectItem itemLabel="Pilih Satu COA"/>
+                                 <f:selectItems value="#{userBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.chartofaccountname} | #{coa.generalaccountnumber}" />
+                              </p:selectOneMenu>
+
+                              <h:outputText value="User Terminal Deficit Surplus"/>
+                              <p:selectOneMenu id="UserTerminalDeficitSurplus" value="#{userBean.operatorUser.userTerminalDeficitSurplus}" style="width: 300px">
+                                 <f:selectItem itemLabel="Pilih Satu COA"/>
+                                 <f:selectItems value="#{userBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.chartofaccountname} | #{coa.generalaccountnumber}" />
+                              </p:selectOneMenu>
+
+                              <h:outputText value="User Terminal Suspense"/>
+                              <p:selectOneMenu id="UserTerminalSuspense" value="#{userBean.operatorUser.userTerminalSuspense}" style="width: 300px">
+                                 <f:selectItem itemLabel="Pilih Satu COA"/>
+                                 <f:selectItems value="#{userBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.chartofaccountname} | #{coa.generalaccountnumber}" />
+                              </p:selectOneMenu>
+
+                           </h:panelGrid>
+                        </p:tab>
+
+                        <p:tab title="Working Areas" rendered="#{userBean.operatorUser.position.isaccountofficer}">
+                           <h:outputText value="Upcomming Features."/>
+                        </p:tab>
+                     </p:tabView>
+                  </h:panelGroup>
+               </h:panelGrid>
+            </p:fieldset>
+         </h:form>
+
+         <h:form id="formTableUserManagement" >
+            <p:growl severity="info, error" showDetail="true" showSummary="true" escape="false" id="tableGrowl"/>
+            <p:dataTable
+               id="tableUserManagement"
+               value="#{userBean.operatorUsers}"
+               var="opUser"
+               emptyMessage="No User Found"
+               sortOrder="descending">
+
+               <pe:paginator
+                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                  rows="10"
+                  rowsPerPageTemplate="5,10,15"
+                  />
+
+               <f:facet name="header">Daftar User Operator</f:facet>
+
+               <p:column headerText="Working Locations">
+                  <h:outputText value="#{opUser.masterOperational.headOffice.headofficename}" rendered="#{opUser.masterOperational.officetype.equalsIgnoreCase('h')}"/>
+                  <h:outputText value="#{opUser.masterOperational.region.regionName}" rendered="#{opUser.masterOperational.officetype.equalsIgnoreCase('r')}"/>
+                  <h:outputText value="#{opUser.masterOperational.branch.branchname}" rendered="#{opUser.masterOperational.officetype.equalsIgnoreCase('b')}"/>
+                  <h:outputText value="#{opUser.masterOperational.subBranchUnitCo.subbranchunitconame}" rendered="#{opUser.masterOperational.officetype.equalsIgnoreCase('s')}"/>
+               </p:column>
+
+               <p:column sortBy="#{opUser.employeename}" filterBy="#{opUser.employeename}" filterMatchMode="contains">
+                  <f:facet name="header">Operator Name</f:facet>
+                  <h:outputText value="#{opUser.employeename}"/>
+               </p:column>
+
+               <p:column sortBy="#{opUser.username}" filterBy="#{opUser.username}" filterMatchMode="contains">
+                  <f:facet name="header">User Name</f:facet>
+                  <h:outputText value="#{opUser.username}"/>
+               </p:column>
+
+               <p:column sortBy="#{opUser.employeename}" filterBy="#{opUser.employeename}" filterMatchMode="contains">
+                  <f:facet name="header">Position Name</f:facet>
+                  <h:outputText value="#{opUser.position.positionname}"/>
+               </p:column>
+
+               <p:column style="width: 80px; text-align: center;">
+                  <f:facet name="header">Status</f:facet>
+                  <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{opUser.userstatus}"/>
+                  <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{not opUser.userstatus}"/>
+               </p:column>
+
+               <p:column style="width: 80px; text-align: center;">
+                  <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{opUser.username}" actionListener="#{userBean.edit(opUser)}" update=":formFieldsetUserManagement"/>
+                  <p:commandButton icon="ui-icon ui-icon-trash" title="Delete #{opUser.username}" actionListener="#{userBean.delete(opUser)}" update="@form"/>
+               </p:column>
+            </p:dataTable>
+         </h:form>
+      </p:panel>
+
+      <p:dialog header="Reset Password" widgetVar="resetPasswordDialog" modal="true" hideEffect="fade" showEffect="fade">
+         <h:form id="formResetPassword" >
+            <h:panelGrid columns="2">
+               <p:outputLabel for="resetPassword" value="New Password"/>
+               <p:password id="resetPassword" value="#{userBean.resetPassword}" match="retypeResetPassword" required="true" feedback="false"/>
+
+               <p:outputLabel for="retypeResetPassword" value="Re-Type New Password"/>
+               <p:password id="retypeResetPassword" value="#{userBean.resetPassword}" required="true" feedback="false"/>
+            </h:panelGrid>
+            <h:panelGrid columns="2">
+               <p:commandButton value="Submit Reset Password" actionListener="#{userBean.resetPassword}"/>
+               <p:commandButton value="Cancel"/>
+            </h:panelGrid>
+
+         </h:form>
+      </p:dialog>
+
+      <p:dialog header="Add Target" widgetVar="addTarget" modal="true" hideEffect="fade" showEffect="fade">
+         <h:form id="formAddTargetLoanApplicationApproval" >
+            <h:panelGrid columns="2">
+               <p:outputLabel for="addTargetPosition" value="Position"/>
+               <p:selectOneMenu id="addTargetPosition">
+                  <f:selectItem itemLabel="Select Position"/>
+                  <f:selectItems value="#{userBean.positions}" var="addPosition" itemLabel="#{addPosition.positioncode} | #{addPosition.positionname}" itemValue="#{addPosition.positionid}"/>
+               </p:selectOneMenu>
+
+               <p:outputLabel for="addTargetLevel" value="Level"/>
+               <p:selectOneMenu id="addTargetLevel" style="width: 300px;" value="#{userBean.selectedTarget}">
+                  <f:selectItem itemLabel="Select Loan Approval Level" />
+                  <f:selectItems value="#{userBean.loanapprovals}" var="loanApproval" itemLabel="#{loanApproval.loanapprovalgroup}" itemValue="#{loanApproval}" />
+                  <p:ajax update="@form :formFieldsetUserManagement:growl" process="@form" partialSubmit="true" listener="#{userBean.changeSelectedTarget()}"/>
+               </p:selectOneMenu>
+
+               <!--                    <p:outputLabel for="minimumloanlimit" value="Minimum Loan" />-->
+               <h:outputText id="minimumloanlimit" value="#{userBean.userSelectedTarget.minimumloanlimit}">
+                  <f:convertNumber type="currency" currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" minFractionDigits="2"/>
+               </h:outputText>
+
+               <!--                    <p:outputLabel for="maximimloanlimit" value="Maximum Loan"/>-->
+               <h:outputText id="maximimloanlimit" value="#{userBean.userSelectedTarget.maximumloanlimit}">
+                  <f:convertNumber type="currency" currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}"  minFractionDigits="2"/>
+               </h:outputText>
+            </h:panelGrid>
+            <p:commandButton value="Submit" onclick="addTarget.hide();"/>
+            <p:commandButton value="Cancel" onclick="addTarget.hide();"/>
+         </h:form>
+      </p:dialog>
+
+      <p:dialog header="Edit User Access Menu" widgetVar="EditUserMenuDialog" modal="true" hideEffect="fade" showEffect="fade">
+         <h:form id="formDialogEditUserAccessMenu">
+            <h:panelGrid columns="2">
+               <p:commandButton value="Save"/>
+               <p:commandButton value="Cancel" onclick="EditUserMenuDialog.hide()"/>
+            </h:panelGrid>
+         </h:form>
+      </p:dialog>
+
+      <p:dialog  header="tes" height="300" width="400" widgetVar="testDialog">
+         <h:form id="formTest">
+            <p:dataTable value="#{userBean.editedUserconfirmations}" var="confDefault">
+               <p:column headerText="?">
+                  <p:selectBooleanCheckbox value="#{confDefault.needconfirmation}"/>
+               </p:column>
+
+               <p:column headerText="?">
+                  <h:outputText value="#{confDefault.menu.menuname}"/>
+               </p:column>
+            </p:dataTable>
+         </h:form>
+      </p:dialog>
+
+   </ui:define>
+
+   <ui:define name="bottom">
+      bottom
+   </ui:define>
+
+</ui:composition>

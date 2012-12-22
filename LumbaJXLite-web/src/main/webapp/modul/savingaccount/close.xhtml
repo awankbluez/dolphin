@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+     
+     
+    <ui:define name="content">
+        <p:panel id="panelSaving" header="Close Account Saving" closable="true">
+            <h:form prependId="false">
+                <h:panelGroup id="contSaving">
+                    <p:growl id="messagesClose" showDetail="true" sticky="true" life="5000"/>  
+                    <h:panelGroup layout="block" styleClass="makeBox" id="headerForm">
+                        <h:panelGrid columns="4" cellpadding="5" cellspacing="2" columnClasses="evenColumns, oddColumns, evenColumns, oddColumns">
+                            #{msgs.accountSavingNumber}
+                            <h:panelGroup>: 
+                                <p:autoComplete minQueryLength="3" value="#{close.con1}" completeMethod="#{close.complete}" size="30" required="true" label="#{msgs.accountSavingNumber}">  
+                                    <p:ajax event="itemSelect" update="@form"/>
+                                </p:autoComplete> 
+                            </h:panelGroup>
+                            <span style="margin-left: 50px">#{msgs.customerID}</span>
+                            <h:panelGroup>: <p:inputText size="30" disabled="true" value="#{close.customerID}"/></h:panelGroup>
+
+                            #{msgs.product}
+                            <h:panelGroup>: 
+                                <p:inputText size="30" disabled="true" value="#{close.product}"/>  
+                            </h:panelGroup>
+                            <span style="margin-left: 50px">#{msgs.customerName}</span>
+                            <h:panelGroup>: 
+                                <p:inputText size="30" disabled="true" value="#{close.customerName}"/>  
+                            </h:panelGroup>     
+                        </h:panelGrid>
+                    </h:panelGroup>
+
+                    <p:tabView id="tab">  
+                        <p:tab title="General"> 
+                            <h:panelGrid columns="2" cellpadding="5" cellspacing="2" columnClasses="evenColumns,oddColumns">  
+                                #{msgs.closeDate}
+                                <h:panelGroup>: 
+                                    <h:outputFormat value="#{close.openDate}"/>
+                                </h:panelGroup>
+
+                                #{msgs.typeSavingClose}
+                                <h:panelGroup>
+                                    <span class="spanOption">:</span> 
+                                    <h:selectOneRadio value="#{close.typeClose}" disabled="#{close.statAction}">
+                                        <f:selectItem itemValue="T" itemLabel="Temporary"/>
+                                        <f:selectItem itemValue="I" itemLabel="Permanent"/>
+                                    </h:selectOneRadio>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{close.typeProduct == 'deposito'}">#{msgs.earlyClosurePenalty}</h:panelGroup>
+                                <h:panelGroup rendered="#{close.typeProduct == 'deposito'}">: 
+                                    <h:outputFormat value="Rp. 6000,00"/>
+                                </h:panelGroup>
+
+                                #{msgs.note}
+                                <h:panelGroup>: <p:inputText size="70" value="#{close.note}" disabled="#{close.statAction}"/></h:panelGroup>
+
+                            </h:panelGrid>
+
+                        </p:tab>  
+                        <p:tab title="Transaction">  
+                            <div class="label w150">Daftar Biaya</div>
+                            <p:dataTable var="f" 
+                                         value="#{close.dtFee}"  
+                                         emptyMessage="No Data Retrived"
+                                         style="float: left" styleClass="w400">  
+                                <p:column headerText="Nama Biaya">  
+                                    <h:outputText value="#{f.feename}"/>
+                                </p:column>  
+                                <p:column headerText="Jumlah">  
+                                    <h:outputText value="#{f.amount}">
+                                        <f:convertNumber type="currency" currencySymbol="Rp. "/>
+                                    </h:outputText>
+                                </p:column>  
+                            </p:dataTable>
+                            <div class="clear space"></div>
+                        </p:tab>
+                    </p:tabView>  
+
+                    <div class="buttonGroup">
+                        <p:commandButton value="#{msgs.resetButton}" styleClass="resetButton" update="@form" process="@this" action="#{close.reset}"/>
+                        <p:commandButton value="#{msgs.saveButton}" styleClass="saveButton" update="@form messagesClose" disabled="#{close.statAction}" oncomplete="dlg.show()"/>
+                    </div>
+                </h:panelGroup>
+
+                <p:dialog id="dialog" header="#{msgs.confDialog}" widgetVar="dlg" modal="true">  
+
+                    <h:panelGrid columns="2" cellpadding="5">  
+                        <h:outputLabel for="username" value="#{msgs.username}: *" />  
+                        <p:inputText value="#{close.username}"   
+                                     id="username" label="username" />  
+
+                        <h:outputLabel for="password" value="#{msgs.password}: * " />  
+                        <h:inputSecret value="#{close.password}"   
+                                       id="password" label="password" />  
+
+                        <f:facet name="footer">  
+                            <p:commandButton value="#{msgs.accept}" update="contSaving"   
+                                             action="#{close.login()}"   
+                                             oncomplete="handleLoginRequest(xhr, status, args)"/>  
+                        </f:facet>  
+                    </h:panelGrid>  
+
+                </p:dialog> 
+            </h:form>  
+        </p:panel>
+        <script type="text/javascript">  
+        function handleLoginRequest(xhr, status, args) {  
+            if(args.validationFailed || !args.loggedIn) {  
+                $('#dialog').effect("shake", { times:3 }, 100);  
+            } else {  
+                dlg.hide();  
+                /*jQuery('.linkConfirm').html('Confirmed');  
+                jQuery('.linkConfirm').css('color','green');  
+                jQuery('.linkConfirm').attr('onclick',false);  */
+            }  
+        }  
+        </script>  
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,210 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+   <ui:define name="top">
+      top
+   </ui:define>
+
+   <ui:define name="menuBar">
+      menuBar
+   </ui:define>
+
+   <ui:define name="content">
+      <p:panel closable="true" toggleable="true" header="Jabatan">
+         <h:form id="formFieldsetPosition" >
+            <p:growl severity="info, error" showDetail="true" showSummary="true" escape="false" id="growl"/>
+            <p:fieldset legend="Tambah Jabatan"
+                        toggleable="TRUE"
+                        collapsed="#{positionBean.fieldsetCollapse}"
+                        toggleSpeed="500">
+
+               <h:panelGrid columns="2" styleClass="verticalAlignTop" style="width: 100%;">
+                  <h:panelGroup id="panelForm" layout="block">
+                     <h:panelGrid columns="2">
+                        <p:outputLabel for="PositionCode" value="Kode Posisi"/>
+                        <p:inputText id="PositionCode" value="#{positionBean.position.positioncode}" required="true" label="Kode Posisi" maxlength="4"/>
+
+                        <p:outputLabel for="PositionName" value="Nama Posisi"/>
+                        <p:inputText id="PositionName" value="#{positionBean.position.positionname}" required="true" label="Nama Posisi" maxlength="40"/>
+
+                        <p:outputLabel for="IsAccountOfficer" value="Account Officer ?"/>
+                        <p:selectOneRadio id="IsAccountOfficer" value="#{positionBean.position.isaccountofficer}">
+                           <f:selectItem itemValue="true" itemLabel="Ya"/>
+                           <f:selectItem itemValue="false" itemLabel="Tidak"/>
+                        </p:selectOneRadio>
+
+                        <p:outputLabel for="PositionStatus" value="Status"/>
+                        <p:selectOneRadio id="PositionStatus" value="#{positionBean.position.positionstatus}">
+                           <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                           <f:selectItem itemValue="false" itemLabel="Tidak Aktif"/>
+                        </p:selectOneRadio>
+
+                     </h:panelGrid>
+                     <p:commandButton value="Simpan" icon="ui-icon ui-icon-check" update="@form :formTablePosition" actionListener="#{positionBean.create}" rendered="#{positionBean.status.equalsIgnoreCase('insert')}" process="@form"/>
+                     <p:commandButton value="Reset" rendered="#{positionBean.status.equalsIgnoreCase('insert')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                        <pe:resetInput for="@form"/>
+                     </p:commandButton>
+                     <p:commandButton value="Rubah" icon="ui-icon ui-icon-check" update="@form :formTablePosition" actionListener="#{positionBean.update}" rendered="#{positionBean.status.equalsIgnoreCase('update')}"/>
+                     <p:commandButton value="Cancel" rendered="#{positionBean.status.equalsIgnoreCase('update')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                        <pe:resetInput for="@form"/>
+                     </p:commandButton>
+                  </h:panelGroup>
+
+                  <h:panelGroup layout="block">
+                     <p:tabView >
+                        <p:tab title="Menu Previlege" id="tabMenuPrivilage">
+                           <p:tree value="#{positionBean.treeMenu}" var="menutree" selectionMode="checkbox" selection="#{positionBean.selectedTreeMenu}">
+
+                              <p:treeNode>
+                                 <h:outputText value="#{msgs[menutree.menuname]}"/>
+                              </p:treeNode>
+
+                           </p:tree>
+                           <p:commandButton actionListener="#{positionBean.displayselectedmenu}" update=":formFieldsetPosition:growl" rendered="#{positionBean.selectedTreeMenu != null}"/>
+                        </p:tab>
+
+                        <p:tab title="Confirmation" id="tabConfirmation">
+                           <p:dataTable value="#{positionBean.confirmationdefaults}" var="confirmationMenu">
+                              <p:column headerText="Confirmation ?" style="width: 100px;">
+                                 <p:selectBooleanCheckbox value="#{confirmationMenu.needconfirmation}" style="width: 100px;"/>
+                              </p:column>
+
+                              <p:column headerText="Process ?">
+                                 <h:outputText value="#{confirmationMenu.menu.menuname}"/>
+                              </p:column>
+                           </p:dataTable>
+                        </p:tab>
+
+                        <p:tab title="Hak Akses Kantor">
+                           <p:dataTable value="#{positionBean.privilageaccessDefaults}" var="privilageaccessdefault" selection="#{positionBean.selectedPrivilageaccessDefaults}" rowKey="#{privilageaccessdefault.masterOperational.masteroperationalid}">
+
+                              <p:column headerText="Selected" selectionMode="multiple" style="width: 18px;"/>
+
+                              <p:column headerText="Offices Name">
+                                 <h:outputText value="#{privilageaccessdefault.masterOperational.headOffice.headofficename}"/>
+                                 <h:outputText value="#{privilageaccessdefault.masterOperational.region.regionName}"/>
+                                 <h:outputText value="#{privilageaccessdefault.masterOperational.branch.branchname}"/>
+                                 <h:outputText value="#{privilageaccessdefault.masterOperational.subBranchUnitCo.subbranchunitconame}"/>
+                              </p:column>
+
+                              <p:column headerText="Office Code">
+                                 <h:outputText value="#{privilageaccessdefault.masterOperational.headOffice.headofficecode}"/>
+                                 <h:outputText value="#{privilageaccessdefault.masterOperational.region.regionCode}"/>
+                                 <h:outputText value="#{privilageaccessdefault.masterOperational.branch.branchcode}"/>
+                                 <h:outputText value="#{privilageaccessdefault.masterOperational.subBranchUnitCo.subbranchunitcocode}"/>
+                              </p:column>
+
+                              <p:column headerText="Level">
+                                 <h:outputText value="Head Office" rendered="#{privilageaccessdefault.masterOperational.officetype.equalsIgnoreCase('h')}"/>
+                                 <h:outputText value="Region" rendered="#{privilageaccessdefault.masterOperational.officetype.equalsIgnoreCase('r')}"/>
+                                 <h:outputText value="Branch" rendered="#{privilageaccessdefault.masterOperational.officetype.equalsIgnoreCase('b')}"/>
+                                 <h:outputText value="Sub Branch" rendered="#{privilageaccessdefault.masterOperational.officetype.equalsIgnoreCase('s')}"/>
+                              </p:column>
+                           </p:dataTable>
+                        </p:tab>
+                     </p:tabView>
+                  </h:panelGroup>
+               </h:panelGrid>
+            </p:fieldset>
+         </h:form>
+
+         <h:form id="formTablePosition" >
+            <p:growl severity="info, error" showDetail="true" showSummary="true" escape="false" id="tableGrowl"/>
+            <p:dataTable
+               id="tablePosition"
+               value="#{positionBean.positionList}"
+               var="position"
+               emptyMessage="Tidak Ada Posisi"
+               sortOrder="descending">
+
+               <pe:paginator
+                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                  rows="10"
+                  rowsPerPageTemplate="5,10,15"
+                  />
+
+               <f:facet name="header">Daftar Jabatan</f:facet>
+
+               <p:column headerText="Kode" sortBy="#{position.positioncode}" filterBy="#{position.positioncode}" filterMatchMode="contains">
+                  <h:outputText value="#{position.positioncode}"/>
+               </p:column>
+
+               <p:column headerText="Nama" sortBy="#{position.positionname}" filterBy="#{position.positionname}" filterMatchMode="contains">
+                  <h:outputText value="#{position.positionname}"/>
+               </p:column>
+
+               <p:column headerText="Account Officer ?" style="width: 70px; text-align: center;">
+                  <p:commandButton icon="ui-icon ui-icon-check" title="Yes" rendered="#{position.isaccountofficer == true}"/>
+                  <p:commandButton icon="ui-icon ui-icon-closethick" title="No" rendered="#{position.isaccountofficer == false}"/>
+               </p:column>
+
+               <p:column headerText="Status" style="width: 80px; text-align: center;">
+                  <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{position.positionstatus == true}"/>
+                  <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{position.positionstatus == false}"/>
+               </p:column>
+
+               <p:column headerText="" style="width: 80px;">
+                  <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{position.positionname}" actionListener="#{positionBean.edit(position)}" update=":formFieldsetPosition :formFieldsetPosition:growl"/>
+                  <p:commandButton icon="ui-icon ui-icon-trash" title="Delete #{position.positionname}" actionListener="#{positionBean.delete(position)}" update="@form"/>
+               </p:column>
+            </p:dataTable>
+         </h:form>
+      </p:panel>
+
+      <p:dialog header="Edit User Access Menu" widgetVar="EditUserMenuDialog" modal="true" hideEffect="fade" showEffect="fade">
+         <h:form id="formDialogEditUserAccessMenu">
+            <p:dataTable value="#{positionBean.mainMenuList}" var="mainmenu" scrollHeight="400">
+
+               <pe:paginator
+                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                  rows="20"
+                  rowsPerPageTemplate="5,10,15"
+                  />
+
+               <p:column headerText="Menu">
+                  <h:outputText value="#{mainmenu.menuname}"/>
+               </p:column>
+
+               <p:column headerText="Level">
+                  <h:outputText value="#{mainmenu.level}"/>
+               </p:column>
+
+               <p:column headerText="Accessible ?">
+                  <p:selectBooleanCheckbox/>
+               </p:column>
+            </p:dataTable>
+
+            <h:panelGrid columns="2">
+               <p:commandButton value="Save"/>
+               <p:commandButton value="Cancel" onclick="EditUserMenuDialog.hide()"/>
+            </h:panelGrid>
+         </h:form>
+      </p:dialog>
+
+      <p:dialog  header="tes" height="300" width="400" widgetVar="testDialog">
+         <h:form id="formTest">
+            <p:dataTable value="#{positionBean.editedConfirmationdefaults}" var="confDefault">
+               <p:column headerText="?">
+                  <p:selectBooleanCheckbox value="#{confDefault.needconfirmation}"/>
+               </p:column>
+
+               <p:column headerText="?">
+                  <h:outputText value="#{confDefault.menu.menuname}"/>
+               </p:column>
+            </p:dataTable>
+         </h:form>
+      </p:dialog>
+
+   </ui:define>
+
+   <ui:define name="bottom">
+      bottom
+   </ui:define>
+
+</ui:composition>

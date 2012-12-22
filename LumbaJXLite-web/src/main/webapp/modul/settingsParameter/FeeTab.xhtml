@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+
+    <ui:define name="content">
+        <p:panel header="Kelompok Biaya" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+
+            <p:tabView id="tabSemua" activeIndex="#{feeBean.tabNext.indexTab}">
+                <p:tab id="TabFee"  title="Fee">
+                    <h:form id="Fee">
+                        <p:fieldset legend="#{msgs.add} #{msgs.fee}" toggleable="true" collapsed="#{feeBean.fieldsetCollapse}" id="fieldset">
+                            <p:panel id="feePanel" style="border: #ffffff">
+                                <h:panelGrid columns="6" id="aaa">
+
+                                    <h:outputText value="#{msgs.feeCode}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneMenu id="feeCode" value="#{feeBean.fee.feetype}" style="width: 160px" >
+                                        <f:selectItem itemLabel="Pilih Tipe Biaya" />
+                                        <f:selectItem itemLabel="Pinjaman" itemValue="Pinjaman" />  
+                                        <f:selectItem itemLabel="Simpanan" itemValue="Simpanan" />  
+                                    </p:selectOneMenu>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.feePayment}" />
+                                    <h:outputText value=":"/>
+                                    <p:selectOneMenu id="feePayment" value="#{feeBean.fee.feepayment}" style="width: 160px" required="true">
+                                        <f:selectItem itemLabel="Pilih Tipe Pembayaran"/>
+                                        <f:selectItem itemLabel="Auto Debet" itemValue="Auto Debet" />  
+                                        <f:selectItem itemLabel="Tunai" itemValue="Tunai" />  
+                                        <f:selectItem itemLabel="Auto Debet dan Tunai" itemValue="Auto Debet dan Tunai" />  
+                                        <f:ajax/>
+                                    </p:selectOneMenu>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="Use to"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneRadio id="useto" value="#{feeBean.fee.useto}">
+                                        <f:selectItem itemLabel="Nominal" itemValue="N" />  
+                                        <f:selectItem itemLabel="Persentase" itemValue="P" />  
+                                        <p:ajax update="aaa"/>
+                                    </p:selectOneRadio>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.feeName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{feeBean.fee.feename}" id="feeName" required="true" requiredMessage="Harus diisi" style="width: 150px">
+                                        <f:ajax/>
+                                    </p:inputText>
+                                    <p:message for="feeName"/>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.feeValue}"/>
+                                    <h:outputText value=":"/>
+                                    <pe:inputNumber id="feeValue1" value="#{feeBean.fee.feevalue}" symbol="Rp. " requiredMessage="Harus diisi" thousandSeparator="." decimalSeparator="," maxValue="999999999999" rendered="#{feeBean.fee.useto=='N'}">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <pe:inputNumber id="feeValue2" value="#{feeBean.fee.feevalue}" symbol=" %" requiredMessage="Harus diisi" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100" rendered="#{feeBean.fee.useto=='P'}">
+                                        <f:ajax/>
+                                    </pe:inputNumber>
+                                    <p:message for="feeValue1" rendered="#{feeBean.fee.useto=='N'}"/>
+                                    <p:message for="feeValue2" rendered="#{feeBean.fee.useto=='P'}"/>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.startDate}"/>
+                                    <h:outputText value=":"/>
+                                    <p:calendar value="#{feeBean.fee.startdate}" yearRange="c-120:c+20" navigator="true" readOnlyInputText="true" pattern="yyyy-MM-dd">
+                                        <f:ajax/>
+                                    </p:calendar>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <p:commandButton value="Next" update="@form :tabSemua:Fee :tabSemua:GLAccount :tabelBiaya:idtabelBiaya :tabSemua"  action="#{feeBean.add()}" actionListener="#{feeBean.tabNext.nextTab(0)}" rendered="#{feeBean.status == 'insert'}" />
+                                    <p:commandButton value="Next" update="@form :tabSemua:Fee :tabSemua:GLAccount :tabelBiaya:idtabelBiaya :tabSemua"  actionListener="#{feeBean.tabNext.nextTab(0)}" rendered="#{feeBean.status == 'update'}" />
+
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:fieldset>
+                    </h:form>
+                </p:tab>
+
+                <p:tab id="TabGLAccount"  title="GLAccount" disabled="#{feeBean.tabNext.indexTab != 1}">
+                    <h:form id="GLAccount">
+                        <p:fieldset legend="#{msgs.add} #{msgs.GLAccount}" toggleable="true" collapsed="#{feeBean.fieldsetCollapse}" id="fieldset">
+
+                            <h:panelGrid columns="4" id="bbb">
+                                <h:outputText value="Penangguhan Biaya Bunga"/>
+                                <h:outputText value=":"/>
+                                <p:selectOneMenu id="accountCode1" value="#{feeBean.fee.feeinterestinsuspense}"  style="width: 427px">
+                                    <f:selectItem  itemLabel="Pilih Product"/>
+                                    <f:selectItems var="combo1" value="#{feeBean.dtCmbGLAccount1}" itemValue="#{combo1.chartofaccountid}" itemLabel="#{combo1.generalaccountnumber} - #{combo1.chartofaccountname}"/>
+                                </p:selectOneMenu> 
+                                <p:spacer width="10"/>
+
+                                <h:outputText value="Pendapatan Biaya"/>
+                                <h:outputText value=":"/>
+                                <p:selectOneMenu id="accountCode2" value="#{feeBean.fee.feeincomeaccount}"  style="width: 427px">
+                                    <f:selectItem  itemLabel="Pilih Product"/>
+                                    <f:selectItems var="combo2" value="#{feeBean.dtCmbGLAccount2}" itemValue="#{combo2.chartofaccountid}" itemLabel="#{combo1.generalaccountnumber} - #{combo2.chartofaccountname}"/>
+                                </p:selectOneMenu> 
+                                <p:spacer width="10"/>
+
+                                <h:outputText value="Pendapatan Penangguhan Biaya"/>
+                                <h:outputText value=":"/>
+                                <p:selectOneMenu id="accountCode3" value="#{feeBean.fee.feedeferredincome}"  style="width: 427px">
+                                    <f:selectItem  itemLabel="Pilih Product"/>
+                                    <f:selectItems var="combo3" value="#{feeBean.dtCmbGLAccount3}" itemValue="#{combo3.chartofaccountid}" itemLabel="#{combo1.generalaccountnumber} - #{combo3.chartofaccountname}"/>
+                                </p:selectOneMenu> 
+                                <p:spacer width="10"/>
+
+                                <h:outputText value="Akun Biaya Akrual"/>
+                                <h:outputText value=":"/>
+                                <p:selectOneMenu id="accountCode4" value="#{feeBean.fee.feeaccrualaccount}"  style="width: 427px">
+                                    <f:selectItem  itemLabel="Pilih Product"/>
+                                    <f:selectItems var="combo4" value="#{feeBean.dtCmbGLAccount4}" itemValue="#{combo4.chartofaccountid}" itemLabel="#{combo1.generalaccountnumber} - #{combo4.chartofaccountname}"/>
+                                </p:selectOneMenu> 
+                                <p:spacer width="10"/>
+
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:commandButton value="Simpan" update=":tabSemua:Fee :tabSemua:Fee:fieldset :tabSemua:GLAccount :tabSemua:GLAccount:fieldset :tabelBiaya:idtabelBiaya" actionListener="#{feeBean.add1()}" rendered="#{feeBean.status == 'insert'}" />
+                                <p:commandButton value="Reset"  actionListener="#{feeBean.reset()}" rendered="#{feeBean.status == 'insert'}" update=":tabSemua:Fee :tabSemua:Fee:fieldset :tabSemua:GLAccount :tabSemua:GLAccount:fieldset :tabelBiaya:idtabelBiaya" process="@this"/>
+
+                                <p:commandButton value="Edit" update=":tabSemua:Fee :tabSemua:Fee:fieldset :tabSemua:GLAccount :tabSemua:GLAccount:fieldset :tabelBiaya" actionListener="#{feeBean.update()}" rendered="#{feeBean.status == 'update'}" />
+                                <p:commandButton value="Cancel"  actionListener="#{feeBean.reset()}" rendered="#{feeBean.status == 'update'}" update=":tabSemua:Fee :tabSemua:Fee:fieldset :tabSemua:GLAccount :tabSemua:GLAccount:fieldset :tabelBiaya:idtabelBiaya" action="#{feeBean.setFieldsetCollapse(true)}" process="@this"/>
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+
+            <br/>
+            <br/>
+            <h:form id="tabelBiaya">
+                <p:dataTable id="idtabelBiaya" value="#{feeBean.feeList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.feetype}" filterBy="#{o.feetype}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.feeCode}</f:facet>
+                        #{o.feetype}
+                    </p:column>
+
+                    <p:column sortBy="#{o.feepayment}" filterBy="#{o.feepayment}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.feePayment}</f:facet>
+                        #{o.feepayment}
+                    </p:column>
+
+                    <p:column sortBy="#{o.feename}" filterBy="#{o.feename}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.feeName}</f:facet>
+                        #{o.feename}
+                    </p:column>
+
+                    <p:column sortBy="#{o.feevalue}" filterBy="#{o.feevalue}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.feeValue}</f:facet>
+                        <h:outputText value="Rp. " rendered="#{o.useto == 'N'}"/>
+                        #{feeBean.convertDouble(o.feevalue)}
+                        <h:outputText value=" %" rendered="#{o.useto == 'P'}"/>
+                    </p:column>
+
+                    <p:column sortBy="#{o.startdate}" filterBy="#{o.startdate}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.startDate}</f:facet>
+                        <h:outputText value="#{o.startdate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.feename}" action="#{feeBean.edit(o)}" update=":tabSemua:Fee:fieldset,:tabSemua:GLAccount:fieldset"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.feename}"  update="@form" action="#{feeBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,426 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+
+        <p:panel header="Journal Entry" closable="true" toggleable="true" id="panelJournalEntry">
+
+            <h:form id="formJournalType">
+                <p:growl id="savestatus" sticky="false" life="5000"/>
+                <!-- pemilihan type jurnal - panel grid -->
+                <h:panelGrid columns="3">
+                    <h:outputLabel for="entryJournalType" value="Journal type"/>
+                    <p:selectOneMenu id="entryJournalType" value="#{journalEntryBean.journalType}" style="width: 200px;">
+                        <f:selectItem itemLabel="Select Journal Type" itemValue=""/>
+                        <f:selectItem itemLabel="Batch Journal" itemValue="batch"/>
+                        <f:selectItem itemLabel="Single Journal" itemValue="single"/>
+                        <p:ajax update="@form" listener="#{journalEntryBean.listJournalEntryHeaderTable()}"/>
+                    </p:selectOneMenu>
+                    <p:spacer/>
+                </h:panelGrid>
+
+                <p:panel id="panelEntryJournalEntry" rendered="#{journalEntryBean.journalType == 'batch' or journalEntryBean.journalType == 'single'}" style="width: 100%; border: 0" >
+                    <!-- Panelgrid untuk pengaturan batch-->
+                    <h:panelGrid columns="1" id="dfg">
+
+                        <h:panelGroup id="groupBatchadd">
+                            <h:panelGrid columns="3">
+                                <h:outputLabel for="journalSubject" value="#{msgs.subject}" rendered="#{journalEntryBean.journalType == 'batch'}"/>
+                                <p:selectOneMenu id="journalSubject" rendered="#{journalEntryBean.journalType == 'batch'}" style="width: 200px;" value="#{journalEntryBean.journalEntryHeader.batch.batchid}">
+                                    <f:selectItem itemLabel="Pilih Subject" itemValue=""/>
+                                    <f:selectItems value="#{journalEntryBean.batchs}" var="batch" itemLabel="#{batch.subject}" itemValue="#{batch.batchid}"/>
+                                    <p:ajax update="@form :formJournalType:panelEntryJournalEntry groupManagedBatch " listener="#{journalEntryBean.findBatch()}"/>
+                                </p:selectOneMenu>
+                                <p:commandButton process="@this" id="buttonBatchadd" value="add batch" actionListener="#{journalEntryBean.newBatch()}" immediate="true" update="groupManagedBatch groupBatchadd" rendered="#{journalEntryBean.addButtonBatch == 'show' and journalEntryBean.journalEntryHeader.batch.batchid == null and journalEntryBean.journalType != 'single'}"/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup id="groupManagedBatch">
+                            <p:fieldset
+                                legend="Manage Batch"
+                                toggleable="true"
+                                rendered="#{journalEntryBean.batchStatus == 'insert' and journalEntryBean.journalType == 'batch'}"
+                                collapsed="#{journalEntryBean.fieldsetCollapse}"
+                                id="fieldsetManageBatch"
+                                widgetVar="fieldsetManageBatch">
+
+                                <h:panelGrid columns="3">
+
+                                    <h:outputLabel for="DivisionDepartemen" value="#{msgs.divisiondepartement}"/>
+                                    <p:selectOneMenu id="DivisionDepartemen" value="#{journalEntryBean.batch.division.divisionid}" required="true" style="width: 300px;">
+                                        <f:selectItem itemLabel="Pilih Division / Departement"/>
+                                        <f:selectItems value="#{journalEntryBean.divisions}" var="division" itemLabel="#{division.divisionname}" itemValue="#{division.divisionid}"/>
+                                        <p:ajax process="@this"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="DivisionDepartemen"/>
+
+                                    <h:outputLabel for="Currency" value="#{msgs.currency}"/>
+                                    <p:selectOneMenu id="Currency" value="#{journalEntryBean.batch.currency.currencyID}" required="true" style="width: 250px;">
+                                        <f:selectItems value="#{journalEntryBean.currencys}" var="currency" itemLabel="#{currency.currencyCode} | #{currency.currencyDescribe}" itemValue="#{currency.currencyID}"/>
+                                        <p:ajax process="@this"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="Currency"/>
+
+                                    <h:outputLabel for="Date" value="#{msgs.date}"/>
+                                    <p:calendar id="Date"  pattern="YYYY-MM-dd" value="#{journalEntryBean.batch.date}" disabled="true"/>
+                                    <p:message for="Date"/>
+
+                                    <h:outputLabel for="Subject" value="#{msgs.subject}"/>
+                                    <p:inputText id="Subject" value="#{journalEntryBean.batch.subject}" required="true">
+                                        <p:ajax process="@this"/>
+                                    </p:inputText>
+                                    <p:message for="Subject"/>
+
+                                    <h:outputLabel for="Description" value="#{msgs.description}"/>
+                                    <p:inputTextarea id="Description" value="#{journalEntryBean.batch.description}" rows="5" cols="30" autoResize="false" required="true">
+                                        <p:ajax process="@this"/>
+                                    </p:inputTextarea>
+                                    <p:message for="Description"/>
+
+                                    <p:commandButton value="#{msgs.saveButton}" process="@this" actionListener="#{journalEntryBean.testsave()}"  update=":formJournalType:panelEntryJournalEntry" rendered="#{journalEntryBean.journalEntryHeader.batch.batchid == null}"/>
+                                    <p:commandButton process="@this" value="Cancel" global="false" actionListener="#{journalEntryBean.reset()}" update=":formJournalType:panelEntryJournalEntry" immediate="true" rendered="#{journalEntryBean.journalEntryHeader.batch.batchid == null}"/>
+                                    <p:commandButton process="@this" value="#{msgs.edit}" actionListener="#{journalEntryBean.editBatch()}"  update=":formJournalType:panelEntryJournalEntry" rendered="#{journalEntryBean.journalEntryHeader.batch.batchid != null}"/>
+                                    <p:commandButton process="@this" value="#{msgs.delete}" actionListener="#{journalEntryBean.deleteBatch()}" update=":formJournalType:panelEntryJournalEntry @form" immediate="true" rendered="#{journalEntryBean.journalEntryHeader.batch.batchid != null}"/>
+
+                                </h:panelGrid>
+                            </p:fieldset>
+
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                    <!-- panel entry -->
+
+                    <!--                    <p:panel id="panelentry" style="border: 0">-->
+                    <h:panelGroup id="groupFieldsetEntryJournal">
+                        <!--                            -->
+                        <p:fieldset id="fieldsetlistjournal" legend="Detail Jurnal Entry"
+                                    toggleable="TRUE"
+                                    collapsed="#{journalEntryBean.fieldsetlistjournal}"
+                                    toggleSpeed="500">
+                            <p:dataTable id="tablesingleJournal"
+                                         var="entryheader" 
+                                         value="#{journalEntryBean.journalEntryHeaderlist}"
+                                         selection="#{journalEntryBean.journalEntryHeadersSelected}"
+                                         rowKey="#{entryheader.headerjournalentryid}">
+
+                                <!--                                <p:column selectionMode="multiple"/>-->
+
+                                <f:facet name="header">
+                                    <h:outputText value="Journal Entry List"/>
+                                </f:facet>
+
+                                <p:column headerText="Ref">
+                                    <h:outputText value="#{entryheader.refferencenumber}"/>
+                                </p:column>
+
+                                <p:column headerText="Batch">
+                                    <h:outputText value="#{entryheader.batch.subject}"/>
+                                </p:column>
+                                <p:column headerText="#{msgs.description}">
+                                    <h:outputText value="#{entryheader.descriptionheader}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msgs.date}">
+                                    <h:outputText value="#{entryheader.creationdate}"/>
+                                </p:column>
+                                <p:column headerText="Action">
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.delete}" oncomplete="confirmation.show()"  update="@form" process="@this">
+                                        <f:setPropertyActionListener value="#{entryheader}" target="#{journalEntryBean.journalEntryHeaderSelected}" />
+                                    </p:commandButton>
+                                    <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.view}" action="#{journalEntryBean.showDetailEntry(entryheader)}" update="@form" process="@this"/>
+                                </p:column>
+                                <!--                                <f:facet name="footer">
+                                                                    <p:commandButton icon="ui-icon ui-icon-trash" oncomplete="selecteddelete.show()" id="ddd" value="Delete" process="@this"  update="@form"/>
+                                                                                                        <p:commandButton icon="ui-icon ui-icon-search" id="post" value="Posting" update="@form" oncomplete="selectedposting.show()" />
+                                                                </f:facet>-->
+                            </p:dataTable>
+                        </p:fieldset>
+
+                        <p:confirmDialog id="confirmDialog" message="Are you sure to move trash messages with title [ #{journalEntryBean.journalEntryHeaderSelected.refferencenumber} xx] ?"  
+                                         header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                            <p:commandButton id="confirm" value="Yes" update="tablesingleJournal panelgridentry2" oncomplete="confirmation.hide()"  process="@this"
+                                             action="#{journalEntryBean.deleteHeaderJournalEntryId(journalEntryBean.journalEntryHeaderSelected)}"/>  
+                            <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                        </p:confirmDialog>
+
+                        <p:dialog id="modalDialog" header="Detail Journal" widgetVar="detailvar" modal="true" >
+                            <p:dataTable style="text-align: center" 
+                                         value="#{journalEntryBean.listdetailjournalentry}" 
+                                         sortOrder="desc" 
+                                         emptyMessage="#{msgs.emptymessage}" 
+                                         var="detail" 
+                                         paginator="false" 
+                                         paginatorPosition="top" 
+                                         >
+                                <p:column headerText="general account" sortBy="#{detail.chartofaccount.generalaccountnumber}" filterBy="#{detail.chartofaccount.generalaccountnumber}" filterMatchMode="contains">
+                                    <h:outputText value="#{detail.chartofaccount.generalaccountnumber} || #{detail.chartofaccount.chartofaccountname}"/>
+                                </p:column>
+                                <p:column headerText="#{msgs.debet}">
+                                    <h:outputText value="#{detail.amount}" rendered="#{detail.credit == false}">
+                                        <f:convertNumber pattern="###.#####" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{msgs.credit}">
+                                    <h:outputText value="#{detail.amount}" rendered="#{detail.credit == true}">
+                                        <f:convertNumber pattern="###.#####" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="transaction date" sortBy="#{detail.transactiondate}" filterBy="#{detail.transactiondate}" filterMatchMode="contains">
+                                    <h:outputText value="#{detail.transactiondate}"/>
+                                </p:column>
+                                <p:column headerText="description" sortBy="#{detail.description}" filterBy="#{detail.description}" filterMatchMode="contains">
+                                    <h:outputText value="#{detail.description}"/>
+                                </p:column>
+
+                            </p:dataTable>   
+                        </p:dialog>
+
+                        <p:dialog header="delete" widgetVar="selecteddelete" resizable="false" showEffect="fade" hideEffect="explode" closable="true">
+                            <p:dataList  id="datalistdelete" value="#{journalEntryBean.journalEntryHeadersSelected}" var="selectdelete">
+                                <h:outputText value="Are You sure to remove #{selectdelete.headerjournalentryid}?"/>
+                            </p:dataList>
+                            <p:commandButton value="Delete beneran ?" actionListener="#{journalEntryBean.deleteAll()}" update="@form" process="@this"/>
+                        </p:dialog>
+
+
+
+                        <p:fieldset id="xxsd" legend="#{msgs.newentry}"
+                                    toggleable="TRUE"
+                                    collapsed="true"
+                                    toggleSpeed="500" >
+                            <fieldset>
+                                <legend>Header</legend>
+
+                                <h:panelGrid id="panelgridentry2" columns="3">
+                                    <h:outputText value="No Reff"/>
+                                    <p:inputText value="#{journalEntryBean.reffsementara+1}" disabled="true"/>
+                                    <p:spacer/>
+
+                                    <h:outputText value="Header Description"/>
+                                    <p:inputText id="headerdesc" value="#{journalEntryBean.journalEntryHeader.descriptionheader}" required="true" requiredMessage="Harus Di Isi" disabled="#{journalEntryBean.disableheaderdesc}"/>
+                                    <p:message id="messageheaderdesc" for="headerdesc"/>
+
+                                    <h:outputLabel for="newDate" value="#{msgs.date}"/>
+                                    <p:calendar id="newDate" value="#{journalEntryBean.journalEntryHeader.creationdate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="true"/>
+                                    <p:spacer/>
+                                </h:panelGrid>
+                            </fieldset>
+                            <fieldset>
+                                <h:panelGrid id="panelgridentry" columns="4">
+
+                                    <h:outputLabel value="menggunakan contra"/>
+                                    <p:selectOneRadio  value="#{journalEntryBean.usecontra}" >
+                                        <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                        <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                        <p:ajax update="panelgridentry"/>
+                                    </p:selectOneRadio>
+                                    <p:spacer/>
+                                    <p:spacer/>
+
+                                    <h:outputLabel for="newDescription" value="#{msgs.description}"/>
+                                    <p:inputText id="newDescription" value="#{journalEntryBean.journalEntry.description}"/>
+                                    <p:message for="newDescription"/>
+                                    <p:spacer/>
+
+                                    <h:outputLabel for="transDate" value="Transaction Date"/>
+                                    <p:calendar id="transDate" value="#{journalEntryBean.journalEntry.transactiondate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" />
+                                    <p:message for="transDate"/>
+                                    <p:spacer/>
+
+                                    <h:outputLabel value="#{msgs.coa}"/>
+                                    <p:inputText id="coa" disabled="true" value="#{journalEntryBean.journalEntry.chartofaccount.chartofaccountname}" style="width: 250px"/>
+                                    <p:commandButton value="Cari" update=":formsearchcoa" onclick="dlg.show()" />
+                                    <p:spacer/>
+
+                                    <h:outputLabel for="newKreditDebet" value="#{msgs.coadebetcredit}"/>
+                                    <p:selectOneRadio id="newKreditDebet" value="#{journalEntryBean.journalEntry.credit}" >
+                                        <f:selectItem itemValue="false" itemLabel="#{msgs.debet}"/>
+                                        <f:selectItem itemValue="true" itemLabel="#{msgs.credit}"/>
+                                    </p:selectOneRadio>
+                                    <p:message for="newKreditDebet"/>
+                                    <p:spacer/>
+
+                                    <h:outputLabel id="outputcontra" value="contra" rendered="#{journalEntryBean.usecontra == true}"/>
+                                    <p:inputText id="contra" disabled="true" value="#{journalEntryBean.journalEntry.contrachartofaccount.chartofaccountname}"  rendered="#{journalEntryBean.usecontra == true}" style="width: 250px"/>
+                                    <p:commandButton id="buttoncontra" value="Cari" update=":formsearchcoa" onclick="dlg2.show(); dlg2.content.parent().css('top','100px');" rendered="#{journalEntryBean.usecontra == true}" />
+                                    <p:spacer id="spacercontra" rendered="#{journalEntryBean.usecontra == true}"/>
+
+                                    <h:outputLabel for="newAmount" value="#{msgs.amount}"/>
+                                    <pe:inputNumber id="newAmount" value="#{journalEntryBean.journalEntry.amount}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                        <f:convertNumber pattern="###.#####" />
+                                        <p:ajax event="blur" update="btn_add" listener="#{journalEntryBean.enablebuttonaddlist()}"/>
+                                    </pe:inputNumber>
+
+                                    <p:message for="newAmount"/>
+                                    <p:spacer/>
+                                    <p:commandButton id="btn_add" value="Add to list" update="btn_add messageheaderdesc headerdesc save tableJournal debetcredit amountView  panelgridentry headerdesc" actionListener="#{journalEntryBean.nambah()}" process="xxsd" disabled="#{journalEntryBean.buttonaddlist}"/>
+                                </h:panelGrid>
+                            </fieldset>
+                        </p:fieldset>
+
+                        <p:dataTable
+                            id="tableJournal"
+                            widgetVar="tableJournal"
+                            emptyMessage="#{msgs.norecordjournalentry}"
+                            value="#{journalEntryBean.listjournalentry}"
+                            var="entry"
+                            paginator="true"
+                            paginatorPosition="bottom"
+                            rows="10"
+                            rowsPerPageTemplate="10,20,50"
+                            sortOrder="descending"
+                            >
+
+                            <p:column headerText="#{msgs.reff}" footerText="Jumlah">
+                                <h:outputText value="#{entry.refferencenumber}"/>
+                            </p:column>
+                            <p:column headerText="#{msgs.description}">
+                                <h:outputText value="#{entry.description}"/>
+                            </p:column>
+                            <p:column headerText="#{msgs.transactiondate}">
+                                <h:outputText value="#{entry.transactiondate}">
+                                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msgs.akun}">
+                                <h:outputText value="#{entry.chartofaccount.generalaccountnumber} || #{entry.chartofaccount.chartofaccountname}"/>
+                            </p:column>
+                            <p:column headerText="#{msgs.debet}" footerText="#{journalEntryBean.sumdebet}">
+                                <h:outputText value="#{entry.amount}" rendered="#{entry.credit == false}">
+                                    <f:convertNumber pattern="###.#####" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msgs.credit}" footerText="#{journalEntryBean.sumcredit}">
+                                <h:outputText value="#{entry.amount}" rendered="#{entry.credit == true}">
+                                    <f:convertNumber pattern="###.#####" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="aksi">
+                                <p:commandButton value="hapus"  update="@form" process="@this" actionListener="#{journalEntryBean.amountvalue(entry.credit, entry.amount)}">
+                                    <p:collector value="#{entry}"  
+                                                 removeFrom="#{journalEntryBean.listjournalentry}"/>    
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:commandButton id="save" value="Save" update="@form" actionListener="#{journalEntryBean.createjournal()}"  disabled="#{journalEntryBean.status != 'balance'}" process="@this"/>
+                        
+                        <!--                            <p:panel header="Difference" id="difference">-->
+                        <h:panelGrid columns="4">
+                            <h:outputLabel value="#{msgs.amount}" for="amountView" />
+                            <p:inputText id="amountView" disabled="true" value="#{ (journalEntryBean.balance &lt; 0) ? journalEntryBean.balance * -1 : journalEntryBean.balance}">
+                                <f:convertNumber pattern="###.#####" />
+                            </p:inputText>
+                            <p:inputText id="debetcredit" disabled="true" value="#{journalEntryBean.status}"/>
+                        </h:panelGrid>
+                        <!--                            </p:panel>-->
+
+                    </h:panelGroup>
+
+                </p:panel>
+
+
+                <!--                </p:panel>-->
+
+            </h:form>
+
+
+
+
+            <p:dialog id="Dialogcoa" header="Search Coa" widgetVar="dlg" modal="true" draggable="true" resizable="true" height="500"> 
+
+                <h:form id="formsearchcoa">
+                    <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+
+                        <h:outputText value="number COA"/>
+                        <p:inputText value="#{journalEntryBean.chartofaccount.generalaccountnumber}"/>
+
+                        <h:outputText value="nama COA"/>
+                        <p:inputText value="#{journalEntryBean.chartofaccount.chartofaccountname}"/>
+
+                        <h:outputLabel for="Category" value="#{msgs.category}"/>
+                        <p:selectOneMenu id="Category" value="#{journalEntryBean.chartofaccount.category.categoryid}" style="width: 150px;" required="true" >
+                            <f:selectItem itemLabel="All Category" itemValue="0"/>
+                            <f:selectItems value="#{journalEntryBean.categorylist}" var="category" itemLabel="#{category.categoryname}" itemValue="#{category.categoryid}"/>
+                        </p:selectOneMenu>
+
+
+                        <p:commandButton value="cari" action="#{journalEntryBean.searchcoa()}" update="@form"/>
+
+                    </h:panelGrid>
+
+                    <p:dataTable style="text-align: center" 
+                                 value="#{journalEntryBean.listchartofaccountssearch}" 
+                                 sortOrder="desc" 
+                                 emptyMessage="#{msgs.emptymessage}" 
+                                 var="searchcoa" 
+                                 paginator="true" 
+                                 paginatorPosition="top" 
+                                 rows="10" 
+                                 rowsPerPageTemplate="10,20,25"
+                                 >
+
+
+                        <p:column headerText="nomor">
+                            <p:commandLink value="#{searchcoa.generalaccountnumber}" actionListener="#{journalEntryBean.selectedcoa(searchcoa)}"  update=":formJournalType:coa" onclick="dlg.hide();"/>
+                        </p:column>
+                        <p:column headerText="name" filterBy="#{searchcoa.chartofaccountname}" filterMatchMode="contains">
+                            <p:commandLink value="#{searchcoa.chartofaccountname}" actionListener="#{journalEntryBean.selectedcoa(searchcoa)}" update=":formJournalType:coa" onclick="dlg.hide();"/>
+                        </p:column>
+                    </p:dataTable>   
+
+                </h:form>
+            </p:dialog>  
+
+            <p:dialog id="Dialogcontra" header="Search Coa" widgetVar="dlg2" modal="true" draggable="true" resizable="true" height="500"> 
+                <h:form id="formsearchcontra">
+                    <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+
+                        <h:outputText value="number COA"/>
+                        <p:inputText value="#{journalEntryBean.chartofaccount.generalaccountnumber}"/>
+
+                        <h:outputText value="nama COA"/>
+                        <p:inputText value="#{journalEntryBean.chartofaccount.chartofaccountname}"/>
+
+                        <h:outputLabel for="Category" value="#{msgs.category}"/>
+                        <p:selectOneMenu id="Category" value="#{journalEntryBean.chartofaccount.category.categoryid}" style="width: 150px;" required="true" >
+                            <f:selectItem itemLabel="All Category" itemValue="0"/>
+                            <f:selectItems value="#{journalEntryBean.categorylist}" var="category" itemLabel="#{category.categoryname}" itemValue="#{category.categoryid}"/>
+                        </p:selectOneMenu>
+
+
+                        <p:commandButton value="cari contra" action="#{journalEntryBean.searchcontra()}" update="@form"/>
+
+                    </h:panelGrid>
+
+                    <p:dataTable style="text-align: center" 
+                                 value="#{journalEntryBean.listcontrasearch}" 
+                                 sortOrder="desc" 
+                                 emptyMessage="#{msgs.emptymessage}" 
+                                 var="searchcontra" 
+                                 paginator="true" 
+                                 paginatorPosition="top" 
+                                 rows="10" 
+                                 rowsPerPageTemplate="10,20,25"
+                                 >
+
+
+                        <p:column headerText="nomor">
+                            <p:commandLink value="#{searchcontra.generalaccountnumber}" actionListener="#{journalEntryBean.selectedcontra(searchcontra)}"  update=":formJournalType:contra" onclick="dlg2.hide();"/>
+                        </p:column>
+                        <p:column headerText="name" filterBy="#{searchcontra.chartofaccountname}" filterMatchMode="contains">
+                            <p:commandLink value="#{searchcontra.chartofaccountname}" actionListener="#{journalEntryBean.selectedcontra(searchcontra)}" update=":formJournalType:contra" onclick="dlg2.hide();"/>
+                        </p:column>
+                    </p:dataTable>   
+                </h:form>
+            </p:dialog>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,347 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:CompositeComponent="http://java.sun.com/jsf/composite/CompositeComponent">
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="menuBar">
+        menuBar
+    </ui:define>
+
+    <ui:define name="content">
+        <p:panel id="pengajuanPinjaman" header="CIF" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" >
+            <h:form id="searchCIF" prependId="false">
+                <h:panelGrid columns="4" id="pgDataAnalisis">
+                    <h:outputLabel for="namaCIF" value="Nama Nasabah"/>
+                    <h:outputText value="aa" style="color: white"/>
+                    <p:inputText id="namaCIF" value="#{cifGress.namaCIF}"  style="width: 150px"/> 
+                    <p:spacer/>
+                </h:panelGrid>
+                <br/>
+            </h:form>
+            <h:form id="dataAnalisis" prependId="false">
+                <p:tabView id ="tabCIF" >
+                    <p:tab title="CIF Sesuai KTP" id="cifKTP">
+                        <h:panelGrid columns="3" id="pgDataAnalisis">
+
+                            <h:outputLabel for="tipeNasabah" value="Tipe Nasabah"></h:outputLabel>
+                            <p:selectOneRadio id="tipeNasabah" value="#{cifGress.customer.customerType}">
+                                <f:selectItem itemValue="1" itemLabel="Individu"/>
+                                <f:selectItem itemValue="2" itemLabel="Kelompok"/>
+                                <f:selectItem itemValue="3" itemLabel="Badan Usaha"/>
+                                <p:ajax update="pgDataAnalisis"/>
+
+                            </p:selectOneRadio>    
+                            <p:spacer/>
+
+                            <h:outputLabel for="KTP" value="KTP"/>
+                            <p:inputText id="KTP" value="#{cifGress.person.socialsecuritynumber}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="Nama" value="Nama" rendered="#{cifGress.customer.customerType=='1'}"/>
+                            <p:inputText id="Nama" value="#{cifGress.customer.firstName}" style="width: 150px"  rendered="#{cifGress.customer.customerType=='1'}"/>
+                            <p:spacer  rendered="#{cifGress.customer.customerType=='1'}"/>
+
+                            <h:outputLabel for="namaKelompok" value="Nama Kelompok"  rendered="#{cifGress.customer.customerType=='2'}"/>
+                            <p:inputText id="namaKelompok" value="#{cifGress.customer.firstName}" style="width: 150px"  rendered="#{cifGress.customer.customerType=='2'}"/>
+                            <p:spacer  rendered="#{cifGress.customer.customerType=='2'}"/>
+
+                            <h:outputLabel for="namaBadanUsaha" value="Nama Badan Usaha"  rendered="#{cifGress.customer.customerType=='3'}"/>
+                            <p:inputText id="namaBadanUsaha" value="#{cifGress.customer.companyname_institution}" style="width: 150px"  rendered="#{cifGress.customer.customerType=='3'}"/>
+                            <p:spacer  rendered="#{cifGress.customer.customerType=='3'}"/>
+
+                            <h:outputLabel for="tmpLahir" value="Tempat Lahir"/>
+                            <p:inputText id="tmpLahir" value="#{cifGress.person.placeofbirth}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="tglLahir" value="Tanggal Lahir"/>
+                            <p:inputText id="tglLahir" value="#{cifGress.person.dateofbirth}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="jenisKelamin" value="Jenis Kelamin"></h:outputLabel>
+                            <p:selectOneRadio id="jenisKelamin" value="#{cifGress.person.gender}">
+                                <f:selectItem itemValue="M" itemLabel="Laki-laki"/>
+                                <f:selectItem itemValue="F" itemLabel="Perempuan"/>     
+                            </p:selectOneRadio>    
+                            <p:spacer/>
+
+                            <h:outputLabel for="alamatKtp" value="Alamat KTP"/>
+                            <p:inputText id="alamatKtp" value="#{cifGress.address.address}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="propinsi" value="Propinsi"/>
+                            <p:selectOneMenu id="propinsi" value="#{cifGress.address.village.subDistrict.district.province.provinceid}" style="width: 155px">
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="kota" value="Kota/Kabupaten"/>
+                            <p:selectOneMenu id="kota" value="#{cifGress.address.village.subDistrict.district.districtid}" style="width: 155px">
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="kecamatan" value="Kecamatan"/>
+                            <p:selectOneMenu id="kecamatan" value="#{cifGress.address.village.subDistrict.subdistrictid}" style="width: 155px">
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="desa" value="Desa/Kelurahan"/>
+                            <p:selectOneMenu id="desa" value="#{cifGress.address.village.villageid}" style="width: 155px">
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="rtrw" value="RT/RW"/>
+                            <p:inputText id="rtrw" value="#{cifGress.address.rtrw}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="kodePos" value="Kode POS"/>
+                            <p:inputText id="kodePos" value="#{cifGress.address.postcode}" style="width: 150px"/>
+                            <p:spacer/>
+                            <p:spacer/>
+
+                            <p:commandButton id="alamatLain" value="Alamat Lain" onclick="popupAlamatLain.show()" process="@this"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="telepon" value="Telepon/HP"/>
+                            <p:inputText id="telepon" value="#{cifGress.address.phonenumber}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="email" value="Email"/>
+                            <p:inputText id="email" value="#{cifGress.address.email}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="agama" value="Agama"/>
+                            <p:selectOneMenu id="agama" value="#{cifGress.person.religiID}">
+                                <f:selectItem itemLabel="Islam" itemValue="1"/>
+                                <f:selectItem itemLabel="Kristen" itemValue="2"/>
+                                <f:selectItem itemLabel="Katolik" itemValue="3"/>
+                                <f:selectItem itemLabel="Hindu" itemValue="4"/>
+                                <f:selectItem itemLabel="Budha" itemValue="5"/>
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="statusKawin" value="Status Kawin"/>
+                            <p:selectOneMenu id="statusKawin" value="#{cifGress.person.maritalstatus}">
+                                <f:selectItem itemLabel="Menikah" itemValue="1"/>
+                                <f:selectItem itemLabel="Belum Menikah" itemValue="2"/>
+                                <f:selectItem itemLabel="Cerai" itemValue="3"/>
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <h:outputLabel for="tandaTangan" value="Tanda Tangan"/>
+                            <h:outputText/>
+                            <p:spacer/>
+                            <p:inputTextarea id="tandaTangan" value="#{cifGress.customerspeciment.speciment}" disabled="false" style="width: 150px"/>
+                            <p:commandButton id="btnDataAnalisis" value="Browse"/>
+                        </h:panelGrid>
+                    </p:tab>
+
+                    <p:tab title="CIF Detail" id="cifDetail">
+                        <h:panelGrid columns="6" id="cifTab2">
+                            <h:outputLabel for="nomerCIF" value="Nomer CIF"/>
+                            <p:inputText id="nomerCIF" disabled="true" style="width: 150px"/>
+                            <h:outputText value="aaaaaaaaaaaaaaaaaaaaaaaaaa" style="color: white"/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="kantor" value="Kantor"/>
+                            <p:inputText id="kantor" disabled="true" style="width: 150px"/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="tglPembuatan" value="Tanggal Pembuatan"/>
+                            <p:inputText id="tglPembuatan" disabled="true" style="width: 150px"/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+
+                            <p:spacer height="10px"/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+                            <p:spacer/>
+
+
+                            <h:outputLabel for="din" value="DIN"/>
+                            <p:inputText id="din" value="#{cifGress.customer.din}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="namaAlias" value="Nama Alias"/>
+                            <p:inputText id="namaAlias" value="#{cifGress.customer.aliasName}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="statusGelar" value="Status/Gelar"/>
+                            <p:selectOneMenu id="statusGelar" value="#{cifGress.customer.degreestatus}" style="width: 155px">
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="keteranganGelar" value="Keterangan Status"/>
+                            <p:inputText id="keteranganGelar" value="#{cifGress.customer.degreedesc}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="golDebitur" value="Golongan Debitur"/>
+                            <p:selectOneMenu id="golDebitur" value="#{cifGress.customer.sectoreconomy}" style="width: 155px">
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="noAkteAwal" value="No Akte Awal(pendirian)"/>
+                            <p:inputText id="noAkteAwal" value="#{cifGress.customerlegal.initialcertificatenumber}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="noPaspor" value="No Paspor"/>
+                            <p:inputText id="noPaspor" value="#{cifGress.person.passportnumber}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="noAkteAkhir" value="No Akte Akhir"/>
+                            <p:inputText id="noAkteAkhir" value="#{cifGress.customerlegal.notarynumberchance}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="tglAkteAwal" value="Tanggal Akte Awal"/>
+                            <p:inputText id="tglAkteAwal" value="#{cifGress.customerlegal.notarydate}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="tglAkteAkhir" value="Tanggal Akte Akhir"/>
+                            <p:inputText id="tglAkteAkhir" value="#{cifGress.customerlegal.dateofchange}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="npwp" value="NPWP"/>
+                            <p:inputText id="npwp" value="#{cifGress.person.taxnumber}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="negaraDomisili" value="Negara Domisili"/>
+                            <p:selectOneMenu id="negaraDomisili" value="#{cifGress.customer.countryID}" style="width: 155px">
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="namaIbu" value="Nama Gadis Ibu Kandung"/>
+                            <p:inputText id="namaIbu" value="#{cifGress.person.mothermaiden}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="hubDenganBank" value="Hubungan Dengan Bank"/>
+                            <p:selectOneMenu id="hubDenganBank" value="#{cifGress.customer.banklinkagesid}" style="width: 155px">
+                            </p:selectOneMenu>
+                            <p:spacer/>
+
+                            <h:outputLabel for="melanggarBMPK" value="Melanggar BMPK"></h:outputLabel>
+                            <p:selectOneRadio id="melanggarBMPK" value="#{cifGress.customer.isbmpkviolation}">
+                                <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                <f:selectItem itemValue="false" itemLabel="Tidak"/>     
+                            </p:selectOneRadio>    
+                            <p:spacer/>
+
+                            <h:outputLabel for="melampauiBMPK" value="Melampaui BMPK"></h:outputLabel>
+                            <p:selectOneRadio id="melampauiBMPK" value="#{cifGress.customer.isbmpkexceed}">
+                                <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                <f:selectItem itemValue="false" itemLabel="Tidak"/>      
+                            </p:selectOneRadio>    
+                            <p:spacer/>
+
+                            <h:outputLabel for="menggunakanRating" value="Menggunakan Rating?"></h:outputLabel>
+                            <p:selectOneRadio id="menggunakanRating" value="#{cifGress.customer.isuserating}">
+                                <f:selectItem itemValue="ya" itemLabel="Ya"/>
+                                <f:selectItem itemValue="tidak" itemLabel="Tidak"/>      
+                            </p:selectOneRadio>    
+                            <p:spacer/>
+
+                            <h:outputLabel for="ratingDebitur" value="Rating Debitur"/>
+                            <p:inputText id="ratingDebitur" value="#{cifGress.customer.debiturrating}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="lembagaRating" value="Lembaga Rating"/>
+                            <p:inputText id="lembagaRating" value="#{cifGress.customer.ratinginstitution}" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="goPublic" value="Go Public"></h:outputLabel>
+                            <p:selectOneRadio id="goPublic" value="#{cifGress.customer.isgopublic}">
+                                <f:selectItem itemValue="true" itemLabel="Go Public"/>
+                                <f:selectItem itemValue="false" itemLabel="Belum Go Public"/>      
+                            </p:selectOneRadio>    
+                            <p:spacer/>
+                        </h:panelGrid>
+
+                    </p:tab>
+                </p:tabView>
+
+            </h:form> 
+            <h:form id="viewDialog" prependId="false">
+                <p:dialog header="Alamat Lain" widgetVar="popupAlamatLain" id="popoupAlamat" modal="true" showEffect="explode" hideEffect="explode">
+                    <h:panelGrid columns="3">
+                        <h:outputLabel for="alamatKtp" value="Alamat KTP"/>
+                        <p:inputText id="alamatKtp" value="#{cifGress.address.address}" style="width: 150px"/>
+                        <p:spacer/>
+
+                        <h:outputLabel for="propinsi" value="Propinsi"/>
+                        <p:selectOneMenu id="propinsi" value="#{cifGress.address.village.subDistrict.district.province.provinceid}" style="width: 155px">
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+                        <h:outputLabel for="kota" value="Kota/Kabupaten"/>
+                        <p:selectOneMenu id="kota" value="#{cifGress.address.village.subDistrict.district.districtid}" style="width: 155px">
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+                        <h:outputLabel for="kecamatan" value="Kecamatan"/>
+                        <p:selectOneMenu id="kecamatan" value="#{cifGress.address.village.subDistrict.subdistrictid}" style="width: 155px">
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+                        <h:outputLabel for="desa" value="Desa/Kelurahan"/>
+                        <p:selectOneMenu id="desa" value="#{cifGress.address.village.villageid}" style="width: 155px">
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+                        <h:outputLabel for="rtrw" value="RT/RW"/>
+                        <p:inputText id="rtrw" value="#{cifGress.address.rtrw}" style="width: 150px"/>
+                        <p:spacer/>
+
+                        <h:outputLabel for="kodePos" value="Kode POS"/>
+                        <p:inputText id="kodePos" value="#{cifGress.address.postcode}" style="width: 150px"/>
+                        <p:spacer/>
+                        <p:spacer/>
+                        <p:spacer/>
+                        <p:spacer/>
+                        <p:commandButton id="simpanAlamat" value="Simpan"/>
+                        <p:spacer/>
+                    </h:panelGrid>
+                    <h:panelGroup>
+                        <p:dataTable value="" id="viewAlamatLain" widgetVar="tabelAlamat">
+                            <p:column headerText="Alamat"></p:column>
+                            <p:column headerText="RT/RW"></p:column>
+                            <p:column headerText="Desa/Kelurahan"></p:column>
+                            <p:column headerText="Kecamatan"></p:column>
+                            <p:column headerText="Kab/Kota"></p:column>
+                            <p:column headerText="Kode Pos"></p:column>
+                            <p:column > 
+                                <p:commandButton id="ubahAlamat" title="Ubah" icon="ui-icon ui-icon-pencil"/>
+                                <p:commandButton id="tampilAlamat" title="Tampil" icon="ui-icon ui-icon-search"/>
+                            </p:column>
+
+
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:dialog>
+            </h:form>            
+        </p:panel>
+    </ui:define>
+    <ui:define name="bottom">
+        bottom
+    </ui:define>
+
+</ui:composition>

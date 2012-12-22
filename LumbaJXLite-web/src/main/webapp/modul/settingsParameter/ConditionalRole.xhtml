@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.conditionalRole}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="KelompokBank">
+                <p:fieldset legend="#{msgs.add} #{msgs.conditionalRole}" toggleable="true" collapsed="#{conditionalroleBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.conditionalRoleType}"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu id="ConditionRoleType" value="#{conditionalroleBean.conditionalrole.conditionalroletype}" style="width: 192px;">
+                            <f:selectItem itemLabel="Pilih Aturan Pengkondisian" />
+                            <f:selectItem itemLabel="#{msgs.cif}" itemValue="CIF" />  
+                            <f:selectItem itemLabel="#{msgs.loan}" itemValue="Pinjaman" /> 
+                        </p:selectOneMenu>
+                        <p:spacer width="10"/>
+                        <h:outputText value="#{msgs.conditionalRoleName}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{conditionalroleBean.conditionalrole.conditionalrole}" style="width: 185px;" id="ConditionalRole" required="true" requiredMessage="Harus diisi" validator="#{conditionalroleBean.validateConditionalRole}">
+                            <p:ajax event="blur" update="conditionalroleValidasi"/>
+                        </p:inputText>
+                        <p:message id="conditionalroleValidasi" for="ConditionalRole"/>
+                        
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelAturanPengkondisian:tabelAturanPengkondisian" actionListener="#{conditionalroleBean.add()}" rendered="#{conditionalroleBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{conditionalroleBean.reset()}" rendered="#{conditionalroleBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelAturanPengkondisian:tabelAturanPengkondisian" actionListener="#{conditionalroleBean.update()}" rendered="#{conditionalroleBean.status == 'update'}" />
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{conditionalroleBean.reset()}" rendered="#{conditionalroleBean.status == 'update'}" update="@form" action="#{conditionalroleBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelAturanPengkondisian">
+                <p:dataTable id="tabelAturanPengkondisian" value="#{conditionalroleBean.conditionroleList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.conditionalroletype}" filterBy="#{o.conditionalroletype}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.conditionalRoleType}</f:facet>
+                        #{o.conditionalroletype}
+                    </p:column>
+                    <p:column sortBy="#{o.conditionalrole}" filterBy="#{o.conditionalrole}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.conditionalRoleName}</f:facet>
+                        #{o.conditionalrole}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.conditionalrole}" action="#{conditionalroleBean.edit(o)}" update=":KelompokBank" />
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.conditionalrole}"  update="@form" action="#{conditionalroleBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

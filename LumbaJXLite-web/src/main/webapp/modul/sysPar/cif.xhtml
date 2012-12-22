@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+     
+     
+    <ui:define name="content">
+        <h:outputStylesheet name="sysPar_global.css" library="css"/>
+        <h2 class="title">System Parameter : Formating ID</h2>
+        <h:form prependId="false">
+            <p:growl id="messages" life="5000"/> 
+            <div class="contLeft">
+                <div class="tabHead">Masking</div>
+                <div class="frgroup">
+                    <div class="label w150">Social Security Number</div>
+                    <p:inputText value="#{sysParCIF.mask_socialsecurity}" styleClass="w200"/>
+                    <div class="clear space"></div>
+                    <div class="label w150">Tax Number</div>
+                    <p:inputText value="#{sysParCIF.mask_tax}" styleClass="w200"/>
+                    <div class="clear space"></div>
+                    <div class="label w150">Driving Licenses Number</div>
+                    <p:inputText value="#{sysParCIF.mask_drivinglicenses}" styleClass="w200"/>
+                    <div class="clear space"></div>
+                    <div class="label w150">Passport</div>
+                    <p:inputText value="#{sysParCIF.mask_passport}" styleClass="w200"/>
+                    <div class="clear space"></div>
+                </div>
+            </div>
+            <div class="contRight">
+                <div class="tabHead"></div>
+                <div class="frgroup"></div>
+            </div>    
+            
+            <div class="buttonGroup">
+                <p:commandButton id="saveButton" value="#{msgs.saveButton}" styleClass="saveButton" icon="ui-icon-disk" process="@form" update="messages" action="#{sysParGlobal.save()}"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.lasteducation}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="PendidikanTerakhir">
+                <p:fieldset legend="#{msgs.add} #{msgs.lasteducation}" toggleable="true" collapsed="#{lasteducationBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.lastEducationName}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{lasteducationBean.parameter.name}" id="Name" required="true" requiredMessage="Harus diisi" validator="#{lasteducationBean.validateLastEducation}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="Name"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelPendidikanTerakhir:tabelPendidikanTerakhir" actionListener="#{lasteducationBean.add()}" rendered="#{lasteducationBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{lasteducationBean.reset()}" rendered="#{lasteducationBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelPendidikanTerakhir:tabelPendidikanTerakhir" actionListener="#{lasteducationBean.update()}" rendered="#{lasteducationBean.status == 'update'}" />
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{lasteducationBean.reset()}" rendered="#{lasteducationBean.status == 'update'}" update="@form" action="#{lasteducationBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelPendidikanTerakhir">
+                <p:dataTable id="tabelPendidikanTerakhir" value="#{lasteducationBean.lasteducationList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.name}" filterBy="#{o.name}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.lastEducationName}</f:facet>
+                        #{o.name}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.name}" action="#{lasteducationBean.edit(o)}" update=":PendidikanTerakhir"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.name}"  update="@form" action="#{lasteducationBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

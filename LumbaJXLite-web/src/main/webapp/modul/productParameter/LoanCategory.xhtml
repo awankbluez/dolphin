@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+
+        <p:panel id="panelloan" header="#{msgs.loanproduct}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000">
+            <h:form id="qwerty" prependId="true">
+                <p:fieldset id="fieldsetloancategory" legend="Create Loan Category" collapsed="#{loanCategory.fieldsetCollapse}" toggleable="true">
+
+                    <h:panelGrid id="panelgridcategory" columns="3" columnClasses="label, value" styleClass="grid" >
+
+                        <h:outputText value="Maksimum Jumlah Pinjaman Aktif"/>
+                        <pe:inputNumber value="#{loanCategory.loancategory.maximumloanactive}"/>
+                        <p:spacer/>
+
+                        <h:outputText value="Nama Loan Kategory"/>
+                        <p:inputText id="inputcategoryname" value="#{loanCategory.loancategory.loancategoryname}" required="true" requiredMessage="#{msgs.mustfilled}" validator="#{loanCategory.validateLoancategoryname}">
+                             <p:ajax event="blur" update="panelgridcategory"/>
+                        </p:inputText>
+                        <p:message for="inputcategoryname"/>
+
+                        <h:outputText value="maksimum jumlah produk yang diterima"/>
+                        <pe:inputNumber value="#{loanCategory.loancategory.maximumloannumber}"/>
+                        <p:spacer/>
+
+                        <h:outputText value="menggunakan skoring"/>
+                        <p:selectOneRadio  value="#{loanCategory.loancategory.usescoring}">
+                            <f:selectItem itemValue="true" itemLabel="Yes"/>
+                            <f:selectItem itemValue="false" itemLabel="No" />
+                        </p:selectOneRadio>
+                        <p:spacer/>
+
+                        <p:commandButton process="panelgridcategory" action="#{loanCategory.add()}" value="#{msgs.create}" update=":asdf" rendered="#{loanCategory.status == 'insert'}"/>
+                        <p:commandButton process="panelgridcategory" action="#{loanCategory.update()}" value="edit" update=":qwerty:fieldsetloancategory,:asdf" rendered="#{loanCategory.status == 'update'}"/>
+
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+
+            <h:form id="asdf">
+                <p:dataTable style="text-align: center" value="#{loanCategory.loancategorylist}" sortOrder="desc" emptyMessage="#{msgs.emptymessage}" var="category" paginator="true" paginatorPosition="top" rows="5" rowsPerPageTemplate="5,10,20,25">
+
+                    <p:column headerText="Nama Loan Kategory">
+                        <h:outputText value="#{category.loancategoryname}"/>
+                    </p:column>
+                    <p:column headerText="Maksimum Jumlah Product yang diterima">
+                        <h:outputText value="#{category.maximumloannumber}"/>
+                    </p:column>
+                    <p:column headerText="Maksimum Jumlah Pinjaman Aktif">
+                        <h:outputText value="#{category.maximumloanactive}"/>
+                    </p:column>
+                    <p:column headerText="Menggunakan Scoring">
+                        <p:commandButton icon="ui-icon ui-icon-check" title="Aktif" rendered="#{category.usescoring == 'true'}" disabled="true"/>
+                        <p:commandButton icon="ui-icon ui-icon-closethick" title="Tidak Aktif" rendered="#{category.usescoring == 'false'}"  disabled="true"/>
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{loanCategory.edit(category)}" update=":panelloan"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.delete}" action="#{loanCategory.remove(category)}" update=":asdf"  />
+                    </p:column> 
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

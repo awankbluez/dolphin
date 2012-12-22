@@ -1,0 +1,322 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+
+     
+     
+    <ui:define name="content">
+        <h2 class="title">System Parameter : Loan</h2>
+        <p:tabView id="tabView" >  
+            <p:tab id="tab1" title="General">  
+                <h:form prependId="false" id="fr-loan-general">
+                    <p:growl id="messages" life="5000"/> 
+                    <h:panelGroup layout="block" styleClass="cLeft wp50">
+                        <div class="label w150">PPAP</div>
+                        <p:selectOneRadio value="#{sysParLoan.ppapversi}">  
+                            <f:selectItem itemLabel="General" itemValue="GN" />  
+                            <f:selectItem itemLabel="Spesifik" itemValue="SS" /> 
+                            <f:ajax render="@form"/>
+                        </p:selectOneRadio>  
+                        <div class="clear space"></div>
+                        <h:panelGroup rendered="#{sysParLoan.ppapversi=='GN'}">
+                            <div class="label w150">Nilai PPAP</div>
+                            
+                            <p:inputText value="#{sysParLoan.ppapgeneralamount}" styleClass="w50"/>
+                            <div class="clear space"></div>
+                        </h:panelGroup>
+                        <div class="label w150">Tipe tunggakan dalam</div>
+                        <p:selectOneRadio value="#{sysParLoan.collectabilityversi}">  
+                            <f:selectItem itemLabel="Harian" itemValue="DY" />  
+                            <f:selectItem itemLabel="Tunggakan" itemValue="AR" /> 
+                        </p:selectOneRadio>  
+                        <div class="clear space"></div>
+                        <div class="label w150">PPAP WD</div>
+                        <p:selectOneRadio value="#{sysParLoan.ppapwd}">  
+                            <f:selectItem itemLabel="Use collateral value" itemValue="true" />  
+                            <f:selectItem itemLabel="Without collateral value" itemValue="false" /> 
+                        </p:selectOneRadio>  
+                        <div class="clear space"></div>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" styleClass="cRight wp50">
+                        <div class="label w150">Is accumulated pinalty</div>
+                        
+                        <p:selectOneRadio value="#{sysParLoan.isaccumulatedpenalty}">  
+                            <f:selectItem itemLabel="Yes" itemValue="true" />  
+                            <f:selectItem itemLabel="No" itemValue="false" />  
+                            <f:ajax render="@form"/>
+                        </p:selectOneRadio>  
+                        <div class="clear space"></div>
+                        <h:panelGroup rendered="#{sysParLoan.isaccumulatedpenalty==true}">
+                            <div class="label w150">Penalty Payment</div>
+                            
+                            <p:selectOneMenu value="#{sysParLoan.whenaccumulatedpenalty}">
+                                <f:selectItem itemLabel="Monthly" itemValue="ML"/>
+                                <f:selectItem itemLabel="Deffered" itemValue="DF"/>
+                            </p:selectOneMenu> 
+                            <div class="clear space"></div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    <div class="clear space"></div>
+                    <div class="buttonGroup">
+                        <p:commandButton id="saveButton" value="#{msgs.saveButton}" styleClass="saveButton" icon="ui-icon-disk" process="@form" update=":tabView" action="#{sysParLoan.saveLoan()}"/>
+                    </div>
+                </h:form>
+            </p:tab>
+
+            <p:tab id="tab2" title="Versi Bank Indonesia">  
+                <h:form prependId="false" id="fr-loan-bi">
+                    <div class="tabHead">Collectability - Priority Order <p:commandButton value="Tambah Collectability" oncomplete="addCollectability.show()" style="margin: -7px 0px 0px 0px;float: right" icon="ui-icon-plus"/></div>
+                    <div class="frgroup">
+                        <p:dataTable id="idCollect" var="varCollect" 
+                                     value="#{sysParLoan.dtCollectability}"  
+                                     sortBy="#{varCollect.collectabilitycode}"
+                                     sortOrder="ascending" 
+                                     widgetVar="widgetCollect"   
+                                     emptyMessage="No Data Retrived"> 
+                            <p:column headerText="Tingkat Kolektabilitas" style="width:150px">  
+                                <h:outputText value="#{varCollect.collectabilitycode}"/>  
+                            </p:column>  
+
+                            <p:column headerText="Keterangan" style="width:200px">  
+                                <h:outputText value="#{varCollect.collectabilityname}" />  
+                            </p:column>  
+
+                            <p:column headerText="Prioritas" style="width:300px">  
+                                <h:outputText value="#{varCollect.prioritas}" />  
+                            </p:column>
+
+                            <p:column headerText="Nilai PPAP" style="width:50px">  
+                                <h:outputText value="#{ (sysParLoan.ppapversi=='GN') ? sysParLoan.ppapgeneralamount : varCollect.ppap} %" />  
+                            </p:column>  
+
+                            <p:column style="width: 70px;">
+                                <p:commandButton icon="ui-icon-pencil" title="Edit" action="#{sysParLoan.editCollectability()}" oncomplete="addCollectability.show()" update="@form">
+                                    <f:setPropertyActionListener value="#{varCollect}" target="#{sysParLoan.selectCollectability}"/>  
+                                </p:commandButton>
+                                <p:commandButton icon="ui-icon-trash" title="Delete" action="#{sysParLoan.deleteCollectability()}" update="@form">
+                                    <f:setPropertyActionListener value="#{varCollect}" target="#{sysParLoan.selectCollectability}" />  
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog id="addCollectability"  header="Collectability Form" widgetVar="addCollectability" modal="true">  
+                            <div class="label w150">NPL Versi</div>
+                            <h:outputText value="Bank Indonesia"/>
+                            <div class="clear space"></div>
+                            <div class="label w150">Tingkat Kolektabilitas</div>
+                            <h:inputText value="#{sysParLoan.collectabilitycode}" maxlength="5"/>
+                            <div class="clear space"></div>
+                            <div class="label w150">Keterangan</div>
+                            <h:inputText value="#{sysParLoan.collectabilityname}"/>
+                            <div class="clear space"></div>
+                            <div class="label w150">Prioritas</div>
+                            <p:orderList value="#{sysParLoan.dtPriority}" controlsLocation="none" itemLabel="#{priority.priority}" itemValue="#{priority.priorityid}" var="priority" style="height: 100px;float: left"/>  
+                            <div class="clear space"></div>
+                            <div class="label w150">Nilai PPAP</div>
+                            <h:inputText value="#{sysParLoan.ppap}" maxlength="3" styleClass="w40"/> %
+                            <div class="clear space"></div>
+                            <p:commandButton value="Save" oncomplete="addCollectability.hide()" styleClass="button" update="@form" process="@form" action="#{sysParLoan.saveCollectability()}">  
+                                <f:setPropertyActionListener value="BI" target="#{sysParLoan.nplversi}" />  
+                            </p:commandButton>
+                        </p:dialog>  
+                    </div>
+
+                    <h:panelGroup>
+                        <div class="tabHead">Kategori kualitas aktiva produktif <p:commandButton value="Tambah Kategori Kualitas" oncomplete="addPPAP.show()" style="margin: -7px 0px 0px 0px;float: right" icon="ui-icon-plus"/></div>
+                        <div class="frgroup">
+                            <p:dataTable var="p" 
+                                         value="#{sysParLoan.dtPPAP}"  
+                                         sortBy="#{p.collectabilityname}"
+                                         sortOrder="ascending" 
+                                         widgetVar="wP"   
+                                         emptyMessage="No Data Retrived"
+                                         id="tbppap"> 
+                                <p:column headerText="Kolektabilitas" style="width:100px">  
+                                    <h:outputText value="#{p.collectabilityname}"/>  
+                                </p:column>  
+                                <p:column headerText="Kategori" style="width:100px">  
+                                    <h:outputText value="#{(p.category=='KR') ? 'KPR' : (p.category=='NK') ? 'Non KPR' : 'Tanpa Angsuran'}"/>  
+                                </p:column>  
+                                <p:column headerText="Periode" style="width:100px">  
+                                    <h:outputText value="#{p.periodname}" />  
+                                </p:column>  
+
+                                <p:column headerText="Tunggakan" style="width:200px">  
+                                   #{p.dfrom} #{sysParLoan.collectabilityversiName} - #{p.dto} #{sysParLoan.collectabilityversiName } 
+                                </p:column>  
+
+
+                                <p:column style="width: 40px;">
+                                    <p:commandButton icon="ui-icon-pencil" title="Edit" action="#{sysParLoan.editPPAP()}" oncomplete="addPPAP.show()" update="@form" >
+                                        <f:setPropertyActionListener value="#{p}" target="#{sysParLoan.selectPPAP}" />  
+                                    </p:commandButton>
+                                    <p:commandButton icon="ui-icon-trash" title="Delete" action="#{sysParLoan.deletePPAP()}" update="@form">
+                                        <f:setPropertyActionListener value="#{p}" target="#{sysParLoan.selectPPAP}" />  
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                            <p:dialog header="Tambah Kategori kualitas aktiva produktif" widgetVar="addPPAP" modal="true" id="dialogPPAP">  
+                                <div class="label w150">NPL Versi</div>
+                                <h:outputText value="#{(sysParLoan.nplversi=='BI') ? 'Bank Indonesia' : 'Internn'}"/>
+                                <div class="clear space"></div>
+                                <div class="label w150">Collectability</div>
+                                <p:selectOneMenu value="#{sysParLoan.collectabilityid}">  
+                                    <f:selectItems value="#{sysParLoan.dtCmbCollectability}" />  
+                                </p:selectOneMenu>  
+                                <div class="clear space"></div>
+                                <div class="label w150">Category</div>
+                                <p:selectOneMenu value="#{sysParLoan.category}">  
+                                    <f:selectItem itemLabel="KPR" itemValue="KR" />  
+                                    <f:selectItem itemLabel="Non KPR" itemValue="NK" />  
+                                    <f:selectItem itemLabel="Tanpa Angsuran" itemValue="NI" />  
+                                </p:selectOneMenu>  
+                                <div class="clear space"></div>
+                                <div class="label w150">Period</div>
+                                <p:selectOneMenu value="#{sysParLoan.periodid}">  
+                                    <f:selectItems value="#{sysParLoan.dtCmbPeriod}" />  
+                                </p:selectOneMenu>  
+                                <div class="clear space"></div>
+                                <div class="label w150">Arrears</div>
+                                <h:inputText value="#{sysParLoan.dfrom}" maxlength="3" styleClass="w40"/> - <h:inputText value="#{sysParLoan.dto}" maxlength="3" styleClass="w40"/> #{sysParLoan.collectabilityversiName } 
+                                <div class="clear space"></div>
+
+                                <p:commandButton value="Save" oncomplete="addPPAP.hide()" styleClass="button" update="@form" process="@form" action="#{sysParLoan.savePPAP()}"/>  
+                            </p:dialog>  
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+            </p:tab>  
+
+            <p:tab id="tab3" title="Versi Internal">  
+                <h:form prependId="false" id="fr-loan-internal">
+                    <div class="tabHead">Collectability - Priority Order <p:commandButton value="Tambah Collectability" oncomplete="addCollectabilityInternn.show()" style="margin: -7px 0px 0px 0px;float: right" icon="ui-icon-plus"/></div>
+                    <div class="frgroup">
+                        <p:dataTable id="idCollectIntern" var="varCollect" 
+                                     value="#{sysParLoan.dtCollectabilityIntern}"  
+                                     sortBy="#{varCollect.collectabilitycode}"
+                                     sortOrder="ascending" 
+                                     widgetVar="widgetCollect"   
+                                     emptyMessage="No Data Retrived"> 
+                            <p:column headerText="Tingkat Kolektabilitas" style="width:150px">  
+                                <h:outputText value="#{varCollect.collectabilitycode}"/>  
+                            </p:column>  
+
+                            <p:column headerText="Keterangan" style="width:200px">  
+                                <h:outputText value="#{varCollect.collectabilityname}" />  
+                            </p:column>  
+
+                            <p:column headerText="Prioritas" style="width:300px">  
+                                <h:outputText value="#{varCollect.prioritas}" />  
+                            </p:column>
+
+                            <p:column headerText="Nilai PPAP" style="width:50px">  
+                                <h:outputText value="#{ (sysParLoan.ppapversi=='GN') ? sysParLoan.ppapgeneralamount : varCollect.ppap} %" />  
+                            </p:column>  
+
+                            <p:column style="width: 70px;">
+                                <p:commandButton icon="ui-icon-pencil" title="Edit" action="#{sysParLoan.editCollectability()}" oncomplete="addCollectabilityInternn.show()" update="@form">
+                                    <f:setPropertyActionListener value="#{varCollect}" target="#{sysParLoan.selectCollectability}"/>  
+                                </p:commandButton>
+                                <p:commandButton icon="ui-icon-trash" title="Delete" action="#{sysParLoan.deleteCollectability()}" update="@form">
+                                    <f:setPropertyActionListener value="#{varCollect}" target="#{sysParLoan.selectCollectability}" />  
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog id="addCollectabilityInternn"  header="Collectability Form" widgetVar="addCollectabilityInternn" modal="true">  
+                            <div class="label w150">NPL Versi</div>
+                            <h:outputText value="Bank Indonesia"/>
+                            <div class="clear space"></div>
+                            <div class="label w150">Tingkat Kolektabilitas</div>
+                            <h:inputText value="#{sysParLoan.collectabilitycode}" maxlength="5"/>
+                            <div class="clear space"></div>
+                            <div class="label w150">Keterangan</div>
+                            <h:inputText value="#{sysParLoan.collectabilityname}"/>
+                            <div class="clear space"></div>
+                            <div class="label w150">Prioritas</div>
+                            <p:orderList value="#{sysParLoan.dtPriority}" controlsLocation="none" itemLabel="#{priority.priority}" itemValue="#{priority.priorityid}" var="priority" style="height: 100px;float: left"/>  
+                            <div class="clear space"></div>
+                            <div class="label w150">Nilai PPAP</div>
+                            <h:inputText value="#{sysParLoan.ppap}" maxlength="3" styleClass="w40"/> %
+                            <div class="clear space"></div>
+                            <p:commandButton value="Save" oncomplete="addCollectability.hide()" styleClass="button" update="@form" process="@form" action="#{sysParLoan.saveCollectability()}">  
+                                <f:setPropertyActionListener value="IN" target="#{sysParLoan.nplversi}" />  
+                            </p:commandButton>
+                        </p:dialog>  
+                    </div>
+
+                    <h:panelGroup>
+                        <div class="tabHead">Kategori kualitas aktiva produktif  <p:commandButton value="Tambah Kategori Kualitas" oncomplete="addPPAPInternn.show()" style="margin: -7px 0px 0px 0px;float: right" icon="ui-icon-plus"/></div>
+                        <div class="frgroup">
+                            <p:dataTable var="p" 
+                                         value="#{sysParLoan.dtPPAPintern}"  
+                                         sortBy="#{p.collectabilityname}"
+                                         sortOrder="ascending" 
+                                         widgetVar="wP"   
+                                         emptyMessage="No Data Retrived"
+                                         id="tbppapIntern"> 
+                                <p:column headerText="Kolektabilitas" style="width:100px">  
+                                    <h:outputText value="#{p.collectabilityname}"/>  
+                                </p:column>  
+                                <p:column headerText="Kategori" style="width:100px">  
+                                    <h:outputText value="#{(p.category=='KR') ? 'KPR' : (p.category=='NK') ? 'Non KPR' : 'Tanpa Angsuran'}"/>  
+                                </p:column>  
+                                <p:column headerText="Periode" style="width:100px">  
+                                    <h:outputText value="#{p.periodname}" />  
+                                </p:column>  
+
+                                <p:column headerText="Tunggakan" style="width:200px">  
+                                    #{p.dfrom} #{sysParLoan.collectabilityversiName} - #{p.dto} #{sysParLoan.collectabilityversiName } 
+                                </p:column>  
+
+
+                                <p:column style="width: 40px;">
+                                    <p:commandButton icon="ui-icon-pencil" title="Edit" action="#{sysParLoan.editPPAP()}" oncomplete="addPPAPInternn.show()" update="@form" >
+                                        <f:setPropertyActionListener value="#{p}" target="#{sysParLoan.selectPPAP}" />  
+                                    </p:commandButton>
+                                    <p:commandButton icon="ui-icon-trash" title="Delete" action="#{sysParLoan.deletePPAP()}" update="@form">
+                                        <f:setPropertyActionListener value="#{p}" target="#{sysParLoan.selectPPAP}" />  
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                            <p:dialog header="Tambah Kategori kualitas aktiva produktif" widgetVar="addPPAPInternn" modal="true" id="dialogPPAPInternn">  
+                                <div class="label w150">NPL Versi</div>
+                                <h:outputText value="Internn"/>
+                                <div class="clear space"></div>
+                                <div class="label w150">Collectability</div>
+                                <p:selectOneMenu value="#{sysParLoan.collectabilityid}">  
+                                    <f:selectItems value="#{sysParLoan.dtCmbCollectabilityInternn}" />  
+                                </p:selectOneMenu>  
+                                <div class="clear space"></div>
+                                <div class="label w150">Category</div>
+                                <p:selectOneMenu value="#{sysParLoan.category}">  
+                                    <f:selectItem itemLabel="KPR" itemValue="KR" />  
+                                    <f:selectItem itemLabel="Non KPR" itemValue="NK" />  
+                                    <f:selectItem itemLabel="Tanpa Angsuran" itemValue="NI" />  
+                                </p:selectOneMenu>  
+                                <div class="clear space"></div>
+                                <div class="label w150">Period</div>
+                                <p:selectOneMenu value="#{sysParLoan.periodid}">  
+                                    <f:selectItems value="#{sysParLoan.dtCmbPeriod}" />  
+                                </p:selectOneMenu>  
+                                <div class="clear space"></div>
+                                <div class="label w150">Arrears</div>
+                                <h:inputText value="#{sysParLoan.dfrom}" maxlength="3" styleClass="w40"/> - <h:inputText value="#{sysParLoan.dto}" maxlength="3" styleClass="w40"/> #{sysParLoan.collectabilityversiName } 
+                                <div class="clear space"></div>
+
+                                <p:commandButton value="Save" oncomplete="addPPAP.hide()" styleClass="button" update="@form" process="@form" action="#{sysParLoan.savePPAP()}"/>  
+                            </p:dialog>  
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+            </p:tab>  
+
+        </p:tabView>  
+
+
+
+
+    </ui:define>
+</ui:composition>

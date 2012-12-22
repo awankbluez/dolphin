@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../templateLeft.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="page">Create Private Messages</ui:define>
+    <ui:define name="title">Create Private Messages</ui:define>
+    <ui:define name="desk">Buat pesan teks untuk user lain yang berada pada system</ui:define>
+
+
+    <ui:define name="content">
+
+        <h:form id="fr-create-msg" prependId="false">
+            <p:growl id="infoMsg" showDetail="true" sticky="true" life="5000"/>  
+            <h:panelGroup layout="block" styleClass="makeBox" rendered="#{messagesCreate.stsMessages == 'IB' || messagesCreate.stsMessages == 'OB'}">
+                <div class="label w150">Judul</div>
+                #{messagesCreate.titleSender}
+                <div class="clear space"></div>
+                <div class="label w150">Isi Pesan</div>
+                #{messagesCreate.messagesSender}
+                <div class="clear space"></div>
+            </h:panelGroup>
+            <h:panelGroup layout="block" rendered="#{messagesCreate.stsMessages != 'OB'}">
+                <div class="label w150">Tujuan</div>
+                <p:selectOneMenu value="#{messagesCreate.targetUserID}" required="true" style="width: 200px">
+                    <f:selectItem itemLabel="#{msgs.select}" itemValue="#{null}"/>
+                    <f:selectItems value="#{combo.operatorUser}"/>
+                </p:selectOneMenu>
+                <div class="clear space"></div>
+                <div class="label w150">Judul</div> <p:inputText styleClass="w400" value="#{messagesCreate.title}"/>
+                <div class="clear space"></div>
+                <p:editor id="editor" width="785" value="#{messagesCreate.messages}"/>  
+                <div class="clear space"></div>
+                <p:commandButton value="#{messagesCreate.stsMessages == 'IB' ? 'Balas Pesan' : 'Kirim Pesan'}" styleClass="saveButton" update="@form" actionListener="#{messagesCreate.send()}"/>
+                <p:commandButton value="Hold" styleClass="saveButton" update="@form" actionListener="#{messagesCreate.hold()}" rendered="#{messagesCreate.stsMessages != 'IB'}"/>
+                <div class="clear space"></div>
+            </h:panelGroup>
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>

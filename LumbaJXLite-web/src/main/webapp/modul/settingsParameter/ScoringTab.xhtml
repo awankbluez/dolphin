@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel header="Scoring" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelSemua">
+
+            <p:tabView id="tabSemua">
+                <p:tab id="TabVariabel"  title="#{msgs.variabel}">
+                    <p:panel header="#{msgs.variabel}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelVariabel">
+                        <h:form id="Variabel">
+                            <p:fieldset legend="#{msgs.add} #{msgs.variabel}" toggleable="true" collapsed="#{scoringTabBean.fieldsetCollapseVariabelScoring}" id="fieldsetVariabelScoring">
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.variabelName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{scoringTabBean.variabelscoring.variabelname}" id="variabelName" required="true" requiredMessage="Harus diisi" validator="#{scoringTabBean.validateVariabelscoringName}">
+                                        <p:ajax event="blur" update="Validasi"/>
+                                    </p:inputText>                                                                                                     
+                                    <p:message id="Validasi" for="variabelName"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:Variabel:fieldsetVariabelScoring :tabSemua:formtabelVariabel:tabelVariabel :tabSemua:ParameterScoring:fieldsetParamScoring" actionListener="#{scoringTabBean.addVariabelScoring()}" rendered="#{scoringTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{scoringTabBean.resetVariabelScoring()}" rendered="#{scoringTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:Variabel:fieldsetVariabelScoring :tabSemua:formtabelVariabel:tabelVariabel :tabSemua:ParameterScoring:fieldsetParamScoring" actionListener="#{scoringTabBean.updateVariabelScoring()}" rendered="#{scoringTabBean.status == 'update'}" />
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{scoringTabBean.resetParameterScoring()}" rendered="#{scoringTabBean.status == 'update'}" update="@form" action="#{scoringTabBean.setFieldsetCollapseVariabelScoring(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="formtabelVariabel">
+                            <p:dataTable id="tabelVariabel" value="#{scoringTabBean.variabelScoringList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                                <p:column sortBy="#{o.variabelname}" filterBy="#{o.variabelname}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.variabelName}</f:facet>
+                                    #{o.variabelname}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.variabelname}" action="#{scoringTabBean.editVariabelScoring(o)}" update=":tabSemua:Variabel:fieldsetVariabelScoring"/>
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.variabelname}"  update="@form :tabSemua:ParameterScoring:fieldsetParamScoring" action="#{scoringTabBean.deleteVariabelScoring(o)}"/>
+                                </p:column>
+                            </p:dataTable>   
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="TabParameter"  title="#{msgs.scoringParam}">
+                    <p:panel header="#{msgs.scoringParam}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelParameter">
+                        <h:form id="ParameterScoring">
+                            <p:fieldset legend="#{msgs.add} #{msgs.scoringParam}" toggleable="true" collapsed="#{scoringTabBean.fieldsetCollapseParameterScoring}" id="fieldsetParamScoring">
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.scoringVariabel}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneMenu id="variabelScoring_combo" value="#{scoringTabBean.parameterscoring.variabelscoringid}" style="width: 390px" >
+                                        <f:selectItem itemLabel="Pilihan Variabel Scoring"/>
+                                        <f:selectItems value="#{scoringTabBean.variabelScoringList}" var="varScoring" itemLabel="#{varScoring.variabelname}" itemValue="#{varScoring.variabelscoringid}" />  
+                                    </p:selectOneMenu>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.scoringParamName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{scoringTabBean.parameterscoring.parameterstring}" id="ScoringParameter" required="true" requiredMessage="Harus diisi" style="width: 390px">
+                                        <p:ajax event="blur" update="Validasi"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi" for="ScoringParameter"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:ParameterScoring:fieldsetParamScoring :tabSemua:formtabelScoring:tabelScoring" actionListener="#{scoringTabBean.addParameterScoring()}" rendered="#{scoringTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{scoringTabBean.resetParameterScoring()}" rendered="#{scoringTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:ParameterScoring:fieldsetParamScoring :tabSemua:formtabelScoring:tabelScoring" actionListener="#{scoringTabBean.updateParameterScoring()}" rendered="#{scoringTabBean.status == 'update'}" process="@this"/>
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{scoringTabBean.resetParameterScoring()}" rendered="#{scoringTabBean.status == 'update'}" update="@form" action="#{scoringTabBean.setFieldsetCollapseParameterScoring(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="formtabelScoring">
+                            <p:dataTable id="tabelScoring" value="#{scoringTabBean.parameterscoringList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                                <p:column sortBy="#{o.variabelname}" filterBy="#{o.variabelname}">
+                                    <f:facet name="header">#{msgs.scoringVariabel}</f:facet>
+                                    #{o.variabelname}
+                                </p:column>
+                                <p:column sortBy="#{o.parameterstring}" filterBy="#{o.parameterstring}">
+                                    <f:facet name="header">#{msgs.scoringParameter}</f:facet>
+                                    #{o.parameterstring}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.parameterstring}" action="#{scoringTabBean.editParameterScoring(o)}" update=":tabSemua:ParameterScoring:fieldsetParamScoring"/>
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.parameterstring}"  update="@form" action="#{scoringTabBean.deleteParameterScoring(o)}"/>
+                                </p:column>
+                            </p:dataTable>    
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+            </p:tabView>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+
+        <p:panel header="#{msgs.collateral}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="Collateral">
+                <p:fieldset legend="#{msgs.add} #{msgs.collateral}" toggleable="true" collapsed="#{collateralParameterBean.fieldsetCollapse}" id="fieldsetCollateral" >
+                    <h:panelGrid columns="4" id="wewe">
+
+                        <h:outputText value="#{msgs.collateralType}"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneMenu id="combobox" value="#{collateralParameterBean.collateralParameter.collateralparametername}" style="width: 160px">
+                            <f:selectItem itemLabel="Pilih Tipe Kolateral" />
+                            <f:selectItem itemLabel="Rumah" itemValue="Rumah" />  
+                            <f:selectItem itemLabel="Komersial" itemValue="Komersial" />  
+                            <f:selectItem itemLabel="Tanah" itemValue="Tanah" />
+                            <f:selectItem itemLabel="Kas" itemValue="Kas" /> 
+                            <f:selectItem itemLabel="Emas" itemValue="Emas" />  
+                            <f:selectItem itemLabel="Kendaraan" itemValue="Kendaraan" />
+                        </p:selectOneMenu>
+                        <p:spacer width="10"/>
+
+                        <h:outputText value="#{msgs.collateralDetail}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{collateralParameterBean.collateralParameter.collateralparameterdetail}" id="collateralParameterDetail" required="true" requiredMessage="Harus diisi"  validator="#{collateralParameterBean.validateCollaterallDetail}" style="width: 155px">
+                            <p:ajax event="blur" update="Validasi1"/>
+                        </p:inputText>
+                        <p:message id="Validasi1" for="collateralParameterDetail"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelAgunan:TabelAgunan" actionListener="#{collateralParameterBean.add()}" rendered="#{collateralParameterBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{collateralParameterBean.reset()}" rendered="#{collateralParameterBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelAgunan:TabelAgunan" actionListener="#{collateralParameterBean.update()}"  rendered="#{collateralParameterBean.status == 'update'}" process="@this combobox"/>
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{collateralParameterBean.reset()}" rendered="#{collateralParameterBean.status == 'update'}" update="@form" action="#{collateralParameterBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelAgunan">
+                <p:dataTable id="TabelAgunan" value="#{collateralParameterBean.collateralParameterList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.collateralparametername}" filterBy="#{o.collateralparametername}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.collateralType}</f:facet>
+                        #{o.collateralparametername}
+                    </p:column>
+                    <p:column sortBy="#{o.collateralparameterdetail}" filterBy="#{o.collateralparameterdetail}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.collateralDetail}</f:facet>
+                        #{o.collateralparameterdetail} 
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.Edit} #{o.collateralparametername}" action="#{collateralParameterBean.edit(o)}" update=":Collateral"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.Delete} #{o.collateralparametername}"  update="@form" action="#{collateralParameterBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

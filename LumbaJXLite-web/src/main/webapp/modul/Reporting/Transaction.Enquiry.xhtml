@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+   <ui:define name="content">
+      <script type="text/javascript" language="javascript">
+         //<![CDATA[
+         function checkAllCheckboxTransactionType(){
+            var transactionTypeSize = "#{transactionEnquiryBean.transactiontypes.size()}";
+
+            for(var i = 0; i<transactionTypeSize; i++){
+               if(document.getElementById('tabViewTransactionEnquiry:formTransactionParam:TransactionEntryTransactionType:'+i)){
+                  document.getElementById('tabViewTransactionEnquiry:formTransactionParam:TransactionEntryTransactionType:'+i).click();
+               }
+            }
+         }
+
+         function checkAllCheckboxTransactionSource(){
+            var transactionSourceSize = "#{transactionEnquiryBean.transactionsources.size()}";
+
+            for(var i = 0; i <transactionSourceSize; i++){
+               if(document.getElementById('tabViewTransactionEnquiry:formTransactionParam:TransactionEntryTransactionSource:'+i)){
+                  document.getElementById('tabViewTransactionEnquiry:formTransactionParam:TransactionEntryTransactionSource:'+i).click();
+               }
+
+            }
+         }
+         //]]>
+      </script>
+      <p:panel closable="true" toggleable="true" header="Transaction Enquiry">
+         <p:messages id="messages" showDetail="true" showSummary="true"/>
+         <p:tabView id="tabViewTransactionEnquiry">
+            <p:tab title="Transaction Parameters">
+               <h:form id="formTransactionParam" target="_blank">
+                  <h:panelGrid columns="4">
+                     <p:outputLabel for="TransactionEnquiryCurrency" value="Currency"/>
+                     <p:selectOneMenu id="TransactionEnquiryCurrency" value="#{transactionEnquiryBean.currencyid}" style="width: 300px;" required="true">
+                        <f:selectItem itemLabel="Select Currency"/>
+                        <f:selectItems value="#{transactionEnquiryBean.currencys}" var="currency" itemLabel="#{currency.currencyDescribe} | #{currency.currencyCode}" itemValue="#{currency.currencyID}"/>
+                     </p:selectOneMenu>
+                     <h:outputText/>
+                     <h:outputText/>
+
+                     <p:outputLabel for="TransactionEnquiryUser" value="User"/>
+                     <p:inputText id="TransactionEnquiryUser" disabled="true" value="#{transactionEnquiryBean.loggedUser}"/>
+                     <p:outputLabel for="TransactionEnquiryBranch" value="Branch"/>
+                     <p:inputText id="TransactionEnquiryBranch" disabled="true" value="#{transactionEnquiryBean.loggedBranch}"/>
+
+                     <p:outputLabel for="TransactionEntryDateFrom" value="Transaction Date"/>
+                     <p:calendar id="TransactionEntryDateFrom" pattern="EEE, dd MMM yyyy"  navigator="true" yearRange="c-3:c" value="#{transactionEnquiryBean.transactionDateFrom}" required="true">
+       <!--                                <p:ajax event="dateSelect" listener="#{transactionEnquiryBean}" update=""/>-->
+                     </p:calendar>
+                     <p:outputLabel for="TransactionEntryDateTo" value="To"/>
+                     <p:calendar id="TransactionEntryDateTo" pattern="EEE, dd MMM yyyy"  navigator="true" yearRange="c-3:c" value="#{transactionEnquiryBean.transactionDateTo}" required="true">
+       <!--                                <p:ajax event="dateSelect" listener="#{transactionEnquiryBean}" update=""/>-->
+                     </p:calendar>
+
+                     <p:outputLabel for="transactionRoundingTransactionParam" value="Rounding"/>
+                     <p:selectOneMenu id="transactionRoundingTransactionParam" value="#{transactionEnquiryBean.rounding}" required="true">
+                        <f:selectItem itemValue="0" itemLabel="Select rounding by"/>
+                        <f:selectItem itemValue="1" itemLabel="1000"/>
+                        <f:selectItem itemValue="2" itemLabel="10.000"/>
+                        <f:selectItem itemValue="3" itemLabel="100.000"/>
+                        <f:selectItem itemValue="4" itemLabel="1.000.000"/>
+                     </p:selectOneMenu>
+
+                     <p:outputLabel for="TransactionEntryGroupBy" value="Group By"/>
+                     <p:selectOneMenu id="TransactionEntryGroupBy" value="#{transactionEnquiryBean.groupBy}">
+                        <f:selectItem itemLabel="Select Group By"/>
+                        <f:selectItem itemValue="customername" itemLabel="Customer"/>
+                        <f:selectItem itemValue="receiptnumber" itemLabel="Receipt Number"/>
+                        <f:selectItem itemValue="customerreceipt" itemLabel="Customer Receipt"/>
+                     </p:selectOneMenu>
+                  </h:panelGrid>
+
+                  <h:panelGrid columns="4">
+                     <p:outputLabel for="TransactionEntryTransactionType" value="Transaction Type"/>
+                     <p:selectManyCheckbox id="TransactionEntryTransactionType" layout="pageDirection" value="#{transactionEnquiryBean.listTransactionType}" required="true">
+                        <f:selectItems value="#{transactionEnquiryBean.transactiontypes}" var="transType" itemLabel="#{transType.description}" itemValue="#{transType.transactiontypeid}"/>
+                     </p:selectManyCheckbox>
+
+
+                     <p:outputLabel for="TransactionEntryTransactionSource" value="Transaction Source"/>
+                     <p:selectManyCheckbox id="TransactionEntryTransactionSource" layout="pageDirection" value="#{transactionEnquiryBean.listTransactionSource}">
+                        <f:selectItems value="#{transactionEnquiryBean.transactionsources}" var="transSource" itemLabel="#{transSource.transactionsourcename}" itemValue="#{transSource.transactionsourceid}"/>
+                     </p:selectManyCheckbox>
+
+                     <p:commandButton value="Cek / Uncheck All" type="button" onclick="checkAllCheckboxTransactionType()"/>
+                     <h:outputText/>
+                     <p:commandButton value="Cek / Uncheck All" type="button" onclick="checkAllCheckboxTransactionSource()"/>
+                     <h:outputText/>
+                  </h:panelGrid>
+
+                  <h:panelGrid columns="2">
+                     <p:selectBooleanCheckbox id="TransactionEntryDisplayCustomerName" value="#{transactionEnquiryBean.displayCustomerName}"/>
+                     <p:outputLabel for="TransactionEntryDisplayCustomerName" value="Display Customer Name"/>
+                  </h:panelGrid>
+
+                  <h:panelGrid columns="1">
+                     <p:commandButton value="Generate Report" process="@form" actionListener="#{transactionEnquiryBean.generateReportFromTransParam}" update=":tabViewTransactionEnquiry:formTransactionParam:tableResultTransaction" ajax="false"/>
+                  </h:panelGrid>
+               </h:form>
+            </p:tab>
+
+            <p:tab title="Account Parameters">
+               <h:form id="formAccountParam" target="_blank">
+                  <h:panelGrid columns="4">
+                     <p:outputLabel for="TransactionEnquiryAccountParamReceiptNumberFrom" value="Receipt Number From"/>
+                     <p:inputText id="TransactionEnquiryAccountParamReceiptNumberFrom" value="#{transactionEnquiryBean.receiptNumberFrom}"/>
+                     <p:outputLabel for="TransactionEnquiryAccountParamReceiptNumberTo" value="To"/>
+                     <p:inputText id="TransactionEnquiryAccountParamReceiptNumberTo" value="#{transactionEnquiryBean.receiptNumberTo}"/>
+
+                     <p:outputLabel for="TransactionEnquiryAccountAccountNumberFrom" value="Account Number From"/>
+                     <p:inputText id="TransactionEnquiryAccountAccountNumberFrom" value="#{transactionEnquiryBean.accountNumberFrom}"/>
+                     <p:outputLabel for="TransactionEnquiryAccountAccountNumberTo" value="To"/>
+                     <p:inputText id="TransactionEnquiryAccountAccountNumberTo" value="#{transactionEnquiryBean.accountNumberTo}"/>
+
+                     <p:outputLabel for="TransactionEnquiryAccountProductSaving" value="Product Saving"/>
+                     <p:selectBooleanCheckbox id="TransactionEnquiryAccountProductSaving" value="#{transactionEnquiryBean.productSaving}">
+                        <p:ajax update=":tabViewTransactionEnquiry:formAccountParam:TransactionEnquiryAccountProduct" listener="#{transactionEnquiryBean.updateProductList}" process="@this TransactionEnquiryAccountProductLoan"/>
+                     </p:selectBooleanCheckbox>
+                     <p:outputLabel for="TransactionEnquiryAccountProductLoan" value="Product Loan"/>
+                     <p:selectBooleanCheckbox id="TransactionEnquiryAccountProductLoan" value="#{transactionEnquiryBean.productLoan}">
+                        <p:ajax update=":tabViewTransactionEnquiry:formAccountParam:TransactionEnquiryAccountProduct" listener="#{transactionEnquiryBean.updateProductList}" process="@this TransactionEnquiryAccountProductSaving"/>
+                     </p:selectBooleanCheckbox>
+
+                     <p:outputLabel for="TransactionEnquiryAccountProduct" value="Product"/>
+                     <p:selectManyMenu id="TransactionEnquiryAccountProduct" value="#{transactionEnquiryBean.selectedProductID}" style="width: 300px;">
+                        <f:selectItems value="#{transactionEnquiryBean.products}" var="product" itemLabel="#{product.productName}" itemValue="#{product.productId}"/>
+                     </p:selectManyMenu>
+                     <p:outputLabel for="TransactionEnquiryAccountProduct"/>
+                     <p:outputLabel for="TransactionEnquiryAccountProduct"/>
+
+
+                     <p:outputLabel for="TransactionEnquiryAccountParamTransDateFrom" value="Transaction Date"/>
+                     <p:calendar id="TransactionEnquiryAccountParamTransDateFrom" pattern="EEE, dd MMM yyyy"  navigator="true" yearRange="c-3:c" value="#{transactionEnquiryBean.transactionDateFrom}" required="true">
+       <!--                                <p:ajax event="dateSelect" listener="#{transactionEnquiryBean}" update=""/>-->
+                     </p:calendar>
+                     <p:outputLabel for="TransactionEnquiryAccountParamTransDateTo" value="To"/>
+                     <p:calendar id="TransactionEnquiryAccountParamTransDateTo" pattern="EEE, dd MMM yyyy"  navigator="true" yearRange="c-3:c" value="#{transactionEnquiryBean.transactionDateTo}" required="true">
+       <!--                                <p:ajax event="dateSelect" listener="#{transactionEnquiryBean}" update=""/>-->
+                     </p:calendar>
+
+                     <p:outputLabel for="transactionRoundingAccountParam" value="Rounding"/>
+                     <p:selectOneMenu id="transactionRoundingAccountParam" value="#{transactionEnquiryBean.rounding}">
+                        <f:selectItem itemValue="0" itemLabel="Select rounding by"/>
+                        <f:selectItem itemValue="1" itemLabel="1000"/>
+                        <f:selectItem itemValue="2" itemLabel="10.000"/>
+                        <f:selectItem itemValue="3" itemLabel="100.000"/>
+                        <f:selectItem itemValue="4" itemLabel="1.000.000"/>
+                     </p:selectOneMenu>
+                     <h:outputText/>
+                     <h:outputText/>
+                  </h:panelGrid>
+
+                  <h:panelGrid columns="1">
+                     <p:commandButton value="Generate Report" process="@form" actionListener="#{transactionEnquiryBean.generateReportFromAccountParam}" ajax="false"/>
+                  </h:panelGrid>
+               </h:form>
+            </p:tab>
+
+            <p:tab title="Customer Parameters">
+               <h:form id="formCustomerParam" target="_blank">
+                  <h:panelGrid columns="4">
+                     <p:outputLabel for="TransactionEnquiryCustParamTransDateFrom" value="Transaction Date"/>
+                     <p:calendar id="TransactionEnquiryCustParamTransDateFrom" pattern="EEE, dd MMM yyyy"  navigator="true" yearRange="c-3:c" value="#{transactionEnquiryBean.transactionDateFrom}" required="true">
+       <!--                                <p:ajax event="dateSelect" listener="#{transactionEnquiryBean}" update=""/>-->
+                     </p:calendar>
+                     <p:outputLabel for="TransactionEnquiryCustParamTransDateTo" value="To"/>
+                     <p:calendar id="TransactionEnquiryCustParamTransDateTo" pattern="EEE, dd MMM yyyy"  navigator="true" yearRange="c-3:c" value="#{transactionEnquiryBean.transactionDateTo}" required="true">
+       <!--                                <p:ajax event="dateSelect" listener="#{transactionEnquiryBean}" update=""/>-->
+                     </p:calendar>
+
+                     <p:outputLabel for="TransactionEnquiryCustomerNumberFrom" value="Customer Number From"/>
+                     <p:inputText id="TransactionEnquiryCustomerNumberFrom" value="#{transactionEnquiryBean.customerNumberFrom}"/>
+                     <p:outputLabel for="TransactionEnquiryCustomerNumberTo" value="To"/>
+                     <p:inputText id="TransactionEnquiryCustomerNumberTo" value="#{transactionEnquiryBean.customerNumberTo}"/>
+                  </h:panelGrid>
+
+                  <h:panelGrid columns="2">
+                     <p:outputLabel for="TransactionEnquiryCustomerType" value="Customer Type"/>
+                     <p:selectManyCheckbox id="TransactionEnquiryCustomerType" layout="pageDirection" value="#{transactionEnquiryBean.listCustomerType}" required="true">
+                        <f:selectItem itemValue="1" itemLabel="Individual"/>
+                        <f:selectItem itemValue="2" itemLabel="Solidarity"/>
+                        <f:selectItem itemValue="3" itemLabel="Community"/>
+                        <f:selectItem itemValue="4" itemLabel="Company"/>
+                     </p:selectManyCheckbox>
+                  </h:panelGrid>
+
+                  <h:panelGrid columns="2">
+                     <p:outputLabel for="transactionRoundingCustParam" value="Rounding"/>
+                     <p:selectOneMenu id="transactionRoundingCustParam" value="#{transactionEnquiryBean.rounding}">
+                        <f:selectItem itemValue="0" itemLabel="Select rounding by"/>
+                        <f:selectItem itemValue="1" itemLabel="1000"/>
+                        <f:selectItem itemValue="2" itemLabel="10.000"/>
+                        <f:selectItem itemValue="3" itemLabel="100.000"/>
+                        <f:selectItem itemValue="4" itemLabel="1.000.000"/>
+                     </p:selectOneMenu>
+                  </h:panelGrid>
+                  <h:panelGrid columns="1">
+                     <p:commandButton value="Generate Report" process="@form" actionListener="#{transactionEnquiryBean.generateReportFromCustomerParam}" ajax="false"/>
+
+                  </h:panelGrid>
+               </h:form>
+            </p:tab>
+         </p:tabView>
+         <p:watermark forElement="@(:input .hasDatepicker)" value="Day, Date Month Year"/>
+      </p:panel>
+   </ui:define>
+
+</ui:composition>

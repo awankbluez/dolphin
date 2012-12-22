@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.whenispaid}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelParameter">
+            <h:form id="formWhenispaid">
+            <h:panelGroup id="Whenispaid">
+                <p:fieldset legend="#{msgs.add} #{msgs.whenispaid}" toggleable="true" collapsed="#{whenispaidBean.fieldsetWhenispaid}" id="fieldsetWhenispaid">
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.productType}"/>
+                        <h:outputText value=":"/>
+                        <p:selectOneRadio id="ProductType" value="#{whenispaidBean.whenispaidParameter.producttype}"  >
+                            <f:selectItem itemLabel="#{msgs.loan}" itemValue="true"/>
+                            <f:selectItem itemLabel="#{msgs.saving}" itemValue="false" />  
+                        </p:selectOneRadio>
+                        <p:spacer width="10"/>
+
+                        <h:outputText value="#{msgs.whenispaid} Name"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{whenispaidBean.whenispaidParameter.whenispaidname}" id="WhenispaidName" required="true" requiredMessage="Harus diisi" style="width: 150px" validator="#{whenispaidBean.validateWhenispaidName}">
+                            <p:ajax event="blur" update="ValidasiWhenispaidName"/>
+                        </p:inputText>
+                        <p:message id="ValidasiWhenispaidName" for="WhenispaidName"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" process=":formWhenispaid:Whenispaid" update=":formWhenispaid:fieldsetWhenispaid :formWhenispaid:tabelWhenispaid" actionListener="#{whenispaidBean.add()}" rendered="#{whenispaidBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}" process="@this" actionListener="#{whenispaidBean.reset()}" rendered="#{whenispaidBean.status == 'insert'}" update=":formWhenispaid:fieldsetWhenispaid" />
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" process=":formWhenispaid:Whenispaid" update=":formWhenispaid:fieldsetWhenispaid :formWhenispaid:tabelWhenispaid" actionListener="#{whenispaidBean.update()}" rendered="#{whenispaidBean.status == 'update'}" />
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}" process="@this" actionListener="#{whenispaidBean.reset()}" rendered="#{whenispaidBean.status == 'update'}" update=":formWhenispaid:fieldsetWhenispaid" action="#{whenispaidBean.setFieldsetWhenispaid(true)}" />
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:panelGroup>
+            <h:panelGroup id="FormtabelWhenispaid">
+                <p:dataTable id="tabelWhenispaid" value="#{whenispaidBean.whenispaidList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column headerText="#{msgs.productType}" sortBy="#{o.producttype}" filterBy="#{o.producttype}" filterMatchMode="contains">
+                        <h:outputText value="#{msgs.loan}" rendered="#{o.producttype==true}"/>
+                        <h:outputText value="#{msgs.saving}" rendered="#{o.producttype==false}"/>
+                    </p:column>
+                    <p:column sortBy="#{o.whenispaidname}" filterBy="#{o.whenispaidname}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.whenispaidName}</f:facet>
+                        #{o.whenispaidname}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.whenispaidname}" process="@this" action="#{whenispaidBean.edit(o)}" update=":formWhenispaid:fieldsetWhenispaid"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.whenispaidname}" process="@this" update=":formWhenispaid:fieldsetWhenispaid" oncomplete="confirmation.show()">
+                            <f:setPropertyActionListener value="#{o}" target="#{whenispaidBean.selectedMsg}" />  
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>   
+                <p:confirmDialog id="confirmDialog" message="Are you sure to move trash ?"  header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                    <p:commandButton id="confirm" value="Yes" update=":formWhenispaid:tabelWhenispaid" oncomplete="confirmation.hide()"  
+                                     action="#{whenispaidBean.delete(whenispaidBean.selectedMsg)}" />  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>
+            </h:panelGroup>
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+</ui:composition>

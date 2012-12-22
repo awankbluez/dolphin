@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Trial Balance Report">
+            <h:form id="formTrialBalanceReport" prependId="false" target="_blank">
+                <h:panelGrid columns="4" >
+                    <p:outputLabel for="Branch" value="#{msgs.branch}"/>
+                    <p:selectOneMenu id="Branch" value="#{trialbalanceBean.userID}" style="width: 150px;" required="true" >
+                        <f:selectItem itemLabel="Select Branch" />
+                        <f:selectItems value="#{trialbalanceBean.dtCmbBranch}"/>
+                        <p:ajax listener="#{trialbalanceBean.listcomboBranch()}" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Date" value="#{msgs.date}"/>
+                    <p:calendar id="Date"  value="#{trialbalanceBean.date}" effect="explode" yearRange="c-120:c+20" navigator="true" readonlyInput="true" pattern="yyyy-MM-dd" >
+                        <p:ajax process="@this"/>
+                    </p:calendar>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Detail" value="Detail"/>
+                    <p:selectOneMenu id="Detail" style="width: 150px;" value="#{trialbalanceBean.detailID}">
+                        <f:selectItem itemLabel="Pilih Detail" itemValue="0"/>
+                        <f:selectItem itemLabel="Category" itemValue="Category"/>
+                        <f:selectItem itemLabel="Financial Category" itemValue="Financial Category"/>
+                        <f:selectItem itemLabel="Account Category" itemValue="Account Category"/>
+                        <f:selectItem itemLabel="Account" itemValue="Account"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+                    <p:outputLabel for="Rounding" value="#{msgs.rounding}"/>
+                    <p:selectOneMenu id="Rounding" value="#{trialbalanceBean.roundingID}" style="width: 150px;" required="true" >
+                        <f:selectItem itemLabel="Select Rounding" />
+                        <f:selectItem itemLabel="No Rounding" itemValue="1"/>
+                        <f:selectItem itemLabel="10" itemValue="10"/>
+                        <f:selectItem itemLabel="100" itemValue="100"/>
+                        <f:selectItem itemLabel="1000" itemValue="1000"/>
+                        <f:selectItem itemLabel="10000" itemValue="10000"/>
+                        <f:selectItem itemLabel="100000" itemValue="10000"/>
+                        <f:selectItem itemLabel="1000000" itemValue="100000"/>
+                    </p:selectOneMenu>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+
+
+                    <p:commandButton value="Download Report" actionListener="#{trialbalanceBean.generateReport}" ajax="false"/>
+                </h:panelGrid>
+
+
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

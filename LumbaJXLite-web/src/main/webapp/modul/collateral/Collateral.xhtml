@@ -1,0 +1,950 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd ">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+
+        <p:panel id="panelcollateral" header="Agunan" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000">
+
+            <h:form id="qwerty" prependId="true">
+                <h:panelGrid id="panelgridcollateral" columns="2" columnClasses="label, value" styleClass="grid" >
+
+                    <h:outputText value="Nama Nasabah"/>
+                    <p:inputText value="#{collateralManagedBean.customer.customername}"/>
+
+                    <h:outputText value="CIF"/>
+                    <p:inputText value="#{collateralManagedBean.customer.customerCode}"/>
+
+                    <p:commandButton action="#{collateralManagedBean.search}" value="Cari" update=":formcollateral2" onclick="dlg2.show();"/>
+
+                </h:panelGrid>
+            </h:form>
+
+            <p:dialog id="modalDialog" header="Cari Customer" widgetVar="dlg2" modal="true" > 
+                <h:form id="formcollateral2">
+
+                    <p:dataTable style="text-align: center" 
+                                 value="#{collateralManagedBean.customerSearch}" 
+                                 sortOrder="desc" 
+                                 emptyMessage="#{msgs.emptymessage}" 
+                                 var="searchcustomer" 
+                                 paginator="true" 
+                                 paginatorPosition="top" 
+                                 rows="5" 
+                                 rowsPerPageTemplate="5,10,20,25">
+
+
+                        <p:column headerText="Nama Customer" sortBy="#{searchcustomer.customername}" filterBy="#{searchcustomer.customername}" filterMatchMode="contains">
+                            <p:commandLink value="#{searchcustomer.customername}" actionListener="#{collateralManagedBean.selected(searchcustomer)}"  update=":panelcollateral, :qwerty , :formtabcollateral" onclick="dlg2.hide();"/>
+                        </p:column>
+                        <p:column headerText="Kode Customer"  sortBy="#{searchcustomer.customerCode}" filterBy="#{searchcustomer.customerCode}" filterMatchMode="contains">
+                            <p:commandLink value="#{searchcustomer.customerCode}" actionListener="#{collateralManagedBean.selected(searchcustomer)}" update=":panelcollateral, :qwerty, :formtabcollateral" onclick="dlg2.hide();"/>
+                        </p:column>
+                    </p:dataTable>   
+                </h:form>
+            </p:dialog>
+
+            <h:form id="formtabcollateral" enctype="multipart/form-data">
+
+                <p:fieldset id="fieldsetCollateral" legend="Buat Agunan" collapsed="#{collateralManagedBean.formcreatecollateral}" toggleable="true">
+                    <p:tabView id="tabviewcollateral" activeIndex="#{tabcollateral.indexTab}">
+
+                        <p:tab title="General" id="general" disabled="#{tabcollateral.cekTabCifCreate(0)}">
+                            <h:panelGrid id="panelgridgeneral" columns="2"  columnClasses="label, value" styleClass="grid" >
+
+                                <h:outputText value="Kategori Agunan"/>
+                                <p:selectOneRadio  value="#{collateralManagedBean.collateral.collateralcategory}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemValue="P" itemLabel="Pokok"/>
+                                    <f:selectItem itemValue="T" itemLabel="Tambahan" />
+                                </p:selectOneRadio>
+
+                                <h:outputText value="Tipe Agunan"/>
+                                <p:selectOneMenu id="typeagunan" value="#{collateralManagedBean.collateral.collateralparametername}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view' or collateralManagedBean.status == 'update'}">
+                                    <f:selectItem itemValue="" itemLabel="Pilih Type Agunan" />
+                                    <f:selectItem itemValue="Rumah" itemLabel="Rumah Tinggal" />
+                                    <f:selectItem itemValue="Komersial" itemLabel="Property Komersial" />
+                                    <f:selectItem itemValue="Tanah" itemLabel="Tanah" />
+                                    <f:selectItem itemValue="Kas" itemLabel="Kas" />
+                                    <f:selectItem itemValue="Emas" itemLabel="Emas" />
+                                    <f:selectItem itemValue="Kendaraan" itemLabel="Kendaraan" />
+                                    <p:ajax update="grouptypeagunan suratkepimilikanowner tabviewcollateral nilaiPengikatan"/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Nilai Proyeksi Likuidasi"/>
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.liquidityprojectionvalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100"/>
+
+                                <h:outputText value="Nilai Realisasi Likuidasi"/>
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.liquidityrealizationvalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100"/>
+
+                                <h:outputText value="Proyeksi Nilai Pasar Wajar"/>
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.projectionfairmarketvalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <f:convertNumber pattern="###.#####" />
+                                </pe:inputNumber>
+
+                                <h:outputText value="Realisasi Nilai Pasar Wajar" />
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.realizationfairmarketvalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <f:convertNumber pattern="###.#####" />
+                                </pe:inputNumber>
+
+                                <h:outputText value="Rasio NPW terhadap Plafon"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.ratiofairmarketvalueandplafond}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Nilai Realisasi"/>
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.realizationvalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <p:ajax event="blur" update="nilaibersih nilaijualagunan nilaitaksir" listener="#{collateralManagedBean.valuenet}" process="@this"  partialSubmit="false" />
+                                    <f:convertNumber pattern="###.#####" />
+                                </pe:inputNumber>
+
+                                <h:outputText value="Biaya Tetap"/>
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.fixedfee}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <p:ajax event="blur" update="nilaibersih nilaijualagunan nilaitaksir"  listener="#{collateralManagedBean.valuenet}" process="@this" partialSubmit="false" />
+                                    <f:convertNumber pattern="###.#####" />
+                                </pe:inputNumber>
+
+                                <h:outputText value="Nilai Bersih"/>
+                                <pe:inputNumber id="nilaibersih" value="#{collateralManagedBean.collateral.netvalue}" disabled="#{collateralManagedBean.statusview == 'view'  or collateralManagedBean.status == 'update' or collateralManagedBean.status == 'insert'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <p:ajax event="blur" update="nilaijualagunan nilaitaksir"/>
+                                    <f:convertNumber pattern="###.#####" />
+                                </pe:inputNumber>
+
+
+                                <h:outputText value="Nilai Jual Agunan untuk Angsuran Pinjaman"/>
+                                <pe:inputNumber id="nilaijualagunan" value="#{collateralManagedBean.collateral.collateralsalesvalueforloaninstallment}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999"/>
+
+                                <h:outputText value="Nilai Taksir"/>
+                                <pe:inputNumber id="nilaitaksir" value="#{collateralManagedBean.collateral.appraisedvalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="#{collateralManagedBean.collateral.netvalue}"/>
+
+
+                                <h:outputText value="Keterangan"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.description}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Status Agunan"/>
+                                <p:selectOneRadio  value="#{collateralManagedBean.collateral.collateralstatus}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak Aktif" />
+                                </p:selectOneRadio>
+
+                            </h:panelGrid>
+                            <p:commandButton value="Lanjut" actionListener="#{tabcollateral.nextTab1()}" update=":formtabcollateral:tabviewcollateral :formcollateral" action="#{collateralManagedBean.add}" rendered="#{collateralManagedBean.status == 'insert'}" disabled="#{collateralManagedBean.statusview == 'view' or collateralManagedBean.buttoncreate == 'false'}"/>
+                            <p:commandButton value="update" update=":formtabcollateral:tabviewcollateral :formcollateral" action="#{collateralManagedBean.update_general}" rendered="#{collateralManagedBean.status == 'update'}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                        </p:tab>
+                        <p:tab title="Detail Agunan" id="detailagunan" disabled="#{tabcollateral.cekTabCifCreate(1)}">
+                            <h:panelGroup id="grouptypeagunan">
+                                <p:panel id="paneltypeagunan">
+
+                                    <h:panelGroup  id="panelgrouprumahtinggal" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Rumah'}">
+
+                                        <h:panelGrid id="panelgridrumahtinggal" columns="2" style="width: 100%">
+
+                                            <h:panelGroup>
+                                                <h:panelGrid id="lefthouse" columns="2">
+
+                                                    <h:outputText value="Detail Rumah Tinggal"/>
+                                                    <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralHouse.collateralparameterid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItems value="#{collateralManagedBean.collateralParameterHouselist}" var="houselist" itemValue="#{houselist.collateralparameterid}" itemLabel="#{houselist.collateralparameterdetail}" />
+                                                        <!--                                                        <p:ajax event="keyup" update="nilaiPengikatan" listener="" />-->
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Status Rumah Tinggal"/>
+                                                    <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralHouse.statusresidenceid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItems value="#{collateralManagedBean.collateralParameterResidencelist}" var="statusresidence" itemValue="#{statusresidence.collateralparameterid}" itemLabel="#{statusresidence.collateralparameterdetail}" />
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Luas Tanah (m2)"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralHouse.landsize}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="Luas Bangunan (m2)"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralHouse.buildingsize}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="NJOP"/>
+                                                    <pe:inputNumber value="#{collateralManagedBean.collateral.collateralHouse.taxobjectsalevalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="#{collateralManagedBean.collateral.netvalue}">
+                                                        <f:convertNumber pattern="###.#####" />
+                                                    </pe:inputNumber>
+
+                                                    <h:outputText value="Keterangan"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralHouse.housenote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                </h:panelGrid>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <h:panelGrid id="righthouse" columns="2">
+
+                                                    <h:outputText value="Alamat"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralHouse.address}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="Provinsi"/>
+                                                    <p:selectOneMenu value="#{collateralManagedBean.provincerumah.provinceid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih provinsi" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.provincelist}" var="province" itemValue="#{province.provinceid}" itemLabel="#{province.provincename}" />
+                                                        <f:ajax execute="districtmenuhouse" render="districtmenuhouse"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kabupaten"/>
+                                                    <p:selectOneMenu id="districtmenuhouse" value="#{collateralManagedBean.districtrumah.districtid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kabupaten" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.districtlistrumah}" var="district" itemValue="#{district.districtid}" itemLabel="#{district.districtname}" />
+                                                        <f:ajax execute="subdistrictmenuhouse" render="subdistrictmenuhouse"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kecamatan"/>
+                                                    <p:selectOneMenu id="subdistrictmenuhouse" value="#{collateralManagedBean.subDistrictrumah.subdistrictid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kecamatan" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.subDistrictlistrumah}" var="subdistrict" itemValue="#{subdistrict.subdistrictid}" itemLabel="#{subdistrict.subdistrictname}" />
+                                                        <f:ajax execute="villagemenuhouse" render="villagemenuhouse"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kelurahan"/>
+                                                    <p:selectOneMenu id="villagemenuhouse" value="#{collateralManagedBean.collateral.collateralHouse.village.villageid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kelurahan" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.villagelistrumah}" var="village" itemValue="#{village.villageid}" itemLabel="#{village.villagename}" />
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kodepos"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralHouse.postcode}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="Keterangan"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralHouse.addressnote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                                </h:panelGrid>
+                                            </h:panelGroup>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2" >
+                                            <h:outputText value="Foto Bagian Depan Agunan"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Bagian Belakang Agunan"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Sisi Kiri Agunan"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Sisi Kanan Agunan"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Bagian Dalam Agunan 1"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Bagian Dalam Agunan 2"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Bagian Dalam Agunan 3"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+
+                                            <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.agunanhouse}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                            <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.agunanhouse}"  disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                        </h:panelGrid>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup id="propertykomersial" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Komersial'}">
+                                        <h:panelGrid id="panelgridpropertykomersial" columns="2" style="width: 100%">
+
+                                            <h:panelGroup>
+                                                <h:panelGrid id="leftcommerce" columns="2">
+
+                                                    <h:outputText value="Detail Properti Komersial"/>
+                                                    <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralCommerce.collateralparameterid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItems value="#{collateralManagedBean.collateralParameterCommercelist}" var="commerce" itemValue="#{commerce.collateralparameterid}" itemLabel="#{commerce.collateralparameterdetail}" />
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Status Properti Komersial"/>
+                                                    <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralCommerce.ownershipstatus}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemValue="O" itemLabel="Milik Sendiri"/>
+                                                        <f:selectItem itemValue="P" itemLabel="Milik Orang Lain"/>
+                                                    </p:selectOneMenu>
+
+
+                                                    <h:outputText value="Luas Tanah (m2)"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralCommerce.landsize}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="Luas Bangunan (m2)"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralCommerce.buildingsize}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="NJOP"/>
+                                                    <pe:inputNumber value="#{collateralManagedBean.collateral.collateralCommerce.taxobjectsalevalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="#{collateralManagedBean.collateral.netvalue}">
+                                                        <f:convertNumber pattern="###.#####" />
+                                                    </pe:inputNumber>
+
+                                                    <h:outputText value="Keterangan"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralCommerce.commercenote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                </h:panelGrid>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <h:panelGrid id="rightcommerce" columns="2">
+
+                                                    <h:outputText value="Alamat"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralCommerce.address}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="Provinsi"/>
+                                                    <p:selectOneMenu value="#{collateralManagedBean.provincekomersial.provinceid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih provinsi" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.provincelist}" var="province" itemValue="#{province.provinceid}" itemLabel="#{province.provincename}" />
+                                                        <f:ajax execute="districtmenucommerce" render="districtmenucommerce"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kabupaten"/>
+                                                    <p:selectOneMenu id="districtmenucommerce" value="#{collateralManagedBean.districtkomersial.districtid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kabupaten" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.districtskomersial}" var="district" itemValue="#{district.districtid}" itemLabel="#{district.districtname}" />
+                                                        <f:ajax execute="subdistrictmenucommerce" render="subdistrictmenucommerce"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kecamatan"/>
+                                                    <p:selectOneMenu id="subdistrictmenucommerce" value="#{collateralManagedBean.subDistrictkomersial.subdistrictid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kecamatan" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.subDistrictskomersial}" var="subdistrict" itemValue="#{subdistrict.subdistrictid}" itemLabel="#{subdistrict.subdistrictname}" />
+                                                        <f:ajax execute="villagemenucommerce" render="villagemenucommerce"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kelurahan"/>
+                                                    <p:selectOneMenu id="villagemenucommerce" value="#{collateralManagedBean.collateral.collateralCommerce.village.villageid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kelurahan" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.villageskomersial}" var="village" itemValue="#{village.villageid}" itemLabel="#{village.villagename}" />
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kodepos"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralCommerce.postcode}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="Keterangan"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralCommerce.addressnote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+
+                                                </h:panelGrid>
+                                            </h:panelGroup>
+                                            <h:panelGrid columns="2">
+
+                                                <h:outputText value="Foto Bagian Depan Agunan"/>
+                                                <p:fileUpload value="#" mode="simple"/> 
+
+                                                <h:outputText value="Foto Bagian Belakang Agunan"/>
+                                                <p:fileUpload value="#" mode="simple"/> 
+
+                                                <h:outputText value="Foto Sisi Kiri Agunan"/>
+                                                <p:fileUpload value="#" mode="simple"/> 
+
+                                                <h:outputText value="Foto Sisi Kanan Agunan"/>
+                                                <p:fileUpload value="#" mode="simple"/> 
+
+                                                <h:outputText value="Foto Bagian Dalam Agunan 1"/>
+                                                <p:fileUpload value="#" mode="simple"/> 
+
+                                                <h:outputText value="Foto Bagian Dalam Agunan 2"/>
+                                                <p:fileUpload value="#" mode="simple"/> 
+
+                                                <h:outputText value="Foto Bagian Dalam Agunan 3"/>
+                                                <p:fileUpload value="#" mode="simple"/> 
+
+                                                <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.commerce}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                                <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.commerce}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup id="tanah" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Tanah'}">
+                                        <h:panelGrid id="panelgridtanah" columns="2" style="width: 100%">
+
+                                            <h:panelGroup>
+                                                <h:panelGrid id="leftland" columns="2">
+
+                                                    <h:outputText value="Luas Tanah (m2)"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralLand.landsize}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="NJOP"/>
+                                                    <pe:inputNumber value="#{collateralManagedBean.collateral.collateralLand.taxobjectsalevalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="#{collateralManagedBean.collateral.netvalue}">
+                                                        <f:convertNumber pattern="###.#####" />
+                                                    </pe:inputNumber>
+
+                                                    <h:outputText value="Keterangan"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralLand.landnote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                </h:panelGrid>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <h:panelGrid id="rightland" columns="2">
+
+                                                    <h:outputText value="Alamat"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralLand.address}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="Provinsi"/>
+                                                    <p:selectOneMenu value="#{collateralManagedBean.provincetanah.provinceid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih provinsi" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.provincelist}" var="province" itemValue="#{province.provinceid}" itemLabel="#{province.provincename}" />
+                                                        <f:ajax execute="districtmenuland" render="districtmenuland"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kabupaten"/>
+                                                    <p:selectOneMenu id="districtmenuland" value="#{collateralManagedBean.districttanah.districtid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kabupaten" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.districtstanah}" var="district" itemValue="#{district.districtid}" itemLabel="#{district.districtname}" />
+                                                        <f:ajax execute="subdistrictmenuland" render="subdistrictmenuland"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kecamatan"/>
+                                                    <p:selectOneMenu id="subdistrictmenuland" value="#{collateralManagedBean.subDistricttanah.subdistrictid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kecamatan" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.subDistrictstanah}" var="subdistrict" itemValue="#{subdistrict.subdistrictid}" itemLabel="#{subdistrict.subdistrictname}" />
+                                                        <f:ajax execute="villagemenuland" render="villagemenuland"/> 
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kelurahan"/>
+                                                    <p:selectOneMenu id="villagemenuland" value="#{collateralManagedBean.collateral.collateralLand.village.villageid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                        <f:selectItem itemLabel="silahkan pilih kelurahan" itemValue=""/>
+                                                        <f:selectItems value="#{collateralManagedBean.villagestanah}" var="village" itemValue="#{village.villageid}" itemLabel="#{village.villagename}" />
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Kodepos"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralLand.postcode}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                    <h:outputText value="Keterangan"/>
+                                                    <p:inputText value="#{collateralManagedBean.collateral.collateralLand.addressnote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                                </h:panelGrid>
+                                            </h:panelGroup>
+                                            <h:panelGrid columns="2">
+
+                                                <h:outputText value="Foto Agunan 1"/>
+                                                <p:fileUpload value="#" mode="simple"/> 
+
+                                                <h:outputText value="Foto Agunan 2"/>
+                                                <p:fileUpload value="#" mode="simple"/>
+
+                                                <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.land}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                                <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.land}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            </h:panelGrid>
+
+                                        </h:panelGrid>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup id="kas" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Kas'}">
+                                        <h:panelGrid id="panelgridkas" columns="2">
+
+                                            <h:outputText value="Tipe Kas"/>
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralCash.collateralparameterid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItems value="#{collateralManagedBean.collateralParameterCashlist}" var="collateralcash" itemValue="#{collateralcash.collateralparameterid}" itemLabel="#{collateralcash.collateralparameterdetail}" />
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Bank Asal"/>
+                                            <p:selectOneRadio  value="#{collateralManagedBean.collateral.collateralCash.bankorigin}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItem itemValue="I" itemLabel="Internal"/>
+                                                <f:selectItem itemValue="E" itemLabel="External" />
+                                            </p:selectOneRadio>
+
+                                            <h:outputText value="Nomor Rekening "/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralCash.bankaccountnumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Nomor PIN ATM"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralCash.bankaccountpinatm}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Nama Nasabah"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralCash.bankcustomername}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Saldo Akhir (Rp)"/>
+                                            <pe:inputNumber value="#{collateralManagedBean.collateral.collateralCash.balance}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                                <f:convertNumber pattern="###.#####" />
+                                            </pe:inputNumber>
+
+                                            <h:outputText value="Keterangan"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralCash.cashnote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.cash}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                            <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.cash}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                        </h:panelGrid>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup id="emas" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Emas'}">
+                                        <h:panelGrid id="panelgridemas" columns="2">
+
+                                            <h:outputText value="Tipe Emas"/>
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralGold.collateralparameterid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItems value="#{collateralManagedBean.collateralParameterGoldlist}" var="typegold" itemValue="#{typegold.collateralparameterid}" itemLabel="#{typegold.collateralparameterdetail}" />
+                                                <f:ajax execute="panelgridemas" render="panelgridemas"/> 
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Tipe Koin Emas" rendered="#{collateralManagedBean.collateral.collateralGold.collateralparameterid == '19'}" />
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralGold.cointypeid}" rendered="#{collateralManagedBean.collateral.collateralGold.collateralparameterid == '19'}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItems value="#{collateralManagedBean.cointypelist}" var="cointype" itemValue="#{cointype.cointypeid}" itemLabel="#{cointype.cointypename}" />
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Berat (Gram)"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralGold.weight}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Karat"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralGold.carrat}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Status Kepemilikan"/>
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralGold.ownershipstatus}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItem itemValue="O" itemLabel="Milik Sendiri"/>
+                                                <f:selectItem itemValue="P" itemLabel="Milik Orang Lain"/>
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Tanggal Kwitansi" />
+                                            <p:calendar id="datereciept" value="#{collateralManagedBean.collateral.collateralGold.buydate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Nomor Kwitansi"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralGold.receiptnumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Penerbit Kwitansi"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralGold.issueingreceipt}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Keterangan"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralGold.goldnote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Foto"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.gold}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                            <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.gold}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                        </h:panelGrid>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup id="kendaraan" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Kendaraan'}">
+                                        <h:panelGrid id="panelgridkendaraan" columns="2">
+
+                                            <h:outputText value="Klasifikasi Kendaraan"/>
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralVehicle.collateralparameterid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItem itemLabel="Pilih kendaraan" itemValue=""/>
+                                                <f:selectItems value="#{collateralManagedBean.collateralParameterClasificationmotorcyclelist}" var="vehicle" itemValue="#{vehicle.collateralparameterid}" itemLabel="#{vehicle.collateralparameterdetail}" />
+                                                <f:ajax execute="panelgridkendaraan" render="panelgridkendaraan"/> 
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Status Kendaraan"/>
+                                            <p:selectOneRadio  value="#{collateralManagedBean.collateral.collateralVehicle.collateralvehiclestatus}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItem itemValue="N" itemLabel="Baru"/>
+                                                <f:selectItem itemValue="U" itemLabel="Bekas" />
+                                            </p:selectOneRadio>
+
+                                            <h:outputText value="Tipe Kendaraan" rendered="#{collateralManagedBean.collateral.collateralVehicle.collateralparameterid == 24}"/>
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralVehicle.vehicleid}" rendered="#{collateralManagedBean.collateral.collateralVehicle.collateralparameterid == 24}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItems value="#{collateralManagedBean.vehiclecarlist}" var="car" itemValue="#{car.vehicleid}" itemLabel="#{car.vehicletype}" />
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Tipe Kendaraan" rendered="#{collateralManagedBean.collateral.collateralVehicle.collateralparameterid == 27}"/>
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralVehicle.vehicleid}" rendered="#{collateralManagedBean.collateral.collateralVehicle.collateralparameterid == 27}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItems value="#{collateralManagedBean.vehiclemotorcyclelist}" var="motorcycle" itemValue="#{motorcycle.vehicleid}" itemLabel="#{motorcycle.vehicletype}" />
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Merk"/>
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralVehicle.brandid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItems value="#{collateralManagedBean.vehiclebrandslist}" var="brand" itemValue="#{brand.brandid}" itemLabel="#{brand.brandname}" />
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Warna"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralVehicle.colour}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="No Polisi"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralVehicle.policenumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Nomor STNK"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralVehicle.vehiclenumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Nomor BPKB"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralVehicle.booksvehicleownernumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Tahun Pembuatan" />
+                                            <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralVehicle.manufactureyear}" disabled="#{collateralManagedBean.statusview == 'view'}" >
+                                                <f:selectItem itemValue="" itemLabel="Pilih Tahun"  />
+                                                <f:selectItems value="#{collateralManagedBean.manufactureYearArraylist}" />
+                                            </p:selectOneMenu>
+
+
+                                            <h:outputText value="Nomor Mesin"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralVehicle.enginenumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Nomor Rangka"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralVehicle.framenumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Penyerahan fisik kendaraan"/>
+                                            <p:selectOneRadio  value="#{collateralManagedBean.collateral.collateralVehicle.physicaldeliveryvehicle}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                                <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                            </p:selectOneRadio>
+
+                                            <h:outputText value="Keterangan"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralVehicle.vehiclenote}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Foto Bagian Depan Agunan"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Bagian Belakang Agunan"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Sisi Kiri Agunan"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <h:outputText value="Foto Sisi Kanan Agunan"/>
+                                            <p:fileUpload value="#" mode="simple"/> 
+
+                                            <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.vehicle}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                            <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.vehicle}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                        </h:panelGrid>
+                                    </h:panelGroup>
+
+                                </p:panel>
+                            </h:panelGroup>
+                        </p:tab>
+                        <p:tab title="Alamat dan Bukti Kepemilikan" id="alamatdanbuktikepemilikan" disabled="#{tabcollateral.cekTabCifCreate(2)}">
+                            <h:panelGrid id="panelgridalamatdanbuktikepemilikan" columns="2">
+
+                                <h:outputText value="Nama Pemilik"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralOwnershipletter.ownername}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Nomor KTP"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralOwnershipletter.socialsecuritynumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Alamat"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralOwnershipletter.address}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Provinsi"/>
+                                <p:selectOneMenu value="#{collateralManagedBean.provinceownershipletter.provinceid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemLabel="silahkan pilih provinsi" itemValue=""/>
+                                    <f:selectItems value="#{collateralManagedBean.provincelist}" var="province" itemValue="#{province.provinceid}" itemLabel="#{province.provincename}" />
+                                    <f:ajax execute="districtmenuowner" render="districtmenuowner"/> 
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Kabupaten"/>
+                                <p:selectOneMenu id="districtmenuowner" value="#{collateralManagedBean.districtownershipletter.districtid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemLabel="silahkan pilih kabupaten" itemValue=""/>
+                                    <f:selectItems value="#{collateralManagedBean.districtsownershipletter}" var="district" itemValue="#{district.districtid}" itemLabel="#{district.districtname}" />
+                                    <f:ajax execute="subdistrictmenuowner" render="subdistrictmenuowner"/> 
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Kecamatan"/>
+                                <p:selectOneMenu id="subdistrictmenuowner" value="#{collateralManagedBean.subDistrictownershipletter.subdistrictid}" style="width: 150px" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemLabel="silahkan pilih kecamatan" itemValue=""/>
+                                    <f:selectItems value="#{collateralManagedBean.subDistrictsownershipletter}" var="subdistrict" itemValue="#{subdistrict.subdistrictid}" itemLabel="#{subdistrict.subdistrictname}" />
+                                    <f:ajax execute="villagemenuowner" render="villagemenuowner"/> 
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Kelurahan"/>
+                                <p:selectOneMenu id="villagemenuowner" style="width: 150px" value="#{collateralManagedBean.collateral.collateralOwnershipletter.village.villageid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemLabel="silahkan pilih kelurahan" itemValue=""/>
+                                    <f:selectItems value="#{collateralManagedBean.villagesownershipletter}" var="village" itemValue="#{village.villageid}" itemLabel="#{village.villagename}" />
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Kodepos"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralOwnershipletter.postcode}" disabled="#{collateralManagedBean.statusview == 'view'}" maxlength="5"/>
+
+                                <h:outputText value="Surat Kepemilikan"/>
+                                <p:selectOneMenu id="suratkepimilikanowner" value="#{collateralManagedBean.collateral.collateralOwnershipletter.letterofownershiptypeid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemLabel="silahkan pilih" itemValue=""/>
+                                    <f:selectItems value="#{collateralManagedBean.letterofownershiptypelist}" var="suratmilik" itemValue="#{suratmilik.letterofownershiptypeid}" itemLabel="#{suratmilik.letterofownershiptypename}" />
+                                </p:selectOneMenu>
+
+
+                                <h:outputText value="Nomor Surat Kepemilikan" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Rumah' or collateralManagedBean.collateral.collateralparametername == 'Komersial' or collateralManagedBean.collateral.collateralparametername == 'Tanah' or collateralManagedBean.collateral.collateralparametername == 'Emas'}"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralOwnershipletter.letterofownershipnumber}" disabled="#{collateralManagedBean.statusview == 'view'}" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Rumah' or collateralManagedBean.collateral.collateralparametername == 'Komersial' or collateralManagedBean.collateral.collateralparametername == 'Tanah' or collateralManagedBean.collateral.collateralparametername == 'Emas'}"/>
+
+                                <h:outputText value="Tanggal Surat Kepemilikan" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Rumah' or collateralManagedBean.collateral.collateralparametername == 'Komersial' or collateralManagedBean.collateral.collateralparametername == 'Tanah' or collateralManagedBean.collateral.collateralparametername == 'Emas' or collateralManagedBean.collateral.collateralOwnershipletter.letterofownershiptypeid == 35 or collateralManagedBean.collateral.collateralOwnershipletter.letterofownershiptypeid == 37}"/>
+                                <p:calendar id="tanggalkepemilikan" value="#{collateralManagedBean.collateral.collateralOwnershipletter.letterofownershipstartdate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view'}" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Rumah' or collateralManagedBean.collateral.collateralparametername == 'Komersial' or collateralManagedBean.collateral.collateralparametername == 'Tanah' or collateralManagedBean.collateral.collateralparametername == 'Emas' or collateralManagedBean.collateral.collateralOwnershipletter.letterofownershiptypeid == 35 or collateralManagedBean.collateral.collateralOwnershipletter.letterofownershiptypeid == 37}">
+                                    <p:ajax event="dateSelect" update="tanggalkepemilikanjatuhtempo" listener="#{collateralManagedBean.expirydate}" process="@this"/>
+                                </p:calendar>
+
+                                <h:outputText value="Tanggal Jatuh Tempo" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Rumah' or collateralManagedBean.collateral.collateralparametername == 'Komersial' or collateralManagedBean.collateral.collateralparametername == 'Tanah' or collateralManagedBean.collateral.collateralOwnershipletter.letterofownershiptypeid == 37}"/>
+                                <p:calendar id="tanggalkepemilikanjatuhtempo" value="#{collateralManagedBean.collateral.collateralOwnershipletter.letterofownershipexpirydate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view'}" rendered="#{collateralManagedBean.collateral.collateralparametername == 'Rumah' or collateralManagedBean.collateral.collateralparametername == 'Komersial' or collateralManagedBean.collateral.collateralparametername == 'Tanah' or collateralManagedBean.collateral.collateralOwnershipletter.letterofownershiptypeid == 37}"/>
+
+                                <h:outputText value="Keterangan"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralOwnershipletter.desciption}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <p:commandButton value="Tambah" update="tablekepemilikan @form" action="#{collateralManagedBean.ownershipletter}" rendered="#{collateralManagedBean.statusletterofownership == 'insert'}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                <p:commandButton value="Edit" update="tablekepemilikan @form" action="#{collateralManagedBean.updateownershipletter}" rendered="#{collateralManagedBean.statusletterofownership == 'update'}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                            </h:panelGrid>
+
+                            <p:dataTable id="tablekepemilikan" style="text-align: center" value="#{collateralManagedBean.collateralOwnershipletterlist}" sortOrder="desc" emptyMessage="#{msgs.emptymessage}" var="alamatdanbuktikepemilikan" paginator="true" paginatorPosition="top" rows="5" rowsPerPageTemplate="5,10,20,25">
+
+                                <p:column headerText="Nama Pemilik">
+                                    <h:outputText value="#{alamatdanbuktikepemilikan.ownername}"/>
+                                </p:column>
+                                <p:column headerText="Alamat">
+                                    <h:outputText value="#{alamatdanbuktikepemilikan.address}"/>
+                                </p:column>
+                                <p:column headerText="Surat Kepemilikan">
+                                    <h:outputText value="#{alamatdanbuktikepemilikan.letterofownershiptypename}"/>
+                                </p:column>
+
+                                <p:column> 
+                                    <p:commandButton icon="ui-icon ui-icon-trash" oncomplete="confirmation2.show()" title="#{msgs.delete}"  update=":formtabcollateral" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                        <f:setPropertyActionListener value="#{alamatdanbuktikepemilikan}" target="#{collateralManagedBean.selectedMsgowner}" />
+                                    </p:commandButton>
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{collateralManagedBean.editownershipletter(alamatdanbuktikepemilikan)}" update=":formtabcollateral" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                    <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.view}" action="#{collateralManagedBean.viewownershipletter(alamatdanbuktikepemilikan)}" update=":formtabcollateral" rendered="#{collateralManagedBean.statusview == 'view'}"/>
+                                </p:column>
+                            </p:dataTable>   
+
+                            <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                        </p:tab>
+                        <p:tab title="Pengikatan dan Penjaminan" id="pengikatanagunan" disabled="#{tabcollateral.cekTabCifCreate(3)}">
+                            <h:panelGroup>
+                                <h:panelGrid id="panelgridpengikatanagunan" columns="2">
+                                    <h:panelGroup>
+                                        <h:panelGrid columns="2">
+
+                                            <h:outputText value="Surat Kepemilikan"/>
+                                            <p:selectOneMenu id="suratkepimilikanowner2" value="#{collateralManagedBean.collateral.collateralBinding.collateralOwnershipletter.collateralownershipletterid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <f:selectItem itemLabel="silahkan pilih" itemValue=""/>
+                                                <f:selectItems value="#{collateralManagedBean.collateralOwnershipletterlist}" var="suratmilik2" itemValue="#{suratmilik2.collateralownershipletterid}" itemLabel="#{suratmilik2.letterofownershiptypename}" />
+<!--                                                <f:ajax execute="panelgridpengikatanagunan" render="panelgridpengikatanagunan" listener="#{collateralManagedBean.letterownership}"/>-->
+                                                <p:ajax update="suratkepimilikanowner3 panelgridpengikatanagunan" listener="#{collateralManagedBean.letterownership}"/>
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Jenis Pengikatan" rendered="#{collateralManagedBean.statusview != 'view'}"/>
+                                            <p:selectOneMenu id="suratkepimilikanowner3" value="#{collateralManagedBean.collateral.collateralBinding.bindingchecklistid}" rendered="#{collateralManagedBean.statusview != 'view'}" >
+                                                <f:selectItem itemLabel="silahkan pilih" itemValue=""/>
+                                                <f:selectItems value="#{collateralManagedBean.tambahan}" var="suratmilik3" itemValue="#{suratmilik3.bindingchecklistid}" itemLabel="#{suratmilik3.bindingguaranteesname}" />
+                                                <f:ajax execute="panelgridpengikatanagunan" render="panelgridpengikatanagunan hjk" listener="#{collateralManagedBean.ppapvalue}"/>
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="Urutan Hak Tanggungan" rendered="#{collateralManagedBean.collateral.collateralBinding.bindingguaranteesid == '2'}"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralBinding.sequencemortgage}"  disabled="#{collateralManagedBean.statusview == 'view'}" rendered="#{collateralManagedBean.collateral.collateralBinding.bindingguaranteesid == '2'}">
+                                                <f:ajax execute="bindingRank" render="bindingRank" event="blur" listener="#{collateralManagedBean.check}"/>
+                                            </p:inputText>
+
+                                            <h:outputLabel for="bindingRank" value="Peringkat Pengikatan Agunan" rendered="#{collateralManagedBean.collateral.collateralBinding.bindingguaranteesid == '2'}"/>
+                                            <p:inputText id="bindingRank" value="#{collateralManagedBean.collateral.collateralBinding.bindingrank}" rendered="#{collateralManagedBean.collateral.collateralBinding.bindingguaranteesid == '2' }" disabled="#{collateralManagedBean.sequenceBindingEnable or collateralManagedBean.statusview == 'view' }"/>
+
+                                            <h:outputText value="Nilai Hak Tanggungan"/>
+                                            <pe:inputNumber id="balancelimit" value="#{collateralManagedBean.collateral.collateralBinding.mortgagevalue}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="#{collateralManagedBean.collateral.netvalue}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <p:ajax event="blur" process="@this" partialSubmit="false" update="nilaiPengikatan" listener="#{collateralManagedBean.nilai}" />
+                                                <f:convertNumber pattern="###.#####" />
+                                            </pe:inputNumber>
+
+                                            <h:outputText value="Tanggal Pengikatan Agunan"/>
+                                            <p:calendar id="tanggalpengikatanagunan" value="#{collateralManagedBean.collateral.collateralBinding.bindingdate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Nomor Pengikatan Agunan"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralBinding.bindingnumber}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                            <h:outputText value="Keterangan"/>
+                                            <p:inputText value="#{collateralManagedBean.collateral.collateralBinding.description}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                                        </h:panelGrid>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="hjk">
+                                        <h:panelGrid columns="2">
+
+                                            <h:outputText value="% Nilai Agunan"/>
+                                            <pe:inputNumber value="#{collateralManagedBean.collateral.collateralBinding.ppapvalue}" symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100" disabled="true">
+                                                <p:ajax update="reducingofprovisioningvalue" event="blur"  partialSubmit="false" process="@this"/>
+                                            </pe:inputNumber>
+
+                                            <h:outputText value="Nilai Agunan"/>
+                                            <pe:inputNumber id="nilaiPengikatan" value="#{collateralManagedBean.collateral.netvaluebalance}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="#{collateralManagedBean.collateral.netvalue}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <p:ajax update="reducingofprovisioningvalue" event="blur" listener="#{collateralManagedBean.reducingofprovisioningvalue}" partialSubmit="false" process="@this"/>
+                                                <f:convertNumber pattern="###.#####" />
+                                            </pe:inputNumber>
+
+                                            <h:outputText value="Pengali Jangka waktu"/>
+                                            <pe:inputNumber value="#{collateralManagedBean.collateral.collateralBinding.termmultiplayerpercentage}" symbol=" %" thousandSeparator="." decimalSeparator="," symbolPosition="suffix" maxValue="100" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                                <p:ajax update="reducingofprovisioningvalue" event="blur" listener="#{collateralManagedBean.reducingofprovisioningvalue}" partialSubmit="false" process="@this"/>
+                                            </pe:inputNumber>
+
+                                            <h:outputText value="Nilai pengurang PPAP"/>
+                                            <pe:inputNumber id="reducingofprovisioningvalue" value="#{collateralManagedBean.collateral.collateralBinding.reducingofprovisioningvalue}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999" disabled="true">
+                                                <f:convertNumber pattern="###.#####" />
+                                            </pe:inputNumber>
+
+
+                                        </h:panelGrid>
+                                    </h:panelGroup>
+
+                                </h:panelGrid>
+                            </h:panelGroup>
+
+                            <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.binding}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                            <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.binding}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                        </p:tab>
+                        <p:tab title="Appraisal" id="appraisal" disabled="#{tabcollateral.cekTabCifCreate(4)}">
+                            <h:panelGrid id="panelgridappraisal" columns="2">
+
+                                <h:outputText value="Tanggal Penilaian"/>
+                                <p:calendar id="tanggalpenilaian" value="#{collateralManagedBean.collateral.collateralAppraisal.appraisaldate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view' }"/>
+
+                                <h:outputText value="Tanggal Habis Masa Nilai"/>
+                                <p:calendar id="tanggalhabismasanilai" value="#{collateralManagedBean.collateral.collateralAppraisal.expirationdateofappraisal}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Tanggal Penilaian Akhir"/>
+                                <p:calendar id="tanggalpenilaianakhir" value="#{collateralManagedBean.collateral.collateralAppraisal.finalassestmentdate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Appraisal"/>
+                                <p:selectOneRadio  value="#{collateralManagedBean.collateral.collateralAppraisal.appraisaltype}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemValue="D" itemLabel="Dependent"/>
+                                    <f:selectItem itemValue="I" itemLabel="Independent" />
+                                </p:selectOneRadio>
+
+                                <h:outputText value="Nama Appriasial"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralAppraisal.appraisalname}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Syarat Telah Terpenuhi"/>
+                                <p:selectOneRadio  value="#{collateralManagedBean.collateral.collateralAppraisal.requirementfulfilled}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak" />
+                                </p:selectOneRadio>
+
+
+
+                                <h:outputText value="Keterangan"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralAppraisal.description}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                            </h:panelGrid>
+
+                            <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.appraisal}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                            <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.appraisal}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                        </p:tab>
+                        <p:tab title="Paripassu" id="paripasu" disabled="#{tabcollateral.cekTabCifCreate(5)}">
+                            <h:panelGrid id="panelgridparipasu" columns="2">
+
+                                <h:outputText value="Nilai Asli Paripasu"/>
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.collateralParipassu.originalvalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="9999999999">
+                                    <f:convertNumber pattern="###.#####" />
+                                </pe:inputNumber>
+
+                                <h:outputText value="Nilai Paripasu"/>
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.collateralParipassu.paripasuedvalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <f:convertNumber pattern="###.#####" />
+                                </pe:inputNumber>
+
+
+                                <h:outputText value="Nama Bank"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralParipassu.bankname}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                            </h:panelGrid>
+                            <p:commandButton value="Lanjut" rendered="#{collateralManagedBean.status == 'insert'}" actionListener="#{tabcollateral.nextTab()}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.paripassu}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                            <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral:tabviewcollateral" action="#{collateralManagedBean.paripassu}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                        </p:tab>
+                        <p:tab title="Asuransi" id="asuransi" disabled="#{tabcollateral.cekTabCifCreate(6)}">
+                            <h:panelGrid id="panelgridasuransi" columns="2">
+
+
+                                <h:outputText value="Nama Perusahaan Asuransi"/>
+                                <p:selectOneMenu value="#{collateralManagedBean.collateral.collateralInsurance.insuranceid}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItems value="#{collateralManagedBean.insurancelist}" var="nameinsurance" itemValue="#{nameinsurance.insuranceid}" itemLabel="#{nameinsurance.insurancename}" />
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Status Polis"/>
+                                <p:selectOneRadio  value="#{collateralManagedBean.collateral.collateralInsurance.policystatus}" disabled="#{collateralManagedBean.statusview == 'view'}">
+                                    <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak Aktif" />
+                                </p:selectOneRadio>
+
+                                <h:outputText value="Tanggal Polis"/>
+                                <p:calendar id="tanggalpolis" value="#{collateralManagedBean.collateral.collateralInsurance.policydate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Tanggal Akhir Polis"/>
+                                <p:calendar id="tanggalakhirpolis" value="#{collateralManagedBean.collateral.collateralInsurance.policyenddate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                                <h:outputText value="Nilai Pertanggungan Asuransi (Rp)"/>
+                                <pe:inputNumber value="#{collateralManagedBean.collateral.collateralInsurance.insurancecoveragevalue}" disabled="#{collateralManagedBean.statusview == 'view'}" symbol="Rp. " thousandSeparator="." decimalSeparator="," maxValue="999999999999">
+                                    <f:convertNumber pattern="###.#####" />
+                                </pe:inputNumber>
+
+                                <h:outputText value="Keterangan"/>
+                                <p:inputText value="#{collateralManagedBean.collateral.collateralInsurance.description}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+
+                            </h:panelGrid>
+                            <p:commandButton value="Simpan" rendered="#{collateralManagedBean.status == 'insert'}" update=":formtabcollateral" action="#{collateralManagedBean.insurance}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                            <p:commandButton value="Update"  rendered="#{collateralManagedBean.status == 'update'}" update=":formtabcollateral" action="#{collateralManagedBean.insurance}" disabled="#{collateralManagedBean.statusview == 'view'}"/>
+                        </p:tab>
+
+                    </p:tabView>
+                    <p:commandButton value="Create New Collateral" action="#{collateralManagedBean.newcollaterall}" actionListener="#{tabcollateral.fungsi()}" rendered="#{collateralManagedBean.status != 'insert'}" update="@form"/>
+                </p:fieldset>
+                <p:confirmDialog id="confirmDialog2" message="Are you sure to move trash messages with title [ #{collateralManagedBean.selectedMsgowner.ownername} ] ?"  
+                                 header="Initiating move trash process" severity="alert" widgetVar="confirmation2">  
+                    <p:commandButton id="confirm2" value="Yes" update="@form" oncomplete="confirmation.hide()"  
+                                     action="#{collateralManagedBean.deleteownershipletter(collateralManagedBean.selectedMsgowner)}" />  
+                    <p:commandButton id="decline2" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>
+
+            </h:form>
+
+            <h:form id="formcollateral">
+                <p:growl id="statusdelete" sticky="false" life="10000"/>
+
+                <p:dataTable style="text-align: center" value="#{collateralManagedBean.collateralsearch}" sortOrder="desc" emptyMessage="#{msgs.emptymessage}" var="collateralsearch" paginator="true" paginatorPosition="top" rows="5" rowsPerPageTemplate="5,10,20,25">
+
+                    <p:column headerText="Kategori" sortBy="#{collateralsearch.collateralcategory}" filterBy="#{collateralsearch.collateralcategory}" filterMatchMode="contains">
+                        <h:outputLabel value="#{collateralsearch.collateralcategory}"/>
+                    </p:column>
+                    <p:column headerText="Tipe Agunan" sortBy="#{collateralsearch.collateralparametername}" filterBy="#{collateralsearch.collateralparametername}" filterMatchMode="contains">
+                        <h:outputLabel value="#{collateralsearch.collateralparametername}"/>
+                    </p:column>
+                    <p:column headerText="Nilai Bersih">
+                        <h:outputText value="Rp. "/>
+                        <h:outputLabel value="#{collateralsearch.netvalue}">
+                            <f:convertNumber pattern="###.#####" />
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="Nilai Pengikatan">
+                        <h:outputText value="Rp. "/>
+                        <h:outputLabel value="#{collateralsearch.collateralBinding.bindingvalue}">
+                            <f:convertNumber pattern="###.#####" />
+                        </h:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="Nilai Taksir">
+                        <h:outputText value="Rp. "/>
+                        <h:outputLabel value="#{collateralsearch.collateralAppraisal.appraisedvalue}">
+                            <f:convertNumber pattern="###.#####" />
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="Status Agunan">
+                        <p:commandButton icon="ui-icon ui-icon-check" title="Aktif" rendered="#{collateralsearch.collateralstatus == 'true'}" disabled="true"/>
+                        <p:commandButton icon="ui-icon ui-icon-closethick" title="Tidak Aktif" rendered="#{collateralsearch.collateralstatus == 'false'}" disabled="true"/>
+                    </p:column>
+                    <p:column headerText="Aksi">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{collateralManagedBean.editcollateral(collateralsearch)}" update=":panelcollateral" actionListener="#{tabcollateral.setTabCC(8)}" disabled="#{ (collateralsearch.collateralBinding.bindingvalue > 0) ? true : false}"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.delete}"  oncomplete="confirmation.show()" update=":formtabcollateral" disabled="#{ (collateralsearch.collateralBinding.bindingvalue > 0) ? true : false}">
+                            <f:setPropertyActionListener value="#{collateralsearch}" target="#{collateralManagedBean.selectedMsg}" />
+                        </p:commandButton>
+
+                        <p:commandButton icon="ui-icon ui-icon-search" title="#{msgs.view}" action="#{collateralManagedBean.viewcollateral(collateralsearch)}" update=":panelcollateral" actionListener="#{tabcollateral.setTabCC(8)}"/>
+                        <p:commandButton icon="ui-icon ui-icon-search" title="detail" action="#{collateralManagedBean.detailcollateral(collateralsearch)}" update=":panelcollateral" />
+                    </p:column>
+                </p:dataTable>  
+
+                <p:confirmDialog id="confirmDialog" message="Are you sure to move trash messages with title [ #{collateralManagedBean.selectedMsg.collateralparametername} ] ?"  
+                                 header="Initiating move trash process" severity="alert" widgetVar="confirmation">  
+                    <p:commandButton id="confirm" value="Yes" update="@form :formtabcollateral" oncomplete="confirmation.hide()"  
+                                     action="#{collateralManagedBean.delete(collateralManagedBean.selectedMsg)}" />  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>
+
+            </h:form>
+
+            <h:form id="formlistcollateral">
+
+                <p:dataTable style="text-align: center" value="#{collateralManagedBean.collaterallist}" sortOrder="desc" emptyMessage="#{msgs.emptymessage}" var="collaterallist" paginator="true" paginatorPosition="top" rows="5" rowsPerPageTemplate="5,10,20,25">
+                    <f:facet name="header">  
+                        Detail Use Account 
+                    </f:facet>  
+                    <p:column headerText="binding Value" sortBy="#{collaterallist.collateralBinding.bindingvalue}" filterBy="#{collaterallist.collateralBinding.bindingvalue}" filterMatchMode="contains">
+                        <h:outputText value="Rp. "/>
+                        <h:outputLabel value="#{collaterallist.collateralBinding.bindingvalue}">
+                            <f:convertNumber pattern="###.#####" />
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="Description" sortBy="#{collaterallist.collateralBinding.description}" filterBy="#{collaterallist.collateralBinding.description}" filterMatchMode="contains">
+                        <h:outputLabel value="#{collaterallist.collateralBinding.description}"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </h:form>
+
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

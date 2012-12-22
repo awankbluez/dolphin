@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="vernav2 iconmenu">
+        <ul>
+            <li><a href="#{root}/info-previlages.html" class="gallery">Info Previlage</a></li>
+            <li><a href="#{root}/create-message.html" class="arrow">Buat Pesan</a></li>
+            <li><a href="#mnInbox" class="inbox">Inbox</a>
+                <span class="arrow"></span>
+                <ul id="mnInbox">
+                    <ui:repeat value="#{messages.menuRM}" var="RM">
+                        <li><a href="inbox-messages.html?mod=#{RM.alias}">[#{RM.countIB}] #{RM.menuname}</a></li>
+                    </ui:repeat>
+                </ul>
+            </li>
+            <li><a href="#mnHold" class="drafts">Hold</a>
+                <span class="arrow"></span>
+                <ul id="mnHold">
+                    <ui:repeat value="#{messages.menuRM}" var="RM">
+                        <li><a href="hold-messages.html?mod=#{RM.alias}">[#{RM.countHD}] #{RM.menuname}</a></li>
+                    </ui:repeat>
+                </ul>
+            </li>
+            <li><a href="#mnOutbox" class="sent">Outbox</a>
+                <span class="arrow"></span>
+                <ul id="mnOutbox">
+                    <ui:repeat value="#{messages.menuRM}" var="RM">
+                        <li><a href="outbox-messages.html?mod=#{RM.alias}">[#{RM.countOB}] #{RM.menuname}</a></li>
+                    </ui:repeat>
+                </ul>
+            </li>
+            <li><a href="#mnTrash" class="trash">Trash</a>
+                <span class="arrow"></span>
+                <ul id="mnTrash">
+                    <ui:repeat value="#{messages.menuRM}" var="RM">
+                        <li><a href="trash-messages.html?mod=#{RM.alias}">[#{RM.countTR}] #{RM.menuname}</a></li>
+                    </ui:repeat>
+                </ul>
+            </li>
+        </ul>
+        <a class="togglemenu"></a>
+        <br /><br />
+    </div><!--leftmenu-->
+
+</ui:composition>

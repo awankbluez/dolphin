@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+
+     
+     
+    <ui:define name="content">
+        <h2 class="title">System Parameter : Holidays</h2>
+        <h:form prependId="false">
+            <p:growl id="messages" life="5000"/> 
+            <div class="makeBox">
+                <div class="label w150">Global Close Days</div>
+                <p:selectBooleanCheckbox value="#{sysParHolidays.day_sunday}" itemLabel="Sunday"/> 
+                <p:selectBooleanCheckbox value="#{sysParHolidays.day_monday}" itemLabel="Monday"/> 
+                <p:selectBooleanCheckbox value="#{sysParHolidays.day_tuesday}" itemLabel="Tuesday"/> 
+                <p:selectBooleanCheckbox value="#{sysParHolidays.day_wednesday}" itemLabel="Wednesday"/> 
+                <p:selectBooleanCheckbox value="#{sysParHolidays.day_thursday}" itemLabel="Thursday"/> 
+                <p:selectBooleanCheckbox value="#{sysParHolidays.day_friday}" itemLabel="Friday"/> 
+                <p:selectBooleanCheckbox value="#{sysParHolidays.day_saturday}" itemLabel="Saturday"/> 
+                <div class="clear space"></div>
+                <div class="label w150">Non Working Days</div>
+                
+                <p:selectOneRadio value="#{sysParHolidays.non_working}">  
+                    <f:selectItem itemLabel="Move Forward" itemValue="true" />  
+                    <f:selectItem itemLabel="Move Backward" itemValue="false" />  
+                </p:selectOneRadio>
+                <div class="clear space"></div>
+                <div class="label w150">List Holidays</div>
+                
+                <p:calendar value="#{sysParHolidays.holidaysDate}" id="popupButtonCal" showOn="button" />
+                <p:commandButton icon="ui-icon-circle-plus" action="#{sysParHolidays.saveHolidays()}" style="padding:0" update="tbHolidays"/>
+                <p:dataTable id="tbHolidays" var="VarDtHolidays" 
+                             value="#{sysParHolidays.dtHolidays}"  
+                             paginator="true" 
+                             paginatorPosition="bottom"
+                             rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="10,20,50"
+                             sortBy="#{VarDtHolidays.holiday_date}"
+                             sortOrder="descending" 
+                             widgetVar="widgetDtHolidays"   
+                             emptyMessage="No Data Retrived"
+                             styleClass="w300"
+                             style="margin:5px 0px 0px 165px;"
+                             >  
+                    <f:facet name="header">  
+                        <p:outputPanel style="float:right">  
+                            <div class="label">Year</div>
+                            <p:selectOneMenu>
+                                <f:selectItems value="#{sysParHolidays.dtFilterYear}"/>
+                            </p:selectOneMenu>
+                            <!--<p:inputText id="globalFilter" onkeyup="widgetDtHolidays.filter()" style="width:150px" />  -->
+                        </p:outputPanel>  
+                    </f:facet>  
+
+                    <p:column headerText="Date" sortBy="#{VarDtHolidays.holiday_date}" filterBy="#{VarDtHolidays.holiday_date}"  filterStyle="display:none;" style="width:270px">  
+                        <h:outputText value="#{VarDtHolidays.holiday_date}"/>  
+                    </p:column>  
+
+                    <p:column style="width: 20px;">
+                        <p:commandButton icon="ui-icon-closethick" title="Delete" action="#{sysParHolidays.deleteHolidays()}" update="@form" process="@this">
+                            <f:setPropertyActionListener value="#{VarDtHolidays}" target="#{sysParHolidays.selectedHolidays}" />  
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </div>
+
+            <div class="buttonGroup">
+                <p:commandButton id="saveButton" value="#{msgs.saveButton}" styleClass="saveButton" icon="ui-icon-disk" process="@form" update="messages" action="#{sysParHolidays.save()}"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

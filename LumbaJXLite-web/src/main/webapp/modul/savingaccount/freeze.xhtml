@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+     
+     
+    <ui:define name="content">
+        <p:panel id="panelSaving" header="Freeze Account Saving" closable="true">
+            <h:form id="fr-freeze" prependId="false">
+                <p:growl id="messages" showDetail="true" sticky="true" life="5000"/>  
+                <div class="makeBox">
+
+                    <h:panelGrid columns="4" cellpadding="2" cellspacing="2" columnClasses="evenColumns, oddColumns, evenColumns, oddColumns">
+                        <h:panelGroup>#{msgs.accountSavingNumber}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>: 
+                            <p:autoComplete minQueryLength="3" value="#{freeze.con1}" completeMethod="#{freeze.complete}" size="30" required="true" label="#{msgs.accountSavingNumber}" disabled="#{freeze.stsRouting}">  
+                                <p:ajax event="itemSelect" update="@form"/>
+                            </p:autoComplete>
+                        </h:panelGroup>
+                        <span style="margin-left: 50px">#{msgs.customerID}</span>
+                        <h:panelGroup>: <p:inputText size="30" disabled="true" value="#{freeze.customerID}"/></h:panelGroup>
+
+                        #{msgs.product}
+                        <h:panelGroup>: 
+                            <p:inputText size="30" disabled="true" value="#{freeze.product}"/>  
+                        </h:panelGroup>
+                        <span style="margin-left: 50px">#{msgs.customerName}</span>
+                        <h:panelGroup>: 
+                            <p:inputText size="30" disabled="true" value="#{freeze.customerName}" />  
+                        </h:panelGroup>     
+                    </h:panelGrid>
+                </div>
+
+                <fieldset class="fieldsetBox">
+                    <legend>#{msgs.freezeDetail}</legend>
+                    <h:panelGrid columns="4" cellpadding="2" cellspacing="2" columnClasses="evenColumns,oddColumns, evenColumns, oddColumns">  
+                        <h:panelGroup>#{msgs.requesterName}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>:
+                            <p:inputText value="#{freeze.requestername}" style="margin-right: 50px" required="true" requiredMessage="#{msgs.requesterName}" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}"/>
+                        </h:panelGroup>
+                        #{msgs.institution}
+                        <h:panelGroup><span class="spanOption">:</span>  
+                            <p:selectOneMenu value="#{freeze.requestid}" disabled="#{freeze.statAction || freeze.stsPrevilage=='V' }" required="true" style="width: 200px">
+                                <f:selectItem itemLabel="#{msgs.select}" itemValue="#{null}"/>
+                                <f:selectItems value="#{freeze.cmbInstitution}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+
+                        <h:panelGroup>#{msgs.requesterPosition}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>:
+                            <p:inputText value="#{freeze.requesterposition}" required="true" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>#{msgs.detailInstitution}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>: 
+                            <p:inputText value="#{freeze.detailinstitution}" required="true" requiredMessage="" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>#{msgs.requesterAddress}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>:
+                            <p:inputText value="#{freeze.requesteraddress}" required="true" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>#{msgs.addressInstitution}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>: 
+                            <p:inputText value="#{freeze.addressinstitution}" required="true" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>#{msgs.requesterPhone}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>:
+                            <p:inputText value="#{freeze.requesterphone}" required="true" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>#{msgs.institutionPhone}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>: 
+                            <p:inputText value="#{freeze.phoneinstitution}" required="true" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>#{msgs.requesterMobilePhone}<span class="spanMandatory">*</span></h:panelGroup>
+                        <h:panelGroup>:
+                            <p:inputText value="#{freeze.requestermobilephone}" required="true" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}"/>
+                        </h:panelGroup>
+                        <h:outputFormat />
+                        <h:outputFormat />
+
+                        #{msgs.freezeDate}
+                        <h:panelGroup>: #{freeze.freezeDate}</h:panelGroup>
+                        <h:outputFormat />
+                        <h:outputFormat />
+
+                        #{msgs.reason}
+                        <h:panelGroup><span class="spanOption">:</span> 
+                            <p:selectOneMenu value="#{freeze.reasonid}" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}" required="true" style="width: 200px">
+                                <f:selectItem itemLabel="#{msgs.select}" itemValue="#{null}"/>
+                                <f:selectItems value="#{freeze.cmbReason}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:outputFormat />
+                        <h:outputFormat />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" cellpadding="2" cellspacing="2" columnClasses="evenColumns,oddColumns">  
+                        #{msgs.note}
+                        <h:panelGroup>: <p:inputText value="#{freeze.note}" size="70" disabled="#{freeze.statAction || freeze.stsPrevilage=='V'}" id="note"/></h:panelGroup>
+                    </h:panelGrid>
+                </fieldset>
+                <h:panelGroup rendered="#{freeze.stsView==false}">
+                    <fieldset class="fieldsetBox">
+                        <legend>Next Routing Approval</legend>
+                        <div class="label w150">Note Routing</div>:  
+                        <h:outputFormat value="This form application will approved" rendered="#{freeze.targetPositionName==''}"></h:outputFormat>
+                        <h:outputFormat value="Agreement, This form will send to {0} : {1}" rendered="#{freeze.targetPositionName!=''}">
+                            <f:param value="#{freeze.targetPositionName}"/>
+                            <f:param value="#{freeze.targetEmployeeName}"/>
+                        </h:outputFormat>
+                        <br/>
+                        #{freeze.noteRouting}
+                    </fieldset>
+
+                    <!-- Start Button Routing -->
+                    <h:panelGroup styleClass="buttonGroup" layout="block" rendered="#{freeze.stsMessages != 'OB'}">
+                        <h:panelGroup rendered="#{loginBean.routing.get(0).getMaker()}">
+                            <p:commandButton value="Submit" styleClass="button" disabled="#{freeze.statAction}" oncomplete="confirmation.show()" update="confirmDialog" icon="ui-icon-disk" process="@this">
+                                <f:setPropertyActionListener value="save" target="#{freeze.actButton}" /> 
+                            </p:commandButton>
+                            <p:commandButton value="Hold " styleClass="button" update="@form messages" action="#{freeze.process}" disabled="#{freeze.statAction}"  icon="ui-icon-bookmark">
+                                <f:setPropertyActionListener value="holdFirst" target="#{freeze.actButton}" /> 
+                            </p:commandButton>
+                            <p:commandButton value="#{msgs.resetButton}" styleClass="resetButton" update="@form" process="@this" action="#{freeze.reset}"/>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{loginBean.routing.get(0).getApproval()}">
+                            <p:commandButton value="Approve" styleClass="button" oncomplete="confirmation.show()" process="@this" update="confirmDialog">
+                                <f:setPropertyActionListener value="submit" target="#{freeze.actButton}" /> 
+                            </p:commandButton>
+                            <p:commandButton value="Hold" styleClass="button" update="@form messages" action="#{freeze.process}" icon="ui-icon-bookmark">
+                                <f:setPropertyActionListener value="hold" target="#{freeze.actButton}" /> 
+                            </p:commandButton>
+                            <p:commandButton value="Reject" styleClass="button" oncomplete="confirmation.show()" update="confirmDialog" process="@this">
+                                <f:setPropertyActionListener value="reject" target="#{freeze.actButton}" /> 
+                            </p:commandButton>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    <!-- End Routing -->
+                </h:panelGroup>
+
+
+                <p:confirmDialog id="confirmDialog" message="Are you sure to #{freeze.actButton} this account ?"  header="Initiating Submit Routing" severity="info" widgetVar="confirmation">  
+                    <div class="label w100">Note Routing</div>
+                    <p:inputText value="#{freeze.noteRouting}" styleClass="w400"/> 
+                    <div class="clear space"></div>
+                    <p:commandButton value="Yes" oncomplete="confirmation.hide()" update="@form messages" actionListener="#{freeze.process}"/>  
+                    <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+                </p:confirmDialog>  
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

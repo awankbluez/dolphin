@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel header="#{msgs.periode}" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="Periode">
+                <p:fieldset legend="#{msgs.add} #{msgs.periode}" toggleable="true" collapsed="#{periodeBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{msgs.periodeName}"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{periodeBean.periode.periodname}" id="Name" required="true" requiredMessage="Harus diisi" validator="#{periodeBean.validatePeriodeName}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="Name"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="simpan" value="#{msgs.saveButton}" update="@form :formtabelPeriode:tabelPeriode" actionListener="#{periodeBean.add()}" rendered="#{periodeBean.status == 'insert'}" />
+                        <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{periodeBean.reset()}" rendered="#{periodeBean.status == 'insert'}" update="@form" process="@this"/>
+
+                        <p:commandButton id="edit" value="#{msgs.editButton}" update="@form :formtabelPeriode:tabelPeriode" actionListener="#{periodeBean.update()}" rendered="#{periodeBean.status == 'update'}" />
+                        <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{periodeBean.reset()}" rendered="#{periodeBean.status == 'update'}" update="@form" action="#{periodeBean.setFieldsetCollapse(true)}" process="@this"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelPeriode">
+                <p:dataTable id="tabelPeriode" value="#{periodeBean.periodeList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.periodname}" filterBy="#{o.periodname}" filterMatchMode="contains">
+                        <f:facet name="header">#{msgs.periodeName}</f:facet>
+                        #{o.periodname}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.periodname}" action="#{periodeBean.edit(o)}" update=":Periode"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.periodname}"  update="@form tabelPeriode" action="#{periodeBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

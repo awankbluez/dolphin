@@ -1,0 +1,658 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel header="Customer View" 
+                 collapsed="false" 
+                 toggleable="true" 
+                 closable="true" 
+                 toggleSpeed="500" 
+                 closeSpeed="2000" 
+                 id="panelSemua">
+            <h:form id="CustomView">
+                <h:panelGrid columns="7">
+                    <h:outputText value="#{msgs.customerName}"/>
+                    <h:outputText value=":"/>
+                    <p:inputText id="CustomerName" required="true" readonly="true" value="#{customerviewBean.name}"/>
+                    <p:spacer width="10"/>
+                    <h:outputText value="#{msgs.office}"/>
+                    <h:outputText value=":"/>
+                    <p:inputText id="Office" required="true" readonly="true" value="#{customerviewBean.office}"/>
+                    <h:outputText value="#{msgs.customernumber}"/>
+                    <h:outputText value=":"/>
+                    <p:inputText id="CustomerNumber" required="true" readonly="true" value="#{customerviewBean.code}"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                    <p:spacer width="10"/>
+                </h:panelGrid>
+                <p:dialog header="Information" widgetVar="info" id="info" modal="true" showEffect="explode" hideEffect="explode" >
+                    <center>
+                        <h:panelGrid id="pnlGrdInfo" columns="3">
+                            <h:outputLabel value="Customer not found"/>                        
+                        </h:panelGrid>
+                        <p:commandButton value="OK" actionListener="#{customerviewBean.closeInfo()}"/>
+                    </center>
+                </p:dialog>
+            </h:form>
+            <p:tabView id="tabSemua">
+
+                <p:tab id="TabCustomAddress"  title="#{msgs.customerAddress}">
+                    <h:form id="CustomerAddress">
+                        <p:dataTable id="tabelCustomerAddress" 
+                                     value="#{customerviewBean.dtListAddress}"
+                                     var="listaddress"
+                                     paginator="true"
+                                     paginatorPosition="top"
+                                     rows="5"
+                                     rowsPerPageTemplate="5,10,20,25"
+                                     sortOrder="descending"
+                                     >
+                            <p:column id="Address" style="width:150px">
+                                <f:facet name="header">#{msgs.address}</f:facet>
+                                #{listaddress.address}
+                            </p:column>
+
+                            <p:column id="Village" style="width:150px">
+                                <f:facet name="header">#{msgs.village}</f:facet>
+                                #{listaddress.villagename}
+                            </p:column>
+
+                            <p:column id="Subdistrict" style="width:150px">
+                                <f:facet name="header">#{msgs.subdistrict}</f:facet>
+                                #{listaddress.subdistrictname}
+                            </p:column>
+
+                            <p:column id="District" style="width:150px">
+                                <f:facet name="header">#{msgs.district} / #{msgs.city}</f:facet>
+                                #{listaddress.districtname}
+                            </p:column>
+
+                            <p:column id="Province" style="width:150px">
+                                <f:facet name="header">#{msgs.province}</f:facet>
+                                #{listaddress.provincename}
+                            </p:column>
+                            <p:column id="Country" style="width:150px">
+                                <f:facet name="header">#{msgs.country}</f:facet>
+                                #{listaddress.countryname}
+                            </p:column>
+
+                            <p:column id="Phone" style="width:150px">
+                                <f:facet name="header">#{msgs.phone}</f:facet>
+                                #{listaddress.phone}
+                            </p:column>
+
+                            <p:column id="MobilePhone" style="width:150px">
+                                <f:facet name="header">#{msgs.mobilePhone}</f:facet>
+                                #{listaddress.mobilephone}
+                            </p:column>
+
+                            <p:column id="Email" style="width:150px">
+                                <f:facet name="header">#{msgs.email}</f:facet>
+                                #{listaddress.email}
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab id="TabCustomDetail"  title="#{msgs.customerDetail}">
+                    <h:form id="CustomerDetail">
+                        <h:panelGrid columns="6">
+                            <h:outputText value="#{msgs.dateOfbirth}"/>
+                            <h:outputText value=":"/>
+                            <p:inputText value="#{customerviewBean.dateofbirth}" id="DateOfBirth" required="true" readonly="true"/>
+
+                            <h:outputText value="#{msgs.savingBalance}"/>
+                            <h:outputText value=":"/>
+                            <p:inputText id="SavingBalance" value="#{customerviewBean.balance}"  required="true" readonly="true"  >
+                                <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                            </p:inputText>
+
+                            <h:outputText value="#{msgs.customerType}"/>
+                            <h:outputText value=":"/>
+                            <p:inputText value="#{customerviewBean.customertype}" id="CustomerType" required="true" readonly="true"/>
+
+                            <h:outputText value="#{msgs.totalLoans}"/>
+                            <h:outputText value=":"/>
+                            <p:inputText id="TotalLoans" value="#{customerviewBean.totalloan}" required="true" readonly="true">
+                                <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                            </p:inputText>
+
+                            <h:outputText value="#{msgs.dateJoined}"/>
+                            <h:outputText value=":"/>
+                            <p:inputText value="#{customerviewBean.opendate}" id="DateJoined" required="true" readonly="true"/>
+
+                            <h:outputText value="#{msgs.totalGuaranteeing}"/>
+                            <h:outputText value=":"/>
+                            <p:inputText id="TotalGuaranteeing" value="#{customerviewBean.nominal}" required="true" readonly="true"  >
+                                <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                            </p:inputText>
+
+                            <h:outputText value="#{msgs.age}"/>
+                            <h:outputText value=":"/>
+                            <p:inputText value="#{customerviewBean.age}" id="Age" required="true" readonly="true"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:tab>
+
+
+
+                <p:tab id="TabSaving"  title="#{msgs.saving}">
+                    <h:form id="Saving">
+                        <p:fieldset id="fsdSaving" legend="Form Saving Account">
+                            <h:panelGrid columns="3">
+                                <h:outputText value="#{msgs.closeDate}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.dialogSavingHistorySelected.lastperiodpayment}" id="ClosingDate" required="true" readonly="true" />
+
+                                <h:outputText value="#{msgs.lastPeriodPayment}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.dialogSavingHistorySelected.balancedate}" id="LastPeriodPayment" required="true" readonly="true" />
+
+                                <h:outputText value="#{msgs.closingBalance}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.dialogSavingHistorySelected.closingbalance}" id="ClosingBalance" required="true" readonly="true"  >
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+
+                                <h:outputText value="#{msgs.grade}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText  id="GradeSaving" required="true" readonly="true" />
+
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:commandButton  value="#{msgs.viewSchedule}" disabled="#{customerviewBean.dialogSavingHistorySelected.savingproduct != 'tabungan berjangka'}" action="#{customerviewBean.savingTerm()}"  oncomplete="testing.show()" update="@form" icon="ui-icon ui-icon-search" />
+
+                            </h:panelGrid>
+                        </p:fieldset>
+
+                        <p:dialog widgetVar="testing" modal="true">
+                            <p:dataTable value="#{customerviewBean.dtListSavingTabunganBerjangka}" 
+                                         var="savingTabunganBerjangka" 
+                                         id="tabelSavingTabunganBerjangka"
+                                         paginator="true"
+                                         paginatorPosition="top"
+                                         rows="10"
+                                         rowsPerPageTemplate="5,10,20,25"
+                                         sortOrder="descending">
+                                <p:column >
+                                    <f:facet name="header">#{msgs.period}</f:facet>
+                                    #{savingTabunganBerjangka.period}
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">#{msgs.payment}#{msgs.date}</f:facet>
+                                    #{savingTabunganBerjangka.paymentdate}
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">#{msgs.status}</f:facet>
+                                    #{savingTabunganBerjangka.status}
+                                </p:column>
+                            </p:dataTable> 
+                        </p:dialog>
+                    </h:form>
+                    <h:form id="Formtabelsaving">
+                        <p:dataTable id="tabelSaving" 
+                                     value="#{customerviewBean.dtListSavingHistory}"
+                                     var="listsaving"
+                                     paginator="true"
+                                     paginatorPosition="top"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,20,25"
+                                     sortOrder="descending"
+                                     selection="#{customerviewBean.dialogSavingHistorySelected}" selectionMode="single" rowKey="#{listsaving.accountid}">
+
+                            <p:ajax event="rowSelect" update=":tabSemua:Saving:fsdSaving"/>  
+
+                            <p:column id="AccountNumber" style="width:125px" >
+                                <f:facet name="header">#{msgs.accountNumber}</f:facet>
+                                #{listsaving.accountnumber}
+                            </p:column>
+                            <p:column id="SavingProduct" style="width:125px">
+                                <f:facet name="header">#{msgs.savingProduct}</f:facet>
+                                #{listsaving.savingproduct}
+                            </p:column>
+                            <p:column id="Portofolio" style="width:125px">
+                                <f:facet name="header">#{msgs.portofolio}</f:facet>
+                                #{listsaving.portofolio}
+                            </p:column>
+                            <p:column id="Status" style="width:125px">
+                                <f:facet name="header">#{msgs.status}</f:facet>
+                                #{listsaving.status}
+                            </p:column>
+                        </p:dataTable>    
+                    </h:form>
+                </p:tab>
+
+
+                <p:tab id="TabLoan"  title="#{msgs.loan}">
+                    <h:form id="Loan">
+                        <p:fieldset id="fsdLoan" legend="Form Loan Account">
+                            <h:panelGrid columns="12">
+                                <h:outputText value="#{msgs.account}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.accountcode}" id="Account" required="true" readonly="true" />
+                                <p:spacer width="10"/>
+                                <h:outputText value="#{msgs.gracePeriodType}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.periodedeffered}" id="GracePeriodType" required="true" readonly="true"  >
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+                                <p:spacer width="10"/>
+                                <h:outputText value="#{msgs.plafontotal}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.closebalance}" id="PlafonTotal" required="true" readonly="true"  >
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+                                <p:spacer width="10"/>
+
+                                <h:outputText value="#{msgs.initialIssueDate}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.issuedate}" id="InitialIssueDate" required="true" readonly="true" />
+                                <p:spacer width="10"/>
+                                <h:outputText value="#{msgs.ballonAmount}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.ballonpayment}" id="BallonAmount" required="true" readonly="true"  >
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+                                <p:spacer width="10"/>
+                                <h:outputText value="#{msgs.issueAmount}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.issueamount}" id="IssueAmount" required="true" readonly="true"  >
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+                                <p:commandButton icon="ui-icon ui-icon-search" title="Detail Schedule" update=":tabSemua:loanPopUp:tabeldialogDetailLoanHistory" oncomplete="varDetailTransactionLoan.show()" action="#{customerviewBean.retLoanDetail(customerviewBean.dialogLoanHistorySelected.loanapplicationid)}"/>
+
+                                <h:outputText value="#{msgs.manuturityDate}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.maturitydate}" id="ManuturityDate" required="true" readonly="true" />
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <h:outputText value="#{msgs.issueAmountPlan}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.issueamountplan}" id="IssueAmountPlan" required="true" readonly="true" >
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+                                <p:spacer width="10"/>
+
+                                <h:outputText value="#{msgs.period}"/>
+                                <h:outputText value=":"/>
+                                <p:inputText value="#{customerviewBean.periode}" id="Period" required="true" readonly="true" />
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </h:form>
+                    <h:form id="loanPopUp">
+                        <p:dataTable
+                            id="tabelLoan"
+                            value="#{customerviewBean.dtListLoanHistory}"
+                            var="listloan"
+                            paginator="true"
+                            paginatorPosition="top"
+                            rows="5"
+                            rowsPerPageTemplate="5,10,20,25"
+                            sortOrder="descending"
+                            selection="#{customerviewBean.dialogLoanHistorySelected}" selectionMode="single" rowKey="#{listloan.loanissueid}">
+
+                            <p:ajax event="rowSelect" listener="#{customerviewBean.retLoanTop(customerviewBean.dialogLoanHistorySelected.loanapplicationid, customerviewBean.dialogLoanHistorySelected.loanissueid, customerviewBean.dialogLoanHistorySelected.referencenumber)}" update=":tabSemua:Loan:fsdLoan"/>  
+                            <p:column id="RefNumber" style="width:125px">
+                                <f:facet name="header">#{msgs.refNumber}</f:facet>
+                                #{listloan.referencenumber}
+                            </p:column>
+                            <p:column id="AccountNumber" style="width:125px">
+                                <f:facet name="header">#{msgs.accountNumber}</f:facet>
+                                #{listloan.accountnumber}
+                            </p:column>
+                            <p:column id="LoanProduct" style="width:125px">
+                                <f:facet name="header">#{msgs.loanProduct}</f:facet>
+                                #{listloan.loanproduct}
+                            </p:column>
+                            <p:column id="LoanStatus" style="width:125px">
+                                <f:facet name="header">#{msgs.loanstatus}</f:facet>
+                                #{listloan.loanstatus}
+                            </p:column>
+                            <p:column id="AccountOfficer" style="width:140px">
+                                <f:facet name="header">#{msgs.accountOfficer}</f:facet>
+                                #{listloan.accountofficer}
+                            </p:column> 
+                            <p:column id="Reason" style="width:140px">
+                                <f:facet name="header">#{msgs.reason}</f:facet>
+                                #{listloan.reason}
+                            </p:column>
+                            <p:column id="GradeLoan" style="width:140px">
+                                <f:facet name="header">#{msgs.grade}</f:facet>
+
+                            </p:column>
+                            <p:column id="TotalScore" style="width:140px">
+                                <f:facet name="header">#{msgs.totalScore}</f:facet>
+                            </p:column>
+                            <p:column style="width: 100px;">
+                                <p:commandButton icon="ui-icon ui-icon-search" title="Detail Guaranteeing"  update=":tabSemua:loanPopUp:tabeldialogLoanHistory" oncomplete="varDialogTransactionLoan.show()" action="#{customerviewBean.retLoanPopup(customerviewBean.dialogLoanHistorySelected.loanapplicationid)}"/>
+                            </p:column>
+                        </p:dataTable>    
+                        <p:dialog id="dialogTransactionLoan" 
+                                  header="Transaction Loan Account" 
+                                  widgetVar="varDialogTransactionLoan" 
+                                  resizable="false"  
+                                  showEffect="clip" 
+                                  hideEffect="fold"> 
+                            <p:dataTable id="tabeldialogLoanHistory" 
+                                         value="#{customerviewBean.dtListDialogLoanHistory}"
+                                         var="dialogLoanDialog"
+                                         paginator="true"
+                                         paginatorPosition="top"
+                                         rows="5"
+                                         rowsPerPageTemplate="5,10,20,25"
+                                         sortOrder="descending">
+                                <p:column id="GuaranteeName" style="width:140px">
+                                    <f:facet name="header">#{msgs.guaranteeName}</f:facet>
+                                    #{dialogLoanDialog.guaranteingname}
+                                </p:column>
+                                <p:column id="GuaranteingAmount" style="width:140px">
+                                    <f:facet name="header">#{msgs.guaranteingAmount}</f:facet>
+                                    #{dialogLoanDialog.guaranteingnominal}
+                                </p:column>
+                            </p:dataTable>
+                        </p:dialog>
+
+                        <p:dialog id="dialogDetailTransactionLoan" 
+                                  header="Schedule Transaction Loan" 
+                                  widgetVar="varDetailTransactionLoan" 
+                                  resizable="false"  
+                                  showEffect="clip" 
+                                  hideEffect="fold"> 
+                            <p:dataTable id="tabeldialogDetailLoanHistory" 
+                                         value="#{customerviewBean.dtListDetailLoanHistory}"
+                                         var="dialogDetailLoanDialog"
+                                         paginator="true"
+                                         paginatorPosition="top"
+                                         rows="5"
+                                         rowsPerPageTemplate="5,10,20,25"
+                                         sortOrder="descending">
+                                <p:column id="IssueDate" style="width:140px">
+                                    <f:facet name="header">#{msgs.issuedate}</f:facet>
+                                    #{dialogDetailLoanDialog.issuedate}
+                                </p:column>
+                                <p:column id="IssueAmount" style="width:140px">
+                                    <f:facet name="header">#{msgs.issueamount}</f:facet>
+                                    <h:outputText value="#{dialogDetailLoanDialog.issueamount}">
+                                        <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column id="Paid" style="width:140px">
+                                    <f:facet name="header">#{msgs.paidStatus}</f:facet>
+                                    <h:outputText value="#{dialogDetailLoanDialog.paid}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+
+
+
+                <p:tab id="TabPaymentAllocation"  title="#{msgs.paymentAllocation}">
+                    <h:form id="payment">
+                        <p:dataTable
+                            id="tabelPaymentAllocation"
+                            value="#{customerviewBean.dtListPaymentAllocation}"
+                            var="listpaymentallocation"
+                            paginator="true"
+                            paginatorPosition="top"
+                            rows="25"
+                            rowsPerPageTemplate="5,10,20,25"
+                            sortOrder="descending"
+                            selection="#{customerviewBean.dialogPaymentAllocationSelected}" selectionMode="single" rowKey="#{listpaymentallocation.accountid}">
+
+                            <p:ajax event="rowSelect" listener="#{customerviewBean.retPayment(customerviewBean.dialogPaymentAllocationSelected.accountid)}" update=":tabSemua:paymentDetail:tabelPaymentAllocationDetail"/>  
+
+                            <p:column id="AccountNumber" style="width:125px">
+                                <f:facet name="header">#{msgs.accountNumber}</f:facet>
+                                #{listpaymentallocation.accountnumber} 
+                            </p:column>
+                            <p:column id="LoanProduct" style="width:125px">
+                                <f:facet name="header">#{msgs.loanProduct}</f:facet>
+                                #{listpaymentallocation.loanproduct}
+                            </p:column>
+                            <p:column id="Balance" style="width:125px">
+                                <f:facet name="header">#{msgs.balance}</f:facet>
+                                <h:outputText value="#{listpaymentallocation.balance}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText> 
+                            </p:column>
+                            <p:column id="PartialDeposit" style="width:125px">
+                                <f:facet name="header">#{msgs.partialDeposit}</f:facet>
+                                <h:outputText value="#{listpaymentallocation.partialdeposit}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText>  
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                    <p:spacer height="15"/>
+                    <h:form id="paymentDetail">
+                        <p:dataTable id="tabelPaymentAllocationDetail"
+                                     value="#{customerviewBean.dtListPaymentAllocationDetail}"
+                                     var="listpaymentallocationDetail"
+                                     paginator="true"
+                                     paginatorPosition="top"
+                                     rows="25"
+                                     rowsPerPageTemplate="5,10,20,25"
+                                     sortOrder="descending"
+                                     scrollable="true"
+                                     scrollWidth="925" 
+                                     resizableColumns="true"
+                                     >
+                            <p:column id="ReceiptNumber" headerText="#{msgs.receiptNumber}" width="150" style="text-align: center">
+                                <h:outputText value="#{listpaymentallocationDetail.receiptnumber}" />
+                            </p:column>
+                            <p:column id="Period" headerText="#{msgs.period}" width="50" style="text-align: center">
+                                <h:outputText value="#{listpaymentallocationDetail.periode}"/>
+                            </p:column>
+                            <p:column id="RepaymentDate" headerText="#{msgs.repaymentDate}" width="125" style="text-align: center">
+                                <h:outputText value="#{listpaymentallocationDetail.repaymentdate}" />
+                            </p:column>
+                            <p:column id="Repayment" headerText="#{msgs.repayment}" width="150"> 
+                                <h:outputText value="#{listpaymentallocationDetail.repayment}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText> 
+                            </p:column>
+                            <p:column id="Principal" headerText="#{msgs.principal}" width="150">
+                                <h:outputText value="#{listpaymentallocationDetail.principle}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText> 
+                            </p:column>
+                            <p:column id="Interest" headerText="#{msgs.interest}" width="150">
+                                <h:outputText value="#{listpaymentallocationDetail.interest}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText> 
+                            </p:column>
+                            <p:column id="Penalty" headerText="#{msgs.penalty}" width="150">
+                                <h:outputText value="#{listpaymentallocationDetail.penalty}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText> 
+                            </p:column>
+                            <p:column id="LoanPaid" headerText="#{msgs.principal} Paid" width="150">
+                                <h:outputText value="#{listpaymentallocationDetail.principlepaid}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column id="InterestPaid" headerText="#{msgs.interestPaid}" width="150">
+                                <h:outputText value="#{listpaymentallocationDetail.interestpaid}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText> 
+                            </p:column>
+                            <p:column id="TotalPaid" headerText="#{msgs.totalPaid}" width="150">
+                                <h:outputText value="#{listpaymentallocationDetail.totalpaid}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column id="Balance" headerText="#{msgs.balance}" width="150">
+                                <h:outputText value="#{listpaymentallocationDetail.balance}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </h:outputText> 
+                            </p:column>
+                            <p:column id="Status" headerText="#{msgs.status}" width="100" style="text-align: center">
+                                <h:outputText value="#{listpaymentallocationDetail.paidstatus}" />
+                            </p:column>
+                            <p:column id="Collectability" headerText="#{msgs.collectability}" width="100" style="text-align: center">
+                                <h:outputText value="#{listpaymentallocationDetail.collectabilityname}" />
+                            </p:column>
+                            <p:column width="50">
+                                <p:commandButton icon="ui-icon ui-icon-search" title="Detail Collectability"  update=":tabSemua:popupPaymentColl:tabelPaymentCollectability" oncomplete="testingPayment.show()" action="#{customerviewBean.detailCollectability(listpaymentallocationDetail.collectabilityid)}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                    <h:form id="popupPaymentColl">
+                        <p:dialog widgetVar="testingPayment" modal="true">
+                            <p:dataTable value="#{customerviewBean.dtListPaymentColl}" 
+                                         var="paymentCollectability" 
+                                         id="tabelPaymentCollectability"
+                                         paginator="true"
+                                         paginatorPosition="top"
+                                         rows="10"
+                                         rowsPerPageTemplate="5,10,20,25"
+                                         sortOrder="descending">
+                                <p:column >
+                                    <f:facet name="header">#{msgs.ordering}</f:facet>
+                                    #{paymentCollectability.ordering}
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">#{msgs.priority}</f:facet>
+                                    #{paymentCollectability.priority}
+                                </p:column>
+                            </p:dataTable> 
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+
+                <p:tab id="TabRelationships"  title="#{msgs.relationships}">
+                    <h:form>
+                        <p:dataTable id="Relationships" 
+                                     value="#{customerviewBean.dtListRelationships}"
+                                     var="listrelationship" 
+                                     sortOrder="desc" 
+                                     paginator="true" paginatorPosition="top" 
+                                     rows="25" rowsPerPageTemplate="5,10,20,25" 
+                                     >
+                            <p:column id="Customer" style="width:125px">
+                                <f:facet name="header">#{msgs.customerName}</f:facet>
+                                #{listrelationship.customer}
+                            </p:column>
+                            <p:column id="IsA" style="width:125px">
+                                <f:facet name="header">#{msgs.isA}</f:facet>
+                                #{listrelationship.is_a}
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+
+                <p:tab id="TabWitholding"  title="#{msgs.witholding}">
+                    <h:form id="Witholding">
+                        <p:fieldset id="fsdWitholding" legend="Form Witholding">
+                            <h:panelGrid columns="3">
+                                <h:outputText value="#{msgs.minimumbalanceheld}" rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104'}"/>
+                                <h:outputText value=":" rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104'}"/>
+                                <p:inputText value="#{customerviewBean.minimumbalanceheld}" id="MinimumBalanceHeld" required="true" readonly="true"  rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104'}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+
+                                <h:outputText value="#{msgs.minimumbalancetoearninterest}" rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104' || customerviewBean.dialogWitholdingSelected.savingid =='108'|| customerviewBean.dialogWitholdingSelected.savingid =='107'}"/>
+                                <h:outputText value=":" rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104' || customerviewBean.dialogWitholdingSelected.savingid =='108' || customerviewBean.dialogWitholdingSelected.savingid =='107'}"/>
+                                <p:inputText value="#{customerviewBean.minimumbalancetoearninterest}" id="MinimumBalanceToEarnInterest" required="true" readonly="true"  rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104' || customerviewBean.dialogWitholdingSelected.savingid =='108' || customerviewBean.dialogWitholdingSelected.savingid =='107'}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+
+                                <h:outputText value="#{msgs.minimumsavingbalancetoguarantee}" rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104' || customerviewBean.dialogWitholdingSelected.savingid =='107'}"/>
+                                <h:outputText value=":" rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104' || customerviewBean.dialogWitholdingSelected.savingid =='107'}"/>
+                                <p:inputText id="MinimumSavingBalanceToGuarantee" required="true" readonly="true"  rendered="#{customerviewBean.dialogWitholdingSelected.savingid == '104' || customerviewBean.dialogWitholdingSelected.savingid =='107'}">
+                                    <f:convertNumber currencySymbol="#{appBean.systemGlobal.currency.currencySymbol}" type="currency" maxFractionDigits="#{appBean.systemGlobal.curDigitdecimals}" />
+                                </p:inputText>
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </h:form>
+                    <h:form id="witholdingDetail">
+                        <p:dataTable id="tabelWitholding" 
+                                     value="#{customerviewBean.dtListWitholding}"
+                                     var="listwitholding"
+                                     paginator="true"
+                                     paginatorPosition="top"
+                                     rows="5"
+                                     rowsPerPageTemplate="5,10,20,25"
+                                     sortOrder="descending"
+                                     selection="#{customerviewBean.dialogWitholdingSelected}" selectionMode="single" rowKey="#{listwitholding.savingid}">
+
+                            <p:ajax event="rowSelect" listener="#{customerviewBean.retWitholdingTop(customerviewBean.dialogWitholdingSelected.savingid)}" update=":tabSemua:Witholding:fsdWitholding"/>  
+
+                            <p:column id="NoRekening" style="width:125px">
+                                <f:facet name="header">#{msgs.accNumber}</f:facet>
+                                #{listwitholding.accountnumber}
+                            </p:column>
+                            <p:column id="Product" style="width:125px">
+                                <f:facet name="header">#{msgs.product}</f:facet>
+                                #{listwitholding.product}
+                            </p:column>
+                            <p:column id="AccStatus" style="width:125px">
+                                <f:facet name="header">#{msgs.status}</f:facet>
+                                #{listwitholding.status}
+                            </p:column>
+                        </p:dataTable>    
+                    </h:form>
+                </p:tab>
+
+
+                <p:tab id="TabNote"  title="#{msgs.note}">
+                    <h:form>
+                        <p:dataTable id="Note" 
+                                     value="#{customerviewBean.dtListNote}"
+                                     var="listnote" 
+                                     sortOrder="desc" 
+                                     paginator="true" 
+                                     paginatorPosition="top" 
+                                     rows="5" 
+                                     rowsPerPageTemplate="5,10,20,25" 
+                                     >
+                            <p:column id="Title" style="width:125px">
+                                <f:facet name="header">#{msgs.title}</f:facet>
+                                #{listnote.subject}
+                            </p:column>
+                            <p:column id="Text" style="width:325px">
+                                <f:facet name="header">#{msgs.text}</f:facet>
+                                #{listnote.note}
+                            </p:column>
+                            <p:column id="CreationDate" style="width:125px">
+                                <f:facet name="header">#{msgs.creationDate}</f:facet>
+                                <h:outputText value="#{listnote.creationdate}" >
+                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column id="EditDate" style="width:125px">
+                                <f:facet name="header">#{msgs.editDate}</f:facet>
+                                <h:outputText value="#{listnote.editdate}" >
+                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </p:panel>
+    </ui:define>
+</ui:composition>

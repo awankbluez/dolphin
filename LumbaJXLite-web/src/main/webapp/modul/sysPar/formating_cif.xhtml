@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form prependId="false">
+        <p:growl id="messages" life="5000"/> 
+        <div id="contTopBot">
+            <b>Example Of Automatic Code :</b> #{sysParFormat.exampleFormatCIF} 
+            <p:commandButton icon="ui-icon-circle-plus" styleClass="btn" update="tbFormatCIF" onclick="addformatCIF.show()" value="Add Format"/>
+        </div>
+        <p:dataTable id="tbFormatCIF" var="VarDtCIF" 
+                     value="#{sysParFormat.dtFormatCIF}"  
+                     sortBy="#{VarDtCIF.ordering}"
+                     sortOrder="ascending" 
+                     widgetVar="widgetDtHolidays"   
+                     emptyMessage="No Data Retrived"
+                     style="margin:5px 0px 0px 5px;"
+                     >  
+
+            <p:column headerText="#" style="width:40px;text-align: center">  
+                <h:outputText value="#{VarDtCIF.ordering}"/>  
+            </p:column>  
+            <p:column headerText="Type" style="width:300px">  
+                <h:outputText value="#{VarDtCIF.typeformating}"/>  
+            </p:column>  
+            <p:column headerText="Description" style="width:500px">  
+                <h:outputText value="#{VarDtCIF.description}"/>  
+            </p:column>  
+            <p:column style="width: 20px;">
+                <p:commandButton icon="ui-icon-closethick" title="Delete" action="#{sysParFormat.deleteFormatCIF()}" update="@form" process="@this">
+                    <f:setPropertyActionListener value="#{VarDtCIF}" target="#{sysParFormat.selectedFormat}" />  
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+        <p:dialog id="addformatCIF"  header="Add new item for Formating ID" widgetVar="addformatCIF" modal="true">  
+            <div class="label w150">Type</div>
+            <p:selectOneMenu value="#{sysParFormat.typeformating}">
+                <f:selectItem itemLabel="Office Code" itemValue="OC"/>
+                <f:selectItem itemLabel="Unique Number" itemValue="UN"/>
+                <f:selectItem itemLabel="Valid Text" itemValue="VT"/>
+                <f:selectItem itemLabel="System Year" itemValue="SY"/>
+                <f:selectItem itemLabel="System Month" itemValue="SM"/>
+                <f:selectItem itemLabel="System Day" itemValue="SD"/>
+                <f:selectItem itemLabel="Birth Year" itemValue="BY"/>
+                <f:selectItem itemLabel="Birth Month" itemValue="BM"/>
+                <f:selectItem itemLabel="Birth Day" itemValue="BD"/>
+                <f:selectItem itemLabel="Post Code" itemValue="PC"/>
+                <f:selectItem itemLabel="Separator" itemValue="SP"/>
+                <f:ajax render="forRenderCIF" execute="@this"/> 
+            </p:selectOneMenu>
+            <div class="clear space"></div>
+            <h:panelGroup id="forRenderCIF">
+            <h:panelGroup rendered="#{sysParFormat.typeformating =='UN'}">
+                <div class="label w150">Lenght</div>
+                <p:selectOneMenu value="#{sysParFormat.lenght}">
+                    <f:selectItem itemLabel="3" itemValue="3"/>
+                    <f:selectItem itemLabel="4" itemValue="4"/>
+                    <f:selectItem itemLabel="5" itemValue="5"/>
+                    <f:selectItem itemLabel="6" itemValue="6"/>
+                    <f:selectItem itemLabel="7" itemValue="7"/>
+                    <f:selectItem itemLabel="8" itemValue="8"/>
+                    <f:selectItem itemLabel="9" itemValue="9"/>
+                    <f:selectItem itemLabel="10" itemValue="10"/>
+                </p:selectOneMenu>
+                <div class="clear space"></div>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{sysParFormat.typeformating == 'VT'}">
+                <div class="label w150"> </div>
+                <p:inputText value="#{sysParFormat.description}"/>
+                <div class="clear space"></div>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{sysParFormat.typeformating =='SY' || sysParFormat.typeformating =='BY'}">
+                <div class="label w150">Format Year</div>
+                <p:selectOneMenu value="#{sysParFormat.formatYear}">
+                    <f:selectItem itemLabel="YY" itemValue="YY"/>
+                    <f:selectItem itemLabel="YYYY" itemValue="YYYY"/>
+                </p:selectOneMenu>
+                <div class="clear space"></div>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{sysParFormat.typeformating =='SP'}">
+                <div class="label w150"></div>
+                <p:selectOneMenu value="#{sysParFormat.separator}">
+                    <f:selectItem itemLabel="." itemValue="."/>
+                    <f:selectItem itemLabel="," itemValue=","/>
+                    <f:selectItem itemLabel="/" itemValue="/"/>
+                    <f:selectItem itemLabel="\" itemValue="\"/>
+                    <f:selectItem itemLabel=";" itemValue=";"/>
+                    <f:selectItem itemLabel=":" itemValue=":"/>
+                    <f:selectItem itemLabel="-" itemValue="-"/>
+                    <f:selectItem itemLabel="_" itemValue="_"/>
+                    <f:selectItem itemLabel="=" itemValue="="/>
+                    <f:selectItem itemLabel="(" itemValue="("/>
+                    <f:selectItem itemLabel=")" itemValue=")"/>
+                </p:selectOneMenu>
+                <div class="clear space"></div>
+            </h:panelGroup>
+                <p:commandButton value="Save" oncomplete="addformatCIF.hide()" styleClass="button" action="#{sysParFormat.saveFormatCIF()}" update="@form"/>  
+            </h:panelGroup>
+        </p:dialog>  
+    </h:form>
+</ui:composition>

@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel header="Kelompok Alamat" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+
+            <p:tabView id="tabSemua">
+                <p:tab id="TabCountry"  title="Country">
+                    <p:panel id="panelCountry">
+                        <h:form id="Country">
+                            <p:growl id="growl" showDetail="true"/>
+                            <p:fieldset legend="#{msgs.add} #{msgs.country}" toggleable="true" collapsed="#{addressTabBean.fieldsetCountry}" id="fieldsetCountry">
+
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.countryID}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.country.countrycode}" id="CountryID" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi" for="CountryID"/>
+
+                                    <h:outputText value="#{msgs.countryName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.country.countryname}" id="CountryName" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi1"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi1" for="CountryName"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:Country:fieldsetCountry :tabSemua:tabelCountry:dataTabelCountry :tabSemua:TabProvince" actionListener="#{addressTabBean.addCountry()}" rendered="#{addressTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{addressTabBean.resetCountry()}" rendered="#{addressTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:Country:fieldsetCountry :tabSemua:tabelCountry:dataTabelCountry :tabSemua:TabProvince" actionListener="#{addressTabBean.updateCountry()}" rendered="#{addressTabBean.status == 'update'}" />
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{addressTabBean.resetCountry()}" rendered="#{addressTabBean.status == 'update'}" update="@form" action="#{addressTabBean.setFieldsetCountry(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="tabelCountry">
+                            <p:dataTable value="#{addressTabBean.countryList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25" id="dataTabelCountry" >
+                                <p:column sortBy="#{o.countrycode}" filterBy="#{o.countrycode}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.countryID}</f:facet>
+                                    #{o.countrycode}
+                                </p:column>
+                                <p:column sortBy="#{o.countryname}" filterBy="#{o.countryname}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.countryName}</f:facet>
+                                    #{o.countryname}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.countryname}" actionListener="#{addressTabBean.editCountry(o)}" update=":tabSemua:Country:fieldsetCountry :tabSemua:TabProvince" />
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.countryname}" actionListener="#{addressTabBean.deleteCountry(o)}"  update="@form"/>
+                                </p:column>
+
+                            </p:dataTable>   
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="TabProvince"  title="Province">
+                    <p:panel id="panelProvince">
+                        <h:form id="Province">
+                            <p:fieldset legend="#{msgs.add} #{msgs.province}" toggleable="true" collapsed="#{addressTabBean.fieldsetProvince}" id="fieldsetProvince">
+
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.country}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneMenu id="countryID_province" value="#{addressTabBean.province.countryid}" style="width: 160px" >
+                                        <f:selectItem itemLabel="Pilih Negara" />
+                                        <f:selectItems value="#{addressTabBean.provinceListCombo}" var="country" itemLabel="#{country.countryname}" itemValue="#{country.countryid}"/>  
+                                    </p:selectOneMenu>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.provinceID}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.province.provincecode}" id="ProvinceID" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi2"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi2" for="ProvinceID"/>
+
+                                    <h:outputText value="#{msgs.provinceName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.province.provincename}" id="ProvinceName" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi3"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi3" for="ProvinceName"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:Province:fieldsetProvince :tabSemua:tabelProvince:dataTabelProvince" actionListener="#{addressTabBean.addProvince()}" rendered="#{addressTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{addressTabBean.resetProvince()}" rendered="#{addressTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:Province:fieldsetProvince :tabSemua:tabelProvince:dataTabelProvince" actionListener="#{addressTabBean.updateProvince()}" rendered="#{addressTabBean.status == 'update'}" process="@this"/>
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{addressTabBean.resetProvince()}" rendered="#{addressTabBean.status == 'update'}" update="@form" action="#{addressTabBean.setFieldsetProvince(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="tabelProvince">
+                            <p:dataTable value="#{addressTabBean.provinceList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25" id="dataTabelProvince" >
+                                <p:column sortBy="#{o.countryname}" filterBy="#{o.countryname}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.country}</f:facet>
+                                    #{o.countryname}
+                                </p:column>
+                                <p:column sortBy="#{o.provincecode}" filterBy="#{o.provincecode}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.provinceID}</f:facet>
+                                    #{o.provincecode}
+                                </p:column>
+                                <p:column sortBy="#{o.provincename}" filterBy="#{o.provincename}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.provinceName}</f:facet>
+                                    #{o.provincename}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.provincename}" actionListener="#{addressTabBean.editProvince(o)}" update=":tabSemua:Province:fieldsetProvince" />
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.provincename}" actionListener="#{addressTabBean.deleteProvince(o)}"  update="@form"/>
+                                </p:column>
+
+                            </p:dataTable>   
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="TabDistric"  title="Distric">
+                    <p:panel id="panelDistric">
+                        <h:form id="Distric">
+                            <p:fieldset legend="#{msgs.add} #{msgs.district}" toggleable="true" collapsed="#{addressTabBean.fieldsetDistrict}" id="fieldsetDistrict">
+
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.province}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneMenu id="provinceID_district" value="#{addressTabBean.district.provinceid}" style="width: 160px">
+                                        <f:selectItem itemLabel="Pilih Provinsi" />
+                                        <f:selectItems value="#{addressTabBean.districtListCombo}" var="province" itemLabel="#{province.provincename}" itemValue="#{province.provinceid}" />  
+                                    </p:selectOneMenu>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.districtID}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.district.districtcode}" id="DistricID" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi4"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi4" for="DistricID"/>
+
+                                    <h:outputText value="#{msgs.districtName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.district.districtname}" id="DistricName" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi5"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi5" for="DistricName"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:Distric:fieldsetDistrict :tabSemua:tabelDistric:dataTabelDistric" actionListener="#{addressTabBean.addDistrict()}" rendered="#{addressTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{addressTabBean.resetDistrict()}" rendered="#{addressTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:Distric:fieldsetDistrict :tabSemua:tabelDistric:dataTabelDistric" actionListener="#{addressTabBean.updateDistrict()}" rendered="#{addressTabBean.status == 'update'}" process="@this"/>
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{addressTabBean.resetDistrict()}" rendered="#{addressTabBean.status == 'update'}" update="@form" action="#{addressTabBean.setFieldsetDistrict(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="tabelDistric">
+                            <p:dataTable value="#{addressTabBean.districtList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25" id="dataTabelDistric" >
+                                <p:column sortBy="#{o.provincename}" filterBy="#{o.provincename}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.province}</f:facet>
+                                    #{o.provincename}
+                                </p:column>
+                                <p:column sortBy="#{o.districtcode}" filterBy="#{o.districtcode}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.districtID}</f:facet>
+                                    #{o.districtcode}
+                                </p:column>
+                                <p:column sortBy="#{o.districtname}" filterBy="#{o.districtname}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.districtName}</f:facet>
+                                    #{o.districtname}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.districtname}" actionListener="#{addressTabBean.editDistrict(o)}" update=":tabSemua:Distric:fieldsetDistrict" />
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.districtname}" actionListener="#{addressTabBean.deleteDistrict(o)}"  update="@form"/>
+                                </p:column>
+
+                            </p:dataTable>   
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="TabSubdistrict"  title="Subdistrict">
+                    <p:panel id="panelSubdistrict">
+                        <h:form id="Subdistrict">
+                            <p:fieldset legend="#{msgs.add} #{msgs.subdistrict}" toggleable="true" collapsed="#{addressTabBean.fieldsetSubdistrict}" id="fieldsetSubdistrict">
+
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.district}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneMenu id="districID_subdistrict" value="#{addressTabBean.subDistrict.districtid}" style="width: 160px">
+                                        <f:selectItem itemLabel="Pilih Kota" />
+                                        <f:selectItems value="#{addressTabBean.subdistrictListCombo}" var="district" itemLabel="#{district.districtname}" itemValue="#{district.districtid}" />  
+                                    </p:selectOneMenu>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.subdistrictID}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.subDistrict.subdistrictcode}" id="SubdistricID" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi6"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi6" for="SubdistricID"/>
+
+                                    <h:outputText value="#{msgs.subdistrictName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.subDistrict.subdistrictname}" id="SubdistricName" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi7"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi7" for="SubdistricName"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:Subdistrict:fieldsetSubdistrict :tabSemua:tabelSubdistric:dataTabelSubDistric" actionListener="#{addressTabBean.addSubDistrict()}" rendered="#{addressTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{addressTabBean.resetSubDistrict()}" rendered="#{addressTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:Subdistrict:fieldsetSubdistrict :tabSemua:tabelSubdistric:dataTabelSubDistric" actionListener="#{addressTabBean.updateSubDistrict()}" rendered="#{addressTabBean.status == 'update'}" process="@this"/>
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{addressTabBean.resetSubDistrict()}" rendered="#{addressTabBean.status == 'update'}" update="@form" action="#{addressTabBean.setFieldsetSubdistrict(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="tabelSubdistric">
+                            <p:dataTable value="#{addressTabBean.subdistrictList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25" id="dataTabelSubDistric" >
+                                <p:column sortBy="#{o.districtname}" filterBy="#{o.districtname}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.district}</f:facet>
+                                    #{o.districtname}
+                                </p:column>
+                                <p:column sortBy="#{o.subdistrictcode}" filterBy="#{o.subdistrictcode}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.subdistrictID}</f:facet>
+                                    #{o.subdistrictcode}
+                                </p:column>
+                                <p:column sortBy="#{o.subdistrictname}" filterBy="#{o.subdistrictname}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.subdistrictName}</f:facet>
+                                    #{o.subdistrictname}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.subdistrictname}" actionListener="#{addressTabBean.editSubDistrict(o)}" update=":tabSemua:Subdistrict:fieldsetSubdistrict" />
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.subdistrictname}" actionListener="#{addressTabBean.deleteSubDistrict(o)}"  update="@form"/>
+                                </p:column>
+
+                            </p:dataTable>   
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="TabVillage"  title="Village">
+                    <p:panel id="panelVillage">
+                        <h:form id="Village">
+                            <p:fieldset legend="#{msgs.add} #{msgs.village}" toggleable="true" collapsed="#{addressTabBean.fieldsetVillage}" id="fieldsetVillage">
+                                <h:panelGrid columns="4">
+                                    <h:outputText value="#{msgs.subdistrict}"/>
+                                    <h:outputText value=":"/>
+                                    <p:selectOneMenu id="subdistricID_village" value="#{addressTabBean.village.subdistrictid}" style="width: 160px">
+                                        <f:selectItem itemLabel="Pilih Kecamatan" />
+                                        <f:selectItems value="#{addressTabBean.villageListCombo}" var="subdistrict" itemLabel="#{subdistrict.subdistrictname}" itemValue="#{subdistrict.subdistrictid}" />  
+                                    </p:selectOneMenu>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.villageID}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.village.villagecode}" id="VillageID" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi8"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi8" for="VillageID"/>
+
+                                    <h:outputText value="#{msgs.villageName}"/>
+                                    <h:outputText value=":"/>
+                                    <p:inputText value="#{addressTabBean.village.villagename}" id="VillageName" required="true" requiredMessage="Harus diisi" >
+                                        <p:ajax event="blur" update="Validasi9"/>
+                                    </p:inputText>
+                                    <p:message id="Validasi9" for="VillageName"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton id="simpan" value="#{msgs.saveButton}" update=":tabSemua:Village:fieldsetVillage :tabSemua:tabelVillage:dataTabelVillage" actionListener="#{addressTabBean.addVillage()}" rendered="#{addressTabBean.status == 'insert'}" />
+                                    <p:commandButton id="reset" value="#{msgs.resetButton}"  actionListener="#{addressTabBean.resetVillage()}" rendered="#{addressTabBean.status == 'insert'}" update="@form" process="@this"/>
+
+                                    <p:commandButton id="edit" value="#{msgs.editButton}" update=":tabSemua:Village:fieldsetVillage :tabSemua:tabelVillage:dataTabelVillage" actionListener="#{addressTabBean.updateVillage()}" rendered="#{addressTabBean.status == 'update'}" process="@this"/>
+                                    <p:commandButton id="cancel" value="#{msgs.cancelButton}"  actionListener="#{addressTabBean.resetVillage()}" rendered="#{addressTabBean.status == 'update'}" update="@form" action="#{addressTabBean.setFieldsetVillage(true)}" process="@this"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="tabelVillage">
+                            <p:dataTable value="#{addressTabBean.villageList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25" id="dataTabelVillage" >
+                                <p:column sortBy="#{o.subdistrictname}" filterBy="#{o.subdistrictname}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.subdistrict}</f:facet>
+                                    #{o.subdistrictname}
+                                </p:column>
+                                <p:column sortBy="#{o.villagecode}" filterBy="#{o.villagecode}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.villageID}</f:facet>
+                                    #{o.villagecode}
+                                </p:column>
+                                <p:column sortBy="#{o.villagename}" filterBy="#{o.villagename}" filterMatchMode="contains">
+                                    <f:facet name="header">#{msgs.villageName}</f:facet>
+                                    #{o.villagename}
+                                </p:column>
+                                <p:column style="width: 100px;">
+                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.editButton} #{o.villagename}" actionListener="#{addressTabBean.editVillage(o)}" update=":tabSemua:Village:fieldsetVillage" />
+                                    <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton} #{o.villagename}" actionListener="#{addressTabBean.deleteVillage(o)}"  update="@form"/>
+                                </p:column>
+
+                            </p:dataTable>   
+                        </h:form>
+                    </p:panel>
+                </p:tab>
+            </p:tabView>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

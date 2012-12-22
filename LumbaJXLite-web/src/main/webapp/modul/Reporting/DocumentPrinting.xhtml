@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Document Printing">
+            <h:form id="formDocumentPrinting" target="_blank">
+                <p:growl id="growl" showDetail="true"/>
+
+                <h:panelGrid id="panelgriddocumentprinting" columns="4">
+                    <p:outputLabel for="TypeProduct" value="Type Produk"/>
+                    <p:selectOneMenu id="TypeProduct" value="#{documentPrintingBean.typeproduct}" style="width: 200px;" required="true">
+                        <f:selectItem itemLabel="Pilih Tipe Produk"/>
+                        <f:selectItem itemLabel="Loan" itemValue="loan"/>
+                        <f:selectItem itemLabel="Saving" itemValue="saving"/>
+                        <f:ajax listener="#{documentPrintingBean.productLookup}" render="panelgriddocumentprinting"/>
+                    </p:selectOneMenu>
+                    <p:spacer/>
+                    <p:spacer/>
+
+                    <p:outputLabel for="TypeDocument" value="Dokumen"/>
+                    <p:selectOneMenu id="TypeDocument" value="#{documentPrintingBean.typedocument}" style="width: 200px;" required="true">
+                        <f:selectItem itemLabel="Bukti Realisasi Kredit" itemValue="brk"/>
+                        <f:selectItem itemLabel="Surat Perjanjian Kredit" itemValue="spk" rendered="#{documentPrintingBean.typeproduct=='saving'}"/>
+                        <f:selectItem itemLabel="Bulyet Deposito" itemValue="bd" />
+                        <f:ajax/>
+                    </p:selectOneMenu>
+                    <p:spacer/>
+                    <p:spacer/>
+
+                    <p:outputLabel for="ListProduct" value="Product"/>
+                    <p:selectOneMenu id="ListProduct" value="#{documentPrintingBean.idproduct}" style="width: 200px;" required="true">
+                        <f:selectItem itemLabel="Pilih Product"/>
+                        <f:selectItems value="#{documentPrintingBean.loanlist}" var="loanlist" itemLabel="#{loanlist.loanname}" itemValue="#{loanlist.loanid}" rendered="#{documentPrintingBean.typeproduct=='loan'}"/>
+                        <f:selectItems value="#{documentPrintingBean.savinglist}" var="savinglist" itemLabel="#{savinglist.savingname}" itemValue="#{savinglist.savingid}" rendered="#{documentPrintingBean.typeproduct=='saving'}"/>
+                        <p:ajax/>
+                    </p:selectOneMenu>
+                    <p:spacer/>
+                    <p:spacer/>
+
+                    <p:spacer/>
+                    <p:selectOneRadio value="#{documentPrintingBean.dateparameter}">  
+                        <f:selectItem itemLabel="Today" itemValue="true" />  
+                        <f:selectItem itemLabel="History" itemValue="false" />  
+                        <f:ajax render="@form" />
+                    </p:selectOneRadio> 
+                    <p:spacer/>
+                    <p:spacer/>
+
+                    
+                        <p:outputLabel for="today" value="Print Date" rendered="#{documentPrintingBean.dateparameter=='true'}"/>
+                        <p:calendar  id="today" value="#{documentPrintingBean.dateToday}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true"   rendered="#{documentPrintingBean.dateparameter=='true'}" >
+                            <f:ajax listener="#{documentPrintingBean.dateToday}"/>
+                        </p:calendar>
+                        <p:spacer rendered="#{documentPrintingBean.dateparameter=='true'}"/>
+                        <p:spacer rendered="#{documentPrintingBean.dateparameter=='true'}"/>
+
+                        <p:outputLabel for="dateFrom" value="Print Date" rendered="#{documentPrintingBean.dateparameter=='false'}"/>
+                        <p:calendar  id="dateFrom" value="#{documentPrintingBean.dateFrom}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true"   rendered="#{documentPrintingBean.dateparameter=='false'}" >
+                            <f:ajax listener="#{documentPrintingBean.dateToday}"/>
+                        </p:calendar>
+                        <p:outputLabel for="dateTo" value="hingga" rendered="#{documentPrintingBean.dateparameter=='false'}"/>
+                        <p:calendar  id="dateTo" value="#{documentPrintingBean.dateTo}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true"   rendered="#{documentPrintingBean.dateparameter=='false'}" >
+                            <f:ajax listener="#{documentPrintingBean.dateToday}"/>
+                        </p:calendar>
+                 
+
+                </h:panelGrid>
+
+                <p:commandButton value="search" process="formDocumentPrinting" actionListener="#{documentPrintingBean.searchFunction}"  update="formDocumentPrinting"/>
+
+                <p:dataTable 
+                    style="text-align: center" 
+                    value="#{documentPrintingBean.loanapplicationList}" 
+                    emptyMessage="Data masih kosong" 
+                    id="cvbn" 
+                    var="loanapplicationlist" 
+                    paginator="true" 
+                    paginatorPosition="top" 
+                    rows="25" 
+                    rowsPerPageTemplate="5,10,20,25">
+
+                    <p:column headerText="No CIF">
+                        <h:outputText value="#{loanapplicationlist.customercode}"/>
+                    </p:column>
+
+                    <p:column headerText="Nama Nasabah">
+                        <h:outputText value="#{loanapplicationlist.namaNasabah}"/>
+                    </p:column>
+
+                    <p:column headerText="Nama Product">
+                        <h:outputText value="#{loanapplicationlist.productName}"/>
+                    </p:column>
+                    <p:column headerText="Tanggal Pencairan" rendered="#{documentPrintingBean.dateparameter == 'false'}">
+                        <h:outputText value="#{loanapplicationlist.issueDate}" rendered="#{documentPrintingBean.dateparameter == 'false'}"/>
+                    </p:column>
+                    <p:column headerText="id loan aplikasi">
+                        <h:outputText value="#{loanapplicationlist.loanapplicationid}"/>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{documentPrintingBean.generateReport(loanapplicationlist)}" update="@form" ajax="false"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

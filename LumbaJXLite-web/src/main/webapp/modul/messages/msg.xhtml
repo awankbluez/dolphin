@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../templateLeft.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="page">Messages : Info Previlage</ui:define>
+    <ui:define name="title">Messages : Info Previlage</ui:define>
+    <ui:define name="desk">Informasi previlage apa saja yang anda dapat</ui:define>
+
+    <ui:define name="content">
+
+        <b>Information : Your Routing Previlages</b><br/><br/>
+        <ui:repeat value="#{messages.menuRM}" var="RM">
+            <h:panelGroup layout="block" rendered="#{RM.menuname != 'Private Message'}">
+                <div class="label w200" >#{RM.menuname}</div>#{RM.infoRouting} 
+                <div class="clear space"></div>
+            </h:panelGroup>
+        </ui:repeat>
+
+    </ui:define>
+</ui:composition>

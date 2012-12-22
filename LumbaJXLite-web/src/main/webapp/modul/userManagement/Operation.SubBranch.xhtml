@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+   <ui:define name="top">
+      top
+   </ui:define>
+
+   <ui:define name="menuBar">
+      menuBar
+   </ui:define>
+
+   <ui:define name="content">
+      <p:panel closable="true" toggleable="true" header="Sub Cabang">
+         <h:form id="formFieldsetSubBranch" >
+            <p:fieldset legend="Tambah Kantor Sub Cabang"
+                        toggleable="TRUE"
+                        collapsed="#{subBranchBean.fieldsetCollapse}"
+                        toggleSpeed="500">
+               <h:panelGrid columns="3">
+                  <p:outputLabel for="SubBranchHeadOffice" value="Kantor Pusat"/>
+                  <p:selectOneMenu id="SubBranchHeadOffice" value="#{subBranchBean.selectedSubBranch.headOffice.headofficeid}" required="true" label="Kantor Pusat" style="width: 200px;">
+                     <f:selectItem itemValue="" itemLabel="Pilih Kantor Pusat"/>
+                     <f:selectItems value="#{subBranchBean.headOffices}" var="headOffice" itemLabel="#{headOffice.headOffice.headofficename}" itemValue="#{headOffice.headOffice.headofficeid}"/>
+                     <p:ajax update="SubBranchRegion"/>
+                  </p:selectOneMenu>
+                  <p:message for="SubBranchHeadOffice"/>
+
+                  <p:outputLabel for="SubBranchRegion" value="Regional"/>
+                  <p:selectOneMenu id="SubBranchRegion" value="#{subBranchBean.selectedSubBranch.region.regionID}" required="true" label="Regional" style="width: 200px;">
+                     <f:selectItem itemValue="" itemLabel="Pilih Regional"/>
+                     <f:selectItems value="#{subBranchBean.regions}" var="region" itemLabel="#{region.region.regionName}" itemValue="#{region.region.regionID}"/>
+                     <p:ajax update="SubBranchBranch"/>
+                  </p:selectOneMenu>
+                  <p:message for="SubBranchRegion"/>
+
+                  <p:outputLabel for="SubBranchBranch" value="Cabang"/>
+                  <p:selectOneMenu id="SubBranchBranch" value="#{subBranchBean.selectedSubBranch.branch.branchid}" required="true" label="Cabang" style="width: 200px;">
+                     <f:selectItem itemValue="" itemLabel="Pilih Cabang"/>
+                     <f:selectItems value="#{subBranchBean.branchs}" var="branch" itemLabel="#{branch.branch.branchname}" itemValue="#{branch.branch.branchid}"/>
+                  </p:selectOneMenu>
+                  <p:message for="SubBranchBranch"/>
+
+                  <p:outputLabel for="SubBranchType" value="Tipe Sub Cabang"/>
+                  <p:selectOneMenu id="SubBranchType" value="#{subBranchBean.selectedSubBranch.subBranchUnitCo.type}" required="true" label="Tipe Sub Cabang" style="width: 200px;">
+                     <f:selectItem itemValue="" itemLabel="Pilih Tipe Sub Cabang"/>
+                     <f:selectItem itemValue="S" itemLabel="Sub Cabang"/>
+                     <f:selectItem itemValue="U" itemLabel="Unit"/>
+                     <f:selectItem itemValue="C" itemLabel="Cash Office"/>
+                  </p:selectOneMenu>
+                  <p:message for="SubBranchType"/>
+
+                  <p:outputLabel for="SubBranchCode" value="Kode Sub Cabang"/>
+                  <p:inputText id="SubBranchCode" value="#{subBranchBean.selectedSubBranch.subBranchUnitCo.subbranchunitcocode}" required="true" label="Kode Sub Cabang"/>
+                  <p:message for="SubBranchCode"/>
+
+                  <p:outputLabel for="SubBranchName" value="Nama Sub Cabang"/>
+                  <p:inputText id="SubBranchName" value="#{subBranchBean.selectedSubBranch.subBranchUnitCo.subbranchunitconame}" required="true" label="Nama Sub Cabang" maxlength="40"/>
+                  <p:message for="SubBranchName"/>
+
+                  <p:outputLabel for="SubBranchProvinceID" value="Provinsi"/>
+                  <p:selectOneMenu id="SubBranchProvinceID" required="true" label="Provinsi" value="#{subBranchBean.selectedSubBranch.village.subDistrict.district.province.provinceid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Provinsi"/>
+                     <f:selectItems value="#{subBranchBean.listProvince}" var="province" itemLabel="#{province.provincename}" itemValue="#{province.provinceid}"/>
+                     <p:ajax update="SubBranchDistrictID"/>
+                  </p:selectOneMenu>
+                  <p:message for="SubBranchProvinceID"/>
+
+                  <p:outputLabel for="SubBranchDistrictID" value="Kota / Kabupaten"/>
+                  <p:selectOneMenu id="SubBranchDistrictID" required="true" label="Kota / Kabupaten" value="#{subBranchBean.selectedSubBranch.village.subDistrict.district.districtid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Kota / Kabupaten"/>
+                     <f:selectItems value="#{subBranchBean.listDistrict}" var="district" itemLabel="#{district.districtname}" itemValue="#{district.districtid}"/>
+                     <p:ajax update="SubBranchSubDistrictID"/>
+                  </p:selectOneMenu>
+                  <p:message for="SubBranchDistrictID"/>
+
+                  <p:outputLabel for="SubBranchSubDistrictID" value="Kecamatan"/>
+                  <p:selectOneMenu id="SubBranchSubDistrictID" required="true" label="Kecamatan" value="#{subBranchBean.selectedSubBranch.village.subDistrict.subdistrictid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Kecamatan"/>
+                     <f:selectItems value="#{subBranchBean.listSubDistrict}" var="subdistrict" itemLabel="#{subdistrict.subdistrictname}" itemValue="#{subdistrict.subdistrictid}"/>
+                     <p:ajax update="SubBranchVillageID"/>
+                  </p:selectOneMenu>
+                  <p:message for="SubBranchSubDistrictID"/>
+
+                  <p:outputLabel for="SubBranchVillageID" value="Keluarahan / Desa"/>
+                  <p:selectOneMenu id="SubBranchVillageID" required="true" label="Keluarahan / Desa" value="#{subBranchBean.selectedSubBranch.village.villageid}" style="width: 200px;">
+                     <f:selectItem itemLabel="Pilih Keluarahan / Desa"/>
+                     <f:selectItems value="#{subBranchBean.listVillage}" var="village" itemLabel="#{village.villagename}" itemValue="#{village.villageid}"/>
+                  </p:selectOneMenu>
+                  <p:message for="SubBranchVillageID"/>
+
+                  <p:outputLabel for="SubBranchAddress" value="Alamat"/>
+                  <p:inputText id="SubBranchAddress" value="#{subBranchBean.selectedSubBranch.address}" required="true" label="Alamat" maxlength="400"/>
+                  <p:message for="SubBranchAddress"/>
+
+                  <p:outputLabel for="SubBranchPhomeNumber" value="Nomor Telepon"/>
+                  <p:inputText id="SubBranchPhomeNumber" value="#{subBranchBean.selectedSubBranch.phonenumber}"/>
+                  <p:spacer/>
+
+                  <p:outputLabel for="SubBranchStatus" value="Sub Cabang Status"/>
+                  <p:selectOneRadio id="SubBranchStatus" value="#{subBranchBean.selectedSubBranch.subBranchUnitCo.subbranchunitcostatus}">
+                     <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                     <f:selectItem itemValue="false" itemLabel="Tidak Aktif"/>
+                  </p:selectOneRadio>
+                  <p:spacer/>
+
+                  <h:outputText value="Branch Vault Account"/>
+                  <p:selectOneMenu id="BranchVaultAccount" value="#{subBranchBean.selectedSubBranch.subBranchUnitCo.branchVaultAccount}" style="width: 200px">
+                     <f:selectItem itemLabel="Pilih Satu COA"/>
+                     <f:selectItems value="#{subBranchBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.generalaccountnumber} | #{coa.chartofaccountname}}" />
+                  </p:selectOneMenu>
+                  <h:outputText/>
+
+                  <h:outputText value="Inter Branch Account"/>
+                  <p:selectOneMenu id="InterBranchAccount" value="#{subBranchBean.selectedSubBranch.subBranchUnitCo.interBranchAccount}" style="width: 200px">
+                     <f:selectItem itemLabel="Pilih Satu COA"/>
+                     <f:selectItems value="#{subBranchBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.generalaccountnumber} | #{coa.chartofaccountname}}" />
+                  </p:selectOneMenu>
+                  <h:outputText/>
+
+                  <h:outputText value="BranchBankAccount"/>
+                  <p:selectOneMenu id="BranchBankAccount" value="#{subBranchBean.selectedSubBranch.subBranchUnitCo.branchBankAccount}" style="width: 200px">
+                     <f:selectItem itemLabel="Pilih Satu COA"/>
+                     <f:selectItems value="#{subBranchBean.chartofaccounts}" var="coa" itemValue="#{coa.chartofaccountid}" itemLabel="#{coa.generalaccountnumber} | #{coa.chartofaccountname}}" />
+                  </p:selectOneMenu>
+                  <h:outputText/>
+
+                  <p:commandButton value="Simpan" icon="ui-icon ui-icon-check" update="@form :panelGroupTableSubbranch" actionListener="#{subBranchBean.create()}" rendered="#{subBranchBean.status == 'insert'}"/>
+                  <p:commandButton value="Reset" rendered="#{subBranchBean.status.equalsIgnoreCase('insert')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+                  <p:commandButton value="Rubah" icon="ui-icon ui-icon-check" update="@form :panelGroupTableSubbranch" actionListener="#{subBranchBean.update()}" rendered="#{subBranchBean.status == 'update'}"/>
+                  <p:commandButton value="Cancel" rendered="#{subBranchBean.status.equalsIgnoreCase('update')}" update="@form" process="@this" icon="ui-icon ui-icon-closethick">
+                     <pe:resetInput for="@form"/>
+                  </p:commandButton>
+               </h:panelGrid>
+            </p:fieldset>
+         </h:form>
+
+         <h:panelGroup id="panelGroupTableSubbranch">
+            <h:form id="formTableSubBranch" >
+               <p:dataTable
+                  id="tableSubBranch"
+                  emptyMessage="Tidak Ada Sub Kantor Sub Cabang"
+                  value="#{subBranchBean.subBranchList}"
+                  var="subBranch"
+                  sortOrder="descending">
+
+                  <pe:paginator
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rows="10"
+                     rowsPerPageTemplate="5,10,15"
+                     />
+
+                  <f:facet name="header">Daftar Sub Cabang</f:facet>
+
+                  <p:column sortBy="#{subBranch.subBranchUnitCo.subbranchunitcocode}" filterBy="#{subBranch.subBranchUnitCo.subbranchunitcocode}" filterMatchMode="contains">
+                     <f:facet name="header">Kode</f:facet>
+                     <h:outputText value="#{subBranch.subBranchUnitCo.subbranchunitcocode}"/>
+                  </p:column>
+
+                  <p:column sortBy="#{subBranch.subBranchUnitCo.subbranchunitconame}" filterBy="#{subBranch.subBranchUnitCo.subbranchunitconame}" filterMatchMode="contains">
+                     <f:facet name="header">Nama</f:facet>
+                     <h:outputText value="#{subBranch.subBranchUnitCo.subbranchunitconame}"/>
+                  </p:column>
+
+                  <p:column sortBy="#{subBranch.subBranchUnitCo.type}" filterBy="#{subBranch.subBranchUnitCo.type}" filterMatchMode="contains">
+                     <f:facet name="header">Tipe</f:facet>
+                     <h:outputText value="#{subBranch.subBranchUnitCo.typename}"/>
+                  </p:column>
+
+                  <p:column sortBy="#{subBranch.branch.branchname}" filterBy="#{subBranch.branch.branchname}" filterMatchMode="contains">
+                     <f:facet name="header">Kantor Cabang</f:facet>
+                     <h:outputText value="#{subBranch.branch.branchname}"/>
+                  </p:column>
+
+                  <p:column sortBy="#{subBranch.region.regionName}" filterBy="#{subBranch.region.regionName}" filterMatchMode="contains">
+                     <f:facet name="header">Kantor Wilayah</f:facet>
+                     <h:outputText value="#{subBranch.region.regionName}"/>
+                  </p:column>
+
+                  <p:column style="width: 80px; text-align: center;">
+                     <f:facet name="header">Status</f:facet>
+                     <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{subBranch.subBranchUnitCo.subbranchunitcostatus == true}"/>
+                     <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{subBranch.subBranchUnitCo.subbranchunitcostatus == false}"/>
+                  </p:column>
+
+                  <p:column style="width: 80px; text-align: center;">
+                     <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{subBranch.subBranchUnitCo.subbranchunitconame}" actionListener="#{subBranchBean.edit(subBranch)}" update=":formFieldsetSubBranch"/>
+                     <p:commandButton icon="ui-icon ui-icon-trash" title="Delete #{subBranch.subBranchUnitCo.subbranchunitconame}" actionListener="#{subBranchBean.delete(subBranch)}" update="@form"/>
+                  </p:column>
+               </p:dataTable>
+            </h:form>
+         </h:panelGroup>
+      </p:panel>
+   </ui:define>
+
+   <ui:define name="bottom">
+      bottom
+   </ui:define>
+
+</ui:composition>

@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">  
+        <p:panel header="Kolektabilitas" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" id="panelK">
+            <h:form id="Kolektabilitas">
+                <p:fieldset legend="Tambah Kolektabilitas" toggleable="true" collapsed="#{collectabilityBean.fieldsetCollapse}" >
+                    <h:panelGrid columns="4">
+                        <h:outputText value="ID Kolektabilitas"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{collectabilityBean.collectability.collectabilitycode}" id="KodeKolektabilitas" required="true" requiredMessage="Harus diisi" validator="#{collectabilityBean.validateCollectabilityCode}">
+                            <p:ajax event="blur" update="Validasi"/>
+                        </p:inputText>
+                        <p:message id="Validasi" for="KodeKolektabilitas"/>
+                        
+                        <h:outputText value="Nama Kolektabilitas"/>
+                        <h:outputText value=":"/>
+                        <p:inputText value="#{collectabilityBean.collectability.collectabilityname}" id="NamaKolektabilitas" required="true" requiredMessage="Harus diisi" validator="#{collectabilityBean.validateCollectabilityName}">
+                            <p:ajax event="blur" update="Validasi1"/>
+                        </p:inputText>
+                        <p:message id="Validasi1" for="NamaKolektabilitas"/>
+
+                        <p:spacer width="10"/>
+                        <p:spacer width="10"/>
+                        <p:commandButton id="btnSubmitKolektabilitas" value="#{msgs.Save}" update="@form :formtabelKolektabilitas:tabelKolektabilitas" action="#{collectabilityBean.add()}" rendered="#{collectabilityBean.status == 'insert'}"/>
+                        <p:commandButton id="btnUpdateKolektabilitas" value="#{msgs.Edit}" update="@form :formtabelKolektabilitas:tabelKolektabilitas" action="#{collectabilityBean.update()}" rendered="#{collectabilityBean.status == 'update'}"/>
+                        
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+            <h:form id="formtabelKolektabilitas">
+                <p:dataTable id="tabelKolektabilitas" value="#{collectabilityBean.collectabilityList}" var="o" sortOrder="desc" paginator="true" paginatorPosition="top" rows="25" rowsPerPageTemplate="5,10,20,25"  >
+                    <p:column sortBy="#{o.collectabilitycode}" filterBy="#{o.collectabilitycode}">
+                        <f:facet name="header">ID Kolektabilitas</f:facet>
+                        #{o.collectabilitycode}
+                    </p:column>
+                    <p:column sortBy="#{o.collectabilityname}" filterBy="#{o.collectabilityname}">
+                        <f:facet name="header">Nama Kolektabilitas</f:facet>
+                        #{o.collectabilityname}
+                    </p:column>
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{o.collectabilityname}" action="#{collectabilityBean.edit(o)}" update=":Kolektabilitas"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus #{o.collectabilityname}"  update="@form" action="#{collectabilityBean.delete(o)}"/>
+                    </p:column>
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

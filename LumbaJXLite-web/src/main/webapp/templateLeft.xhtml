@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+
+    <f:view locale="#{userInfoBean.locale}" encoding="UTF-8" contentType="text/html">
+        <h:head>
+            <title><ui:insert name="page">Untitled Page</ui:insert></title>
+            <ui:param name="root" value="#{facesContext.externalContext.requestContextPath}"/>
+            <h:outputStylesheet name="style.default.css" library="css"/>
+            <h:outputScript name="custom/general.js" library="js"/>
+            <link href="#{root}/resources/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+            <f:metadata>
+                <f:event listener="#{userSessionBean.verifyUserLogin}" type="preRenderView"/>
+            </f:metadata>
+        </h:head>
+
+        <h:body styleClass="withvernav">
+
+            <div class="bodywrapper">
+                <ui:include src="header.xhtml"/>
+                <ui:include src="left.xhtml"/>
+                <div class="centercontent">
+                    <div class="pageheader notab">
+                        <h3 class="pagetitle"><ui:insert name="title">Untitled</ui:insert></h3>
+                        <span class="pagedesc"><ui:insert name="desk">Undesk</ui:insert></span>
+                    </div><!--pageheader-->
+                    <div id="contentwrapper" class="contentwrapper">
+                        <ui:insert name="content">Content</ui:insert>
+                    </div><!--contentwrapper-->
+                    <br clear="all" />
+                </div>
+            </div><!--bodywrapper-->
+            <ui:include src="error.xhtml"/>
+        </h:body>
+    </f:view>
+</html>

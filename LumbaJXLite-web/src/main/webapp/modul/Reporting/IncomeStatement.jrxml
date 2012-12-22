@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="306"/>
+	<parameter name="periodFrom1" class="java.lang.String"/>
+	<parameter name="periodTo3" class="java.lang.String"/>
+	<parameter name="period" class="java.lang.String"/>
+	<parameter name="loggedBranch" class="java.lang.String"/>
+	<parameter name="branchName" class="java.lang.String"/>
+	<parameter name="periodTo1" class="java.lang.String"/>
+	<parameter name="loggedUser" class="java.lang.String"/>
+	<parameter name="periodTo2" class="java.lang.String"/>
+	<parameter name="periodFrom3" class="java.lang.String"/>
+	<parameter name="periodFrom2" class="java.lang.String"/>
+	<parameter name="sitename" class="java.lang.String"/>
+	<parameter name="rounding" class="java.lang.String"/>
+	<parameter name="sitebisnis" class="java.lang.String"/>
+	<parameter name="dateSession" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="month1Value" class="java.lang.String"/>
+	<field name="month2Value" class="java.lang.String"/>
+	<field name="month3Value" class="java.lang.String"/>
+	<field name="tempNetIncome.netincome1Value" class="java.lang.String"/>
+	<field name="tempNetIncome.netincome2Value" class="java.lang.String"/>
+	<field name="tempNetIncome.netincome3Value" class="java.lang.String"/>
+	<field name="categoryid" class="java.lang.Integer"/>
+	<field name="month1" class="java.lang.Double"/>
+	<field name="month2" class="java.lang.Double"/>
+	<field name="month3" class="java.lang.Double"/>
+	<variable name="netincome1Value" class="java.lang.Double" resetType="Group" resetGroup="categoryid" calculation="Sum">
+		<variableExpression><![CDATA[$F{month1}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="netincome2Value" class="java.lang.Double" resetType="Group" resetGroup="categoryid" calculation="Sum">
+		<variableExpression><![CDATA[$F{month2}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="netincome3Value" class="java.lang.Double" resetType="Group" resetGroup="categoryid" calculation="Sum">
+		<variableExpression><![CDATA[$F{month3}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<group name="categoryid">
+		<groupExpression><![CDATA[$F{categoryid}]]></groupExpression>
+		<groupHeader>
+			<band height="9"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="57">
+				<staticText>
+					<reportElement x="121" y="5" width="69" height="20"/>
+					<textElement textAlignment="Center">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField pattern="#0.0#">
+					<reportElement x="445" y="6" width="109" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{netincome3Value}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#0.0#">
+					<reportElement x="205" y="5" width="99" height="20"/>
+					<textElement textAlignment="Center">
+						<font isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{netincome1Value}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#0.0#">
+					<reportElement x="324" y="6" width="102" height="20"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{netincome2Value}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="161" splitType="Stretch">
+			<staticText>
+				<reportElement x="115" y="73" width="314" height="21"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INCOME STATEMENT
+                
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="163" y="123" width="78" height="14"/>
+				<textElement/>
+				<text><![CDATA[Period 3 from : 
+                
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="163" y="109" width="78" height="14"/>
+				<textElement/>
+				<text><![CDATA[Period 2 from : 
+                
+                ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="325" y="109" width="75" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{periodTo2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="221" y="138" width="117" height="21"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{branchName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="305" y="123" width="16" height="14"/>
+				<textElement/>
+				<text><![CDATA[To
+                
+                ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="325" y="95" width="75" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{periodTo1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="241" y="95" width="63" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{periodFrom1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="241" y="123" width="63" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{periodFrom3}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="305" y="109" width="16" height="14"/>
+				<textElement/>
+				<text><![CDATA[To
+                
+                ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="241" y="109" width="63" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{periodFrom2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="163" y="95" width="78" height="14"/>
+				<textElement/>
+				<text><![CDATA[Period 1 from : 
+                
+                ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="325" y="123" width="75" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{periodTo3}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="305" y="95" width="16" height="14"/>
+				<textElement/>
+				<text><![CDATA[To
+                
+                ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="16" width="553" height="29"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sitebisnis}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="45" width="553" height="28"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sitename}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="6" width="61" height="14"/>
+				<textElement/>
+				<text><![CDATA[Period Type: 
+                
+                ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="71" y="6" width="106" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{period}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="8" width="111" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description
+                
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="445" y="6" width="109" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Period 3
+                
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="322" y="6" width="104" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Period 2
+                
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="199" y="26" width="32" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Rp. (]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="204" y="6" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Period 1
+                
+                ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="48" width="554" height="2"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="45" width="554" height="2"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="231" y="26" width="68" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{rounding}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="298" y="26" width="11" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="351" y="26" width="68" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{rounding}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="319" y="26" width="32" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Rp. (]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="418" y="26" width="11" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="476" y="26" width="68" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{rounding}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="444" y="26" width="32" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Rp. (]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="543" y="26" width="11" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="205" y="0" width="99" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{month1Value}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="0" width="109" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{month3Value}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="324" y="0" width="102" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{month2Value}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="8" y="0" width="180" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="13" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="5" width="87" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{loggedUser}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="495" y="5" width="59" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Of : " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="428" y="5" width="67" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page : " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="88" y="5" width="87" height="20"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{loggedBranch}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="5" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dateSession}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="326" y="6" width="102" height="21"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tempNetIncome.netincome2Value}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="207" y="6" width="99" height="20"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tempNetIncome.netincome1Value}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="444" y="6" width="110" height="21"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tempNetIncome.netincome3Value}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="86" y="6" width="111" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Income]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="1" width="553" height="2"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

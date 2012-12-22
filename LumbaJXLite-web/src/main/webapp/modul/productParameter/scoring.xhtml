@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+
+        <p:panel id="panelscoring" header="scoring" collapsed="false" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000">
+            <h:form id="qwerty" prependId="true">
+                <p:fieldset id="fieldsetloancategory" legend="scoring" collapsed="true" toggleable="true">
+
+                    <h:panelGrid id="panelgridscoring" columns="4" columnClasses="label, value" styleClass="grid" >
+
+                        <h:outputText value="Kategory Pinjaman (khusus yg use scoring)"/>
+                        <p:selectOneMenu id="LoanCategory" value="#{loanBean.loan.loancategory.loancategoryid}" style="width: 100px">
+                            <f:selectItems value="#{loanBean.loancategorylist}" var="category" itemValue="#{category.loancategoryid}" itemLabel="#{category.loancategoryname}" />
+                        </p:selectOneMenu>
+                        <p:spacer/>
+                        <p:spacer/>
+
+                        <h:outputText value="Variable"/>
+                        <p:selectOneMenu id="variable" value="#{loanBean.loan.loancategory.loancategoryid}" style="width: 100px">
+                            <f:selectItems value="#{loanBean.loancategorylist}" var="category" itemValue="#{category.loancategoryid}" itemLabel="#{category.loancategoryname}" />
+                        </p:selectOneMenu>
+                        <p:spacer/>
+                        <p:spacer/>
+
+                        <h:outputText value="use range"/>
+                        <p:selectOneRadio  value="#">
+                            <f:selectItem itemValue="true" itemLabel="Yes"/>
+                            <f:selectItem itemValue="false" itemLabel="No" />
+                        </p:selectOneRadio>
+                        <p:spacer/>
+                        <p:spacer/>
+
+                        <h:outputText value="Parameter"/>
+                        <p:inputText/>
+                        <h:outputText value="to"/>
+                        <p:inputText/>
+
+                        <h:outputText value="Parameter"/>
+                        <p:selectOneMenu id="Parameter" value="#{loanBean.loan.loancategory.loancategoryid}" style="width: 100px">
+                            <f:selectItems value="#{loanBean.loancategorylist}" var="category" itemValue="#{category.loancategoryid}" itemLabel="#{category.loancategoryname}" />
+                        </p:selectOneMenu>
+                        <p:spacer/>
+                        <p:spacer/>
+
+                        <h:outputText value="Score Point"/>
+                        <p:inputText/>
+                        <p:spacer/>
+                        <p:spacer/>
+
+                        <h:outputText value="use ratio"/>
+                        <p:selectOneRadio  value="#">
+                            <f:selectItem itemValue="true" itemLabel="Yes"/>
+                            <f:selectItem itemValue="false" itemLabel="No" />
+                        </p:selectOneRadio>
+                        <p:spacer/>
+                        <p:spacer/>
+
+                        <h:outputText value="tabel 1"/>
+                        <p:selectOneMenu id="tabel1" value="#{loanBean.loan.loancategory.loancategoryid}" style="width: 100px">
+                            <f:selectItems value="#{loanBean.loancategorylist}" var="category" itemValue="#{category.loancategoryid}" itemLabel="#{category.loancategoryname}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="tabel 2"/>
+                        <p:selectOneMenu id="tabel2" value="#{loanBean.loan.loancategory.loancategoryid}" style="width: 100px">
+                            <f:selectItems value="#{loanBean.loancategorylist}" var="category" itemValue="#{category.loancategoryid}" itemLabel="#{category.loancategoryname}" />
+                        </p:selectOneMenu>
+
+                        <h:outputText value="field 1"/>
+                        <p:selectOneMenu id="field1" value="#{loanBean.loan.loancategory.loancategoryid}" style="width: 100px">
+                            <f:selectItems value="#{loanBean.loancategorylist}" var="category" itemValue="#{category.loancategoryid}" itemLabel="#{category.loancategoryname}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="field 2"/>
+                        <p:selectOneMenu id="field2" value="#{loanBean.loan.loancategory.loancategoryid}" style="width: 100px">
+                            <f:selectItems value="#{loanBean.loancategorylist}" var="category" itemValue="#{category.loancategoryid}" itemLabel="#{category.loancategoryname}" />
+                        </p:selectOneMenu>
+
+                        <p:commandButton process="panelgridscoring" action="#{loanCategory.add()}" value="#{msgs.create}" update=":asdf" rendered="#{loanCategory.status == 'insert'}"/>
+                        <p:commandButton process="panelgridscoring" action="#{loanCategory.update()}" value="edit" update=":qwerty:fieldsetloancategory,:asdf" rendered="#{loanCategory.status == 'update'}"/>
+
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+
+            <h:form id="asdf">
+                <p:dataTable style="text-align: center" value="#{loanCategory.loancategorylist}" sortOrder="desc" emptyMessage="#{msgs.emptymessage}" var="scoring" paginator="true" paginatorPosition="top" rows="5" rowsPerPageTemplate="5,10,20,25">
+
+
+                    <p:column>
+                        <f:facet name="header">kategori pinjaman</f:facet>
+                        <h:outputText value="#"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">variabel</f:facet>
+                        <h:outputText value="#"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">parameter</f:facet>
+                        <h:outputText value="#"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">score point</f:facet>
+                        <h:outputText value="#"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">table</f:facet>
+                        <h:outputText value="#"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">field</f:facet>
+                        <h:outputText value="#"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Status</f:facet>
+                        <h:outputText value="#"/>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Action</f:facet>
+                        <h:outputText value="#"/>
+                    </p:column>
+                    
+                    <p:column style="width: 100px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="#{msgs.edit}" action="#{loanCategory.edit(category)}" update=":panelscoring"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.delete}" action="#{loanCategory.remove(category)}" update=":asdf"  />
+                    </p:column> 
+                </p:dataTable>   
+            </h:form>
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,386 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <p:panel id="panelReversal" header="Reversal" closable="true" collapsed="false" toggleable="true">
+            <h:form id="formReversal">
+                <p:growl id="savereversal" sticky="false" life="5000"/>
+                <h:panelGrid columns="2">
+                    <h:outputLabel for="chooseReversal" value="Journal Reverse Type"/>
+                    <p:selectOneMenu id="chooseReversal" value="#{reverseBean.journaltobereversed}">
+                        <f:selectItem itemLabel="Select Journal" itemValue=""/>
+                        <f:selectItem itemLabel="Journal Entry" itemValue="entry"/>
+                        <f:selectItem itemLabel="Journal Transaksi" itemValue="transaksi"/>
+                        <f:selectItem itemLabel="Journal Reconciliation" itemValue="recon"/>
+                        <p:ajax update="@form"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+                <p:panel header="Reverse Journal Entry" rendered="#{reverseBean.journaltobereversed == 'entry'}">
+                    <h:panelGrid columns="3" id="gridjournal">
+                        <h:outputLabel for="entryJournalType" value="Journal type"/>
+                        <p:selectOneMenu id="entryJournalType" value="#{reverseBean.journalType}">
+                            <f:selectItem itemLabel="Select Journal Type" itemValue=""/>
+                            <f:selectItem itemLabel="Batch Journal" itemValue="batch"/>
+                            <f:selectItem itemLabel="Single Journal" itemValue="single"/>
+                            <p:ajax update="@form"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+                        <h:outputLabel for="chooseDate" value="#{msgs.date}" rendered="#{reverseBean.journalType == 'batch'}"/>
+                        <p:calendar id="chooseDate" value="#{reverseBean.batch.date}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" rendered="#{reverseBean.journalType == 'batch'}">
+                            <p:ajax event="dateSelect" listener="#{reverseBean.updateBatchListByDate}" update="gridjournal"/>
+                        </p:calendar>
+                        <p:spacer rendered="#{reverseBean.journalType == 'batch'}"/>
+
+                        <h:outputLabel for="chooseDate" value="#{msgs.date}" rendered="#{reverseBean.journalType == 'single'}"/>
+                        <p:calendar id="chooseDatesingle" value="#{reverseBean.journalEntryHeader.creationdate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" rendered="#{reverseBean.journalType == 'single'}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </p:calendar>
+                        <p:spacer rendered="#{reverseBean.journalType == 'single'}"/>
+
+                        <h:outputLabel id="labelchooseBatch" for="chooseBatch" value="Batch" rendered="#{reverseBean.journalType == 'batch'}"/>
+                        <p:selectOneMenu id="chooseBatch" rendered="#{reverseBean.journalType == 'batch'}" value="#{reverseBean.batch.batchid}">
+                            <f:selectItem itemLabel="Pilih Subject" itemValue=""/>
+                            <f:selectItems value="#{reverseBean.batchs}" var="batch" itemLabel="#{batch.subject}" itemValue="#{batch.batchid}"/>
+                        </p:selectOneMenu>
+                        <p:spacer rendered="#{reverseBean.journalType == 'batch'}"/>
+
+                        <h:outputLabel for="chooseRef" value="Ref. Number"/>
+                        <p:inputText id="chooseRef" value="#{reverseBean.journalEntryHeader.refferencenumber}"/>
+
+                        <p:commandButton action="#{reverseBean.searchReffBatch}" value="Search Ref" rendered="#{reverseBean.journalType == 'batch'}" update="@form" />
+                        <p:commandButton action="#{reverseBean.searchReff}" value="Search Ref" rendered="#{reverseBean.journalType == 'single'}" update="@form" />
+                    </h:panelGrid>
+
+
+                    <p:dataTable
+                        id="tableJournalEntry"
+                        widgetVar="tableJournal"
+                        emptyMessage="No Journal Entry To Be Reversed"
+                        var="entry"
+                        paginator="true"
+                        paginatorPosition="bottom"
+                        rows="10"
+                        rowsPerPageTemplate="10,20,50"
+                        sortOrder="descending"
+                        value="#{reverseBean.journalEntrys}"
+                        selection="#{reverseBean.journalEntrySelected}"
+                        rowKey="#{entry.journalentryid}"
+                        >
+
+                        <p:column selectionMode="multiple"/>
+
+                        <f:facet name="header">
+                            <h:outputText value="Journal Entry List"/>
+                        </f:facet>
+
+                        <p:column headerText="ID">
+                            <h:outputText value="#{entry.journalentryid}"/>
+                        </p:column>
+
+                        <p:column headerText="Ref">
+                            <h:outputText value="#{entry.refferencenumber}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msgs.description}">
+                            <h:outputText value="#{entry.description}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msgs.coa}">
+                            <h:outputText value="#{entry.chartofaccount.generalaccountnumber} || #{entry.chartofaccount.chartofaccountname}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msgs.debet}">
+                            <h:outputText value="#{entry.amount}" rendered="#{entry.credit == false}">
+                                <f:convertNumber pattern="###.#####" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msgs.credit}">
+                            <h:outputText value="#{entry.amount}" rendered="#{entry.credit == true}">
+                                <f:convertNumber pattern="###.#####" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="transaction date">
+                            <h:outputText value="#{entry.transactiondate}"/>
+                        </p:column>
+
+
+                        <f:facet name="footer">
+                            <p:commandButton icon="ui-icon ui-icon-search" id="reversal" value="Reversal" update="@form" oncomplete="selectedreversal.show()" />
+                        </f:facet>
+
+                    </p:dataTable>
+
+                    <p:dialog header="Posting" widgetVar="selectedreversal" resizable="false" showEffect="fade" hideEffect="explode" closable="true">
+                        <p:dataList id="datalistreversal" value="#{reverseBean.journalEntrySelected}" var="selectreversal">
+                            <h:outputText value="Are You sure to Reversal #{selectreversal.journalentryid}?"/>
+                            #{reverseBean.setArrayid(selectreversal.journalentryid)}
+                        </p:dataList>
+                        <p:commandButton value="Reversal" action="#{reverseBean.reversalAll()}"  update="@form" onclick="selectedreversal.hide()"/>
+                    </p:dialog>
+                </p:panel>
+
+                <p:panel header="Reverse Journal Transaksi" rendered="#{reverseBean.journaltobereversed == 'transaksi'}">
+                    <h:panelGrid id="panelgridTransaksi" columns="3">
+
+                        <h:outputText value="Date Transaksi"/>
+                        <p:calendar id="newDate" value="#{reverseBean.transaction.creationdate}" pattern="yyyy-MM-dd" navigator="true" yearRange="c-120:c+20" readOnlyInputText="true" disabled="true"/>
+                        <p:spacer/>
+
+                        <h:outputText value="Receipt Number"/>
+                        <p:inputText value="#{reverseBean.transaction.receiptnumber}"/>
+                        <p:spacer/>
+
+                        <p:commandButton action="#{reverseBean.searchReceipt}" value="Search Receipt" update="@form"/>
+                    </h:panelGrid>
+
+                    <p:dataTable
+                        id="tableJournalTransaksi"
+                        widgetVar="tableTransaksi"
+                        emptyMessage="No Journal Transaksi To Be Reversed"
+                        var="transaction"
+                        paginator="true"
+                        paginatorPosition="bottom"
+                        rows="10"
+                        rowsPerPageTemplate="10,20,50"
+                        sortOrder="descending"
+                        value="#{reverseBean.transactions}"
+                        selection="#{reverseBean.transactionsSelected}"
+                        rowKey="#{transaction.transactionid}"
+                        >
+
+                        <p:column selectionMode="multiple"/>
+
+                        <f:facet name="header">
+                            <h:outputText value="Journal Entry List"/>
+                        </f:facet>
+
+                        <p:column headerText="ID">
+                            <h:outputText value="#{transaction.transactionid}"/>
+                        </p:column>
+
+                        <p:column headerText="Amount">
+                            <h:outputText value="#{transaction.amount}"/>
+                        </p:column>
+
+                        <p:column headerText="transaction date">
+                            <h:outputText value="#{transaction.transactiondate}"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:commandButton icon="ui-icon ui-icon-search" id="reversalTransaction" value="Reversal" update="@form" oncomplete="selectedtransaksi.show()" />
+                        </f:facet>
+
+                    </p:dataTable>
+
+                    <p:dialog header="Journal Transaksi Reversal" widgetVar="selectedtransaksi" resizable="false" showEffect="fade" hideEffect="explode" closable="true">
+                        <p:dataList id="datalisttransaksi" value="#{reverseBean.transactionsSelected}" var="selecttransaksi">
+                            <h:outputText value="Are You sure to Reversal #{selecttransaksi.transactionid}?"/>
+                            #{reverseBean.setTransactionid(selecttransaksi.transactionid)}
+                        </p:dataList>
+                        <p:commandButton value="Reversal" actionListener="#{reverseBean.reversalTransaksi}"  onclick="selectedreversal.hide()"/>
+                    </p:dialog>
+
+                </p:panel>
+
+                <p:panel header="Reverse Journal Reconciliation" rendered="#{reverseBean.journaltobereversed == 'recon'}">
+                    <h:panelGrid columns="3">
+                        <h:outputLabel for="reconChooseBank" value="Third Party Bank"/>
+                        <p:selectOneMenu id="reconChooseBank">
+                            <f:selectItem itemLabel="Select Third Party Bank" itemValue=""/>
+                            <f:selectItem itemLabel="Generate Database" itemValue="1"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+                        <h:outputLabel for="reconChooseDate" value="#{msgs.date}"/>
+                        <p:calendar id="reconChooseDate" pattern="YYYY-MM-dd" navigator="true" readOnlyInputText="true" yearRange="1945-2020"/>
+                        <p:spacer/>
+
+                        <h:outputLabel for="reconChooseRef" value="Ref. Number"/>
+                        <p:inputText id="reconChooseRef" />
+                        <p:commandButton value="Search Ref" onclick="journalReconSearchDialog.show();"/>
+                    </h:panelGrid>
+
+
+                    <p:dataTable
+                        id="tableJournalRecon"
+                        widgetVar="tableJournal"
+                        emptyMessage="No Journal Reconciliation To Be Reversed"
+                        var="entry"
+                        paginator="true"
+                        paginatorPosition="bottom"
+                        rows="10"
+                        rowsPerPageTemplate="10,20,50"
+                        sortOrder="descending"
+                        >
+                        <f:facet name="header">
+                            <h:outputText value="Journal Reconciliation List"/>
+                        </f:facet>
+
+                        <p:column headerText="Ref">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.description}">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.coa}">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.debit}">
+
+                        </p:column>
+
+                        <p:column headerText="#{msgs.credit}">
+
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+
+            </h:form>
+        </p:panel>
+
+        <p:dialog header="Batch Search" widgetVar="batchSearchDialog" closable="true" hideEffect="fade" showEffect="fade" modal="true">
+            <h:form id="formSearchBatch" prependId="false">
+                <p:dataTable
+                    value="#{reverseBean.batchsReff}"
+                    id="tableSearchBatch"
+                    emptyMessage="No Journal Entry To Be Reversed"
+                    var="searchReffBatch"
+                    paginator="true"
+                    paginatorPosition="bottom"
+                    rows="10"
+                    rowsPerPageTemplate="10,20,50"
+                    sortOrder="descending"
+                    >
+
+                    <f:facet name="header">
+                        <h:outputText value="Journal Entry List"/>
+                    </f:facet>
+
+                    <p:column headerText="ID">
+                        <p:commandLink value="#{searchReffBatch.headerjournalentryid}" actionListener="#{reverseBean.selectedBatchReff(searchReffBatch)}"  update=":formReversal" onclick="batchSearchDialog.hide();"/>
+                    </p:column>
+
+                    <p:column headerText="Ref">
+                        <p:commandLink value="#{searchReffBatch.refferencenumber}" actionListener="#{reverseBean.selectedBatchReff(searchReffBatch)}"  update=":formReversal" onclick="batchSearchDialog.hide();"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs.date}">
+                        <p:commandLink value="#{searchReffBatch.creationdate}" actionListener="#{reverseBean.selectedBatchReff(searchReffBatch)}"  update=":formReversal" onclick="batchSearchDialog.hide();"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs.description}">
+                        <p:commandLink value="#{searchReffBatch.descriptionheader}" actionListener="#{reverseBean.selectedBatchReff(searchReffBatch)}"  update=":formReversal" onclick="batchSearchDialog.hide();"/>
+                    </p:column>
+                </p:dataTable>
+
+                <h:panelGrid columns="3">
+                    <p:commandButton value="Close" onclick="batchSearchDialog.hide();"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Journal Search" widgetVar="journalSearchDialog" closable="true" hideEffect="fade" showEffect="fade"  modal="true">
+            <h:form id="formSearchJournal" prependId="false">
+
+                <p:dataTable
+                    id="tableSearchJournal"
+                    widgetVar="tableJournal"
+                    emptyMessage="No Journal Entry To Be Reversed"
+                    var="entry"
+                    paginator="true"
+                    paginatorPosition="bottom"
+                    rows="10"
+                    rowsPerPageTemplate="10,20,50"
+                    sortOrder="descending"
+
+                    >
+                    <f:facet name="header">
+                        <h:outputText value="Journal Entry List"/>
+                    </f:facet>
+
+                    <p:column headerText="Ref">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.description}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.coa}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.debit}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.credit}">
+
+                    </p:column>
+                </p:dataTable>
+                <h:panelGrid columns="3">
+                    <p:commandButton value="Close" onclick="journalSearchDialog.hide();"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Journal Reconciliation Search" widgetVar="journalReconSearchDialog" closable="true" hideEffect="fade" showEffect="fade"  modal="true">
+            <h:form id="formReconSearchJournal" prependId="false">
+
+                <p:dataTable
+                    id="tableReconSearchJournal"
+                    widgetVar="tableJournal"
+                    emptyMessage="No Journal Reconciliation To Be Reversed"
+                    var="entry"
+                    paginator="true"
+                    paginatorPosition="bottom"
+                    rows="10"
+                    rowsPerPageTemplate="10,20,50"
+                    sortOrder="descending"
+                    >
+                    <f:facet name="header">
+                        <h:outputText value="Journal Reconciliation List"/>
+                    </f:facet>
+
+                    <p:column headerText="Ref">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.date}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.description}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.coa}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.debit}">
+
+                    </p:column>
+
+                    <p:column headerText="#{msgs.credit}">
+
+                    </p:column>
+                </p:dataTable>
+                <h:panelGrid columns="3">
+                    <p:commandButton value="Close" onclick="journalReconSearchDialog.hide();"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,1003 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="menuBar">
+        menuBar
+    </ui:define>
+
+    <ui:define name="content">
+        <p:panel id="pengajuanPinjaman" header="Pengajuan Pinjaman" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="2000" >
+            <h:form id="dataAnalisis" prependId="false">
+                <p:panel id="pnDataAnalisis" header="Keputusan" toggleable="true" toggleSpeed="500">
+                    <h:panelGrid columns="5" id="pgDataAnalisis">
+                        <h:outputLabel for="kategoriPinjaman" value="Kategori Pinjaman"/>
+                        <p:inputText id="kategoriPinjaman" disabled="true" style="width: 150px"/>
+                        <p:spacer/>
+                        <h:outputLabel for="jenisPinjaman" value="Jenis Pinjaman"/>
+                        <p:inputText id="jenisPinjaman" disabled="true" style="width: 150px"/>
+                        <p:spacer/><p:spacer/><p:spacer/>
+                        <h:outputLabel for="produkPinjaman" value="Nama Produk Pinjaman"/>
+                        <p:inputText id="produkPinjaman" disabled="true" style="width: 150px"/>
+                        <h:outputLabel for="tglPengajuan" value="Tanggal Pengajuan"/>
+                        <p:inputText id="tglPengajuan" value="#{appBean.sesDateSQL}" disabled="true" style="width: 150px">
+                            <f:convertDateTime pattern="#{appBean.systemGlobal.siteFormatdate}"/>
+                        </p:inputText>
+                        <p:spacer/><p:spacer/><p:spacer/>
+                        <h:outputLabel for="customerID" value="ID Nasabah"/>
+                        <p:inputText id="customerID" disabled="true" style="width: 150px"/>
+                        <p:spacer/><h:outputLabel for="LihatDataPermohonan" value="Lihat Data Permohonan"/>
+                        <p:commandButton id="LihatDataPermohonan" 
+                                         value="Lihat Permohonan" 
+                                         onclick="window.open('DataPermohonan.xhtml', 'popupWindowName', 'dependent=yes,scrollbars=yes, menubar=no, toolbar=no'); return false;"/>
+                        <h:outputLabel for="namaNasabah" value="Nama Nasabah"/>
+                        <p:inputText id="namaNasabah" disabled="true" style="width: 150px"/>
+                        <p:spacer/><h:outputLabel for="LihatDataAnalisis" value="Lihat Data Analisis"/>
+                        <p:commandButton id="LihatDataAnalisis" 
+                                         value="Lihat Analisis" 
+                                         onclick="window.open('AnalisaBaru.xhtml', 'popupWindowName', 'dependent=yes,scrollbars=yes, menubar=no, toolbar=no'); return false;"/>
+
+                        <h:outputLabel for="alamatNasabah" value="Alamat Nasabah"/>
+                        <p:inputText id="alamatNasabah" disabled="true" style="width: 150px"/>
+                        <p:spacer/><p:spacer/><p:spacer/>
+                        <p:commandButton id="btnDataAnalisis" value="Lanjut"/>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+            <h:form id="approval" prependId="false">
+                <p:panel toggleable="true" toggleSpeed="500">
+                    <p:tabView id="tabapproval">
+                        <p:tab title="Rangkuman dan Rekomendasi" id="rangkumandanrekomendasi">
+                            <p:panel header="RANGKUMAN" >
+                                <p:panel header="Analisa Penghasilan">
+                                    <p:panelGrid style="width: 100%; margin-top:20px">
+                                        <f:facet name="header">  
+                                            <p:row>  
+                                                <p:column rowspan="2"><h:outputText value="Komponen"/></p:column>  
+                                                <p:column colspan="3"><h:outputText value="Estimasi Penghasilan Bersih"/></p:column>  
+                                            </p:row>
+                                            <p:row>
+                                                <p:column><h:outputText value="Menurut Pemohon"/></p:column>  
+                                                <p:column><h:outputText value="Menurut Bank"/></p:column>  
+                                                <p:column><h:outputText value="Selisih"/></p:column>  
+                                            </p:row>
+                                        </f:facet>
+                                        <p:row>
+                                            <p:column><h:outputText value="Total Penghasilan dari Usaha"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column style="text-align: right"><h:outputText value="Jenis Usaha ke- 1"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column style="text-align: right"><h:outputText value="Jenis Usaha ke- 2"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column style="text-align: right"><h:outputText value="Jenis Usaha ke- 3"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column><h:outputText value="Total Biaya Hidup"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column><h:outputText value="Total Penghasilan Bersih"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column><h:outputText value="Kemampuan angsuran per-bulan"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column><h:outputText value="total nilai jaminan"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column style="text-align: right"><h:outputText value="Nilai Jaminan 1"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column style="text-align: right"><h:outputText value="Nilai Jaminan 2"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                            <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel for="Tambahanpenghasilansetelahpembiayaan2" value="Tambahan penghasilan setelah pembiayaan"/>
+                                        <pe:inputNumber id="Tambahanpenghasilansetelahpembiayaan2" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                </p:panel>
+                                <p:panel header="Data Keuangan">
+                                    <h:panelGrid columns="2" id="pgDataKeuangan32">
+                                        <p:panel header="Permohonan">
+                                            <h:panelGrid columns="3" id="pgDataKeuangan2" title="Permohonan">
+                                                <h:outputLabel for="totalPenghasilanUsaha2" value="Total Penghasilan dari Usaha"/>
+                                                <pe:inputNumber id="totalPenghasilanUsaha2" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                                <h:outputLabel for="biayaRumahTangga2" value="Biaya rumah tangga"/>
+                                                <pe:inputNumber id="biayaRumahTangga2" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>                           
+                                                <p:spacer/>
+                                                <h:outputLabel for="totalCicilan2" value="Total cicilan"/>
+                                                <pe:inputNumber id="totalCicilan2" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                                <h:outputLabel for="biayaPendidikan2" value="Biaya pendidikan"/>
+                                                <pe:inputNumber id="biayaPendidikan2" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                                <h:outputLabel for="biayaRekreasi2" value="Biaya Rekreasi"/>
+                                                <pe:inputNumber id="biayaRekreasi2" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                                <h:outputLabel for="totalBiayaHidup2" value="Total Biaya Hidup"/>
+                                                <pe:inputNumber id="totalBiayaHidup2" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                        <p:panel header="Analisis">
+                                            <h:panelGrid columns="3" id="pgDataKeuangan22" title="Analisis">
+                                                <h:outputLabel for="totalPenghasilanUsaha22" value="Total Penghasilan dari Usaha"/>
+                                                <pe:inputNumber id="totalPenghasilanUsaha22" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                                <h:outputLabel for="biayaRumahTangga22" value="Biaya rumah tangga"/>
+                                                <pe:inputNumber id="biayaRumahTangga22" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>                           
+                                                <p:spacer/>
+                                                <h:outputLabel for="totalCicilan22" value="Total cicilan"/>
+                                                <pe:inputNumber id="totalCicilan22" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                                <h:outputLabel for="biayaPendidikan22" value="Biaya pendidikan"/>
+                                                <pe:inputNumber id="biayaPendidikan22" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                                <h:outputLabel for="biayaRekreasi22" value="Biaya Rekreasi"/>
+                                                <pe:inputNumber id="biayaRekreasi22" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                                <h:outputLabel for="totalBiayaHidup22" value="Total Biaya Hidup"/>
+                                                <pe:inputNumber id="totalBiayaHidup22" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                                <p:spacer/>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel header="Hasil Cross Check">
+                                    <p:dataTable 
+                                        value="" 
+                                        id="tabelCrosscheck2" 
+                                        widgetVar="tabelCrosscheck" 
+                                        emptyMessage="Data Masih Kosong"
+                                        var="Crosschecklist" >
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="ke-"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Tanggal Crosscek"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Nama Petugas"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Crosscheck kepada"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Nama"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Cara Crosscheck"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Nomer Telepon"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Hasil Crosscheck"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="keterangan"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value=""/></f:facet>
+                                            <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus"/>
+                                            <p:commandButton icon="ui-icon ui-icon-pencil" title="Ubah"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+                                <p:panel header="Survey Lapangan">
+                                    <p:dataTable 
+                                        value="" 
+                                        id="tabelsurvey2" 
+                                        widgetVar="tabelsurvey" 
+                                        emptyMessage="Data Masih Kosong"
+                                        var="surveylist" >
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="ke-"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Tanggal Survey"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Nama Petugas"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Survey Kepada"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="Nama"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="hasil survey"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="keterangan"/></f:facet>
+                                            <h:outputText value=""/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value=""/></f:facet>
+                                            <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus"/>
+                                            <p:commandButton icon="ui-icon ui-icon-pencil" title="Ubah"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+                                <p:panel header="Aset / Jaminan">
+                                    <p:panel>
+                                        <h:panelGroup id="tblAssetAnalis2">
+                                            <p:dataTable
+                                                id="dtAssetAnalis2"
+                                                value="" 
+                                                emptyMessage="Nasabah Tidak Ditemukan"
+                                                var="Assetlist"
+                                                paginator="true"
+                                                paginatorPosition="bottom"
+                                                rows="10"
+                                                rowsPerPageTemplate="10,20,50"
+                                                sortOrder="descending"
+                                                >
+                                                <p:column>
+                                                    <f:facet name="header"><h:outputText value="Asset ke-"/></f:facet>
+                                                    <h:outputText value=""/>
+                                                </p:column>
+                                                <p:column sortBy="" filterBy="" filterMatchMode="contains"  >
+                                                    <f:facet name="header"><h:outputText value="Asset yang diberikan"/></f:facet>
+                                                    <h:outputText value=""/>
+                                                </p:column>
+                                                <p:column sortBy="" filterBy="" filterMatchMode="contains"  >
+                                                    <f:facet name="header"><h:outputText value="Bentuk Asset"/></f:facet>
+                                                    <h:outputText value=""/>
+                                                </p:column>
+                                                <p:column sortBy="" filterBy="" filterMatchMode="contains"  >
+                                                    <f:facet name="header"><h:outputText value="Nilai Aset"/></f:facet>
+                                                    <h:outputText value=""/>
+                                                </p:column>
+                                                <p:column sortBy="" filterBy="" filterMatchMode="contains"  >
+                                                    <f:facet name="header"><h:outputText value="Status"/></f:facet>
+                                                    <h:outputText value="aset / aset sekaligus jaminan"/>
+                                                </p:column>
+                                                <p:column style="width: 70px;">
+                                                    <p:commandButton icon="ui-icon ui-icon-pencil" title="Ubah" onclick="DetailJaminan.show()"/>
+                                                    <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus"/>
+                                                </p:column>
+                                                <p:column >
+                                                    <f:facet name="header"><h:outputText value="Jadikan jaminan"/></f:facet>
+                                                    <center>
+                                                        <p:selectBooleanCheckbox id="useAsCollateralAnalis2">
+                                                            <f:selectItem itemLabel="Ya" itemValue="true"/>
+                                                            <f:selectItem itemLabel="Tidak" itemValue="false"/>
+                                                        </p:selectBooleanCheckbox>
+                                                    </center>
+                                                </p:column>
+                                            </p:dataTable>
+                                            <p:panelGrid style="width: 100%; margin-top:20px">
+                                                <p:row>
+                                                    <p:column style="text-align: right"><h:outputText value="Total nilai jaminan"/></p:column>
+                                                    <p:column><pe:inputNumber disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column style="text-align: right"><h:outputText value="Total nilai jaminan dari Plafon"/></p:column>
+                                                    <p:column><pe:inputNumber disabled="true" symbolPosition="right" symbol=" %" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/></p:column>
+                                                </p:row>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                    </p:panel>
+                                </p:panel>
+                            </p:panel>
+                            <p:panel header="REKOMENDASI">
+                                <h:panelGrid columns="3" >
+                                    <h:outputLabel for="tujuanPinjaman" value="Tujuan Pinjaman"/>
+                                    <p:selectOneMenu id="tujuanPinjaman" style="width: 155px">
+                                        <f:selectItems value="#{loanaccountBean.listLoanReason}" var="loanreason" itemLabel="#{loanreason.reason}" itemValue="#{loanreason.reasonid}" />    
+                                    </p:selectOneMenu>
+                                    <p:spacer/>
+                                    <h:outputLabel for="Namaprodukpinjaman" value="Nama produk pinjaman"/>
+                                    <p:selectOneMenu id="Namaprodukpinjaman" style="width: 155px">
+                                        <f:selectItem itemLabel="PT" itemValue="1"/>
+                                        <f:selectItem itemLabel="Pinjaman Slidding" itemValue="2"/>
+                                    </p:selectOneMenu>
+                                    <p:spacer/>
+                                    <h:outputLabel for="Plafon" value="Plafon"/>
+                                    <pe:inputNumber id="Plafon" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                    <p:spacer/>
+                                    <h:outputLabel for="JangkaWaktu" value="Jangka Waktu"/>
+                                    <p:inputText id="JangkaWaktu" style="width: 150px"/>
+                                    <p:spacer/>
+                                    <h:outputLabel for="Bunga" value="Bunga"/>
+                                    <pe:inputNumber id="Bunga" symbol="%" symbolPosition="right" maxValue="100" style="width: 150px"/>
+                                    <p:spacer/>
+                                    <h:outputLabel for="TanggalPencairan" value="Tanggal Pencairan"/>
+                                    <p:calendar id="TanggalPencairan" pattern="#{appBean.systemGlobal.siteFormatdate}" showOn="button" />
+                                    <p:spacer/>
+                                    <h:outputLabel for="Angsuranpertamasaatpencairan" value="Angsuran pertama saat pencairan?"/>
+                                    <p:selectOneRadio id="Angsuranpertamasaatpencairan" >
+                                        <f:selectItem itemLabel="Ya" itemValue="true"/>
+                                        <f:selectItem itemLabel="Tidak" itemValue="false"/>
+                                    </p:selectOneRadio>
+                                    <p:spacer/>
+                                    <h:outputLabel for="TanggalAngsuranPertama" value="Tanggal Angsuran Pertama"/>
+                                    <p:calendar id="TanggalAngsuranPertama" pattern="#{appBean.systemGlobal.siteFormatdate}" showOn="button" />
+                                    <p:spacer/>
+                                    <h:outputLabel for="ParipasudenganSPKNo" value="Paripasu dengan SPK No"/>
+                                    <p:inputText id="ParipasudenganSPKNo"  style="width: 150px"/>
+                                    <p:spacer/> 
+                                </h:panelGrid>
+                                <h:panelGrid columns="3">                        
+                                    <h:outputLabel for="biayaperpotongan" value="Apakah dikenakan biaya potongan?"/>
+                                    <p:selectOneRadio id="biayaperpotongan">
+                                        <f:selectItem itemValue="1" itemLabel="Ya"/>
+                                        <f:selectItem itemValue="2" itemLabel="Tidak"/>
+                                    </p:selectOneRadio>
+                                    <p:spacer/>
+                                    <h:outputText value="Pilih Potongan"/>
+                                    <p:selectOneMenu id="feelist" value="#{loanissueBean.varfee.feeid}" style="width: 180px" >
+                                        <f:selectItem itemValue="0" itemLabel="pilih"/>
+                                        <f:selectItems value="#{loanissueBean.listfee}" var="feecombo" itemValue="#{feecombo.feeid}" itemLabel="#{feecombo.feename}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandButton value="Tambah" process="feelist" />
+                                    <h:outputLabel for="TotalPotongan" value="Total Potongan"/>
+                                    <pe:inputNumber id="TotalPotongan" disabled="true" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                    <p:spacer/>
+                                </h:panelGrid>
+                                <h:panelGroup >
+                                    <p:dataTable value="" var="fee" style="text-align: center">
+                                        <p:column headerText="#{msgs.feeName}">
+                                            <h:outputText />
+                                        </p:column>
+                                        <p:column headerText="nominal biaya potongan">
+                                            <pe:inputNumber symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                                        </p:column>
+                                        <p:column headerText="#{msgs.delete}">
+                                            <p:commandButton icon="ui-icon ui-icon-trash" title="#{msgs.deleteButton}" actionListener="#{loanissueBean.deletefeelist(fee)}" process="@this"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGroup>
+                                <h:panelGrid columns="3">                        
+                                    <h:outputLabel value="Analisa"/>
+                                    <p:selectOneMenu style="width: 180px" >
+                                        <f:selectItem itemValue="1" itemLabel="Disetujui"/>
+                                        <f:selectItem itemValue="2" itemLabel="Dipending"/>
+                                        <f:selectItem itemValue="2" itemLabel="Ditolak"/>
+                                    </p:selectOneMenu>
+                                    <p:spacer/>
+                                    <h:outputText value="Catatan"/>
+                                    <p:inputTextarea style="width: 500px"/>
+                                    <p:spacer/>
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab title="Keputusan" id="Keputusan">
+                            <h:panelGroup>
+                                <p:panelGrid style="width: 100%; margin-top:20px">
+                                    <f:facet name="header">
+                                        <p:row>
+                                            <p:column><h:outputText value="No"/></p:column>
+                                            <p:column><h:outputText value="Nama Titipan"/></p:column>
+                                            <p:column><h:outputText value="Nominal"/></p:column>
+                                            <p:column><h:outputText value="Checklist"/></p:column>
+                                        </p:row>
+                                    </f:facet>
+                                    <p:row>
+                                        <p:column><h:outputText value="1"/></p:column>
+                                        <p:column><h:outputText value="Titipan Angsuran"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="2"/></p:column>
+                                        <p:column><h:outputText value="Titipan Biaya Notaris"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="3"/></p:column>
+                                        <p:column><h:outputText value="Titipan Kas Sementara"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="4"/></p:column>
+                                        <p:column><h:outputText value="Titipan Bank"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="5"/></p:column>
+                                        <p:column><h:outputText value="Titipan Pengurusan STNK"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="6"/></p:column>
+                                        <p:column><h:outputText value="Titipan Kekurangan Berkas"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="7"/></p:column>
+                                        <p:column><h:outputText value="Titipan Biaya Perpanjangan"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="8"/></p:column>
+                                        <p:column><h:outputText value="Titipan Balik Nama BPKB"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="9"/></p:column>
+                                        <p:column><h:outputText value="Titipan Balik Nama SHM"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="10"/></p:column>
+                                        <p:column><h:outputText value="Titipan Advance / Arears"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><h:outputText value="11"/></p:column>
+                                        <p:column><h:outputText value="Titipan Lainnya"/></p:column>
+                                        <p:column><h:outputText value="Rp."/></p:column>
+                                        <p:column style="text-align: center"><p:selectBooleanCheckbox/></p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </h:panelGroup>
+                            <h:panelGrid columns="3" id="pgKeputusan">                        
+                                <h:outputLabel value="Keputusan"/>
+                                <p:selectOneMenu style="width: 180px" >
+                                    <f:selectItem itemValue="1" itemLabel="Disetujui"/>
+                                    <f:selectItem itemValue="2" itemLabel="Dipending"/>
+                                    <f:selectItem itemValue="2" itemLabel="Ditolak"/>
+                                </p:selectOneMenu>
+                                <p:spacer/>
+                                <h:outputText value="Catatan"/>
+                                <p:inputTextarea style="width: 500px"/>
+                                <p:spacer/>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+                </p:panel>
+                <p:commandButton id="btnrejectPemutus" value="Tolak"/>
+                <p:commandButton id="btnHoldPemutus" value="Simpan Sementara"/>
+                <p:commandButton id="btnSubmitPemutus" value="Setujui"/>
+            </h:form>
+            <h:form id="viewDialog" prependId="false">
+                <p:dialog header="Rincian Penghasilan Bersih Tiap Bulan" widgetVar="rincianPenghasilan" id="rincianPenghasilan" modal="true" showEffect="explode" hideEffect="explode" >
+                    <h:panelGrid columns="3" id="pgrincianPenghasilan">
+                        <p:spacer/>
+                        <p:selectOneRadio id="pekerjaanNasabah" >
+                            <f:selectItem itemLabel="Pekerjaan Utama" itemValue="1"/>
+                            <f:selectItem itemLabel="Pekerjaan Tambahan" itemValue="2"/>
+                        </p:selectOneRadio>
+                        <p:spacer/>
+                        <h:outputLabel for="bidangUsaha" value="Bidang Usaha"/>
+                        <p:selectOneMenu id="bidangUsaha" style="width: 155px">
+                            <f:selectItem itemLabel="Pilih Bidang Usaha" itemValue="1"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>
+                        <h:outputLabel for="siklusUsaha" value="Siklus usaha"/>
+                        <p:selectOneMenu id="siklusUsaha" style="width: 155px">
+                            <f:selectItem itemLabel="Pilih Siklus Usaha" itemValue="1"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>
+                        <h:outputLabel for="jenisUsaha" value="Jenis usaha"/>
+                        <p:selectOneMenu id="jenisUsaha" style="width: 155px">
+                            <f:selectItem itemLabel="Pilih Jenis Usaha" itemValue="1"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>                              
+                        <h:outputLabel for="penghasilanBersihSiklusUsaha" value="Penghasilan bersih per-siklus usaha"/>
+                        <pe:inputNumber id="penghasilanBersihSiklusUsaha" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                        <p:spacer/>
+                        <h:outputLabel for="penghasilanbersihperbulan" value="Penghasilan bersih per-bulan"/>
+                        <pe:inputNumber id="penghasilanbersihperbulan" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                        <p:spacer/>
+                        <h:outputLabel for="perincianPenghasilanBersih" value="Perincian dari penghasilan bersih"/>
+                        <p:inputTextarea id="perincianPenghasilanBersih" style="width: 150px"/>
+                        <p:spacer/>
+                        <p:commandButton id="btnRincianPenghasilan" value="Tambah"/>
+                    </h:panelGrid>
+                    <h:panelGroup id="pnltabelRincianPenghasilan">
+                        <p:dataTable 
+                            value="" 
+                            id="tabelRincianPenghasilan" 
+                            widgetVar="tabel" 
+                            emptyMessage="Data Masih Kosong"
+                            var="rincianBiayaHiduplist" >
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Tipe Pekerjaan"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Bidang Usaha"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Siklus Usaha"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Penghasilan Per siklus usaha"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Penghasilan bersih per bulan"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Hapus / Edit Rincian Penghasilan"/></f:facet>
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus"/>
+                                <p:commandButton icon="ui-icon ui-icon-pencil" title="Ubah"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:outputText value="TOTAL Penghasilan bersih"/> 
+                                <p:inputText value="Rp." disabled="true" style="width: 100px"/>
+                                <p:inputText value="Rp." disabled="true" style="width: 100px"/>
+                            </f:facet>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:dialog>
+                <p:dialog header="Tambah Aset / Jaminan" widgetVar="TambahJaminan" id="TambahJaminan" modal="true" showEffect="explode" hideEffect="explode" >
+                    <h:panelGroup id="panelJaminan">
+                        <h:panelGrid columns="6"  styleClass="grid" >
+                            <h:outputText value="Aset yang dimiliki"/>
+                            <p:selectOneMenu style="width: 150px">
+                            </p:selectOneMenu><h:outputText />
+
+                            <h:outputText value="Jenis Aset" />
+                            <p:selectOneMenu value="#{loanaccountBean.tipejaminan}" style="width: 150px">
+                                <!-- <f:selectItem itemValue="Perumahan" itemLabel="Perumahan" /> -->
+                                <f:selectItem itemValue="Rumah" itemLabel="Tempat Tinggal" />
+                                <f:selectItem itemValue="Tanah" itemLabel="Tanah" />
+                                <f:selectItem itemValue="Komersial" itemLabel="Komersial" />
+                                <f:selectItem itemValue="Kas" itemLabel="Kas" />
+                                <f:selectItem itemValue="Asuransi" itemLabel="Asuransi" />
+                                <f:selectItem itemValue="Emas" itemLabel="Emas" />
+                                <f:selectItem itemValue="Kendaraan" itemLabel="Kendaraan" />
+                                <f:selectItem itemValue="Surat Berharga" itemLabel="Surat Berharga" />
+                                <p:ajax update="srtkepemilikan"/>
+                            </p:selectOneMenu><h:outputText />
+
+
+                            <h:outputLabel for="luasTanahAsset" value="Luas Tanah"/>
+                            <pe:inputNumber id="luasTanahAsset" symbol=" m2" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="luasBangunanAsset" value="Luas Bangunan"/>
+                            <pe:inputNumber id="luasBangunanAsset" symbol=" m2" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="NJOP" value="NJOP"/>
+                            <p:inputText id="NJOP" value="" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="Hargatotaltanahdanbangunan" value="Harga total tanah dan bangunan"/>
+                            <pe:inputNumber id="Hargatotaltanahdanbangunan" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+
+                            <h:outputText value="Jenis Kendaraan" />
+                            <p:selectOneMenu  value="" style="width: 150px"></p:selectOneMenu>
+                            <h:outputText />
+
+                            <h:outputText value="Merk" />
+                            <p:selectOneMenu  value="" style="width: 150px"></p:selectOneMenu>
+                            <h:outputText />
+
+                            <h:outputText value="Model" />
+                            <p:selectOneMenu  value="" style="width: 150px"></p:selectOneMenu>
+                            <h:outputText />
+
+                            <h:outputText value="Tipe Kendaraan" />
+                            <p:selectOneMenu  value="" style="width: 150px"></p:selectOneMenu>
+                            <h:outputText />
+
+                            <h:outputText value="Tahun Pembuatan"/>
+                            <p:inputText value="" style="width: 150px">
+                            </p:inputText><h:outputText />
+
+                            <h:outputText value="Nilai Pasar"/>
+                            <p:inputText value="" style="width: 150px">
+                            </p:inputText><h:outputText />
+
+
+                            <h:outputLabel for="Namabank" value="Nama bank"/>
+                            <p:inputText id="Namabank" value="" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="Atasnamarekeningdeposito" value="Atas nama rekening / deposito"/>
+                            <p:inputText id="Atasnamarekeningdeposito" value="" style="width: 150px"/>
+                            <p:spacer/>
+                            <h:outputLabel for="NomorRekening" value="Nomer rekening / biliyet"/>
+                            <pe:inputNumber id="NomorRekening" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="SaldoAkhir" value="Saldo Akhir"/>
+                            <pe:inputNumber id="SaldoAkhir" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+
+                            <h:outputText value="Atas nama kwitansi"/>
+                            <p:inputText value="" style="width: 150px">
+                            </p:inputText><h:outputText />
+
+                            <h:outputLabel for="Berat" value="Berat"/>
+                            <pe:inputNumber id="Berat" symbol=" gram" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>     
+
+                            <h:outputLabel for="Karat" value="Karat"/>
+                            <pe:inputNumber id="Karat" symbol=" karat" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>     
+
+                            <h:outputLabel for="NilaiEmas" value="Nilai Emas"/>
+                            <pe:inputNumber id="NilaiEmas" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+
+                            <h:outputText value="Status Kepemilikan" />
+                            <p:selectOneMenu style="width: 150px">
+                                <f:selectItem itemValue="0" itemLabel="Pilih Status Kepemilikan" />
+                            </p:selectOneMenu><h:outputText />
+
+                            <h:outputText value="Surat Kepemilikan" />
+                            <p:selectOneMenu  id="srtkepemilikan" value="#{loanaccountBean.collateral.letterofownershiptype.letterofownershiptypeid}" style="width: 150px">
+                                <f:selectItem itemValue="0" itemLabel="Pilih Surat Kepemilikan" />
+                                <f:selectItems value="#{loanaccountBean.letterofownershiptypes}" var="sKepemilikan" itemValue="#{sKepemilikan.letterofownershiptypeid}" itemLabel="#{sKepemilikan.letterofownershiptypename}" />
+                            </p:selectOneMenu><h:outputText />
+
+                            <h:outputText value="Atas nama surat kepemilikan"/>
+                            <p:inputText style="width: 150px"/><h:outputText />
+
+                            <p:commandButton value="#{msgs.add}" rendered="#{loanaccountBean.statusCollateral != 'edit'}" process="@this"/><h:outputText /><h:outputText />
+                        </h:panelGrid>
+                    </h:panelGroup>
+                </p:dialog>
+                <p:dialog header="Detail Aset / Jaminan" widgetVar="DetailJaminan" id="DetailJaminan" modal="true" showEffect="explode" hideEffect="explode" >
+                    <h:panelGroup id="panelJaminan1">
+                        <h:panelGrid columns="6"  styleClass="grid" >
+                            <h:outputText value="Aset yang dimiliki"/>
+                            <p:selectOneMenu style="width: 150px">
+                            </p:selectOneMenu><h:outputText />
+
+                            <h:outputText value="Jenis Aset" />
+                            <p:selectOneMenu value="#{loanaccountBean.tipejaminan}" style="width: 150px">
+                                <!-- <f:selectItem itemValue="Perumahan" itemLabel="Perumahan" /> -->
+                                <f:selectItem itemValue="Rumah" itemLabel="Tempat Tinggal" />
+                                <f:selectItem itemValue="Tanah" itemLabel="Tanah" />
+                                <f:selectItem itemValue="Komersial" itemLabel="Komersial" />
+                                <f:selectItem itemValue="Kas" itemLabel="Kas" />
+                                <f:selectItem itemValue="Asuransi" itemLabel="Asuransi" />
+                                <f:selectItem itemValue="Emas" itemLabel="Emas" />
+                                <f:selectItem itemValue="Kendaraan" itemLabel="Kendaraan" />
+                                <f:selectItem itemValue="Surat Berharga" itemLabel="Surat Berharga" />
+                                <p:ajax update="srtkepemilikan2"/>
+                            </p:selectOneMenu><h:outputText />
+
+
+                            <h:outputLabel for="luasTanahAsset2" value="Luas Tanah"/>
+                            <pe:inputNumber id="luasTanahAsset2" symbol=" m2" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="luasBangunanAsset2" value="Luas Bangunan"/>
+                            <pe:inputNumber id="luasBangunanAsset2" symbol=" m2" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="NJOP2" value="NJOP"/>
+                            <p:inputText id="NJOP2" value="" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="Hargatotaltanahdanbangunan2" value="Harga total tanah dan bangunan"/>
+                            <pe:inputNumber id="Hargatotaltanahdanbangunan2" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+
+                            <h:outputText value="Jenis Kendaraan" />
+                            <p:selectOneMenu  value="" style="width: 150px"></p:selectOneMenu>
+                            <h:outputText />
+
+                            <h:outputText value="Merk" />
+                            <p:selectOneMenu  value="" style="width: 150px"></p:selectOneMenu>
+                            <h:outputText />
+
+                            <h:outputText value="Model" />
+                            <p:selectOneMenu  value="" style="width: 150px"></p:selectOneMenu>
+                            <h:outputText />
+
+                            <h:outputText value="Tipe Kendaraan" />
+                            <p:selectOneMenu  value="" style="width: 150px"></p:selectOneMenu>
+                            <h:outputText />
+
+                            <h:outputText value="Tahun Pembuatan"/>
+                            <p:inputText value="" style="width: 150px">
+                            </p:inputText><h:outputText />
+
+                            <h:outputText value="Nilai Pasar"/>
+                            <p:inputText value="" style="width: 150px">
+                            </p:inputText><h:outputText />
+
+
+                            <h:outputLabel for="Namabank2" value="Nama bank"/>
+                            <p:inputText id="Namabank2" value="" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="Atasnamarekeningdeposito2" value="Atas nama rekening / deposito"/>
+                            <p:inputText id="Atasnamarekeningdeposito2" value="" style="width: 150px"/>
+                            <p:spacer/>
+                            <h:outputLabel for="NomorRekening2" value="Nomer rekening / biliyet"/>
+                            <pe:inputNumber id="NomorRekening2" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+                            <h:outputLabel for="SaldoAkhir2" value="Saldo Akhir"/>
+                            <pe:inputNumber id="SaldoAkhir2" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+
+                            <h:outputText value="Atas nama kwitansi"/>
+                            <p:inputText value="" style="width: 150px">
+                            </p:inputText><h:outputText />
+
+                            <h:outputLabel for="Berat2" value="Berat"/>
+                            <pe:inputNumber id="Berat2" symbol=" gram" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>     
+
+                            <h:outputLabel for="Karat2" value="Karat"/>
+                            <pe:inputNumber id="Karat2" symbol=" karat" symbolPosition="right" maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>     
+
+                            <h:outputLabel for="NilaiEmas2" value="Nilai Emas"/>
+                            <pe:inputNumber id="NilaiEmas2" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                            <p:spacer/>
+
+
+                            <h:outputText value="Status Kepemilikan" />
+                            <p:selectOneMenu style="width: 150px">
+                                <f:selectItem itemValue="0" itemLabel="Pilih Status Kepemilikan" />
+                            </p:selectOneMenu><h:outputText />
+
+                            <h:outputText value="Surat Kepemilikan" />
+                            <p:selectOneMenu  id="srtkepemilikan2" value="#{loanaccountBean.collateral.letterofownershiptype.letterofownershiptypeid}" style="width: 150px">
+                                <f:selectItem itemValue="0" itemLabel="Pilih Surat Kepemilikan" />
+                                <f:selectItems value="#{loanaccountBean.letterofownershiptypes}" var="sKepemilikan" itemValue="#{sKepemilikan.letterofownershiptypeid}" itemLabel="#{sKepemilikan.letterofownershiptypename}" />
+                            </p:selectOneMenu><h:outputText />
+
+                            <h:outputText value="Atas nama surat kepemilikan"/>
+                            <p:inputText style="width: 150px"/><h:outputText />
+
+
+                            <p:commandButton value="#{msgs.saveButton}" rendered="#{loanaccountBean.statusCollateral != 'edit'}" process="@this"/><h:outputText /><h:outputText />
+                        </h:panelGrid>
+                    </h:panelGroup>
+                </p:dialog>
+                <p:dialog header="Rincian Biaya Hidup" widgetVar="rincianBiayaHidup" id="rincianBiayaHidup" modal="true" showEffect="explode" hideEffect="explode" >
+                    <h:panelGrid columns="3" id="pgrincianBiayaHidup">
+                        <h:outputLabel for="anggotaKeluarga" value="Anggota Keluarga"/>
+                        <p:selectOneMenu id="anggotaKeluarga" style="width: 155px">
+                            <f:selectItem itemLabel="Suami/Istri" itemValue="1"/>
+                            <f:selectItem itemLabel="Anak 1" itemValue="2"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>
+                        <h:outputLabel for="pendidikanTerakhir" value="Pendidikan Terakhir"/>
+                        <p:selectOneMenu id="pendidikanTerakhir" style="width: 155px">
+                            <f:selectItem itemLabel="SD" itemValue="1"/>
+                            <f:selectItem itemLabel="SMP" itemValue="2"/>
+                            <f:selectItem itemLabel="SMA" itemValue="3"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>
+                        <p:spacer/>
+                        <p:selectOneRadio id="statusKerja" >
+                            <f:selectItem itemLabel="Sudah Bekerja" itemValue="1"/>
+                            <f:selectItem itemLabel="Belum Bekerja" itemValue="2"/>
+                        </p:selectOneRadio>
+                        <p:spacer/>
+                        <h:outputLabel for="JenisPekerjaan" value="Jenis Pekerjaan"/>
+                        <p:inputText id="JenisPekerjaan" style="width: 150px"/>
+                        <p:spacer/>
+                        <h:outputLabel for="BiayaperBulan" value="Biaya per Bulan"/>
+                        <pe:inputNumber id="BiayaperBulan" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                        <p:spacer/>
+                        <p:commandButton id="btnrincianBiayaHidup" value="Tambah"/>
+                    </h:panelGrid>
+                    <h:panelGroup id="pnltabelrincianBiayaHidup">
+                        <p:dataTable 
+                            value="" 
+                            id="tabelrincianBiayaHidup" 
+                            widgetVar="tabel" 
+                            emptyMessage="Data Masih Kosong"
+                            var="rincianBiayaHiduplist" >
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Anggota Keluarga"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Pendidikan terakhir"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Jenis Pekerjaan"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Biaya per Bulan"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"></f:facet>
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus"/>
+                                <p:commandButton icon="ui-icon ui-icon-pencil" title="Ubah"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:outputText value="TOTAL biaya hidup per anggota keluarga"/> 
+                                <p:inputText value="Rp." disabled="true" style="width: 100px"/>
+                            </f:facet>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:dialog>
+                <p:dialog header="Rincian Cicilan" widgetVar="RincianCicilan" id="RincianCicilan" modal="true" showEffect="explode" hideEffect="explode" >
+                    <h:panelGrid columns="3" id="pgRincianCicilan">
+                        <h:outputLabel for="NamaCicilan" value="Nama Cicilan"/>
+                        <p:inputText id="NamaCicilan" style="width: 150px"/>
+                        <p:spacer/>
+                        <h:outputLabel for="Besarcicilan" value="Besar cicilan"/>
+                        <pe:inputNumber id="Besarcicilan" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                        <p:spacer/>
+                        <p:commandButton id="btnRincianCicilan" value="Tambah"/>
+                    </h:panelGrid>
+                    <h:panelGroup id="pnltabelRincianCicilan">
+                        <p:dataTable 
+                            value="" 
+                            id="tabelRincianCicilan" 
+                            widgetVar="tabel" 
+                            emptyMessage="Data Masih Kosong"
+                            var="RincianCicilanlist" >
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="nama cicilan"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="besar cicilan"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"></f:facet>
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus"/>
+                                <p:commandButton icon="ui-icon ui-icon-pencil" title="Ubah"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:outputText value="TOTAL cicilan"/> 
+                                <p:inputText value="Rp." disabled="true" style="width: 100px"/>
+                            </f:facet>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:dialog>
+                <p:dialog header="Rincian Biaya Rumah Tangga" widgetVar="RincianBiayaRumahTangga" id="RincianBiayaRumahTangga" modal="true" showEffect="explode" hideEffect="explode" >
+                    <h:panelGrid columns="3" id="pgRincianBiayaRumahTangga">
+                        <h:outputLabel for="NamaBiaya" value="Nama Biaya"/>
+                        <p:inputText id="NamaBiaya" style="width: 150px"/>
+                        <p:spacer/>
+                        <h:outputLabel for="BiayaperBulanTangga" value="Biaya per Bulan"/>
+                        <pe:inputNumber id="BiayaperBulanTangga" symbol="#{appBean.systemGlobal.currency.currencySymbol}" decimalPlaces="#{appBean.systemGlobal.curUsedecimals ? appBean.systemGlobal.curDigitdecimals : 0}" thousandSeparator="." decimalSeparator="," maxValue="999999999999999" style="width: 150px"/>
+                        <p:spacer/>
+                        <p:commandButton id="btnRincianBiayaRumahTangga" value="Tambah"/>
+                    </h:panelGrid>
+                    <h:panelGroup id="pnltabelRincianBiayaRumahTangga">
+                        <p:dataTable 
+                            value="" 
+                            id="tabelRincianBiayaRumahTangga" 
+                            widgetVar="tabel" 
+                            emptyMessage="Data Masih Kosong"
+                            var="RincianBiayaRumahTanggalist" >
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Nama Biaya"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="Biaya per Bulan"/></f:facet>
+                                <h:outputText value=""/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"></f:facet>
+                                <p:commandButton icon="ui-icon ui-icon-trash" title="Hapus"/>
+                                <p:commandButton icon="ui-icon ui-icon-pencil" title="Ubah"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:outputText value="TOTAL biaya Rumah Tangga"/> 
+                                <p:inputText value="Rp." disabled="true" style="width: 100px"/>
+                            </f:facet>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:dialog>
+                <p:dialog header="Daftar Nasabah" widgetVar="nasabah" id="daftarnasabah" modal="true" showEffect="explode" hideEffect="explode" >
+                    <p:dataTable
+                        id="nasabahlist"
+                        emptyMessage="Nasabah Tidak Ditemukan"
+                        value="#{loanaccountBean.listCustomer}"
+                        var="customerlist"
+                        paginator="true"
+                        paginatorPosition="bottom"
+                        rows="10"
+                        rowsPerPageTemplate="10,20,50"
+                        sortOrder="descending"
+                        >
+                        <f:facet name="header">Daftar Nasabah</f:facet>
+
+                        <p:column sortBy="#{customerlist.customerCode}" filterBy="#{customerlist.customerCode}" filterMatchMode="contains" >
+                            <f:facet name="header"><h:outputText value="Nomor CIF"/></f:facet>
+                            <h:outputText value="#{customerlist.customerCode}"/>
+                        </p:column>
+
+                        <p:column sortBy="#{customerlist.customername}" filterBy="#{customerlist.customername}" filterMatchMode="contains"  >
+                            <f:facet name="header"><h:outputText value="Nama Nasabah"/></f:facet>
+                            <h:outputText value="#{customerlist.customername}"/>
+                        </p:column>
+
+                        <p:column style="width: 70px;">
+                            <p:commandButton update=":viewDialog" icon="ui-icon ui-icon-search" onclick="nasabah.hide();"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+            </h:form>        
+        </p:panel>
+    </ui:define>
+    <ui:define name="bottom">
+        bottom
+    </ui:define>
+
+</ui:composition>
