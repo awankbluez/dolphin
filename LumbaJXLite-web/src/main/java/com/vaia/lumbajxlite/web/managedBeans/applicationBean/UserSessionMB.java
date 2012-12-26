@@ -78,6 +78,7 @@ public class UserSessionMB extends AbstractManagedBean {
 
         session.removeAttribute("userId");
         session.removeAttribute("userName");
+        session.invalidate();
 
         LOGGER.info("User {} logged out.", authenticatedUser.getEmployeename());
 

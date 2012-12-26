@@ -8,7 +8,7 @@ import com.vaia.lumbajxlite.ejbs.dao.iface.OperatorUserDAO;
 import com.vaia.lumbajxlite.ejbs.ejb.AbstractFacade;
 import com.vaia.lumbajxlite.ejbs.ejb.local.OperatorUserFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
-import java.sql.SQLException;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,7 +25,7 @@ public class OperatorUserFacade extends AbstractFacade<OperatorUser> implements 
     @PersistenceContext(unitName = "com.vaia_LumbaJXLite-ejb_ejb_1.0-SNAPSHOTPU")
     private EntityManager em;
     private static final Logger LOGGER = LoggerFactory.getLogger(OperatorUser.class);
-    private OperatorUserDAO operatorUserDAO = dAOFactory.getDAOImpl(OperatorUserDAO.class);
+    private OperatorUserDAO operatorUserDAO;
 
     @Override
     protected EntityManager getEntityManager() {
@@ -36,15 +36,13 @@ public class OperatorUserFacade extends AbstractFacade<OperatorUser> implements 
         super(OperatorUser.class);
     }
 
+    @PostConstruct
+    private void initialize() {
+        operatorUserDAO = dAOFactory.getDAOImpl(OperatorUserDAO.class);
+    }
+
     @Override
     public OperatorUser checkUser(String userName, String password) {
-        OperatorUser returnedUser;
-
-        if (!userName.isEmpty() && !password.isEmpty()) {
-            returnedUser = operatorUserDAO.findOperatorUser(userName, password);
-        } else {
-            returnedUser = new OperatorUser();
-        }
-        return returnedUser;
+        return operatorUserDAO.findOperatorUser(userName, password);
     }
 }

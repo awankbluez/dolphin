@@ -37,6 +37,16 @@
                 <configuration>
                     <version>6</version>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <webModule>
+                            <groupId>com.vaia</groupId>
+                            <artifactId>LumbaJXLite-web</artifactId>
+                        </webModule>
+                        <ejbModule>
+                            <groupId>com.vaia</groupId>
+                            <artifactId>LumbaJXLite-ejb</artifactId>
+                        </ejbModule>
+                    </modules>
                 </configuration>
             </plugin>
         </plugins>
