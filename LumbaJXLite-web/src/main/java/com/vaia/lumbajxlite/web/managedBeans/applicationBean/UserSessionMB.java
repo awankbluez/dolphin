@@ -44,6 +44,7 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
 
     @PostConstruct
     private void intiialize() {
+        user = new OperatorUser();
     }
 
     public void userLogin() {

@@ -6,54 +6,56 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <h:head>
-        <title>Login - <h:outputText value="#{msgs['lumbajx.title']}"/></title>
-        <h:outputStylesheet name="style.default.css" library="css"/>
-        <h:outputScript name="login.js" library="js"/>
-        <link href="#{resources['dolphin3d.ico']}" rel="shortcut icon" type="image/x-icon" />
-    </h:head>
+    <f:view encoding="UTF-8" contentType="text/html">
+        <h:head>
+            <title>Login - <h:outputText value="#{msgs['lumbajx.title']}"/></title>
+            <h:outputStylesheet name="style.default.css" library="css"/>
+            <h:outputScript name="login.js" library="js"/>
+            <link href="#{resources['dolphin3d.ico']}" rel="shortcut icon" type="image/x-icon" />
+        </h:head>
 
-    <h:body styleClass="loginpage">
-        <div class="loginbox">
-            <div class="loginboxinner">
-                <div class="logo">
-                    <h1><span>Lumba</span> JX</h1>
-                    <p>Core Banking System</p>
-                </div>
-
-                <br clear="all" />
-                <div class="nopwd">
-
-                    <div class="loginmsg">Password yang anda masukkan salah.</div>
-                </div>
-                <div class="noaktif">
-
-                    <div class="loginmsg">User dalam keadaan tidak aktif.</div>
-                </div>
-                <div class="nouser">
-
-                    <div class="loginmsg">User tidak ditemukan.</div>
-                </div>
-
-                <h:form id="login" prependId="false">
-
-                    <p:growl autoUpdate="true"/>
-
-                    <div class="username">
-                        <div class="usernameinner">
-                            <h:inputText id="username" value="#{userSessionBean.user.username}"/>
-                        </div>
+        <h:body styleClass="loginpage">
+            <div class="loginbox">
+                <div class="loginboxinner">
+                    <div class="logo">
+                        <h1><span>Lumba</span> JX</h1>
+                        <p>Core Banking System</p>
                     </div>
-                    <div class="password">
-                        <div class="passwordinner">
-                            <h:inputSecret id="password" value="#{userSessionBean.user.password}"/>
-                        </div>
+
+                    <br clear="all" />
+                    <div class="nopwd">
+
+                        <div class="loginmsg">Password yang anda masukkan salah.</div>
                     </div>
-                    <p:commandButton action="#{userSessionBean.userLogin()}" value="LOGIN" process="@form"/>
-                    <div class="keep"><input type="checkbox" />Keep login</div>
-                </h:form>
+                    <div class="noaktif">
+
+                        <div class="loginmsg">User dalam keadaan tidak aktif.</div>
+                    </div>
+                    <div class="nouser">
+
+                        <div class="loginmsg">User tidak ditemukan.</div>
+                    </div>
+
+                    <h:form id="login">
+
+                        <p:messages autoUpdate="true"/>
+
+                        <div class="username">
+                            <div class="usernameinner">
+                                <p:inputText id="username" value="#{userSessionBean.user.username}" required="true"/>
+                            </div>
+                        </div>
+                        <div class="password">
+                            <div class="passwordinner">
+                                <p:password id="password" value="#{userSessionBean.user.password}" required="true"/>
+                            </div>
+                        </div>
+                        <p:commandButton actionListener="#{userSessionBean.userLogin}" value="LOGIN" process="@form" update="@form"/>
+                        <div class="keep"><input type="checkbox" />Keep login</div>
+                    </h:form>
+                </div>
             </div>
-        </div>
 
-    </h:body>
+        </h:body>
+    </f:view>
 </html>

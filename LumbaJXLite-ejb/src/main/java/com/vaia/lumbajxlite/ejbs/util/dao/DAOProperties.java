@@ -15,12 +15,13 @@ import java.util.Properties;
 public class DAOProperties {
 
     // Constants ----------------------------------------------------------------------------------
-    private static final String PROPERTIES_FILE = "dao.server.properties";
+    private static final String PROPERTIES_FILE = "DB_Server";
+    private static final String PROPERTIES_FILE_EXT = ".properties";
     private static final Properties PROPERTIES = new Properties();
 
     static {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream propertiesFile = classLoader.getResourceAsStream(PROPERTIES_FILE);
+        InputStream propertiesFile = classLoader.getResourceAsStream(PROPERTIES_FILE + PROPERTIES_FILE_EXT);
 
         if (propertiesFile == null) {
             throw new DAOConfigurationException(

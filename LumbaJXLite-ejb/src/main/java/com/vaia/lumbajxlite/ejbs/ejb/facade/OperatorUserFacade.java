@@ -5,6 +5,7 @@
 package com.vaia.lumbajxlite.ejbs.ejb.facade;
 
 import com.vaia.lumbajxlite.ejbs.dao.iface.OperatorUserDAO;
+import com.vaia.lumbajxlite.ejbs.dao.impl.DAOFactory;
 import com.vaia.lumbajxlite.ejbs.ejb.AbstractFacade;
 import com.vaia.lumbajxlite.ejbs.ejb.local.OperatorUserFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
