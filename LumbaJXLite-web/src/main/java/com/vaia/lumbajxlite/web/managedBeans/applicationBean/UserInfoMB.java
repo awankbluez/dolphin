@@ -5,6 +5,7 @@
 package com.vaia.lumbajxlite.web.managedBeans.applicationBean;
 
 import com.vaia.lumbajxlite.web.managedBeans.AbstractManagedBean;
+import java.io.Serializable;
 import java.util.Locale;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -16,7 +17,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean(name="userInfoBean")
 @SessionScoped
-public class UserInfoMB extends AbstractManagedBean {
+public class UserInfoMB extends AbstractManagedBean implements Serializable{
 
     private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 

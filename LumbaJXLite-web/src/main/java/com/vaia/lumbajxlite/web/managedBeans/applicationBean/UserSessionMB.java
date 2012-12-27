@@ -4,11 +4,13 @@
  */
 package com.vaia.lumbajxlite.web.managedBeans.applicationBean;
 
+import com.vaia.lumbajxlite.ejbs.ejb.local.MenuFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.ejb.local.OperatorUserFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
 import com.vaia.lumbajxlite.web.managedBeans.AbstractManagedBean;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -26,8 +28,10 @@ import org.slf4j.LoggerFactory;
  */
 @ManagedBean(name = "userSessionBean")
 @SessionScoped
-public class UserSessionMB extends AbstractManagedBean {
+public class UserSessionMB extends AbstractManagedBean implements Serializable {
 
+    @EJB
+    private MenuFacadeLocal menuFacade;
     @EJB
     private OperatorUserFacadeLocal operatorUserService;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionMB.class);

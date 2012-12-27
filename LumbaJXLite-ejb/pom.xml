@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-    <artifactId>LumbaJXLite</artifactId>
-    <groupId>com.vaia</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
+        <artifactId>LumbaJXLite</artifactId>
+        <groupId>com.vaia</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
     <groupId>com.vaia</groupId>
     <artifactId>LumbaJXLite-ejb</artifactId>
@@ -53,6 +53,13 @@
             <artifactId>postgresql</artifactId>
             <version>9.1-901-1.jdbc4</version>
         </dependency>
+
+        <!--hibernate-->
+        <!--        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>3.5.6-Final</version>
+        </dependency>-->
 
         <!--java ee-->
         <dependency>
@@ -136,6 +143,11 @@
             <id>eclipselink</id>
             <layout>default</layout>
             <name>Repository for library EclipseLink (JPA 2.0)</name>
+        </repository>
+        <repository>
+            <id>repository.jboss.org-public</id>
+            <name>JBoss repository</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
         </repository>
     </repositories>
 </project>

@@ -62,7 +62,7 @@ public class OperatorUser implements Serializable {
     @Column(nullable = false)
     private Integer userid;
     @Size(max = 50)
-    @Column(length = 50, unique=true)
+    @Column(length = 50, unique = true)
     private String username;
     @Size(max = 100)
     @Column(length = 100)
