@@ -36,7 +36,7 @@
        </layout>
     </appender>-->
 
-    <logger name="com.managedBean">
+    <logger name="com.vaia.lumbajxlite.web">
         <level value="debug"/>
         <!--<appender-ref ref="JDBCAppender"></appender-ref>-->
     </logger>

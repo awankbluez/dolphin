@@ -6,25 +6,19 @@ package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -59,7 +53,19 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Customer.findByDegreedesc", query = "SELECT c FROM Customer c WHERE c.degreedesc = :degreedesc"),
     @NamedQuery(name = "Customer.findBySectoreconomy", query = "SELECT c FROM Customer c WHERE c.sectoreconomy = :sectoreconomy"),
     @NamedQuery(name = "Customer.findByApprove", query = "SELECT c FROM Customer c WHERE c.approve = :approve"),
-    @NamedQuery(name = "Customer.findBySessiondate", query = "SELECT c FROM Customer c WHERE c.sessiondate = :sessiondate")})
+    @NamedQuery(name = "Customer.findBySessiondate", query = "SELECT c FROM Customer c WHERE c.sessiondate = :sessiondate"),
+    @NamedQuery(name = "Customer.findByNama1", query = "SELECT c FROM Customer c WHERE c.nama1 = :nama1"),
+    @NamedQuery(name = "Customer.findByNama2", query = "SELECT c FROM Customer c WHERE c.nama2 = :nama2"),
+    @NamedQuery(name = "Customer.findByNama3", query = "SELECT c FROM Customer c WHERE c.nama3 = :nama3"),
+    @NamedQuery(name = "Customer.findByNama4", query = "SELECT c FROM Customer c WHERE c.nama4 = :nama4"),
+    @NamedQuery(name = "Customer.findByInstitution", query = "SELECT c FROM Customer c WHERE c.institution = :institution"),
+    @NamedQuery(name = "Customer.findByOthertypeinstitution", query = "SELECT c FROM Customer c WHERE c.othertypeinstitution = :othertypeinstitution"),
+    @NamedQuery(name = "Customer.findByLegal", query = "SELECT c FROM Customer c WHERE c.legal = :legal"),
+    @NamedQuery(name = "Customer.findByCompanytype", query = "SELECT c FROM Customer c WHERE c.companytype = :companytype"),
+    @NamedQuery(name = "Customer.findByOrganizationid", query = "SELECT c FROM Customer c WHERE c.organizationid = :organizationid"),
+    @NamedQuery(name = "Customer.findByUserid", query = "SELECT c FROM Customer c WHERE c.userid = :userid"),
+    @NamedQuery(name = "Customer.findByMasteroperationalid", query = "SELECT c FROM Customer c WHERE c.masteroperationalid = :masteroperationalid"),
+    @NamedQuery(name = "Customer.findByCountryid", query = "SELECT c FROM Customer c WHERE c.countryid = :countryid")})
 public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -115,32 +121,26 @@ public class Customer implements Serializable {
     private Boolean approve;
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
-    @JoinColumn(name = "companytype", referencedColumnName = "parameterid")
-    @ManyToOne
-    private Parameter companytype;
-    @JoinColumn(name = "institution", referencedColumnName = "parameterid")
-    @ManyToOne
-    private Parameter institution;
-    @JoinColumn(name = "othertypeinstitution", referencedColumnName = "parameterid")
-    @ManyToOne
-    private Parameter othertypeinstitution;
-    @JoinColumn(name = "legal", referencedColumnName = "parameterid")
-    @ManyToOne
-    private Parameter legal;
-    @JoinColumn(name = "organizationid", referencedColumnName = "organizationid")
-    @ManyToOne
-    private Organization organizationid;
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
-    @ManyToOne
-    private OperatorUser userid;
-    @JoinColumn(name = "masteroperationalid", referencedColumnName = "masteroperationalid")
-    @ManyToOne
-    private Masteroperational masteroperationalid;
-    @JoinColumn(name = "countryid", referencedColumnName = "countryid")
-    @ManyToOne
-    private Country countryid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerid")
-    private List<Account> accountList;
+    @Size(max = 20)
+    @Column(length = 20)
+    private String nama1;
+    @Size(max = 20)
+    @Column(length = 20)
+    private String nama2;
+    @Size(max = 20)
+    @Column(length = 20)
+    private String nama3;
+    @Size(max = 20)
+    @Column(length = 20)
+    private String nama4;
+    private Integer institution;
+    private Integer othertypeinstitution;
+    private Integer legal;
+    private Integer companytype;
+    private Integer organizationid;
+    private Integer userid;
+    private Integer masteroperationalid;
+    private Integer countryid;
 
     public Customer() {
     }
@@ -349,77 +349,100 @@ public class Customer implements Serializable {
         this.sessiondate = sessiondate;
     }
 
-    public Parameter getCompanytype() {
-        return companytype;
+    public String getNama1() {
+        return nama1;
     }
 
-    public void setCompanytype(Parameter companytype) {
-        this.companytype = companytype;
+    public void setNama1(String nama1) {
+        this.nama1 = nama1;
     }
 
-    public Parameter getInstitution() {
+    public String getNama2() {
+        return nama2;
+    }
+
+    public void setNama2(String nama2) {
+        this.nama2 = nama2;
+    }
+
+    public String getNama3() {
+        return nama3;
+    }
+
+    public void setNama3(String nama3) {
+        this.nama3 = nama3;
+    }
+
+    public String getNama4() {
+        return nama4;
+    }
+
+    public void setNama4(String nama4) {
+        this.nama4 = nama4;
+    }
+
+    public Integer getInstitution() {
         return institution;
     }
 
-    public void setInstitution(Parameter institution) {
+    public void setInstitution(Integer institution) {
         this.institution = institution;
     }
 
-    public Parameter getOthertypeinstitution() {
+    public Integer getOthertypeinstitution() {
         return othertypeinstitution;
     }
 
-    public void setOthertypeinstitution(Parameter othertypeinstitution) {
+    public void setOthertypeinstitution(Integer othertypeinstitution) {
         this.othertypeinstitution = othertypeinstitution;
     }
 
-    public Parameter getLegal() {
+    public Integer getLegal() {
         return legal;
     }
 
-    public void setLegal(Parameter legal) {
+    public void setLegal(Integer legal) {
         this.legal = legal;
     }
 
-    public Organization getOrganizationid() {
+    public Integer getCompanytype() {
+        return companytype;
+    }
+
+    public void setCompanytype(Integer companytype) {
+        this.companytype = companytype;
+    }
+
+    public Integer getOrganizationid() {
         return organizationid;
     }
 
-    public void setOrganizationid(Organization organizationid) {
+    public void setOrganizationid(Integer organizationid) {
         this.organizationid = organizationid;
     }
 
-    public OperatorUser getUserid() {
+    public Integer getUserid() {
         return userid;
     }
 
-    public void setUserid(OperatorUser userid) {
+    public void setUserid(Integer userid) {
         this.userid = userid;
     }
 
-    public Masteroperational getMasteroperationalid() {
+    public Integer getMasteroperationalid() {
         return masteroperationalid;
     }
 
-    public void setMasteroperationalid(Masteroperational masteroperationalid) {
+    public void setMasteroperationalid(Integer masteroperationalid) {
         this.masteroperationalid = masteroperationalid;
     }
 
-    public Country getCountryid() {
+    public Integer getCountryid() {
         return countryid;
     }
 
-    public void setCountryid(Country countryid) {
+    public void setCountryid(Integer countryid) {
         this.countryid = countryid;
-    }
-
-    @XmlTransient
-    public List<Account> getAccountList() {
-        return accountList;
-    }
-
-    public void setAccountList(List<Account> accountList) {
-        this.accountList = accountList;
     }
 
     @Override

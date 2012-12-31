@@ -37,7 +37,6 @@ public class AuthListener implements PhaseListener {
 
         } else {
             MDC.put("userId", session.getAttribute("userId").toString());
-            MDC.put("userName", session.getAttribute("userName").toString());
         }
     }
 

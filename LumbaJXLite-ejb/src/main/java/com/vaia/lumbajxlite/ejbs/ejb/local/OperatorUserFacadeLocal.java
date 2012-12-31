@@ -29,6 +29,5 @@ public interface OperatorUserFacadeLocal {
 
     int count();
 
-    OperatorUser checkUser(String userName, String password);
-
+    OperatorUser checkUser(OperatorUser operatorUser);
 }

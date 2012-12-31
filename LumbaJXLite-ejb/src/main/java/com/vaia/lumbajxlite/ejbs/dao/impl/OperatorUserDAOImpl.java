@@ -5,14 +5,15 @@
 package com.vaia.lumbajxlite.ejbs.dao.impl;
 
 import static com.vaia.lumbajxlite.ejbs.dao.DAOUtil.*;
+import static com.vaia.lumbajxlite.ejbs.util.Encrypt.*;
 import com.vaia.lumbajxlite.ejbs.dao.iface.OperatorUserDAO;
+import com.vaia.lumbajxlite.ejbs.entity.Masteroperational;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
-import com.vaia.lumbajxlite.ejbs.util.Encrypt;
-import com.vaia.lumbajxlite.ejbs.util.dao.DAOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,77 +23,85 @@ import org.slf4j.LoggerFactory;
  */
 public class OperatorUserDAOImpl implements OperatorUserDAO {
 
-    private DAOFactory daoFactory;
+    private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = LoggerFactory.getLogger(OperatorUserDAOImpl.class);
-    private static final String SQL_FIND_USER_BY_USERNAME_PASSWORD = "SELECT * FROM operatoruser where username = ?, password = ?";
+    private Connection connection;
+    private static final String SQL_CHECK_LOGIN = "SELECT * FROM operatoruser WHERE username = ? AND password = ? AND userstatus = true";
+    private static final String SQL_RETRIEVE_ALL_ACTIVE = "SELECT * FROM operatoruser WHERE userstatus = true";
 
-    public OperatorUserDAOImpl(DAOFactory daoFactory) {
-        this.daoFactory = daoFactory;
+    public OperatorUserDAOImpl() {
     }
 
     @Override
-    public OperatorUser findOperatorUser(String userName, String password) {
-        Encrypt encrypt = new Encrypt();
-        String hasPassword = encrypt.getMD5(password);
-        return find(SQL_FIND_USER_BY_USERNAME_PASSWORD, userName, hasPassword);
-    }
-
-    /**
-     * Returns the user from the database matching the given SQL query with the
-     * given values.
-     *
-     * @param sql The SQL query to be executed in the database.
-     * @param values The PreparedStatement values to be set.
-     * @return The user from the database matching the given SQL query with the
-     * given values.
-     * @throws DAOException If something fails at database level.
-     */
-    private OperatorUser find(String sql, Object... values) throws DAOException {
-        Connection connection = null;
+    public List<OperatorUser> retrieveAllUser() {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        OperatorUser user = null;
+        List<OperatorUser> users = new ArrayList<>();
 
         try {
-            connection = daoFactory.getConnection();
-            preparedStatement = prepareStatement(connection, sql, false, values);
+            preparedStatement = prepareStatement(connection, SQL_RETRIEVE_ALL_ACTIVE);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                users.add(map(resultSet));
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            close(preparedStatement, resultSet);
+        }
 
-            LOGGER.debug(preparedStatement.toString());
+        return users;
+    }
 
+    @Override
+    public OperatorUser checkLogin(OperatorUser loggingInUser) {
+        Object[] parameters = {
+            loggingInUser.getUsername(),
+            getMD5(loggingInUser.getPassword())
+        };
+
+        return find(SQL_CHECK_LOGIN, parameters);
+    }
+
+    @Override
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    private OperatorUser find(String SQL, Object... values) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        OperatorUser operatorUser = null;
+
+        try {
+            preparedStatement = prepareStatement(connection, SQL, false, values);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                user = map(resultSet);
+                operatorUser = map(resultSet);
             }
+
         } catch (SQLException e) {
             LOGGER.error(e.toString());
         } finally {
-            close(connection, preparedStatement, resultSet);
+            close(preparedStatement, resultSet);
         }
 
-        return user;
-    }
-
-    // method helper -----------------------------------------------------------
-    /**
-     * Map the current row of the given ResultSet to an OperatorUser.
-     *
-     * @param resultSet The ResultSet of which the current row is to be mapped
-     * to an OperatorUser.
-     * @return The mapped OperatorUser from the current row of the given
-     * ResultSet.
-     * @throws SQLException If something fails at database level.
-     */
-    private static OperatorUser map(ResultSet resultSet) throws SQLException {
-        OperatorUser operatorUser = new OperatorUser();
-        operatorUser.setUserid(resultSet.getInt("id"));
-        operatorUser.setEmployeename(resultSet.getString("employeename"));
-        operatorUser.setUsername(resultSet.getString("username"));
-        operatorUser.setEmail(resultSet.getString("email"));
         return operatorUser;
+
     }
 
-    @Override
-    public void setDAOFactory(DAOFactory dAOFactory) {
-        this.daoFactory = dAOFactory;
+    private static OperatorUser map(ResultSet resultSet) throws SQLException {
+        OperatorUser user = new OperatorUser();
+        user.setUserid(resultSet.getInt("userid"));
+        user.setEmail(resultSet.getString("email"));
+        user.setEmployeename(resultSet.getString("employeename"));
+        user.setEmployeeid(resultSet.getString("employeeid"));
+        user.setUserstatus(resultSet.getBoolean("userstatus"));
+
+        Masteroperational masteroperational = new Masteroperational();
+        masteroperational.setMasteroperationalid(resultSet.getInt("masteroperationalid"));
+
+        user.setMasteroperationalid(masteroperational);
+        return user;
     }
 }

@@ -6,7 +6,7 @@
         <layout class="org.apache.log4j.PatternLayout">
             <!-- Pattern to output the caller's file name and line number -->
             <!--<param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>-->
-            <param name="ConversionPattern" value="[%X{userId}:%X{userName}] - %5p [%t] (%c:%L) - %m%n"/>
+            <param name="ConversionPattern" value="[%X{userId}] - %5p [%t] (%c:%L) - %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="levelMin" value="debug" />
@@ -36,7 +36,7 @@
        </layout>
     </appender>-->
 
-    <logger name="com.managedBean">
+    <logger name="com.vaia.lumbajxlite.ejbs">
         <level value="debug"/>
         <!--<appender-ref ref="JDBCAppender"></appender-ref>-->
     </logger>

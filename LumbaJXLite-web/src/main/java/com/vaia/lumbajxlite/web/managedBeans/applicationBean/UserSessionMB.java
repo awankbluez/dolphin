@@ -4,7 +4,6 @@
  */
 package com.vaia.lumbajxlite.web.managedBeans.applicationBean;
 
-import com.vaia.lumbajxlite.ejbs.ejb.local.MenuFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.ejb.local.OperatorUserFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
@@ -31,8 +30,6 @@ import org.slf4j.LoggerFactory;
 public class UserSessionMB extends AbstractManagedBean implements Serializable {
 
     @EJB
-    private MenuFacadeLocal menuFacade;
-    @EJB
     private OperatorUserFacadeLocal operatorUserService;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionMB.class);
     private OperatorUser user;
@@ -43,13 +40,13 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
     }
 
     @PostConstruct
-    private void intiialize() {
+    private void initialize() {
         user = new OperatorUser();
     }
 
     public void userLogin() {
         if (!user.getUsername().isEmpty() && !user.getPassword().isEmpty()) {
-            authenticatedUser = operatorUserService.checkUser(user.getUsername(), user.getPassword());
+            authenticatedUser = operatorUserService.checkUser(user);
         } else {
             displayErrorMessageToUser("User Name and Password cannot be empty.");
         }
@@ -60,7 +57,6 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
                 HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
 
                 session.setAttribute("userId", authenticatedUser.getUserid().toString());
-                session.setAttribute("userName", authenticatedUser.getUsername());
 
                 LOGGER.info("User {} successfully logged in.", authenticatedUser.getEmployeename());
 
@@ -82,7 +78,6 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
 
         session.removeAttribute("userId");
-        session.removeAttribute("userName");
         session.invalidate();
 
         LOGGER.info("User {} logged out.", authenticatedUser.getEmployeename());

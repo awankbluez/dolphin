@@ -46,6 +46,9 @@ public final class DAOUtil {
     public static PreparedStatement prepareStatement(Connection connection, String sql, boolean returnGeneratedKeys, Object... values) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql, returnGeneratedKeys ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS);
         setValues(preparedStatement, values);
+
+        LOGGER.debug(preparedStatement.toString());
+
         return preparedStatement;
     }
 
@@ -138,6 +141,18 @@ public final class DAOUtil {
     public static void close(Connection connection, Statement statement) {
         close(statement);
         close(connection);
+    }
+
+    /**
+     * Quietly close the Connection and Statement. Any errors will be printed to
+     * the stderr.
+     *
+     * @param connection The Connection to be closed quietly.
+     * @param statement The Statement to be closed quietly.
+     */
+    public static void close(Statement statement, ResultSet resultSet) {
+        close(statement);
+        close(resultSet);
     }
 
     /**

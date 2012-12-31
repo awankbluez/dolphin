@@ -4,7 +4,7 @@
  */
 package com.vaia.lumbajxlite.ejbs.dao;
 
-import com.vaia.lumbajxlite.ejbs.dao.impl.DAOFactory;
+import java.sql.Connection;
 
 /**
  *
@@ -12,5 +12,5 @@ import com.vaia.lumbajxlite.ejbs.dao.impl.DAOFactory;
  */
 public interface BaseDAO {
 
-    void setDAOFactory(DAOFactory dAOFactory);
+    void setConnection(Connection connection);
 }

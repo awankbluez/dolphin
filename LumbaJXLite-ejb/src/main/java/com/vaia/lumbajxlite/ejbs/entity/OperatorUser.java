@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Operatoruser.findAll", query = "SELECT o FROM Operatoruser o"),
+    @NamedQuery(name = "Operatoruser.findByUsernamePassword", query = "SELECT o FROM Operatoruser o WHERE o.username = :username AND o.password = :password"),
     @NamedQuery(name = "Operatoruser.findByUserid", query = "SELECT o FROM Operatoruser o WHERE o.userid = :userid"),
     @NamedQuery(name = "Operatoruser.findByUsername", query = "SELECT o FROM Operatoruser o WHERE o.username = :username"),
     @NamedQuery(name = "Operatoruser.findByPassword", query = "SELECT o FROM Operatoruser o WHERE o.password = :password"),
@@ -54,8 +55,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Operatoruser.findByCreatorid", query = "SELECT o FROM Operatoruser o WHERE o.creatorid = :creatorid"),
     @NamedQuery(name = "Operatoruser.findByEditorid", query = "SELECT o FROM Operatoruser o WHERE o.editorid = :editorid")})
 public class OperatorUser implements Serializable {
-
     private static final long serialVersionUID = 1L;
+    public static final String USER_CHECK_LOGIN = "Operatoruser.findByUsernamePassword";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

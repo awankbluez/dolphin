@@ -4,7 +4,6 @@
  */
 package com.vaia.lumbajxlite.ejbs.ejb;
 
-import com.vaia.lumbajxlite.ejbs.dao.impl.DAOFactory;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -16,7 +15,6 @@ public abstract class AbstractFacade<T> {
 
 //    private Logger LOGGER;
     private Class<T> entityClass;
-    public DAOFactory dAOFactory = DAOFactory.getInstance("server");
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;

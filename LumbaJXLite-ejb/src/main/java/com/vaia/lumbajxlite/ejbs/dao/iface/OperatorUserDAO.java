@@ -6,6 +6,7 @@ package com.vaia.lumbajxlite.ejbs.dao.iface;
 
 import com.vaia.lumbajxlite.ejbs.dao.BaseDAO;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import java.util.List;
 
 /**
  *
@@ -13,5 +14,7 @@ import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
  */
 public interface OperatorUserDAO extends BaseDAO {
 
-    OperatorUser findOperatorUser(String userName, String password);
+    OperatorUser checkLogin(OperatorUser loggingInUser);
+
+    List<OperatorUser> retrieveAllUser();
 }

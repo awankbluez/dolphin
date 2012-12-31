@@ -12,9 +12,9 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author awank
  */
-public class Encrypt {
+public final class Encrypt {
 
-    public String getMD5(String input) {
+    public static String getMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(input.getBytes());
