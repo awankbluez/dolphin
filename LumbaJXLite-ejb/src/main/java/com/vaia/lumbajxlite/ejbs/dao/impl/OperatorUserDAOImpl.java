@@ -58,6 +58,9 @@ public class OperatorUserDAOImpl implements OperatorUserDAO {
             getMD5(loggingInUser.getPassword())
         };
 
+        OperatorUser returnedUser = find(SQL_CHECK_LOGIN, parameters);
+        returnedUser.setUsername(loggingInUser.getUsername());
+
         return find(SQL_CHECK_LOGIN, parameters);
     }
 

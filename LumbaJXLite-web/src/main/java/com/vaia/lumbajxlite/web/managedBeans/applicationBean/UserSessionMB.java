@@ -42,8 +42,6 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
     private OperatorUser authenticatedUser;
     private MenuModel userMainMenuModel;
     private MenuModel userReportMenuModel;
-    private TreeNode userMainMenu;
-    private TreeNode userReportMenu;
     private List<Menu> userAccessedMenu;
 
     public UserSessionMB() {
@@ -62,7 +60,7 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
             displayErrorMessageToUser("User Name and Password cannot be empty.");
         }
 
-        if (authenticatedUser != null) {
+        if (isUserLoggedIn()) {
             if (authenticatedUser.getUserstatus()) {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
@@ -141,19 +139,19 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
         this.authenticatedUser = authenticatedUser;
     }
 
-    public OperatorUserFacadeLocal getOperatorUserService() {
-        return operatorUserService;
+    public MenuModel getUserMainMenuModel() {
+        return userMainMenuModel;
     }
 
-    public void setOperatorUserService(OperatorUserFacadeLocal operatorUserService) {
-        this.operatorUserService = operatorUserService;
+    public void setUserMainMenuModel(MenuModel userMainMenuModel) {
+        this.userMainMenuModel = userMainMenuModel;
     }
 
-    public TreeNode getUserMainMenu() {
-        return userMainMenu;
+    public MenuModel getUserReportMenuModel() {
+        return userReportMenuModel;
     }
 
-    public TreeNode getUserReportMenu() {
-        return userReportMenu;
+    public void setUserReportMenuModel(MenuModel userReportMenuModel) {
+        this.userReportMenuModel = userReportMenuModel;
     }
 }

@@ -54,13 +54,13 @@
         <h:form prependId="false">
             <div class="headermenu">
                 <p:commandButton id="menuButton" value="#{msgs['lumbajx.menu']}" type="button" styleClass="icon-flatscreen"/>
-                <p:tieredMenu overlay="true" trigger="menuButton" my="left top" at="left bottom" autoDisplay="true"  model="#{userSessionBean.userMainMenu}"/>
+                <p:tieredMenu overlay="true" trigger="menuButton" my="left top" at="left bottom" autoDisplay="true"  model="#{userSessionBean.userMainMenuModel}"/>
 
                 <p:commandButton id="messButton" value="#{msgs['lumbajx.message']}" type="button" styleClass="icon-message"/>
                 <p:tieredMenu overlay="true" trigger="messButton" my="left top" at="left bottom" model="#{loginBean.menuPesan}"/>  
 
                 <p:commandButton id="laporanButton" value="#{msgs['lumbajx.reports']}" type="button" styleClass="icon-chart"/>
-                <p:tieredMenu overlay="true" trigger="laporanButton" my="left top" at="left bottom" model="#{userSessionBean.userReportMenu}"/>
+                <p:tieredMenu overlay="true" trigger="laporanButton" my="left top" at="left bottom" model="#{userSessionBean.userReportMenuModel}"/>
             </div>
         </h:form>
 
