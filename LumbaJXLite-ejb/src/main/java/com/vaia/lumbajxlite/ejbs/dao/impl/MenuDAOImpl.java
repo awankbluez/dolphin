@@ -31,32 +31,36 @@ public class MenuDAOImpl implements MenuDAO {
     private final String SQL_FIND_ROOT_MAIN_MENU = "SELECT * FROM menu WHERE menuid = 1 AND menutype = 'MM'";
     private final String SQL_FIND_PARENT_MENU_FROM_SUBMENU = "SELECT * FROM menu WHERE menutype = 'MM' and menuid = ?";
     private final String SQL_FIND_USER_ROOT_MAIN_MENU = "SELECT * FROM privilageuser"
-            + "INNER JOIN menu ON menu.menuid = privilageuser.menuid "
-            + "WHERE menu.level = 0"
-            + "AND privilageuser.userid = ?"
-            + "AND menu.menutype = 'MM'"
-            + "AND menu.menustatus IS true"
-            + "AND menu.menuid != 8";
+            + " INNER JOIN menu ON menu.menuid = privilageuser.menuid "
+            + " WHERE menu.level = 0 "
+            + " AND privilageuser.userid = ? "
+            + " AND menu.menutype = 'MM' "
+            + " AND menu.menustatus IS true "
+            + " AND menu.menuid != 8 "
+            + " ORDER BY ordering";
     private final String SQL_FIND_USER_ROOT_REPORT_MENU = "SELECT * FROM privilageuser"
-            + "INNER JOIN menu ON menu.menuid = privilageuser.menuid "
-            + "WHERE menu.level = 1"
-            + "AND privilageuser.userid = ?"
-            + "AND menu.menutype = 'MM'"
-            + "AND menu.menustatus IS true"
-            + "AND menu.menuid = 8";
+            + " INNER JOIN menu ON menu.menuid = privilageuser.menuid "
+            + " WHERE menu.level = 1 "
+            + " AND privilageuser.userid = ? "
+            + " AND menu.menutype = 'MM' "
+            + " AND menu.menustatus IS true "
+            + " AND menu.parentid = 8 "
+            + " ORDER BY ordering";
     private final String SQL_FIND_USER_SUB_MAIN_MENU = "SELECT * FROM privilageuser "
-            + "INNER JOIN menu on menu.menuid = privilageuser.menuid "
-            + "WHERE privilageuser.userid = ?"
+            + " INNER JOIN menu on menu.menuid = privilageuser.menuid "
+            + " WHERE privilageuser.userid = ? "
             //            + "AND privilageuser.menuid != 8"
-            + "AND privilageuser.menuid IN ("
-            + "SELECT menu.menuid FROM menu "
-            + "WHERE menu.parentid = ?)";
+            + " AND privilageuser.menuid IN ("
+            + " SELECT menu.menuid FROM menu "
+            + " WHERE menu.parentid = ?) "
+            + " ORDER BY ordering";
     private final String SQL_FIND_USER_SUB_REPORT_MENU = "SELECT * FROM privilageuser "
-            + "INNER JOIN menu on menu.menuid = privilageuser.menuid "
-            + "WHERE privilageuser.userid = ?"
-            + "AND privilageuser.menuid IN ("
-            + "SELECT menu.menuid FROM menu "
-            + "WHERE menu.parentid = ?)";
+            + " INNER JOIN menu on menu.menuid = privilageuser.menuid "
+            + " WHERE privilageuser.userid = ? "
+            + " AND privilageuser.menuid IN ("
+            + " SELECT menu.menuid FROM menu "
+            + " WHERE menu.parentid = ?) "
+            + " ORDER BY ordering";
 
     @Override
     public Menu findParentMenuBySubMenuId(Integer subMenuId) throws SQLException {
@@ -110,7 +114,7 @@ public class MenuDAOImpl implements MenuDAO {
             preparedStatement = prepareStatement(connection, SQL_FIND_USER_ROOT_MAIN_MENU, false, parameters);
             resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Menu rootUserMenu = new Menu();
                 rootUserMenu = map(resultSet);
                 menus.add(rootUserMenu);
@@ -137,7 +141,7 @@ public class MenuDAOImpl implements MenuDAO {
             preparedStatement = prepareStatement(connection, SQL_FIND_USER_ROOT_REPORT_MENU, false, parameters);
             resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Menu rootUserMenu = new Menu();
                 rootUserMenu = map(resultSet);
                 menus.add(rootUserMenu);

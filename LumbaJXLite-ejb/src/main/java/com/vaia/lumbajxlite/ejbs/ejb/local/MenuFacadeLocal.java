@@ -38,4 +38,6 @@ public interface MenuFacadeLocal {
     List<Menu> retrieveUserSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException;
 
     List<Menu> retrieveUserReportSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException;
+
+    String retrieveString();
 }

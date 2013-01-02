@@ -66,4 +66,9 @@ public class MenuFacade extends AbstractFacade<Menu> implements MenuFacadeLocal 
     public List<Menu> retrieveUserReportSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException {
         return menuDAO.retrieveUserReportSubMenuByParentMenuId(operatorUser, parentMenu);
     }
+
+    @Override
+    public String retrieveString() {
+        return "Test";
+    }
 }

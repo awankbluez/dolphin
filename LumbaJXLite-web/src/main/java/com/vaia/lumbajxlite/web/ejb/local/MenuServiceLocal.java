@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vaia.lumbajxlite.ejb.local;
+package com.vaia.lumbajxlite.web.ejb.local;
 
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
 import java.sql.SQLException;

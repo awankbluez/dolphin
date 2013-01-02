@@ -4,11 +4,10 @@
  */
 package com.vaia.lumbajxlite.web.managedBeans.applicationBean;
 
-import com.vaia.lumbajxlite.ejb.impl.MenuService;
-import com.vaia.lumbajxlite.ejb.local.MenuServiceLocal;
 import com.vaia.lumbajxlite.ejbs.ejb.local.OperatorUserFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.web.ejb.local.MenuServiceLocal;
 import com.vaia.lumbajxlite.web.managedBeans.AbstractManagedBean;
 import java.io.IOException;
 import java.io.Serializable;
@@ -21,7 +20,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +48,6 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
     @PostConstruct
     private void initialize() {
         user = new OperatorUser();
-        menuService = new MenuService();
     }
 
     public void userLogin() throws SQLException {
