@@ -6,6 +6,7 @@ package com.vaia.lumbajxlite.ejbs.ejb.local;
 
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import java.sql.SQLException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -30,7 +31,11 @@ public interface MenuFacadeLocal {
 
     int count();
 
-    List<Menu> retrieveUserAccessedMenu(OperatorUser user);
+    List<Menu> findRootUserMenu(OperatorUser operatorUser) throws SQLException;
 
-    List<Menu> retrieveAllMainMenu();
+    List<Menu> findRootUserReportMenu(OperatorUser operatorUser) throws SQLException;
+
+    List<Menu> retrieveUserSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException;
+
+    List<Menu> retrieveUserReportSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException;
 }

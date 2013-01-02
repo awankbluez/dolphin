@@ -7,17 +7,23 @@ package com.vaia.lumbajxlite.web.managedBeans.applicationBean;
 import com.vaia.lumbajxlite.ejbs.ejb.local.OperatorUserFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.web.ejb.service.MenuServiceImplLocal;
 import com.vaia.lumbajxlite.web.managedBeans.AbstractManagedBean;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import org.primefaces.model.MenuModel;
+import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +37,15 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
 
     @EJB
     private OperatorUserFacadeLocal operatorUserService;
+    @EJB
+    private MenuServiceImplLocal menuService;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionMB.class);
     private OperatorUser user;
     private OperatorUser authenticatedUser;
+    private MenuModel userMainMenuModel;
+    private MenuModel userReportMenuModel;
+    private TreeNode userMainMenu;
+    private TreeNode userReportMenu;
     private List<Menu> userAccessedMenu;
 
     public UserSessionMB() {
@@ -44,7 +56,7 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
         user = new OperatorUser();
     }
 
-    public void userLogin() {
+    public void userLogin() throws SQLException {
         if (!user.getUsername().isEmpty() && !user.getPassword().isEmpty()) {
             authenticatedUser = operatorUserService.checkUser(user);
         } else {
@@ -59,6 +71,9 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
                 session.setAttribute("userId", authenticatedUser.getUserid().toString());
 
                 LOGGER.info("User {} successfully logged in.", authenticatedUser.getEmployeename());
+
+                // retrieve user access
+                retrieveUserAccess();
 
                 doRedirect("/index.xhtml");
             } else {
@@ -103,12 +118,9 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
         }
     }
 
-    private void retrieveUserAccess() {
-        if (authenticatedUser != null) {
-            userAccessedMenu = new ArrayList<>();
-
-
-        }
+    private void retrieveUserAccess() throws SQLException {
+        userMainMenuModel = menuService.getUserAccessedMenu(authenticatedUser);
+        userReportMenuModel = menuService.getUserAccessedReportMenu(authenticatedUser);
     }
 
     /**
@@ -136,5 +148,13 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
 
     public void setOperatorUserService(OperatorUserFacadeLocal operatorUserService) {
         this.operatorUserService = operatorUserService;
+    }
+
+    public TreeNode getUserMainMenu() {
+        return userMainMenu;
+    }
+
+    public TreeNode getUserReportMenu() {
+        return userReportMenu;
     }
 }
