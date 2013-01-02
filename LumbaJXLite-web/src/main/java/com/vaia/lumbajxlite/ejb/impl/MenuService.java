@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vaia.lumbajxlite.web.ejb.impl;
+package com.vaia.lumbajxlite.ejb.impl;
 
+import com.vaia.lumbajxlite.ejb.local.MenuServiceLocal;
 import com.vaia.lumbajxlite.ejbs.ejb.local.MenuFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
-import com.vaia.lumbajxlite.web.ejb.service.MenuServiceImplLocal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,9 +17,7 @@ import javax.faces.bean.ManagedProperty;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,22 +26,29 @@ import org.slf4j.LoggerFactory;
  * @author MBS Development Team
  */
 @Stateless
-public class MenuServiceImpl implements MenuServiceImplLocal {
+public class MenuService implements MenuServiceLocal {
 
-    @ManagedProperty(value = "#{msgs}")
-    private ResourceBundle i18n;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MenuServiceImpl.class);
     @EJB
     private MenuFacadeLocal menuFacadeLocal;
+    @ManagedProperty(value = "#{msgs}")
+    private ResourceBundle i18n;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MenuService.class);
+
+    public MenuService() {
+    }
 
     @Override
     public MenuModel getUserAccessedMenu(OperatorUser operatorUser) throws SQLException {
-        return generateMenuModel(menuFacadeLocal.findRootUserMenu(operatorUser), operatorUser);
+        List<Menu> userRootMenus = menuFacadeLocal.findRootUserMenu(operatorUser);
+        MenuModel userRootMenuModel = generateMenuModel(userRootMenus, operatorUser);
+        return userRootMenuModel;
     }
 
     @Override
     public MenuModel getUserAccessedReportMenu(OperatorUser operatorUser) throws SQLException {
-        return generateMenuModel(menuFacadeLocal.findRootUserReportMenu(operatorUser), operatorUser);
+        List<Menu> userRootReportMenus = menuFacadeLocal.findRootUserReportMenu(operatorUser);
+        MenuModel userRootMenuModel = generateMenuModel(userRootReportMenus, operatorUser);
+        return userRootMenuModel;
     }
 
     private MenuModel generateMenuModel(List<Menu> menus, OperatorUser operatorUser) throws SQLException {

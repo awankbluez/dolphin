@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
-
 <log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
     <appender name="console" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
             <!-- Pattern to output the caller's file name and line number -->
             <!--<param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>-->
-            <param name="ConversionPattern" value="[%X{userId}:%X{userName}] - %5p [%t] (%c:%L) - %m%n"/>
+            <param name="ConversionPattern" value="[%X{userId}] - %5p [%t] (%c:%L) - %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="levelMin" value="debug" />
@@ -15,7 +15,7 @@
     </appender>
 
     <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="LumbaJXLite-web.log"/>
+        <param name="file" value="cbs.log"/>
         <param name="MaxFileSize" value="1000KB"/>
         <!-- Keep one backup file -->
         <param name="MaxBackupIndex" value="1"/>
@@ -36,6 +36,11 @@
        </layout>
     </appender>-->
 
+    <logger name="com.vaia.lumbajxlite.ejbs">
+        <level value="debug"/>
+        <!--<appender-ref ref="JDBCAppender"></appender-ref>-->
+    </logger>
+    
     <logger name="com.vaia.lumbajxlite.web">
         <level value="debug"/>
         <!--<appender-ref ref="JDBCAppender"></appender-ref>-->

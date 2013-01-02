@@ -4,21 +4,19 @@
  */
 package com.vaia.lumbajxlite.web.managedBeans.applicationBean;
 
+import com.vaia.lumbajxlite.ejb.impl.MenuService;
+import com.vaia.lumbajxlite.ejb.local.MenuServiceLocal;
 import com.vaia.lumbajxlite.ejbs.ejb.local.OperatorUserFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
 import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
-import com.vaia.lumbajxlite.web.ejb.service.MenuServiceImplLocal;
 import com.vaia.lumbajxlite.web.managedBeans.AbstractManagedBean;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -38,7 +36,7 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
     @EJB
     private OperatorUserFacadeLocal operatorUserService;
     @EJB
-    private MenuServiceImplLocal menuService;
+    private MenuServiceLocal menuService;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionMB.class);
     private OperatorUser user;
     private OperatorUser authenticatedUser;
@@ -54,6 +52,7 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
     @PostConstruct
     private void initialize() {
         user = new OperatorUser();
+        menuService = new MenuService();
     }
 
     public void userLogin() throws SQLException {

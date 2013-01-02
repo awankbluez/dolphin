@@ -13,6 +13,7 @@ import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
 import java.sql.SQLException;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author MBS Development Team
  */
+@Stateless
 public class MenuFacade extends AbstractFacade<Menu> implements MenuFacadeLocal {
 
     @PersistenceContext(unitName = "LumbaJXLite-ejb.v1.PU")
@@ -45,12 +47,14 @@ public class MenuFacade extends AbstractFacade<Menu> implements MenuFacadeLocal 
 
     @Override
     public List<Menu> findRootUserMenu(OperatorUser operatorUser) throws SQLException {
-        return menuDAO.findRootUserMenu(operatorUser);
+        List<Menu> userRootMenu = menuDAO.findRootUserMenu(operatorUser);
+        return userRootMenu;
     }
 
     @Override
     public List<Menu> findRootUserReportMenu(OperatorUser operatorUser) throws SQLException {
-        return menuDAO.findRootUserReportMenu(operatorUser);
+        List<Menu> userRootReportMenu = menuDAO.findRootUserReportMenu(operatorUser);
+        return userRootReportMenu;
     }
 
     @Override
