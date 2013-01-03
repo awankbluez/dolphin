@@ -1,15 +1,8 @@
 package com.vaia.lumbajxlite.ejbs.dao;
 
-/*
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
- */
 import com.vaia.lumbajxlite.ejbs.dao.iface.OperatorUserDAO;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -17,10 +10,6 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author about.me/wirawan.adi
- */
 public class FactoryDAO {
 
     static Logger logger = LoggerFactory.getLogger(FactoryDAO.class);
@@ -28,8 +17,8 @@ public class FactoryDAO {
     public static Connection conn;
     public static OperatorUserDAO operatorUserDAO;
 
-    private static Connection getConnection() throws SQLException {
-
+    private static Connection getConnection()
+            throws SQLException {
         Connection connection = null;
         if (conn != null) {
             connection = conn;
@@ -49,7 +38,6 @@ public class FactoryDAO {
     }
 
     public static Connection getConn() throws SQLException {
-
         Connection connection = null;
         if (conn != null) {
             connection = conn;
@@ -60,12 +48,6 @@ public class FactoryDAO {
         return connection;
     }
 
-    /**
-     * get DAO Implementation Class
-     *
-     * @param daoInterface A Class of DAO Interface
-     * @return DAO Implementations Class
-     */
     public static <DAO extends BaseDAO> DAO getDAOImpl(Class<DAO> daoInterface) {
         DAO daoImplementation = null;
         String daoInterfaceName = daoInterface.getName();
@@ -75,13 +57,11 @@ public class FactoryDAO {
         }
 
         String daoImplClassName = getDAOImplClassName(daoInterfaceName);
-
         try {
             daoImplementation = daoInterface.cast(Class.forName(daoImplClassName).newInstance());
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             logger.error(e.toString());
         }
-
         try {
             daoImplementation.setConnection(getConnection());
         } catch (SQLException ex) {
@@ -91,15 +71,7 @@ public class FactoryDAO {
         return daoImplementation;
     }
 
-    /**
-     * Get DAO Implementation CLass Name
-     *
-     * @param dAOInterfaceClassName A complete classpath name from DAO Interface
-     * @return classpath name from DAO Implementation
-     */
     private static String getDAOImplClassName(String dAOInterfaceClassName) {
-        String daoImplClassName;
-
         String[] daoImplClassNameArrays = new String[0];
         daoImplClassNameArrays = dAOInterfaceClassName.split("\\.");
 
@@ -113,10 +85,9 @@ public class FactoryDAO {
             sb.append(".");
         }
 
-        daoImplClassName = sb.toString();
+        String daoImplClassName = sb.toString();
         daoImplClassName = daoImplClassName.substring(0, daoImplClassName.length() - 1).concat("Impl");
 
         return daoImplClassName;
-
     }
 }

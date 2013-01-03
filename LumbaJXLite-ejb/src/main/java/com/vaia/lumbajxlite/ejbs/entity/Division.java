@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -16,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,25 +21,23 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author MBS Development Team
- */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Division.findAll", query = "SELECT d FROM Division d"),
-    @NamedQuery(name = "Division.findByDivisionid", query = "SELECT d FROM Division d WHERE d.divisionid = :divisionid"),
-    @NamedQuery(name = "Division.findByDivisioncode", query = "SELECT d FROM Division d WHERE d.divisioncode = :divisioncode"),
-    @NamedQuery(name = "Division.findByDivisionname", query = "SELECT d FROM Division d WHERE d.divisionname = :divisionname"),
-    @NamedQuery(name = "Division.findByDivisionstatus", query = "SELECT d FROM Division d WHERE d.divisionstatus = :divisionstatus"),
-    @NamedQuery(name = "Division.findByCreationdate", query = "SELECT d FROM Division d WHERE d.creationdate = :creationdate"),
-    @NamedQuery(name = "Division.findByEditdate", query = "SELECT d FROM Division d WHERE d.editdate = :editdate"),
-    @NamedQuery(name = "Division.findByCreator", query = "SELECT d FROM Division d WHERE d.creator = :creator"),
-    @NamedQuery(name = "Division.findByEditor", query = "SELECT d FROM Division d WHERE d.editor = :editor"),
-    @NamedQuery(name = "Division.findBySessiondate", query = "SELECT d FROM Division d WHERE d.sessiondate = :sessiondate")})
-public class Division implements Serializable {
+    @javax.persistence.NamedQuery(name = "Division.findAll", query = "SELECT d FROM Division d"),
+    @javax.persistence.NamedQuery(name = "Division.findByDivisionid", query = "SELECT d FROM Division d WHERE d.divisionid = :divisionid"),
+    @javax.persistence.NamedQuery(name = "Division.findByDivisioncode", query = "SELECT d FROM Division d WHERE d.divisioncode = :divisioncode"),
+    @javax.persistence.NamedQuery(name = "Division.findByDivisionname", query = "SELECT d FROM Division d WHERE d.divisionname = :divisionname"),
+    @javax.persistence.NamedQuery(name = "Division.findByDivisionstatus", query = "SELECT d FROM Division d WHERE d.divisionstatus = :divisionstatus"),
+    @javax.persistence.NamedQuery(name = "Division.findByCreationdate", query = "SELECT d FROM Division d WHERE d.creationdate = :creationdate"),
+    @javax.persistence.NamedQuery(name = "Division.findByEditdate", query = "SELECT d FROM Division d WHERE d.editdate = :editdate"),
+    @javax.persistence.NamedQuery(name = "Division.findByCreator", query = "SELECT d FROM Division d WHERE d.creator = :creator"),
+    @javax.persistence.NamedQuery(name = "Division.findByEditor", query = "SELECT d FROM Division d WHERE d.editor = :editor"),
+    @javax.persistence.NamedQuery(name = "Division.findBySessiondate", query = "SELECT d FROM Division d WHERE d.sessiondate = :sessiondate")})
+public class Division
+        implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,7 +74,7 @@ public class Division implements Serializable {
     @ManyToOne
     private Directorate directorateid;
     @OneToMany(mappedBy = "divisionid")
-    private List<OperatorUser> operatoruserList;
+    private List<Operatoruser> operatoruserList;
 
     public Division() {
     }
@@ -98,7 +91,7 @@ public class Division implements Serializable {
     }
 
     public Integer getDivisionid() {
-        return divisionid;
+        return this.divisionid;
     }
 
     public void setDivisionid(Integer divisionid) {
@@ -106,7 +99,7 @@ public class Division implements Serializable {
     }
 
     public String getDivisioncode() {
-        return divisioncode;
+        return this.divisioncode;
     }
 
     public void setDivisioncode(String divisioncode) {
@@ -114,7 +107,7 @@ public class Division implements Serializable {
     }
 
     public String getDivisionname() {
-        return divisionname;
+        return this.divisionname;
     }
 
     public void setDivisionname(String divisionname) {
@@ -122,7 +115,7 @@ public class Division implements Serializable {
     }
 
     public boolean getDivisionstatus() {
-        return divisionstatus;
+        return this.divisionstatus;
     }
 
     public void setDivisionstatus(boolean divisionstatus) {
@@ -130,7 +123,7 @@ public class Division implements Serializable {
     }
 
     public Date getCreationdate() {
-        return creationdate;
+        return this.creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -138,7 +131,7 @@ public class Division implements Serializable {
     }
 
     public Date getEditdate() {
-        return editdate;
+        return this.editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -146,7 +139,7 @@ public class Division implements Serializable {
     }
 
     public String getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public void setCreator(String creator) {
@@ -154,7 +147,7 @@ public class Division implements Serializable {
     }
 
     public String getEditor() {
-        return editor;
+        return this.editor;
     }
 
     public void setEditor(String editor) {
@@ -162,7 +155,7 @@ public class Division implements Serializable {
     }
 
     public Date getSessiondate() {
-        return sessiondate;
+        return this.sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -170,7 +163,7 @@ public class Division implements Serializable {
     }
 
     public Directorate getDirectorateid() {
-        return directorateid;
+        return this.directorateid;
     }
 
     public void setDirectorateid(Directorate directorateid) {
@@ -178,37 +171,32 @@ public class Division implements Serializable {
     }
 
     @XmlTransient
-    public List<OperatorUser> getOperatoruserList() {
-        return operatoruserList;
+    public List<Operatoruser> getOperatoruserList() {
+        return this.operatoruserList;
     }
 
-    public void setOperatoruserList(List<OperatorUser> operatoruserList) {
+    public void setOperatoruserList(List<Operatoruser> operatoruserList) {
         this.operatoruserList = operatoruserList;
     }
 
-    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (divisionid != null ? divisionid.hashCode() : 0);
+        hash += (this.divisionid != null ? this.divisionid.hashCode() : 0);
         return hash;
     }
 
-    @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Division)) {
             return false;
         }
         Division other = (Division) object;
-        if ((this.divisionid == null && other.divisionid != null) || (this.divisionid != null && !this.divisionid.equals(other.divisionid))) {
+        if (((this.divisionid == null) && (other.divisionid != null)) || ((this.divisionid != null) && (!this.divisionid.equals(other.divisionid)))) {
             return false;
         }
         return true;
     }
 
-    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Division[ divisionid=" + divisionid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Division[ divisionid=" + this.divisionid + " ]";
     }
-
 }

@@ -42,6 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loanapproval.findByEditor", query = "SELECT l FROM Loanapproval l WHERE l.editor = :editor"),
     @NamedQuery(name = "Loanapproval.findBySessiondate", query = "SELECT l FROM Loanapproval l WHERE l.sessiondate = :sessiondate")})
 public class LoanApproval implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -183,5 +184,4 @@ public class LoanApproval implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Loanapproval[ loanapprovalid=" + loanapprovalid + " ]";
     }
-
 }

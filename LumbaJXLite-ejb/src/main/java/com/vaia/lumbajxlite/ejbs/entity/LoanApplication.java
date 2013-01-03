@@ -218,6 +218,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loanapplication.findBySessiondatechecker", query = "SELECT l FROM Loanapplication l WHERE l.sessiondatechecker = :sessiondatechecker"),
     @NamedQuery(name = "Loanapplication.findByApprovaldate", query = "SELECT l FROM Loanapplication l WHERE l.approvaldate = :approvaldate")})
 public class LoanApplication implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -2092,5 +2093,4 @@ public class LoanApplication implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Loanapplication[ loanapplicationid=" + loanapplicationid + " ]";
     }
-
 }

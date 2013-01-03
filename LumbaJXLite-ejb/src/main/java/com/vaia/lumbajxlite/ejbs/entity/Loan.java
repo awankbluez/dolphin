@@ -107,6 +107,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loan.findByPartialdeposit", query = "SELECT l FROM Loan l WHERE l.partialdeposit = :partialdeposit"),
     @NamedQuery(name = "Loan.findByPenaltycalculation", query = "SELECT l FROM Loan l WHERE l.penaltycalculation = :penaltycalculation")})
 public class Loan implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -873,5 +874,4 @@ public class Loan implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Loan[ loanid=" + loanid + " ]";
     }
-
 }

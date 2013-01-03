@@ -1,72 +1,65 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author MBS Development Team
- */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
-    @NamedQuery(name = "Customer.findByCustomerid", query = "SELECT c FROM Customer c WHERE c.customerid = :customerid"),
-    @NamedQuery(name = "Customer.findByCustomercode", query = "SELECT c FROM Customer c WHERE c.customercode = :customercode"),
-    @NamedQuery(name = "Customer.findByCustomertype", query = "SELECT c FROM Customer c WHERE c.customertype = :customertype"),
-    @NamedQuery(name = "Customer.findByCustomeraccount", query = "SELECT c FROM Customer c WHERE c.customeraccount = :customeraccount"),
-    @NamedQuery(name = "Customer.findByOpendate", query = "SELECT c FROM Customer c WHERE c.opendate = :opendate"),
-    @NamedQuery(name = "Customer.findByStatus", query = "SELECT c FROM Customer c WHERE c.status = :status"),
-    @NamedQuery(name = "Customer.findByFirstname", query = "SELECT c FROM Customer c WHERE c.firstname = :firstname"),
-    @NamedQuery(name = "Customer.findByLastname", query = "SELECT c FROM Customer c WHERE c.lastname = :lastname"),
-    @NamedQuery(name = "Customer.findByAliasname", query = "SELECT c FROM Customer c WHERE c.aliasname = :aliasname"),
-    @NamedQuery(name = "Customer.findByCitizen", query = "SELECT c FROM Customer c WHERE c.citizen = :citizen"),
-    @NamedQuery(name = "Customer.findByIsbank", query = "SELECT c FROM Customer c WHERE c.isbank = :isbank"),
-    @NamedQuery(name = "Customer.findByBankdetail", query = "SELECT c FROM Customer c WHERE c.bankdetail = :bankdetail"),
-    @NamedQuery(name = "Customer.findBySwiftid", query = "SELECT c FROM Customer c WHERE c.swiftid = :swiftid"),
-    @NamedQuery(name = "Customer.findByIspubliccompany", query = "SELECT c FROM Customer c WHERE c.ispubliccompany = :ispubliccompany"),
-    @NamedQuery(name = "Customer.findByCreationdate", query = "SELECT c FROM Customer c WHERE c.creationdate = :creationdate"),
-    @NamedQuery(name = "Customer.findByEditdate", query = "SELECT c FROM Customer c WHERE c.editdate = :editdate"),
-    @NamedQuery(name = "Customer.findByCreator", query = "SELECT c FROM Customer c WHERE c.creator = :creator"),
-    @NamedQuery(name = "Customer.findByEditor", query = "SELECT c FROM Customer c WHERE c.editor = :editor"),
-    @NamedQuery(name = "Customer.findByCompanynameInstitution", query = "SELECT c FROM Customer c WHERE c.companynameInstitution = :companynameInstitution"),
-    @NamedQuery(name = "Customer.findByMembertype", query = "SELECT c FROM Customer c WHERE c.membertype = :membertype"),
-    @NamedQuery(name = "Customer.findByDegreestatus", query = "SELECT c FROM Customer c WHERE c.degreestatus = :degreestatus"),
-    @NamedQuery(name = "Customer.findByDegreedesc", query = "SELECT c FROM Customer c WHERE c.degreedesc = :degreedesc"),
-    @NamedQuery(name = "Customer.findBySectoreconomy", query = "SELECT c FROM Customer c WHERE c.sectoreconomy = :sectoreconomy"),
-    @NamedQuery(name = "Customer.findByApprove", query = "SELECT c FROM Customer c WHERE c.approve = :approve"),
-    @NamedQuery(name = "Customer.findBySessiondate", query = "SELECT c FROM Customer c WHERE c.sessiondate = :sessiondate"),
-    @NamedQuery(name = "Customer.findByNama1", query = "SELECT c FROM Customer c WHERE c.nama1 = :nama1"),
-    @NamedQuery(name = "Customer.findByNama2", query = "SELECT c FROM Customer c WHERE c.nama2 = :nama2"),
-    @NamedQuery(name = "Customer.findByNama3", query = "SELECT c FROM Customer c WHERE c.nama3 = :nama3"),
-    @NamedQuery(name = "Customer.findByNama4", query = "SELECT c FROM Customer c WHERE c.nama4 = :nama4"),
-    @NamedQuery(name = "Customer.findByInstitution", query = "SELECT c FROM Customer c WHERE c.institution = :institution"),
-    @NamedQuery(name = "Customer.findByOthertypeinstitution", query = "SELECT c FROM Customer c WHERE c.othertypeinstitution = :othertypeinstitution"),
-    @NamedQuery(name = "Customer.findByLegal", query = "SELECT c FROM Customer c WHERE c.legal = :legal"),
-    @NamedQuery(name = "Customer.findByCompanytype", query = "SELECT c FROM Customer c WHERE c.companytype = :companytype"),
-    @NamedQuery(name = "Customer.findByOrganizationid", query = "SELECT c FROM Customer c WHERE c.organizationid = :organizationid"),
-    @NamedQuery(name = "Customer.findByUserid", query = "SELECT c FROM Customer c WHERE c.userid = :userid"),
-    @NamedQuery(name = "Customer.findByMasteroperationalid", query = "SELECT c FROM Customer c WHERE c.masteroperationalid = :masteroperationalid"),
-    @NamedQuery(name = "Customer.findByCountryid", query = "SELECT c FROM Customer c WHERE c.countryid = :countryid")})
-public class Customer implements Serializable {
+    @javax.persistence.NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
+    @javax.persistence.NamedQuery(name = "Customer.findByCustomerid", query = "SELECT c FROM Customer c WHERE c.customerid = :customerid"),
+    @javax.persistence.NamedQuery(name = "Customer.findByCustomercode", query = "SELECT c FROM Customer c WHERE c.customercode = :customercode"),
+    @javax.persistence.NamedQuery(name = "Customer.findByCustomeraccount", query = "SELECT c FROM Customer c WHERE c.customeraccount = :customeraccount"),
+    @javax.persistence.NamedQuery(name = "Customer.findByOpendate", query = "SELECT c FROM Customer c WHERE c.opendate = :opendate"),
+    @javax.persistence.NamedQuery(name = "Customer.findByStatus", query = "SELECT c FROM Customer c WHERE c.status = :status"),
+    @javax.persistence.NamedQuery(name = "Customer.findByFirstname", query = "SELECT c FROM Customer c WHERE c.firstname = :firstname"),
+    @javax.persistence.NamedQuery(name = "Customer.findByLastname", query = "SELECT c FROM Customer c WHERE c.lastname = :lastname"),
+    @javax.persistence.NamedQuery(name = "Customer.findByAliasname", query = "SELECT c FROM Customer c WHERE c.aliasname = :aliasname"),
+    @javax.persistence.NamedQuery(name = "Customer.findByCitizen", query = "SELECT c FROM Customer c WHERE c.citizen = :citizen"),
+    @javax.persistence.NamedQuery(name = "Customer.findByIsbank", query = "SELECT c FROM Customer c WHERE c.isbank = :isbank"),
+    @javax.persistence.NamedQuery(name = "Customer.findByBankdetail", query = "SELECT c FROM Customer c WHERE c.bankdetail = :bankdetail"),
+    @javax.persistence.NamedQuery(name = "Customer.findBySwiftid", query = "SELECT c FROM Customer c WHERE c.swiftid = :swiftid"),
+    @javax.persistence.NamedQuery(name = "Customer.findByIspubliccompany", query = "SELECT c FROM Customer c WHERE c.ispubliccompany = :ispubliccompany"),
+    @javax.persistence.NamedQuery(name = "Customer.findByCreationdate", query = "SELECT c FROM Customer c WHERE c.creationdate = :creationdate"),
+    @javax.persistence.NamedQuery(name = "Customer.findByEditdate", query = "SELECT c FROM Customer c WHERE c.editdate = :editdate"),
+    @javax.persistence.NamedQuery(name = "Customer.findByCompanynameInstitution", query = "SELECT c FROM Customer c WHERE c.companynameInstitution = :companynameInstitution"),
+    @javax.persistence.NamedQuery(name = "Customer.findByMembertype", query = "SELECT c FROM Customer c WHERE c.membertype = :membertype"),
+    @javax.persistence.NamedQuery(name = "Customer.findByDegreestatus", query = "SELECT c FROM Customer c WHERE c.degreestatus = :degreestatus"),
+    @javax.persistence.NamedQuery(name = "Customer.findBySectoreconomy", query = "SELECT c FROM Customer c WHERE c.sectoreconomy = :sectoreconomy"),
+    @javax.persistence.NamedQuery(name = "Customer.findByApprove", query = "SELECT c FROM Customer c WHERE c.approve = :approve"),
+    @javax.persistence.NamedQuery(name = "Customer.findBySessiondate", query = "SELECT c FROM Customer c WHERE c.sessiondate = :sessiondate"),
+    @javax.persistence.NamedQuery(name = "Customer.findByCreator", query = "SELECT c FROM Customer c WHERE c.creator = :creator"),
+    @javax.persistence.NamedQuery(name = "Customer.findByEditor", query = "SELECT c FROM Customer c WHERE c.editor = :editor"),
+    @javax.persistence.NamedQuery(name = "Customer.findByName1", query = "SELECT c FROM Customer c WHERE c.name1 = :name1"),
+    @javax.persistence.NamedQuery(name = "Customer.findByName2", query = "SELECT c FROM Customer c WHERE c.name2 = :name2"),
+    @javax.persistence.NamedQuery(name = "Customer.findByName3", query = "SELECT c FROM Customer c WHERE c.name3 = :name3"),
+    @javax.persistence.NamedQuery(name = "Customer.findByName4", query = "SELECT c FROM Customer c WHERE c.name4 = :name4"),
+    @javax.persistence.NamedQuery(name = "Customer.findByDegreedesc", query = "SELECT c FROM Customer c WHERE c.degreedesc = :degreedesc"),
+    @javax.persistence.NamedQuery(name = "Customer.findByCustomertype", query = "SELECT c FROM Customer c WHERE c.customertype = :customertype"),
+    @javax.persistence.NamedQuery(name = "Customer.findByPhotoid", query = "SELECT c FROM Customer c WHERE c.photoid = :photoid"),
+    @javax.persistence.NamedQuery(name = "Customer.findBySignatureid", query = "SELECT c FROM Customer c WHERE c.signatureid = :signatureid")})
+public class Customer
+        implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,7 +69,6 @@ public class Customer implements Serializable {
     @Size(max = 12)
     @Column(length = 12)
     private String customercode;
-    private Character customertype;
     @Size(max = 12)
     @Column(length = 12)
     private String customeraccount;
@@ -103,46 +95,71 @@ public class Customer implements Serializable {
     private Date creationdate;
     @Temporal(TemporalType.TIMESTAMP)
     private Date editdate;
-    @Size(max = 40)
-    @Column(length = 40)
-    private String creator;
-    @Size(max = 40)
-    @Column(length = 40)
-    private String editor;
     @Size(max = 50)
     @Column(name = "companyname_institution", length = 50)
     private String companynameInstitution;
     private Character membertype;
     private Integer degreestatus;
-    @Size(max = 50)
-    @Column(length = 50)
-    private String degreedesc;
     private Integer sectoreconomy;
     private Boolean approve;
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
+    private Integer creator;
+    private Integer editor;
     @Size(max = 20)
     @Column(length = 20)
-    private String nama1;
+    private String name1;
     @Size(max = 20)
     @Column(length = 20)
-    private String nama2;
+    private String name2;
     @Size(max = 20)
     @Column(length = 20)
-    private String nama3;
+    private String name3;
     @Size(max = 20)
     @Column(length = 20)
-    private String nama4;
-    private Integer institution;
-    private Integer othertypeinstitution;
-    private Integer legal;
-    private Integer companytype;
-    private Integer organizationid;
-    private Integer userid;
-    private Integer masteroperationalid;
-    private Integer countryid;
+    private String name4;
+    private Integer degreedesc;
+    private Integer customertype;
+    private Integer photoid;
+    private Integer signatureid;
+    @OneToOne(mappedBy = "customerid")
+    private Person person;
+    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "customerid")
+    private List<Customermanagement> customermanagementList;
+    @JoinColumn(name = "companytype", referencedColumnName = "parameterid")
+    @ManyToOne
+    private Parameter companytype;
+    @JoinColumn(name = "institution", referencedColumnName = "parameterid")
+    @ManyToOne
+    private Parameter institution;
+    @JoinColumn(name = "othertypeinstitution", referencedColumnName = "parameterid")
+    @ManyToOne
+    private Parameter othertypeinstitution;
+    @JoinColumn(name = "legal", referencedColumnName = "parameterid")
+    @ManyToOne
+    private Parameter legal;
+    @JoinColumn(name = "organizationid", referencedColumnName = "organizationid")
+    @ManyToOne
+    private Organization organizationid;
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    @ManyToOne
+    private Operatoruser userid;
+    @JoinColumn(name = "masteroperationalid", referencedColumnName = "masteroperationalid")
+    @ManyToOne
+    private Masteroperational masteroperationalid;
+    @JoinColumn(name = "countryid", referencedColumnName = "countryid")
+    @ManyToOne
+    private Country countryid;
 
     public Customer() {
+        this.companytype = new Parameter();
+        this.countryid = new Country();
+        this.institution = new Parameter();
+        this.masteroperationalid = new Masteroperational();
+        this.legal = new Parameter();
+        this.organizationid = new Organization();
+        this.userid = new Operatoruser();
+        this.person = new Person();
     }
 
     public Customer(Integer customerid) {
@@ -150,7 +167,7 @@ public class Customer implements Serializable {
     }
 
     public Integer getCustomerid() {
-        return customerid;
+        return this.customerid;
     }
 
     public void setCustomerid(Integer customerid) {
@@ -158,23 +175,15 @@ public class Customer implements Serializable {
     }
 
     public String getCustomercode() {
-        return customercode;
+        return this.customercode;
     }
 
     public void setCustomercode(String customercode) {
         this.customercode = customercode;
     }
 
-    public Character getCustomertype() {
-        return customertype;
-    }
-
-    public void setCustomertype(Character customertype) {
-        this.customertype = customertype;
-    }
-
     public String getCustomeraccount() {
-        return customeraccount;
+        return this.customeraccount;
     }
 
     public void setCustomeraccount(String customeraccount) {
@@ -182,7 +191,7 @@ public class Customer implements Serializable {
     }
 
     public Date getOpendate() {
-        return opendate;
+        return this.opendate;
     }
 
     public void setOpendate(Date opendate) {
@@ -190,7 +199,7 @@ public class Customer implements Serializable {
     }
 
     public Character getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(Character status) {
@@ -198,7 +207,7 @@ public class Customer implements Serializable {
     }
 
     public String getFirstname() {
-        return firstname;
+        return this.firstname;
     }
 
     public void setFirstname(String firstname) {
@@ -206,7 +215,7 @@ public class Customer implements Serializable {
     }
 
     public String getLastname() {
-        return lastname;
+        return this.lastname;
     }
 
     public void setLastname(String lastname) {
@@ -214,7 +223,7 @@ public class Customer implements Serializable {
     }
 
     public String getAliasname() {
-        return aliasname;
+        return this.aliasname;
     }
 
     public void setAliasname(String aliasname) {
@@ -222,7 +231,7 @@ public class Customer implements Serializable {
     }
 
     public Character getCitizen() {
-        return citizen;
+        return this.citizen;
     }
 
     public void setCitizen(Character citizen) {
@@ -230,7 +239,7 @@ public class Customer implements Serializable {
     }
 
     public Boolean getIsbank() {
-        return isbank;
+        return this.isbank;
     }
 
     public void setIsbank(Boolean isbank) {
@@ -238,7 +247,7 @@ public class Customer implements Serializable {
     }
 
     public Boolean getBankdetail() {
-        return bankdetail;
+        return this.bankdetail;
     }
 
     public void setBankdetail(Boolean bankdetail) {
@@ -246,7 +255,7 @@ public class Customer implements Serializable {
     }
 
     public String getSwiftid() {
-        return swiftid;
+        return this.swiftid;
     }
 
     public void setSwiftid(String swiftid) {
@@ -254,7 +263,7 @@ public class Customer implements Serializable {
     }
 
     public Boolean getIspubliccompany() {
-        return ispubliccompany;
+        return this.ispubliccompany;
     }
 
     public void setIspubliccompany(Boolean ispubliccompany) {
@@ -262,7 +271,7 @@ public class Customer implements Serializable {
     }
 
     public Date getCreationdate() {
-        return creationdate;
+        return this.creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -270,31 +279,15 @@ public class Customer implements Serializable {
     }
 
     public Date getEditdate() {
-        return editdate;
+        return this.editdate;
     }
 
     public void setEditdate(Date editdate) {
         this.editdate = editdate;
     }
 
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public String getEditor() {
-        return editor;
-    }
-
-    public void setEditor(String editor) {
-        this.editor = editor;
-    }
-
     public String getCompanynameInstitution() {
-        return companynameInstitution;
+        return this.companynameInstitution;
     }
 
     public void setCompanynameInstitution(String companynameInstitution) {
@@ -302,7 +295,7 @@ public class Customer implements Serializable {
     }
 
     public Character getMembertype() {
-        return membertype;
+        return this.membertype;
     }
 
     public void setMembertype(Character membertype) {
@@ -310,23 +303,15 @@ public class Customer implements Serializable {
     }
 
     public Integer getDegreestatus() {
-        return degreestatus;
+        return this.degreestatus;
     }
 
     public void setDegreestatus(Integer degreestatus) {
         this.degreestatus = degreestatus;
     }
 
-    public String getDegreedesc() {
-        return degreedesc;
-    }
-
-    public void setDegreedesc(String degreedesc) {
-        this.degreedesc = degreedesc;
-    }
-
     public Integer getSectoreconomy() {
-        return sectoreconomy;
+        return this.sectoreconomy;
     }
 
     public void setSectoreconomy(Integer sectoreconomy) {
@@ -334,7 +319,7 @@ public class Customer implements Serializable {
     }
 
     public Boolean getApprove() {
-        return approve;
+        return this.approve;
     }
 
     public void setApprove(Boolean approve) {
@@ -342,132 +327,193 @@ public class Customer implements Serializable {
     }
 
     public Date getSessiondate() {
-        return sessiondate;
+        return this.sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
         this.sessiondate = sessiondate;
     }
 
-    public String getNama1() {
-        return nama1;
+    public Integer getCreator() {
+        return this.creator;
     }
 
-    public void setNama1(String nama1) {
-        this.nama1 = nama1;
+    public void setCreator(Integer creator) {
+        this.creator = creator;
     }
 
-    public String getNama2() {
-        return nama2;
+    public Integer getEditor() {
+        return this.editor;
     }
 
-    public void setNama2(String nama2) {
-        this.nama2 = nama2;
+    public void setEditor(Integer editor) {
+        this.editor = editor;
     }
 
-    public String getNama3() {
-        return nama3;
+    public String getName1() {
+        return this.name1;
     }
 
-    public void setNama3(String nama3) {
-        this.nama3 = nama3;
+    public void setName1(String name1) {
+        this.name1 = name1;
     }
 
-    public String getNama4() {
-        return nama4;
+    public String getName2() {
+        return this.name2;
     }
 
-    public void setNama4(String nama4) {
-        this.nama4 = nama4;
+    public void setName2(String name2) {
+        this.name2 = name2;
     }
 
-    public Integer getInstitution() {
-        return institution;
+    public String getName3() {
+        return this.name3;
     }
 
-    public void setInstitution(Integer institution) {
-        this.institution = institution;
+    public void setName3(String name3) {
+        this.name3 = name3;
     }
 
-    public Integer getOthertypeinstitution() {
-        return othertypeinstitution;
+    public String getName4() {
+        return this.name4;
     }
 
-    public void setOthertypeinstitution(Integer othertypeinstitution) {
-        this.othertypeinstitution = othertypeinstitution;
+    public void setName4(String name4) {
+        this.name4 = name4;
     }
 
-    public Integer getLegal() {
-        return legal;
+    public Integer getDegreedesc() {
+        return this.degreedesc;
     }
 
-    public void setLegal(Integer legal) {
-        this.legal = legal;
+    public void setDegreedesc(Integer degreedesc) {
+        this.degreedesc = degreedesc;
     }
 
-    public Integer getCompanytype() {
-        return companytype;
+    public Integer getCustomertype() {
+        return this.customertype;
     }
 
-    public void setCompanytype(Integer companytype) {
+    public void setCustomertype(Integer customertype) {
+        this.customertype = customertype;
+    }
+
+    public Integer getPhotoid() {
+        return this.photoid;
+    }
+
+    public void setPhotoid(Integer photoid) {
+        this.photoid = photoid;
+    }
+
+    public Integer getSignatureid() {
+        return this.signatureid;
+    }
+
+    public void setSignatureid(Integer signatureid) {
+        this.signatureid = signatureid;
+    }
+
+    @XmlTransient
+    public Person getPerson() {
+        return this.person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    @XmlTransient
+    public List<Customermanagement> getCustomermanagementList() {
+        return this.customermanagementList;
+    }
+
+    public void setCustomermanagementList(List<Customermanagement> customermanagementList) {
+        this.customermanagementList = customermanagementList;
+    }
+
+    public Parameter getCompanytype() {
+        return this.companytype;
+    }
+
+    public void setCompanytype(Parameter companytype) {
         this.companytype = companytype;
     }
 
-    public Integer getOrganizationid() {
-        return organizationid;
+    public Parameter getInstitution() {
+        return this.institution;
     }
 
-    public void setOrganizationid(Integer organizationid) {
+    public void setInstitution(Parameter institution) {
+        this.institution = institution;
+    }
+
+    public Parameter getOthertypeinstitution() {
+        return this.othertypeinstitution;
+    }
+
+    public void setOthertypeinstitution(Parameter othertypeinstitution) {
+        this.othertypeinstitution = othertypeinstitution;
+    }
+
+    public Parameter getLegal() {
+        return this.legal;
+    }
+
+    public void setLegal(Parameter legal) {
+        this.legal = legal;
+    }
+
+    public Organization getOrganizationid() {
+        return this.organizationid;
+    }
+
+    public void setOrganizationid(Organization organizationid) {
         this.organizationid = organizationid;
     }
 
-    public Integer getUserid() {
-        return userid;
+    public Operatoruser getUserid() {
+        return this.userid;
     }
 
-    public void setUserid(Integer userid) {
+    public void setUserid(Operatoruser userid) {
         this.userid = userid;
     }
 
-    public Integer getMasteroperationalid() {
-        return masteroperationalid;
+    public Masteroperational getMasteroperationalid() {
+        return this.masteroperationalid;
     }
 
-    public void setMasteroperationalid(Integer masteroperationalid) {
+    public void setMasteroperationalid(Masteroperational masteroperationalid) {
         this.masteroperationalid = masteroperationalid;
     }
 
-    public Integer getCountryid() {
-        return countryid;
+    public Country getCountryid() {
+        return this.countryid;
     }
 
-    public void setCountryid(Integer countryid) {
+    public void setCountryid(Country countryid) {
         this.countryid = countryid;
     }
 
-    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (customerid != null ? customerid.hashCode() : 0);
+        hash += (this.customerid != null ? this.customerid.hashCode() : 0);
         return hash;
     }
 
-    @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Customer)) {
             return false;
         }
         Customer other = (Customer) object;
-        if ((this.customerid == null && other.customerid != null) || (this.customerid != null && !this.customerid.equals(other.customerid))) {
+        if (((this.customerid == null) && (other.customerid != null)) || ((this.customerid != null) && (!this.customerid.equals(other.customerid)))) {
             return false;
         }
         return true;
     }
 
-    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Customer[ customerid=" + customerid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Customer[ customerid=" + this.customerid + " ]";
     }
-
 }

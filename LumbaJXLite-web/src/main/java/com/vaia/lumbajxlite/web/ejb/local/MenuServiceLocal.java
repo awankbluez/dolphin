@@ -4,7 +4,7 @@
  */
 package com.vaia.lumbajxlite.web.ejb.local;
 
-import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.ejbs.entity.Operatoruser;
 import java.sql.SQLException;
 import javax.ejb.Local;
 import org.primefaces.model.MenuModel;
@@ -16,7 +16,7 @@ import org.primefaces.model.MenuModel;
 @Local
 public interface MenuServiceLocal {
 
-    MenuModel getUserAccessedMenu(OperatorUser operatorUser) throws SQLException;
+    MenuModel getUserAccessedMenu(Operatoruser Operatoruser) throws SQLException;
 
-    MenuModel getUserAccessedReportMenu(OperatorUser operatorUser) throws SQLException;
+    MenuModel getUserAccessedReportMenu(Operatoruser Operatoruser) throws SQLException;
 }

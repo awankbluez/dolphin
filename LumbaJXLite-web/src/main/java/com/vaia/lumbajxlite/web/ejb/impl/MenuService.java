@@ -6,7 +6,7 @@ package com.vaia.lumbajxlite.web.ejb.impl;
 
 import com.vaia.lumbajxlite.ejbs.ejb.local.MenuFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
-import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.ejbs.entity.Operatoruser;
 import com.vaia.lumbajxlite.web.ejb.local.MenuServiceLocal;
 import java.sql.SQLException;
 import java.util.List;
@@ -38,20 +38,20 @@ public class MenuService implements MenuServiceLocal {
     }
 
     @Override
-    public MenuModel getUserAccessedMenu(OperatorUser operatorUser) throws SQLException {
-        List<Menu> userRootMenus = menuFacadeLocal.findRootUserMenu(operatorUser);
-        MenuModel userRootMenuModel = generateMenuModel(userRootMenus, operatorUser);
+    public MenuModel getUserAccessedMenu(Operatoruser Operatoruser) throws SQLException {
+        List<Menu> userRootMenus = menuFacadeLocal.findRootUserMenu(Operatoruser);
+        MenuModel userRootMenuModel = generateMenuModel(userRootMenus, Operatoruser);
         return userRootMenuModel;
     }
 
     @Override
-    public MenuModel getUserAccessedReportMenu(OperatorUser operatorUser) throws SQLException {
-        List<Menu> userRootReportMenus = menuFacadeLocal.findRootUserReportMenu(operatorUser);
-        MenuModel userRootMenuModel = generateMenuModel(userRootReportMenus, operatorUser);
+    public MenuModel getUserAccessedReportMenu(Operatoruser Operatoruser) throws SQLException {
+        List<Menu> userRootReportMenus = menuFacadeLocal.findRootUserReportMenu(Operatoruser);
+        MenuModel userRootMenuModel = generateMenuModel(userRootReportMenus, Operatoruser);
         return userRootMenuModel;
     }
 
-    private MenuModel generateMenuModel(List<Menu> menus, OperatorUser operatorUser) throws SQLException {
+    private MenuModel generateMenuModel(List<Menu> menus, Operatoruser Operatoruser) throws SQLException {
         MenuModel menuModel = new DefaultMenuModel();
 
         if (!menus.isEmpty() || menus != null) {
@@ -69,7 +69,7 @@ public class MenuService implements MenuServiceLocal {
                     menuModel.addMenuItem(item);
                 }
 
-                List<Menu> subMenus1 = menuFacadeLocal.retrieveUserSubMenuByParentMenuId(operatorUser, menu);
+                List<Menu> subMenus1 = menuFacadeLocal.retrieveUserSubMenuByParentMenuId(Operatoruser, menu);
 
                 for (Menu sub1 : subMenus1) {
                     Submenu submenu1 = new Submenu();
@@ -85,7 +85,7 @@ public class MenuService implements MenuServiceLocal {
                         submenu.getChildren().add(item);
                     }
 
-                    List<Menu> subMenus2 = menuFacadeLocal.retrieveUserSubMenuByParentMenuId(operatorUser, sub1);
+                    List<Menu> subMenus2 = menuFacadeLocal.retrieveUserSubMenuByParentMenuId(Operatoruser, sub1);
 
                     for (Menu sub2 : subMenus2) {
                         Submenu submenu2 = new Submenu();
@@ -101,7 +101,7 @@ public class MenuService implements MenuServiceLocal {
                             submenu1.getChildren().add(item);
                         }
 
-                        List<Menu> subMenus3 = menuFacadeLocal.retrieveUserSubMenuByParentMenuId(operatorUser, sub2);
+                        List<Menu> subMenus3 = menuFacadeLocal.retrieveUserSubMenuByParentMenuId(Operatoruser, sub2);
 
                         for (Menu sub3 : subMenus3) {
                             Submenu submenu3 = new Submenu();
@@ -117,7 +117,7 @@ public class MenuService implements MenuServiceLocal {
                                 submenu2.getChildren().add(item);
                             }
 
-                            List<Menu> subMenus4 = menuFacadeLocal.retrieveUserSubMenuByParentMenuId(operatorUser, sub3);
+                            List<Menu> subMenus4 = menuFacadeLocal.retrieveUserSubMenuByParentMenuId(Operatoruser, sub3);
 
                             for (Menu sub4 : subMenus4) {
                                 Submenu submenu4 = new Submenu();

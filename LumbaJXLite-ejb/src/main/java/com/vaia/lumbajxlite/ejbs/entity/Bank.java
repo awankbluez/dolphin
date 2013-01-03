@@ -1,21 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -24,24 +18,22 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author MBS Development Team
- */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Bank.findAll", query = "SELECT b FROM Bank b"),
-    @NamedQuery(name = "Bank.findByBankid", query = "SELECT b FROM Bank b WHERE b.bankid = :bankid"),
-    @NamedQuery(name = "Bank.findByBankname", query = "SELECT b FROM Bank b WHERE b.bankname = :bankname"),
-    @NamedQuery(name = "Bank.findByAddress", query = "SELECT b FROM Bank b WHERE b.address = :address"),
-    @NamedQuery(name = "Bank.findByCreationdate", query = "SELECT b FROM Bank b WHERE b.creationdate = :creationdate"),
-    @NamedQuery(name = "Bank.findByCreator", query = "SELECT b FROM Bank b WHERE b.creator = :creator"),
-    @NamedQuery(name = "Bank.findByEditdate", query = "SELECT b FROM Bank b WHERE b.editdate = :editdate"),
-    @NamedQuery(name = "Bank.findByEditor", query = "SELECT b FROM Bank b WHERE b.editor = :editor"),
-    @NamedQuery(name = "Bank.findBySessiondate", query = "SELECT b FROM Bank b WHERE b.sessiondate = :sessiondate")})
-public class Bank implements Serializable {
+    @javax.persistence.NamedQuery(name = "Bank.findAll", query = "SELECT b FROM Bank b"),
+    @javax.persistence.NamedQuery(name = "Bank.findByBankid", query = "SELECT b FROM Bank b WHERE b.bankid = :bankid"),
+    @javax.persistence.NamedQuery(name = "Bank.findByBankname", query = "SELECT b FROM Bank b WHERE b.bankname = :bankname"),
+    @javax.persistence.NamedQuery(name = "Bank.findByAddress", query = "SELECT b FROM Bank b WHERE b.address = :address"),
+    @javax.persistence.NamedQuery(name = "Bank.findByCreationdate", query = "SELECT b FROM Bank b WHERE b.creationdate = :creationdate"),
+    @javax.persistence.NamedQuery(name = "Bank.findByCreator", query = "SELECT b FROM Bank b WHERE b.creator = :creator"),
+    @javax.persistence.NamedQuery(name = "Bank.findByEditdate", query = "SELECT b FROM Bank b WHERE b.editdate = :editdate"),
+    @javax.persistence.NamedQuery(name = "Bank.findByEditor", query = "SELECT b FROM Bank b WHERE b.editor = :editor"),
+    @javax.persistence.NamedQuery(name = "Bank.findBySessiondate", query = "SELECT b FROM Bank b WHERE b.sessiondate = :sessiondate")})
+public class Bank
+        implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,9 +59,9 @@ public class Bank implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
     @OneToMany(mappedBy = "bankid")
-    private List<BankAccount> bankaccountList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bankid")
-    private List<BankBranch> bankbranchList;
+    private List<Bankaccount> bankaccountList;
+    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "bankid")
+    private List<Bankbranch> bankbranchList;
 
     public Bank() {
     }
@@ -79,7 +71,7 @@ public class Bank implements Serializable {
     }
 
     public Integer getBankid() {
-        return bankid;
+        return this.bankid;
     }
 
     public void setBankid(Integer bankid) {
@@ -87,7 +79,7 @@ public class Bank implements Serializable {
     }
 
     public String getBankname() {
-        return bankname;
+        return this.bankname;
     }
 
     public void setBankname(String bankname) {
@@ -95,7 +87,7 @@ public class Bank implements Serializable {
     }
 
     public String getAddress() {
-        return address;
+        return this.address;
     }
 
     public void setAddress(String address) {
@@ -103,7 +95,7 @@ public class Bank implements Serializable {
     }
 
     public Date getCreationdate() {
-        return creationdate;
+        return this.creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -111,7 +103,7 @@ public class Bank implements Serializable {
     }
 
     public String getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public void setCreator(String creator) {
@@ -119,7 +111,7 @@ public class Bank implements Serializable {
     }
 
     public Date getEditdate() {
-        return editdate;
+        return this.editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -127,7 +119,7 @@ public class Bank implements Serializable {
     }
 
     public String getEditor() {
-        return editor;
+        return this.editor;
     }
 
     public void setEditor(String editor) {
@@ -135,7 +127,7 @@ public class Bank implements Serializable {
     }
 
     public Date getSessiondate() {
-        return sessiondate;
+        return this.sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -143,46 +135,41 @@ public class Bank implements Serializable {
     }
 
     @XmlTransient
-    public List<BankAccount> getBankaccountList() {
-        return bankaccountList;
+    public List<Bankaccount> getBankaccountList() {
+        return this.bankaccountList;
     }
 
-    public void setBankaccountList(List<BankAccount> bankaccountList) {
+    public void setBankaccountList(List<Bankaccount> bankaccountList) {
         this.bankaccountList = bankaccountList;
     }
 
     @XmlTransient
-    public List<BankBranch> getBankbranchList() {
-        return bankbranchList;
+    public List<Bankbranch> getBankbranchList() {
+        return this.bankbranchList;
     }
 
-    public void setBankbranchList(List<BankBranch> bankbranchList) {
+    public void setBankbranchList(List<Bankbranch> bankbranchList) {
         this.bankbranchList = bankbranchList;
     }
 
-    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (bankid != null ? bankid.hashCode() : 0);
+        hash += (this.bankid != null ? this.bankid.hashCode() : 0);
         return hash;
     }
 
-    @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Bank)) {
             return false;
         }
         Bank other = (Bank) object;
-        if ((this.bankid == null && other.bankid != null) || (this.bankid != null && !this.bankid.equals(other.bankid))) {
+        if (((this.bankid == null) && (other.bankid != null)) || ((this.bankid != null) && (!this.bankid.equals(other.bankid)))) {
             return false;
         }
         return true;
     }
 
-    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Bank[ bankid=" + bankid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Bank[ bankid=" + this.bankid + " ]";
     }
-
 }

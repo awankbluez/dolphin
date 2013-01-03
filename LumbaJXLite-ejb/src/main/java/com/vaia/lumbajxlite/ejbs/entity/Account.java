@@ -55,6 +55,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Account.findByInterestamount", query = "SELECT a FROM Account a WHERE a.interestamount = :interestamount"),
     @NamedQuery(name = "Account.findByDifferentBalanceDate", query = "SELECT a FROM Account a WHERE a.differentBalanceDate = :differentBalanceDate")})
 public class Account implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -385,5 +386,4 @@ public class Account implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Account[ accountid=" + accountid + " ]";
     }
-
 }

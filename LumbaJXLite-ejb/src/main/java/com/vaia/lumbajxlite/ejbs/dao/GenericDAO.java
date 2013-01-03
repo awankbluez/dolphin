@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.dao;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -15,11 +10,8 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
-/**
- *
- * @author MBS Development Team
- */
-public abstract class GenericDAO<T> implements Serializable {
+public abstract class GenericDAO<T>
+        implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("LumbaJXLite-ejb.v1.PU");
@@ -27,21 +19,21 @@ public abstract class GenericDAO<T> implements Serializable {
     private Class<T> entityClass;
 
     public void beginTransaction() {
-        em = emf.createEntityManager();
+        this.em = emf.createEntityManager();
 
-        em.getTransaction().begin();
+        this.em.getTransaction().begin();
     }
 
     public void commit() {
-        em.getTransaction().commit();
+        this.em.getTransaction().commit();
     }
 
     public void rollback() {
-        em.getTransaction().rollback();
+        this.em.getTransaction().rollback();
     }
 
     public void closeTransaction() {
-        em.close();
+        this.em.close();
     }
 
     public void commitAndCloseTransaction() {
@@ -50,12 +42,12 @@ public abstract class GenericDAO<T> implements Serializable {
     }
 
     public void flush() {
-        em.flush();
+        this.em.flush();
     }
 
     public void joinTransaction() {
-        em = emf.createEntityManager();
-        em.joinTransaction();
+        this.em = emf.createEntityManager();
+        this.em.joinTransaction();
     }
 
     public GenericDAO(Class<T> entityClass) {
@@ -63,50 +55,43 @@ public abstract class GenericDAO<T> implements Serializable {
     }
 
     public void save(T entity) {
-        em.persist(entity);
+        this.em.persist(entity);
     }
 
     public void delete(T entity) {
-        T entityToBeRemoved = em.merge(entity);
+        Object entityToBeRemoved = this.em.merge(entity);
 
-        em.remove(entityToBeRemoved);
+        this.em.remove(entityToBeRemoved);
     }
 
     public T update(T entity) {
-        return em.merge(entity);
+        return this.em.merge(entity);
     }
 
     public T find(int entityID) {
-        return em.find(entityClass, entityID);
+        return this.em.find(this.entityClass, Integer.valueOf(entityID));
     }
 
     public T findReferenceOnly(int entityID) {
-        return em.getReference(entityClass, entityID);
+        return this.em.getReference(this.entityClass, Integer.valueOf(entityID));
     }
 
-    // Using the unchecked because JPA does not have a
-    // em.getCriteriaBuilder().createQuery()<T> method
     public List<T> findAll() {
-        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-        cq.select(cq.from(entityClass));
-        return em.createQuery(cq).getResultList();
+        CriteriaQuery cq = this.em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(this.entityClass));
+        return this.em.createQuery(cq).getResultList();
     }
 
-    // Using the unchecked because JPA does not have a
-    // query.getSingleResult()<T> method
-    protected T findOneResult(String namedQuery, Map<String, Object> parameters) {
-        T result = null;
-
+    protected Object findOneResult(String namedQuery, Map<String, Object> parameters) {
+        Object result = null;
         try {
-            Query query = em.createNamedQuery(namedQuery);
+            Query query = this.em.createNamedQuery(namedQuery);
 
-            // Method that will populate parameters if they are passed not null and empty
-            if (parameters != null && !parameters.isEmpty()) {
+            if ((parameters != null) && (!parameters.isEmpty())) {
                 populateQueryParameters(query, parameters);
             }
 
-            result = (T) query.getSingleResult();
-
+            result = query.getSingleResult();
         } catch (NoResultException e) {
             System.out.println("No result found for named query: " + namedQuery);
         } catch (Exception e) {
@@ -118,8 +103,8 @@ public abstract class GenericDAO<T> implements Serializable {
     }
 
     private void populateQueryParameters(Query query, Map<String, Object> parameters) {
-        for (Entry<String, Object> entry : parameters.entrySet()) {
-            query.setParameter(entry.getKey(), entry.getValue());
+        for (Map.Entry entry : parameters.entrySet()) {
+            query.setParameter((String) entry.getKey(), entry.getValue());
         }
     }
 }

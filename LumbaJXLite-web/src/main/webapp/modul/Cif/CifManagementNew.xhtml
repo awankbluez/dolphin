@@ -1,0 +1,397 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions">
+
+    <ui:define name="page">
+        CIF Management
+    </ui:define>
+
+    <ui:define name="title">
+        Buat CIF
+    </ui:define>
+
+    <ui:define name="content">
+        <p:growl autoUpdate="true"/>
+
+        <h:form id="formSearchCustomer">
+            <p:fieldset legend="Cari CIF">
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="idCif" value="Nomor ID Nasabah"/>
+                    <p:inputText id="idCif" value="#{cifBean.findCustomer.customeraccount}"/>
+
+                    <p:outputLabel for="ssnCif" value="Nomor KTP Nasabah"/>
+                    <p:inputText id="ssnCif" value="#{cifBean.findCustomer.person.socialsecuritynumber}"/>
+
+                    <p:outputLabel for="nameCif" value="Nama Nasabah"/>
+                    <p:inputText id="nameCif" value="#{cifBean.findCustomer.name1}"/>
+
+                    <p:outputLabel for="motehrMaidenCif" value="Nama Ibu Kandung"/>
+                    <p:inputText id="motehrMaidenCif" value="#{cifBean.findCustomer.person.mothermaiden}"/>
+                </h:panelGrid>
+
+                <o:validateOneOrMore components="idCif ssnCif nameCif motehrMaidenCif"/>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Cari" actionListener="#{cifBean.searchCustomer}" update="@form"/>
+                    <p:commandButton value="Buat" disabled="#{cifBean.status != cifBean.STATUS_NOT_FOUND}" update=":formCreateCustomer">
+                        <f:setPropertyActionListener target="#{cifBean.status}" value="#{cifBean.STATUS_CREATE}"/>
+                    </p:commandButton>
+                </h:panelGrid>
+
+                <p:spacer height="10"/>
+
+                <p:dataTable
+                    value="#{cifBean.customerList}"
+                    var="customer"
+                    rendered="#{cifBean.status == cifBean.STATUS_FOUND}"
+                    >
+                    <f:facet name="header">
+                        <h:outputText value="Daftar Nasabah"/>
+                    </f:facet>
+
+                    <p:column headerText="Nomor Nasabah">
+                        <h:outputText value="#{customer.customercode}"/>
+                    </p:column>
+
+                    <p:column headerText="Nomor KTP">
+                        <h:outputText value="#{customer.person.socialsecuritynumber}"/>
+                    </p:column>
+
+                    <p:column headerText="Nama Nasabah">
+                        <h:outputText value="#{of:capitalize(customer.name1)} #{of:capitalize(customer.name2)} #{of:capitalize(customer.name3)} #{of:capitalize(customer.name4)}"/>
+                    </p:column>
+
+                    <p:column headerText="Jenis Kelamin" style="width: 30px;">
+                        <h:outputText value="Pria" rendered="#{customer.person.gender == cifBean.GENDER_MALE}"/>
+                        <h:outputText value="Wanita" rendered="#{customer.person.gender == cifBean.GENDER_FEMALE}"/>
+                    </p:column>
+
+                    <p:column headerText="Nama Ibu Kandung">
+                        <h:outputText value="#{customer.person.mothermaiden}"/>
+                    </p:column>
+
+                    <p:column headerText="Alamat" style="width: 200px;">
+                        <h:outputText value="#{customer.person.address.address}"/>
+                    </p:column>
+
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+
+        <p:spacer height="10"/>
+
+        <h:form id="formCreateCustomer">
+            <p:fieldset legend="Buat CIF" rendered="#{cifBean.status == cifBean.STATUS_CREATE}">
+                <h:panelGrid columns="3">
+                    <p:outputLabel for="typeCif" value="Tipe Nasabah"/>
+                    <p:spacer width="10"/>
+                    <p:selectOneMenu id="typeCif" value="#{cifBean.selectedCustomer.customertype}">
+                        <f:selectItem itemLabel="Pilih Tipe Nasabah"/>
+                        <f:selectItems value="#{cifBean.customerType}" var="cusType" itemLabel="#{cusType.name}" itemValue="#{cusType.parameterid}"/>
+                        <p:ajax update="@form"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+                <p:spacer height="10"/>
+
+                <h:panelGrid id="gridCreateCif" rendered="#{cifBean.selectedCustomer.customertype != null}" style="width: 100%;">
+                    <p:tabView id="tabCreateCif">
+                        <p:tab title="Data Perorangan" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV or cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMM}">
+                            <p:panelGrid styleClass="hideBorderPanelGrid">
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Status / Gelar" for="statusDegreeCif"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="statusDegreeCif" value="#{cifBean.selectedCustomer.degreestatus}">
+                                            <f:selectItem itemLabel="Pilih Status"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:outputLabel value="Keterangan Status Gelar Nasabah" for="descripStatusDegreeCif"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="descripStatusDegreeCif" value="#{cifBean.selectedCustomer.degreedesc}">
+                                            <f:selectItem itemLabel="Pilih Keterangan Status"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputLabel value="Nama Nasabah"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{cifMB.selectedCustomer.nama1}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{cifMB.selectedCustomer.nama2}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{cifMB.selectedCustomer.nama3}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{cifMB.selectedCustomer.nama4}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Nama Alias" for="aliasNameCif"/>
+                                    </p:column>
+                                    <p:column colspan="4">
+                                        <p:inputText id="aliasNameCif" style="width: available;" value="#{cifMB.selectedCustomer.aliasname}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Jenis Kelamin" for="genderCif"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="genderCif" value="#{cifBean.selectedCustomer.person.gender}">
+                                            <f:selectItem itemLabel="Pilih Jenis Kelamin"/>
+                                            <f:selectItems value="#{cifBean.genders}" var="gender" itemLabel="#{gender.name}" itemValue="#{gender.parameterid}"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Nama Gadis Ibu Kandung" for="motherMaidenName"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:inputText id="motherMaidenName" style="width: available;" value="#{cifBean.selectedCustomer.person.mothermaiden}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Nomor KTP" for="ssnCif"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="ssnCif" style="width: available;" value="#{cifBean.selectedCustomer.person.socialsecuritynumber}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Nomor Pasport" for="pasportNumberCif"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:inputText id="pasportNumberCif" style="width: available;" value="#{cifBean.selectedCustomer.person.passportnumber}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Nomor NPWP" for="taxNumberCif"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="taxNumberCif" style="width: available;" value="#{cifBean.selectedCustomer.person.npwp}"/>
+                                    </p:column>
+                                    <p:column colspan="3">
+
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Tempat Lahir" for="placeOfBirth"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="placeOfBirth" style="width: available;" value="#{cifBean.selectedCustomer.person.placeofbirth}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="tanggal Lahir" for="dateOfBirth"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:calendar id="dateOfBirth" style="width: available;" value="#{cifBean.selectedCustomer.person.dateofbirth}"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:tab>
+
+                        <p:tab title="Alamat Nasabah" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV or cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMP}">
+                            <p:panelGrid styleClass="hideBorderPanelGrid">
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Alamat Nasabah" for="customerAddress"/>
+                                    </p:column>
+                                    <p:column colspan="4">
+                                        <p:inputText id="customerAddress" value="#{cifBean.selectedCustomer.person.address.address}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Negara" for="country"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:selectOneMenu id="country" value="#{cifBean.selectedCustomer.person.address.countryid}">
+                                            <f:selectItem itemLabel="Pilih Negara"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Provinsi" for="province"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="province" value="#{cifBean.selectedCustomer.person.address.provinceid}">
+                                            <f:selectItem itemLabel="Pilih Provinsi"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Kota" for="district"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:selectOneMenu id="district" value="#{cifBean.selectedCustomer.person.address.districtid}">
+                                            <f:selectItem itemLabel="Pilih Kota / Kabupaten"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Kecamatan" for="subdistrict"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="subdistrict" value="#{cifBean.selectedCustomer.person.address.subdistrict}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Kelurahan / Desa" for="village"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:inputText id="village" value="#{cifBean.selectedCustomer.person.address.village}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Kode Pos" for="postcode"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="postcode" value="#{cifBean.selectedCustomer.person.address.postcode}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="phoneNumberCode" value="Nomer Telepon Rumah"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="phoneNumberCode" value="#{cifBean.selectedCustomer.person.address.phonenumbercode}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="phoneNumber" value="#{cifBean.selectedCustomer.person.address.phonenumber}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Handphone" for="mobilePhoneNumber"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="mobilePhoneNumber" value="#{cifBean.selectedCustomer.person.address.mobilephonenumber}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="officePhoneNumberCode" value="Nomer Telepon Kantor"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="officePhoneNumberCode" value="#{cifBean.selectedCustomer.person.address.officephonenumbercode}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{cifBean.selectedCustomer.person.address.officephonenumber}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Email" for="email"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="email" value="#{cifBean.selectedCustomer.person.address.email}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Website" for="website"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:inputText id="website" value="#{cifBean.selectedCustomer.person.address.website}"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:tab>
+
+                        <p:tab title="Analisa" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV or cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMP}">
+                            <p:panel header="Data Terkait">
+                                <h:panelGrid columns="4">
+                                    <p:outputLabel value="Golongan Nasabah" for="customerCategory"/>
+                                    <p:selectOneMenu id="customerCategory">
+                                        <f:selectItem itemLabel="Pilih Golongan"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Hubungan Dengan Debitur" for="customerRelation"/>
+                                    <p:selectOneMenu id="customerRelation">
+                                        <f:selectItem itemLabel="Pilih Hubungan"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Pekerjaan Nasabah" for="customerOccupancy"/>
+                                    <p:selectOneMenu id="customerOccupancy">
+                                        <f:selectItem itemLabel="Pilih Pekerjaan"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Perusahaan" for="company"/>
+                                    <p:inputText id="company"/>
+                                </h:panelGrid>
+                            </p:panel>
+
+                            <p:spacer height="10"/>
+
+                            <p:panel header="Data Klarifikasi Nasabah">
+                                <h:panelGrid columns="4">
+                                    <p:outputLabel value="Bidang Usaha" for="lineOfBusiness"/>
+                                    <p:selectOneMenu id="lineOfBusiness">
+                                        <f:selectItem itemLabel="Pilih Bidang Usaha"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Sektor Industri" for="industrialSector"/>
+                                    <p:selectOneMenu id="industrialSector">
+                                        <f:selectItem itemLabel="Pilih Sektor Industri"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Sektor Ekonomi" for="economicSector"/>
+                                    <p:selectOneMenu id="economicSector">
+                                        <f:selectItem itemLabel="Pilih Sektor Ekonomi"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Lokasi" for="location"/>
+                                    <p:selectOneMenu id="location">
+                                        <f:selectItem itemLabel="Pilih Lokasi"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+
+                            </p:panel>
+                        </p:tab>
+                    </p:tabView>
+
+                    <p:spacer height="10"/>
+
+                    <p:panel header="Foto dan Tanda Tangan" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV}">
+                        <p:fileUpload/>
+                        <p:fileUpload/>
+                    </p:panel>
+
+                    <p:spacer height="10"/>
+
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Submit"/>
+                        <p:commandButton value="Batal"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

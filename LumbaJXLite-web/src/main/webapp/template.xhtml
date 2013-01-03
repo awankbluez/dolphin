@@ -23,13 +23,19 @@
 
         <h:body>
 
+            <style>
+                .hideBorderPanelGrid tr, .hideBorderPanelGrid td{
+                    border : none;
+                }
+            </style>
+
             <div class="bodywrapper">
 
                 <ui:include src="header.xhtml"/>
 
                 <div class="pageheader notab">
                     <h3 class="pagetitle"><ui:insert name="title">Untitled</ui:insert></h3>
-                    <span class="pagedesc"><ui:insert name="desk">Undesk</ui:insert></span>
+                    <span class="pagedesc"><ui:insert name="desk"></ui:insert></span>
                 </div><!--pageheader-->
 
                 <div id="contentwrapper" class="contentwrapper">
@@ -50,7 +56,7 @@
                         <p:tab title="#{msgs['lumbajx.error']}">
                             <h:panelGrid style="height: 25px;">
                                 <span style="float: left; width: 7%">
-                                    <h:graphicImage value="/resources/images/warning.png" height="32" style=""/>
+                                    <h:graphicImage value="#{resource['images:warning.png']}" height="32" style=""/>
                                 </span>
                                 <span style="float: right; width: 93%">
                                     <h:outputText value="#{msgs['lumbajx.error.desc']}"/>
@@ -107,11 +113,11 @@
 
 
             <script type="text/javascript">
-                var startFrom = 15*60;//#{session.maxInactiveInterval};  // Total session time out setting eg 10 sec, Real implementation assign from session
+                var startFrom = 1*60;//#{session.maxInactiveInterval};  // Total session time out setting eg 10 sec, Real implementation assign from session
                 var loopTill = 10;//#{systemController.getSessionTimeoutAlertDuration()};  //Count down degins from 6 sec and starts after 4 sec ie 10-6
                 var reduce = 1;
                 var handleDialog = null;
-                var redirectPage = "#{request.contextPath}/login.xhtml";
+                var redirectPage = "#{root}/login.xhtml";
                 var countDownDiv = "dialog-countdown";
 
                 function resetPageTimer()  {
@@ -128,7 +134,9 @@
                     handleDialog = setInterval(function() {
                         if(wCounter == 0) {
                             clearInterval(handleDialog);
-                            window.location.href = timeOutPage;
+//                            window.location.href = timeOutPage;
+                            
+                            $('#logoutButton').click();
                         }
                         else {
                             wCounter -= reduce;

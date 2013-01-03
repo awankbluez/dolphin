@@ -100,6 +100,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Saving.findByMinimumdeposit", query = "SELECT s FROM Saving s WHERE s.minimumdeposit = :minimumdeposit"),
     @NamedQuery(name = "Saving.findByMaximumdeposit", query = "SELECT s FROM Saving s WHERE s.maximumdeposit = :maximumdeposit")})
 public class Saving implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -227,28 +228,28 @@ public class Saving implements Serializable {
     private Currency currencyid;
     @JoinColumn(name = "savinginterestdevidedtaxpayable", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount savinginterestdevidedtaxpayable;
+    private Chartofaccount savinginterestdevidedtaxpayable;
     @JoinColumn(name = "savinginterestdevidedpayable", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount savinginterestdevidedpayable;
+    private Chartofaccount savinginterestdevidedpayable;
     @JoinColumn(name = "savinginterestdevidedexpense", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount savinginterestdevidedexpense;
+    private Chartofaccount savinginterestdevidedexpense;
     @JoinColumn(name = "productcontrolaccountnormal", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount productcontrolaccountnormal;
+    private Chartofaccount productcontrolaccountnormal;
     @JoinColumn(name = "overdraftcontrolaccountnormal", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount overdraftcontrolaccountnormal;
+    private Chartofaccount overdraftcontrolaccountnormal;
     @JoinColumn(name = "baddebtincome", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount baddebtincome;
+    private Chartofaccount baddebtincome;
     @JoinColumn(name = "baddebtexpense", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount baddebtexpense;
+    private Chartofaccount baddebtexpense;
     @JoinColumn(name = "savingstaxwithheld", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount savingstaxwithheld;
+    private Chartofaccount savingstaxwithheld;
 
     public Saving() {
     }
@@ -794,67 +795,67 @@ public class Saving implements Serializable {
         this.currencyid = currencyid;
     }
 
-    public ChartOfAccount getSavinginterestdevidedtaxpayable() {
+    public Chartofaccount getSavinginterestdevidedtaxpayable() {
         return savinginterestdevidedtaxpayable;
     }
 
-    public void setSavinginterestdevidedtaxpayable(ChartOfAccount savinginterestdevidedtaxpayable) {
+    public void setSavinginterestdevidedtaxpayable(Chartofaccount savinginterestdevidedtaxpayable) {
         this.savinginterestdevidedtaxpayable = savinginterestdevidedtaxpayable;
     }
 
-    public ChartOfAccount getSavinginterestdevidedpayable() {
+    public Chartofaccount getSavinginterestdevidedpayable() {
         return savinginterestdevidedpayable;
     }
 
-    public void setSavinginterestdevidedpayable(ChartOfAccount savinginterestdevidedpayable) {
+    public void setSavinginterestdevidedpayable(Chartofaccount savinginterestdevidedpayable) {
         this.savinginterestdevidedpayable = savinginterestdevidedpayable;
     }
 
-    public ChartOfAccount getSavinginterestdevidedexpense() {
+    public Chartofaccount getSavinginterestdevidedexpense() {
         return savinginterestdevidedexpense;
     }
 
-    public void setSavinginterestdevidedexpense(ChartOfAccount savinginterestdevidedexpense) {
+    public void setSavinginterestdevidedexpense(Chartofaccount savinginterestdevidedexpense) {
         this.savinginterestdevidedexpense = savinginterestdevidedexpense;
     }
 
-    public ChartOfAccount getProductcontrolaccountnormal() {
+    public Chartofaccount getProductcontrolaccountnormal() {
         return productcontrolaccountnormal;
     }
 
-    public void setProductcontrolaccountnormal(ChartOfAccount productcontrolaccountnormal) {
+    public void setProductcontrolaccountnormal(Chartofaccount productcontrolaccountnormal) {
         this.productcontrolaccountnormal = productcontrolaccountnormal;
     }
 
-    public ChartOfAccount getOverdraftcontrolaccountnormal() {
+    public Chartofaccount getOverdraftcontrolaccountnormal() {
         return overdraftcontrolaccountnormal;
     }
 
-    public void setOverdraftcontrolaccountnormal(ChartOfAccount overdraftcontrolaccountnormal) {
+    public void setOverdraftcontrolaccountnormal(Chartofaccount overdraftcontrolaccountnormal) {
         this.overdraftcontrolaccountnormal = overdraftcontrolaccountnormal;
     }
 
-    public ChartOfAccount getBaddebtincome() {
+    public Chartofaccount getBaddebtincome() {
         return baddebtincome;
     }
 
-    public void setBaddebtincome(ChartOfAccount baddebtincome) {
+    public void setBaddebtincome(Chartofaccount baddebtincome) {
         this.baddebtincome = baddebtincome;
     }
 
-    public ChartOfAccount getBaddebtexpense() {
+    public Chartofaccount getBaddebtexpense() {
         return baddebtexpense;
     }
 
-    public void setBaddebtexpense(ChartOfAccount baddebtexpense) {
+    public void setBaddebtexpense(Chartofaccount baddebtexpense) {
         this.baddebtexpense = baddebtexpense;
     }
 
-    public ChartOfAccount getSavingstaxwithheld() {
+    public Chartofaccount getSavingstaxwithheld() {
         return savingstaxwithheld;
     }
 
-    public void setSavingstaxwithheld(ChartOfAccount savingstaxwithheld) {
+    public void setSavingstaxwithheld(Chartofaccount savingstaxwithheld) {
         this.savingstaxwithheld = savingstaxwithheld;
     }
 
@@ -882,5 +883,4 @@ public class Saving implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Saving[ savingid=" + savingid + " ]";
     }
-
 }

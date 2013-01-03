@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -14,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,32 +18,31 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author MBS Development Team
- */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Parameter.findAll", query = "SELECT p FROM Parameter p"),
-    @NamedQuery(name = "Parameter.findByParameterid", query = "SELECT p FROM Parameter p WHERE p.parameterid = :parameterid"),
-    @NamedQuery(name = "Parameter.findByParametercode", query = "SELECT p FROM Parameter p WHERE p.parametercode = :parametercode"),
-    @NamedQuery(name = "Parameter.findByName", query = "SELECT p FROM Parameter p WHERE p.name = :name"),
-    @NamedQuery(name = "Parameter.findByCreationdate", query = "SELECT p FROM Parameter p WHERE p.creationdate = :creationdate"),
-    @NamedQuery(name = "Parameter.findByEditdate", query = "SELECT p FROM Parameter p WHERE p.editdate = :editdate"),
-    @NamedQuery(name = "Parameter.findByCreator", query = "SELECT p FROM Parameter p WHERE p.creator = :creator"),
-    @NamedQuery(name = "Parameter.findByEditor", query = "SELECT p FROM Parameter p WHERE p.editor = :editor"),
-    @NamedQuery(name = "Parameter.findBySessiondate", query = "SELECT p FROM Parameter p WHERE p.sessiondate = :sessiondate")})
-public class Parameter implements Serializable {
+    @javax.persistence.NamedQuery(name = "Parameter.findAll", query = "SELECT p FROM Parameter p"),
+    @javax.persistence.NamedQuery(name = "Parameter.findByParameterid", query = "SELECT p FROM Parameter p WHERE p.parameterid = :parameterid"),
+    @javax.persistence.NamedQuery(name = "Parameter.findByParametercode", query = "SELECT p FROM Parameter p WHERE p.parametercode = :parametercode"),
+    @javax.persistence.NamedQuery(name = "Parameter.findByName", query = "SELECT p FROM Parameter p WHERE p.name = :name"),
+    @javax.persistence.NamedQuery(name = "Parameter.findByCreationdate", query = "SELECT p FROM Parameter p WHERE p.creationdate = :creationdate"),
+    @javax.persistence.NamedQuery(name = "Parameter.findByEditdate", query = "SELECT p FROM Parameter p WHERE p.editdate = :editdate"),
+    @javax.persistence.NamedQuery(name = "Parameter.findByCreator", query = "SELECT p FROM Parameter p WHERE p.creator = :creator"),
+    @javax.persistence.NamedQuery(name = "Parameter.findByEditor", query = "SELECT p FROM Parameter p WHERE p.editor = :editor"),
+    @javax.persistence.NamedQuery(name = "Parameter.findBySessiondate", query = "SELECT p FROM Parameter p WHERE p.sessiondate = :sessiondate")})
+public class Parameter
+        implements Serializable {
+
+    public static final String SQL_FIND_BY_PARAMETERCODE = "Parameter.findByParametercode";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(nullable = false)
     private Integer parameterid;
-    @Size(max = 22)
-    @Column(length = 22)
+    @Size(max = 50)
+    @Column(length = 50)
     private String parametercode;
     @Size(max = 50)
     @Column(length = 50)
@@ -65,6 +59,8 @@ public class Parameter implements Serializable {
     private String editor;
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
+    @OneToMany(mappedBy = "position")
+    private List<Customermanagement> customermanagementList;
     @OneToMany(mappedBy = "companytype")
     private List<Customer> customerList;
     @OneToMany(mappedBy = "institution")
@@ -82,7 +78,7 @@ public class Parameter implements Serializable {
     }
 
     public Integer getParameterid() {
-        return parameterid;
+        return this.parameterid;
     }
 
     public void setParameterid(Integer parameterid) {
@@ -90,7 +86,7 @@ public class Parameter implements Serializable {
     }
 
     public String getParametercode() {
-        return parametercode;
+        return this.parametercode;
     }
 
     public void setParametercode(String parametercode) {
@@ -98,7 +94,7 @@ public class Parameter implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -106,7 +102,7 @@ public class Parameter implements Serializable {
     }
 
     public Date getCreationdate() {
-        return creationdate;
+        return this.creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -114,7 +110,7 @@ public class Parameter implements Serializable {
     }
 
     public Date getEditdate() {
-        return editdate;
+        return this.editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -122,7 +118,7 @@ public class Parameter implements Serializable {
     }
 
     public String getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public void setCreator(String creator) {
@@ -130,7 +126,7 @@ public class Parameter implements Serializable {
     }
 
     public String getEditor() {
-        return editor;
+        return this.editor;
     }
 
     public void setEditor(String editor) {
@@ -138,7 +134,7 @@ public class Parameter implements Serializable {
     }
 
     public Date getSessiondate() {
-        return sessiondate;
+        return this.sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -146,8 +142,17 @@ public class Parameter implements Serializable {
     }
 
     @XmlTransient
+    public List<Customermanagement> getCustomermanagementList() {
+        return this.customermanagementList;
+    }
+
+    public void setCustomermanagementList(List<Customermanagement> customermanagementList) {
+        this.customermanagementList = customermanagementList;
+    }
+
+    @XmlTransient
     public List<Customer> getCustomerList() {
-        return customerList;
+        return this.customerList;
     }
 
     public void setCustomerList(List<Customer> customerList) {
@@ -156,7 +161,7 @@ public class Parameter implements Serializable {
 
     @XmlTransient
     public List<Customer> getCustomerList1() {
-        return customerList1;
+        return this.customerList1;
     }
 
     public void setCustomerList1(List<Customer> customerList1) {
@@ -165,7 +170,7 @@ public class Parameter implements Serializable {
 
     @XmlTransient
     public List<Customer> getCustomerList2() {
-        return customerList2;
+        return this.customerList2;
     }
 
     public void setCustomerList2(List<Customer> customerList2) {
@@ -174,36 +179,31 @@ public class Parameter implements Serializable {
 
     @XmlTransient
     public List<Customer> getCustomerList3() {
-        return customerList3;
+        return this.customerList3;
     }
 
     public void setCustomerList3(List<Customer> customerList3) {
         this.customerList3 = customerList3;
     }
 
-    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (parameterid != null ? parameterid.hashCode() : 0);
+        hash += (this.parameterid != null ? this.parameterid.hashCode() : 0);
         return hash;
     }
 
-    @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Parameter)) {
             return false;
         }
         Parameter other = (Parameter) object;
-        if ((this.parameterid == null && other.parameterid != null) || (this.parameterid != null && !this.parameterid.equals(other.parameterid))) {
+        if (((this.parameterid == null) && (other.parameterid != null)) || ((this.parameterid != null) && (!this.parameterid.equals(other.parameterid)))) {
             return false;
         }
         return true;
     }
 
-    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Parameter[ parameterid=" + parameterid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Parameter[ parameterid=" + this.parameterid + " ]";
     }
-
 }

@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,40 +12,36 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author MBS Development Team
- */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"regioncode"}),
-    @UniqueConstraint(columnNames = {"regionname"})})
+@Table(schema = "public", uniqueConstraints = {
+    @javax.persistence.UniqueConstraint(columnNames = {"regioncode"}),
+    @javax.persistence.UniqueConstraint(columnNames = {"regionname"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Region.findAll", query = "SELECT r FROM Region r"),
-    @NamedQuery(name = "Region.findByRegionid", query = "SELECT r FROM Region r WHERE r.regionid = :regionid"),
-    @NamedQuery(name = "Region.findByRegioncode", query = "SELECT r FROM Region r WHERE r.regioncode = :regioncode"),
-    @NamedQuery(name = "Region.findByRegionname", query = "SELECT r FROM Region r WHERE r.regionname = :regionname"),
-    @NamedQuery(name = "Region.findByRegionstatus", query = "SELECT r FROM Region r WHERE r.regionstatus = :regionstatus"),
-    @NamedQuery(name = "Region.findByCreator", query = "SELECT r FROM Region r WHERE r.creator = :creator"),
-    @NamedQuery(name = "Region.findByEditor", query = "SELECT r FROM Region r WHERE r.editor = :editor"),
-    @NamedQuery(name = "Region.findByCreationdate", query = "SELECT r FROM Region r WHERE r.creationdate = :creationdate"),
-    @NamedQuery(name = "Region.findByEditdate", query = "SELECT r FROM Region r WHERE r.editdate = :editdate"),
-    @NamedQuery(name = "Region.findByBranchvaultaccount", query = "SELECT r FROM Region r WHERE r.branchvaultaccount = :branchvaultaccount"),
-    @NamedQuery(name = "Region.findByInterbranchaccount", query = "SELECT r FROM Region r WHERE r.interbranchaccount = :interbranchaccount"),
-    @NamedQuery(name = "Region.findByBranchbankaccount", query = "SELECT r FROM Region r WHERE r.branchbankaccount = :branchbankaccount"),
-    @NamedQuery(name = "Region.findBySessiondate", query = "SELECT r FROM Region r WHERE r.sessiondate = :sessiondate")})
-public class Region implements Serializable {
+    @javax.persistence.NamedQuery(name = "Region.findAll", query = "SELECT r FROM Region r"),
+    @javax.persistence.NamedQuery(name = "Region.findByRegionid", query = "SELECT r FROM Region r WHERE r.regionid = :regionid"),
+    @javax.persistence.NamedQuery(name = "Region.findByRegioncode", query = "SELECT r FROM Region r WHERE r.regioncode = :regioncode"),
+    @javax.persistence.NamedQuery(name = "Region.findByRegionname", query = "SELECT r FROM Region r WHERE r.regionname = :regionname"),
+    @javax.persistence.NamedQuery(name = "Region.findByRegionstatus", query = "SELECT r FROM Region r WHERE r.regionstatus = :regionstatus"),
+    @javax.persistence.NamedQuery(name = "Region.findByCreator", query = "SELECT r FROM Region r WHERE r.creator = :creator"),
+    @javax.persistence.NamedQuery(name = "Region.findByEditor", query = "SELECT r FROM Region r WHERE r.editor = :editor"),
+    @javax.persistence.NamedQuery(name = "Region.findByCreationdate", query = "SELECT r FROM Region r WHERE r.creationdate = :creationdate"),
+    @javax.persistence.NamedQuery(name = "Region.findByEditdate", query = "SELECT r FROM Region r WHERE r.editdate = :editdate"),
+    @javax.persistence.NamedQuery(name = "Region.findByBranchvaultaccount", query = "SELECT r FROM Region r WHERE r.branchvaultaccount = :branchvaultaccount"),
+    @javax.persistence.NamedQuery(name = "Region.findByInterbranchaccount", query = "SELECT r FROM Region r WHERE r.interbranchaccount = :interbranchaccount"),
+    @javax.persistence.NamedQuery(name = "Region.findByBranchbankaccount", query = "SELECT r FROM Region r WHERE r.branchbankaccount = :branchbankaccount"),
+    @javax.persistence.NamedQuery(name = "Region.findBySessiondate", query = "SELECT r FROM Region r WHERE r.sessiondate = :sessiondate")})
+public class Region
+        implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,10 +72,10 @@ public class Region implements Serializable {
     private Date sessiondate;
     @JoinColumn(name = "headofficeid", referencedColumnName = "headofficeid")
     @ManyToOne
-    private HeadOffice headofficeid;
+    private Headoffice headofficeid;
     @OneToMany(mappedBy = "regionid")
     private List<Masteroperational> masteroperationalList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "regionid")
+    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "regionid")
     private List<Branch> branchList;
 
     public Region() {
@@ -95,7 +86,7 @@ public class Region implements Serializable {
     }
 
     public Integer getRegionid() {
-        return regionid;
+        return this.regionid;
     }
 
     public void setRegionid(Integer regionid) {
@@ -103,7 +94,7 @@ public class Region implements Serializable {
     }
 
     public String getRegioncode() {
-        return regioncode;
+        return this.regioncode;
     }
 
     public void setRegioncode(String regioncode) {
@@ -111,7 +102,7 @@ public class Region implements Serializable {
     }
 
     public String getRegionname() {
-        return regionname;
+        return this.regionname;
     }
 
     public void setRegionname(String regionname) {
@@ -119,7 +110,7 @@ public class Region implements Serializable {
     }
 
     public Boolean getRegionstatus() {
-        return regionstatus;
+        return this.regionstatus;
     }
 
     public void setRegionstatus(Boolean regionstatus) {
@@ -127,7 +118,7 @@ public class Region implements Serializable {
     }
 
     public String getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public void setCreator(String creator) {
@@ -135,7 +126,7 @@ public class Region implements Serializable {
     }
 
     public String getEditor() {
-        return editor;
+        return this.editor;
     }
 
     public void setEditor(String editor) {
@@ -143,7 +134,7 @@ public class Region implements Serializable {
     }
 
     public Date getCreationdate() {
-        return creationdate;
+        return this.creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -151,7 +142,7 @@ public class Region implements Serializable {
     }
 
     public Date getEditdate() {
-        return editdate;
+        return this.editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -159,7 +150,7 @@ public class Region implements Serializable {
     }
 
     public Integer getBranchvaultaccount() {
-        return branchvaultaccount;
+        return this.branchvaultaccount;
     }
 
     public void setBranchvaultaccount(Integer branchvaultaccount) {
@@ -167,7 +158,7 @@ public class Region implements Serializable {
     }
 
     public Integer getInterbranchaccount() {
-        return interbranchaccount;
+        return this.interbranchaccount;
     }
 
     public void setInterbranchaccount(Integer interbranchaccount) {
@@ -175,7 +166,7 @@ public class Region implements Serializable {
     }
 
     public Integer getBranchbankaccount() {
-        return branchbankaccount;
+        return this.branchbankaccount;
     }
 
     public void setBranchbankaccount(Integer branchbankaccount) {
@@ -183,24 +174,24 @@ public class Region implements Serializable {
     }
 
     public Date getSessiondate() {
-        return sessiondate;
+        return this.sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
         this.sessiondate = sessiondate;
     }
 
-    public HeadOffice getHeadofficeid() {
-        return headofficeid;
+    public Headoffice getHeadofficeid() {
+        return this.headofficeid;
     }
 
-    public void setHeadofficeid(HeadOffice headofficeid) {
+    public void setHeadofficeid(Headoffice headofficeid) {
         this.headofficeid = headofficeid;
     }
 
     @XmlTransient
     public List<Masteroperational> getMasteroperationalList() {
-        return masteroperationalList;
+        return this.masteroperationalList;
     }
 
     public void setMasteroperationalList(List<Masteroperational> masteroperationalList) {
@@ -209,36 +200,31 @@ public class Region implements Serializable {
 
     @XmlTransient
     public List<Branch> getBranchList() {
-        return branchList;
+        return this.branchList;
     }
 
     public void setBranchList(List<Branch> branchList) {
         this.branchList = branchList;
     }
 
-    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (regionid != null ? regionid.hashCode() : 0);
+        hash += (this.regionid != null ? this.regionid.hashCode() : 0);
         return hash;
     }
 
-    @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Region)) {
             return false;
         }
         Region other = (Region) object;
-        if ((this.regionid == null && other.regionid != null) || (this.regionid != null && !this.regionid.equals(other.regionid))) {
+        if (((this.regionid == null) && (other.regionid != null)) || ((this.regionid != null) && (!this.regionid.equals(other.regionid)))) {
             return false;
         }
         return true;
     }
 
-    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Region[ regionid=" + regionid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Region[ regionid=" + this.regionid + " ]";
     }
-
 }

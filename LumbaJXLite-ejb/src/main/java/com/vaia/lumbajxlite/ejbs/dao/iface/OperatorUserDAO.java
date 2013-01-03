@@ -1,20 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.dao.iface;
 
 import com.vaia.lumbajxlite.ejbs.dao.BaseDAO;
-import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.ejbs.entity.Operatoruser;
 import java.util.List;
 
-/**
- *
- * @author MBS Development Team
- */
-public interface OperatorUserDAO extends BaseDAO {
+public abstract interface OperatorUserDAO extends BaseDAO {
 
-    OperatorUser checkLogin(OperatorUser loggingInUser);
+    public abstract Operatoruser checkLogin(Operatoruser paramOperatoruser);
 
-    List<OperatorUser> retrieveAllUser();
+    public abstract List<Operatoruser> retrieveAllUser();
 }

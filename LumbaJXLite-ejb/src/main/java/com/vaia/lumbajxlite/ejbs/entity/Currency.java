@@ -1,21 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,26 +19,24 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author MBS Development Team
- */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Currency.findAll", query = "SELECT c FROM Currency c"),
-    @NamedQuery(name = "Currency.findByCurrencyid", query = "SELECT c FROM Currency c WHERE c.currencyid = :currencyid"),
-    @NamedQuery(name = "Currency.findByCurrencycode", query = "SELECT c FROM Currency c WHERE c.currencycode = :currencycode"),
-    @NamedQuery(name = "Currency.findByCurrencydescribe", query = "SELECT c FROM Currency c WHERE c.currencydescribe = :currencydescribe"),
-    @NamedQuery(name = "Currency.findByCreationdate", query = "SELECT c FROM Currency c WHERE c.creationdate = :creationdate"),
-    @NamedQuery(name = "Currency.findByEditdate", query = "SELECT c FROM Currency c WHERE c.editdate = :editdate"),
-    @NamedQuery(name = "Currency.findByCreator", query = "SELECT c FROM Currency c WHERE c.creator = :creator"),
-    @NamedQuery(name = "Currency.findByEditor", query = "SELECT c FROM Currency c WHERE c.editor = :editor"),
-    @NamedQuery(name = "Currency.findByCurrencysymbol", query = "SELECT c FROM Currency c WHERE c.currencysymbol = :currencysymbol"),
-    @NamedQuery(name = "Currency.findByActive", query = "SELECT c FROM Currency c WHERE c.active = :active"),
-    @NamedQuery(name = "Currency.findBySessiondate", query = "SELECT c FROM Currency c WHERE c.sessiondate = :sessiondate")})
-public class Currency implements Serializable {
+    @javax.persistence.NamedQuery(name = "Currency.findAll", query = "SELECT c FROM Currency c"),
+    @javax.persistence.NamedQuery(name = "Currency.findByCurrencyid", query = "SELECT c FROM Currency c WHERE c.currencyid = :currencyid"),
+    @javax.persistence.NamedQuery(name = "Currency.findByCurrencycode", query = "SELECT c FROM Currency c WHERE c.currencycode = :currencycode"),
+    @javax.persistence.NamedQuery(name = "Currency.findByCurrencydescribe", query = "SELECT c FROM Currency c WHERE c.currencydescribe = :currencydescribe"),
+    @javax.persistence.NamedQuery(name = "Currency.findByCreationdate", query = "SELECT c FROM Currency c WHERE c.creationdate = :creationdate"),
+    @javax.persistence.NamedQuery(name = "Currency.findByEditdate", query = "SELECT c FROM Currency c WHERE c.editdate = :editdate"),
+    @javax.persistence.NamedQuery(name = "Currency.findByCreator", query = "SELECT c FROM Currency c WHERE c.creator = :creator"),
+    @javax.persistence.NamedQuery(name = "Currency.findByEditor", query = "SELECT c FROM Currency c WHERE c.editor = :editor"),
+    @javax.persistence.NamedQuery(name = "Currency.findByCurrencysymbol", query = "SELECT c FROM Currency c WHERE c.currencysymbol = :currencysymbol"),
+    @javax.persistence.NamedQuery(name = "Currency.findByActive", query = "SELECT c FROM Currency c WHERE c.active = :active"),
+    @javax.persistence.NamedQuery(name = "Currency.findBySessiondate", query = "SELECT c FROM Currency c WHERE c.sessiondate = :sessiondate")})
+public class Currency
+        implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,12 +69,8 @@ public class Currency implements Serializable {
     private Boolean active;
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
-    @OneToMany(mappedBy = "currencyid")
-    private List<Loan> loanList;
-    @OneToMany(mappedBy = "currencyid")
-    private List<Saving> savingList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "currencyid")
-    private List<ChartOfAccount> chartofaccountList;
+    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "currencyid")
+    private List<Chartofaccount> chartofaccountList;
 
     public Currency() {
     }
@@ -98,7 +86,7 @@ public class Currency implements Serializable {
     }
 
     public Integer getCurrencyid() {
-        return currencyid;
+        return this.currencyid;
     }
 
     public void setCurrencyid(Integer currencyid) {
@@ -106,7 +94,7 @@ public class Currency implements Serializable {
     }
 
     public String getCurrencycode() {
-        return currencycode;
+        return this.currencycode;
     }
 
     public void setCurrencycode(String currencycode) {
@@ -114,7 +102,7 @@ public class Currency implements Serializable {
     }
 
     public String getCurrencydescribe() {
-        return currencydescribe;
+        return this.currencydescribe;
     }
 
     public void setCurrencydescribe(String currencydescribe) {
@@ -122,7 +110,7 @@ public class Currency implements Serializable {
     }
 
     public Date getCreationdate() {
-        return creationdate;
+        return this.creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -130,7 +118,7 @@ public class Currency implements Serializable {
     }
 
     public Date getEditdate() {
-        return editdate;
+        return this.editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -138,7 +126,7 @@ public class Currency implements Serializable {
     }
 
     public String getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public void setCreator(String creator) {
@@ -146,7 +134,7 @@ public class Currency implements Serializable {
     }
 
     public String getEditor() {
-        return editor;
+        return this.editor;
     }
 
     public void setEditor(String editor) {
@@ -154,7 +142,7 @@ public class Currency implements Serializable {
     }
 
     public String getCurrencysymbol() {
-        return currencysymbol;
+        return this.currencysymbol;
     }
 
     public void setCurrencysymbol(String currencysymbol) {
@@ -162,7 +150,7 @@ public class Currency implements Serializable {
     }
 
     public Boolean getActive() {
-        return active;
+        return this.active;
     }
 
     public void setActive(Boolean active) {
@@ -170,7 +158,7 @@ public class Currency implements Serializable {
     }
 
     public Date getSessiondate() {
-        return sessiondate;
+        return this.sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -178,55 +166,32 @@ public class Currency implements Serializable {
     }
 
     @XmlTransient
-    public List<Loan> getLoanList() {
-        return loanList;
+    public List<Chartofaccount> getChartofaccountList() {
+        return this.chartofaccountList;
     }
 
-    public void setLoanList(List<Loan> loanList) {
-        this.loanList = loanList;
-    }
-
-    @XmlTransient
-    public List<Saving> getSavingList() {
-        return savingList;
-    }
-
-    public void setSavingList(List<Saving> savingList) {
-        this.savingList = savingList;
-    }
-
-    @XmlTransient
-    public List<ChartOfAccount> getChartofaccountList() {
-        return chartofaccountList;
-    }
-
-    public void setChartofaccountList(List<ChartOfAccount> chartofaccountList) {
+    public void setChartofaccountList(List<Chartofaccount> chartofaccountList) {
         this.chartofaccountList = chartofaccountList;
     }
 
-    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (currencyid != null ? currencyid.hashCode() : 0);
+        hash += (this.currencyid != null ? this.currencyid.hashCode() : 0);
         return hash;
     }
 
-    @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Currency)) {
             return false;
         }
         Currency other = (Currency) object;
-        if ((this.currencyid == null && other.currencyid != null) || (this.currencyid != null && !this.currencyid.equals(other.currencyid))) {
+        if (((this.currencyid == null) && (other.currencyid != null)) || ((this.currencyid != null) && (!this.currencyid.equals(other.currencyid)))) {
             return false;
         }
         return true;
     }
 
-    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Currency[ currencyid=" + currencyid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Currency[ currencyid=" + this.currencyid + " ]";
     }
-
 }

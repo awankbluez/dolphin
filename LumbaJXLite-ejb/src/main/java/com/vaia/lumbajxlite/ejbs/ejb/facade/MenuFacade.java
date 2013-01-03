@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.ejb.facade;
 
 import com.vaia.lumbajxlite.ejbs.dao.FactoryDAO;
@@ -9,7 +5,7 @@ import com.vaia.lumbajxlite.ejbs.dao.iface.MenuDAO;
 import com.vaia.lumbajxlite.ejbs.ejb.AbstractFacade;
 import com.vaia.lumbajxlite.ejbs.ejb.local.MenuFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
-import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.ejbs.entity.Operatoruser;
 import java.sql.SQLException;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -19,16 +15,13 @@ import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author MBS Development Team
- */
 @Stateless
-public class MenuFacade extends AbstractFacade<Menu> implements MenuFacadeLocal {
+public class MenuFacade extends AbstractFacade<Menu>
+        implements MenuFacadeLocal {
 
     @PersistenceContext(unitName = "LumbaJXLite-ejb.v1.PU")
     private EntityManager em;
-    private static final Logger LOGGER = LoggerFactory.getLogger(OperatorUser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Operatoruser.class);
     private MenuDAO menuDAO;
 
     public MenuFacade() {
@@ -37,37 +30,31 @@ public class MenuFacade extends AbstractFacade<Menu> implements MenuFacadeLocal 
 
     @PostConstruct
     private void initialize() {
-        menuDAO = FactoryDAO.getDAOImpl(MenuDAO.class);
+        this.menuDAO = ((MenuDAO) FactoryDAO.getDAOImpl(MenuDAO.class));
     }
 
-    @Override
     protected EntityManager getEntityManager() {
-        return em;
+        return this.em;
     }
 
-    @Override
-    public List<Menu> findRootUserMenu(OperatorUser operatorUser) throws SQLException {
-        List<Menu> userRootMenu = menuDAO.findRootUserMenu(operatorUser);
+    public List<Menu> findRootUserMenu(Operatoruser operatorUser) throws SQLException {
+        List userRootMenu = this.menuDAO.findRootUserMenu(operatorUser);
         return userRootMenu;
     }
 
-    @Override
-    public List<Menu> findRootUserReportMenu(OperatorUser operatorUser) throws SQLException {
-        List<Menu> userRootReportMenu = menuDAO.findRootUserReportMenu(operatorUser);
+    public List<Menu> findRootUserReportMenu(Operatoruser operatorUser) throws SQLException {
+        List userRootReportMenu = this.menuDAO.findRootUserReportMenu(operatorUser);
         return userRootReportMenu;
     }
 
-    @Override
-    public List<Menu> retrieveUserSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException {
-        return menuDAO.retrieveUserSubMenuByParentMenuId(operatorUser, parentMenu);
+    public List<Menu> retrieveUserSubMenuByParentMenuId(Operatoruser operatorUser, Menu parentMenu) throws SQLException {
+        return this.menuDAO.retrieveUserSubMenuByParentMenuId(operatorUser, parentMenu);
     }
 
-    @Override
-    public List<Menu> retrieveUserReportSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException {
-        return menuDAO.retrieveUserReportSubMenuByParentMenuId(operatorUser, parentMenu);
+    public List<Menu> retrieveUserReportSubMenuByParentMenuId(Operatoruser operatorUser, Menu parentMenu) throws SQLException {
+        return this.menuDAO.retrieveUserReportSubMenuByParentMenuId(operatorUser, parentMenu);
     }
 
-    @Override
     public String retrieveString() {
         return "Test";
     }

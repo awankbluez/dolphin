@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Routinglog.findByLastaction", query = "SELECT r FROM Routinglog r WHERE r.lastaction = :lastaction"),
     @NamedQuery(name = "Routinglog.findBySessiondate", query = "SELECT r FROM Routinglog r WHERE r.sessiondate = :sessiondate")})
 public class RoutingLog implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -190,5 +191,4 @@ public class RoutingLog implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Routinglog[ routinglogid=" + routinglogid + " ]";
     }
-
 }

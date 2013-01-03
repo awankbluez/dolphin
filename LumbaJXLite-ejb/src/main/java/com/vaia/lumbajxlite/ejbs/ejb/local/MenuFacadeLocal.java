@@ -1,43 +1,39 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.ejb.local;
 
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
-import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.ejbs.entity.Operatoruser;
 import java.sql.SQLException;
 import java.util.List;
 import javax.ejb.Local;
 
-/**
- *
- * @author MBS Development Team
- */
 @Local
-public interface MenuFacadeLocal {
+public abstract interface MenuFacadeLocal {
 
-    void create(Menu menu);
+    public abstract void create(Menu paramMenu);
 
-    void edit(Menu menu);
+    public abstract void edit(Menu paramMenu);
 
-    void remove(Menu menu);
+    public abstract void remove(Menu paramMenu);
 
-    Menu find(Object id);
+    public abstract Menu find(Object paramObject);
 
-    List<Menu> findAll();
+    public abstract List<Menu> findAll();
 
-    List<Menu> findRange(int[] range);
+    public abstract List<Menu> findRange(int[] paramArrayOfInt);
 
-    int count();
+    public abstract int count();
 
-    List<Menu> findRootUserMenu(OperatorUser operatorUser) throws SQLException;
+    public abstract List<Menu> findRootUserMenu(Operatoruser paramOperatoruser)
+            throws SQLException;
 
-    List<Menu> findRootUserReportMenu(OperatorUser operatorUser) throws SQLException;
+    public abstract List<Menu> findRootUserReportMenu(Operatoruser paramOperatoruser)
+            throws SQLException;
 
-    List<Menu> retrieveUserSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException;
+    public abstract List<Menu> retrieveUserSubMenuByParentMenuId(Operatoruser paramOperatoruser, Menu paramMenu)
+            throws SQLException;
 
-    List<Menu> retrieveUserReportSubMenuByParentMenuId(OperatorUser operatorUser, Menu parentMenu) throws SQLException;
+    public abstract List<Menu> retrieveUserReportSubMenuByParentMenuId(Operatoruser paramOperatoruser, Menu paramMenu)
+            throws SQLException;
 
-    String retrieveString();
+    public abstract String retrieveString();
 }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -14,37 +10,33 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author MBS Development Team
- */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"countrycode"}),
-    @UniqueConstraint(columnNames = {"countryname"})})
+@Table(schema = "public", uniqueConstraints = {
+    @javax.persistence.UniqueConstraint(columnNames = {"countrycode"}),
+    @javax.persistence.UniqueConstraint(columnNames = {"countryname"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Country.findAll", query = "SELECT c FROM Country c"),
-    @NamedQuery(name = "Country.findByCountryid", query = "SELECT c FROM Country c WHERE c.countryid = :countryid"),
-    @NamedQuery(name = "Country.findByCountrycode", query = "SELECT c FROM Country c WHERE c.countrycode = :countrycode"),
-    @NamedQuery(name = "Country.findByCountryname", query = "SELECT c FROM Country c WHERE c.countryname = :countryname"),
-    @NamedQuery(name = "Country.findByCreationdate", query = "SELECT c FROM Country c WHERE c.creationdate = :creationdate"),
-    @NamedQuery(name = "Country.findByEditdate", query = "SELECT c FROM Country c WHERE c.editdate = :editdate"),
-    @NamedQuery(name = "Country.findByCreator", query = "SELECT c FROM Country c WHERE c.creator = :creator"),
-    @NamedQuery(name = "Country.findByEditor", query = "SELECT c FROM Country c WHERE c.editor = :editor"),
-    @NamedQuery(name = "Country.findBySessiondate", query = "SELECT c FROM Country c WHERE c.sessiondate = :sessiondate")})
-public class Country implements Serializable {
+    @javax.persistence.NamedQuery(name = "Country.findAll", query = "SELECT c FROM Country c"),
+    @javax.persistence.NamedQuery(name = "Country.findByCountryid", query = "SELECT c FROM Country c WHERE c.countryid = :countryid"),
+    @javax.persistence.NamedQuery(name = "Country.findByCountrycode", query = "SELECT c FROM Country c WHERE c.countrycode = :countrycode"),
+    @javax.persistence.NamedQuery(name = "Country.findByCountryname", query = "SELECT c FROM Country c WHERE c.countryname = :countryname"),
+    @javax.persistence.NamedQuery(name = "Country.findByCreationdate", query = "SELECT c FROM Country c WHERE c.creationdate = :creationdate"),
+    @javax.persistence.NamedQuery(name = "Country.findByEditdate", query = "SELECT c FROM Country c WHERE c.editdate = :editdate"),
+    @javax.persistence.NamedQuery(name = "Country.findByCreator", query = "SELECT c FROM Country c WHERE c.creator = :creator"),
+    @javax.persistence.NamedQuery(name = "Country.findByEditor", query = "SELECT c FROM Country c WHERE c.editor = :editor"),
+    @javax.persistence.NamedQuery(name = "Country.findBySessiondate", query = "SELECT c FROM Country c WHERE c.sessiondate = :sessiondate")})
+public class Country
+        implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,7 +84,7 @@ public class Country implements Serializable {
     }
 
     public Integer getCountryid() {
-        return countryid;
+        return this.countryid;
     }
 
     public void setCountryid(Integer countryid) {
@@ -100,7 +92,7 @@ public class Country implements Serializable {
     }
 
     public String getCountrycode() {
-        return countrycode;
+        return this.countrycode;
     }
 
     public void setCountrycode(String countrycode) {
@@ -108,7 +100,7 @@ public class Country implements Serializable {
     }
 
     public String getCountryname() {
-        return countryname;
+        return this.countryname;
     }
 
     public void setCountryname(String countryname) {
@@ -116,7 +108,7 @@ public class Country implements Serializable {
     }
 
     public Date getCreationdate() {
-        return creationdate;
+        return this.creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -124,7 +116,7 @@ public class Country implements Serializable {
     }
 
     public Date getEditdate() {
-        return editdate;
+        return this.editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -132,7 +124,7 @@ public class Country implements Serializable {
     }
 
     public String getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public void setCreator(String creator) {
@@ -140,7 +132,7 @@ public class Country implements Serializable {
     }
 
     public String getEditor() {
-        return editor;
+        return this.editor;
     }
 
     public void setEditor(String editor) {
@@ -148,7 +140,7 @@ public class Country implements Serializable {
     }
 
     public Date getSessiondate() {
-        return sessiondate;
+        return this.sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -157,7 +149,7 @@ public class Country implements Serializable {
 
     @XmlTransient
     public List<Customer> getCustomerList() {
-        return customerList;
+        return this.customerList;
     }
 
     public void setCustomerList(List<Customer> customerList) {
@@ -166,36 +158,31 @@ public class Country implements Serializable {
 
     @XmlTransient
     public List<Province> getProvinceList() {
-        return provinceList;
+        return this.provinceList;
     }
 
     public void setProvinceList(List<Province> provinceList) {
         this.provinceList = provinceList;
     }
 
-    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (countryid != null ? countryid.hashCode() : 0);
+        hash += (this.countryid != null ? this.countryid.hashCode() : 0);
         return hash;
     }
 
-    @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Country)) {
             return false;
         }
         Country other = (Country) object;
-        if ((this.countryid == null && other.countryid != null) || (this.countryid != null && !this.countryid.equals(other.countryid))) {
+        if (((this.countryid == null) && (other.countryid != null)) || ((this.countryid != null) && (!this.countryid.equals(other.countryid)))) {
             return false;
         }
         return true;
     }
 
-    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Country[ countryid=" + countryid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Country[ countryid=" + this.countryid + " ]";
     }
-
 }

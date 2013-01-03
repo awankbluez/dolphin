@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,25 +20,23 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author MBS Development Team
- */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Masteroperational.findAll", query = "SELECT m FROM Masteroperational m"),
-    @NamedQuery(name = "Masteroperational.findByMasteroperationalid", query = "SELECT m FROM Masteroperational m WHERE m.masteroperationalid = :masteroperationalid"),
-    @NamedQuery(name = "Masteroperational.findByAddress", query = "SELECT m FROM Masteroperational m WHERE m.address = :address"),
-    @NamedQuery(name = "Masteroperational.findByPhonenumber", query = "SELECT m FROM Masteroperational m WHERE m.phonenumber = :phonenumber"),
-    @NamedQuery(name = "Masteroperational.findByCreationdate", query = "SELECT m FROM Masteroperational m WHERE m.creationdate = :creationdate"),
-    @NamedQuery(name = "Masteroperational.findByEditdate", query = "SELECT m FROM Masteroperational m WHERE m.editdate = :editdate"),
-    @NamedQuery(name = "Masteroperational.findByCreator", query = "SELECT m FROM Masteroperational m WHERE m.creator = :creator"),
-    @NamedQuery(name = "Masteroperational.findByEditor", query = "SELECT m FROM Masteroperational m WHERE m.editor = :editor"),
-    @NamedQuery(name = "Masteroperational.findByTypeoffice", query = "SELECT m FROM Masteroperational m WHERE m.typeoffice = :typeoffice"),
-    @NamedQuery(name = "Masteroperational.findBySessiondate", query = "SELECT m FROM Masteroperational m WHERE m.sessiondate = :sessiondate")})
-public class Masteroperational implements Serializable {
+    @javax.persistence.NamedQuery(name = "Masteroperational.findAll", query = "SELECT m FROM Masteroperational m"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findByMasteroperationalid", query = "SELECT m FROM Masteroperational m WHERE m.masteroperationalid = :masteroperationalid"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findByAddress", query = "SELECT m FROM Masteroperational m WHERE m.address = :address"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findByPhonenumber", query = "SELECT m FROM Masteroperational m WHERE m.phonenumber = :phonenumber"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findByCreationdate", query = "SELECT m FROM Masteroperational m WHERE m.creationdate = :creationdate"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findByEditdate", query = "SELECT m FROM Masteroperational m WHERE m.editdate = :editdate"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findByCreator", query = "SELECT m FROM Masteroperational m WHERE m.creator = :creator"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findByEditor", query = "SELECT m FROM Masteroperational m WHERE m.editor = :editor"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findByTypeoffice", query = "SELECT m FROM Masteroperational m WHERE m.typeoffice = :typeoffice"),
+    @javax.persistence.NamedQuery(name = "Masteroperational.findBySessiondate", query = "SELECT m FROM Masteroperational m WHERE m.sessiondate = :sessiondate")})
+public class Masteroperational
+        implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,26 +67,24 @@ public class Masteroperational implements Serializable {
     @OneToMany(mappedBy = "masteroperationalid")
     private List<Customer> customerList;
     @OneToMany(mappedBy = "masteroperationalid")
-    private List<OperatorUser> operatoruserList;
+    private List<Operatoruser> operatoruserList;
     @JoinColumn(name = "villageid", referencedColumnName = "villageid")
     @ManyToOne
     private Village villageid;
     @JoinColumn(name = "subbranchunitcoid", referencedColumnName = "subbranchunitcoid")
     @ManyToOne
-    private SubBranchUnitCo subbranchunitcoid;
+    private Subbranchunitco subbranchunitcoid;
     @JoinColumn(name = "regionid", referencedColumnName = "regionid")
     @ManyToOne
     private Region regionid;
     @JoinColumn(name = "headofficeid", referencedColumnName = "headofficeid")
     @ManyToOne
-    private HeadOffice headofficeid;
+    private Headoffice headofficeid;
     @JoinColumn(name = "branchid", referencedColumnName = "branchid")
     @ManyToOne
     private Branch branchid;
-    @OneToMany(mappedBy = "masteroperationalid")
-    private List<Account> accountList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "masteroperationalid")
-    private List<ChartOfAccount> chartofaccountList;
+    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "masteroperationalid")
+    private List<Chartofaccount> chartofaccountList;
 
     public Masteroperational() {
     }
@@ -104,7 +94,7 @@ public class Masteroperational implements Serializable {
     }
 
     public Integer getMasteroperationalid() {
-        return masteroperationalid;
+        return this.masteroperationalid;
     }
 
     public void setMasteroperationalid(Integer masteroperationalid) {
@@ -112,7 +102,7 @@ public class Masteroperational implements Serializable {
     }
 
     public String getAddress() {
-        return address;
+        return this.address;
     }
 
     public void setAddress(String address) {
@@ -120,7 +110,7 @@ public class Masteroperational implements Serializable {
     }
 
     public String getPhonenumber() {
-        return phonenumber;
+        return this.phonenumber;
     }
 
     public void setPhonenumber(String phonenumber) {
@@ -128,7 +118,7 @@ public class Masteroperational implements Serializable {
     }
 
     public Date getCreationdate() {
-        return creationdate;
+        return this.creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -136,7 +126,7 @@ public class Masteroperational implements Serializable {
     }
 
     public Date getEditdate() {
-        return editdate;
+        return this.editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -144,7 +134,7 @@ public class Masteroperational implements Serializable {
     }
 
     public String getCreator() {
-        return creator;
+        return this.creator;
     }
 
     public void setCreator(String creator) {
@@ -152,7 +142,7 @@ public class Masteroperational implements Serializable {
     }
 
     public String getEditor() {
-        return editor;
+        return this.editor;
     }
 
     public void setEditor(String editor) {
@@ -160,7 +150,7 @@ public class Masteroperational implements Serializable {
     }
 
     public String getTypeoffice() {
-        return typeoffice;
+        return this.typeoffice;
     }
 
     public void setTypeoffice(String typeoffice) {
@@ -168,7 +158,7 @@ public class Masteroperational implements Serializable {
     }
 
     public Date getSessiondate() {
-        return sessiondate;
+        return this.sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -177,7 +167,7 @@ public class Masteroperational implements Serializable {
 
     @XmlTransient
     public List<Customer> getCustomerList() {
-        return customerList;
+        return this.customerList;
     }
 
     public void setCustomerList(List<Customer> customerList) {
@@ -185,48 +175,48 @@ public class Masteroperational implements Serializable {
     }
 
     @XmlTransient
-    public List<OperatorUser> getOperatoruserList() {
-        return operatoruserList;
+    public List<Operatoruser> getOperatoruserList() {
+        return this.operatoruserList;
     }
 
-    public void setOperatoruserList(List<OperatorUser> operatoruserList) {
+    public void setOperatoruserList(List<Operatoruser> operatoruserList) {
         this.operatoruserList = operatoruserList;
     }
 
     public Village getVillageid() {
-        return villageid;
+        return this.villageid;
     }
 
     public void setVillageid(Village villageid) {
         this.villageid = villageid;
     }
 
-    public SubBranchUnitCo getSubbranchunitcoid() {
-        return subbranchunitcoid;
+    public Subbranchunitco getSubbranchunitcoid() {
+        return this.subbranchunitcoid;
     }
 
-    public void setSubbranchunitcoid(SubBranchUnitCo subbranchunitcoid) {
+    public void setSubbranchunitcoid(Subbranchunitco subbranchunitcoid) {
         this.subbranchunitcoid = subbranchunitcoid;
     }
 
     public Region getRegionid() {
-        return regionid;
+        return this.regionid;
     }
 
     public void setRegionid(Region regionid) {
         this.regionid = regionid;
     }
 
-    public HeadOffice getHeadofficeid() {
-        return headofficeid;
+    public Headoffice getHeadofficeid() {
+        return this.headofficeid;
     }
 
-    public void setHeadofficeid(HeadOffice headofficeid) {
+    public void setHeadofficeid(Headoffice headofficeid) {
         this.headofficeid = headofficeid;
     }
 
     public Branch getBranchid() {
-        return branchid;
+        return this.branchid;
     }
 
     public void setBranchid(Branch branchid) {
@@ -234,46 +224,32 @@ public class Masteroperational implements Serializable {
     }
 
     @XmlTransient
-    public List<Account> getAccountList() {
-        return accountList;
+    public List<Chartofaccount> getChartofaccountList() {
+        return this.chartofaccountList;
     }
 
-    public void setAccountList(List<Account> accountList) {
-        this.accountList = accountList;
-    }
-
-    @XmlTransient
-    public List<ChartOfAccount> getChartofaccountList() {
-        return chartofaccountList;
-    }
-
-    public void setChartofaccountList(List<ChartOfAccount> chartofaccountList) {
+    public void setChartofaccountList(List<Chartofaccount> chartofaccountList) {
         this.chartofaccountList = chartofaccountList;
     }
 
-    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (masteroperationalid != null ? masteroperationalid.hashCode() : 0);
+        hash += (this.masteroperationalid != null ? this.masteroperationalid.hashCode() : 0);
         return hash;
     }
 
-    @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Masteroperational)) {
             return false;
         }
         Masteroperational other = (Masteroperational) object;
-        if ((this.masteroperationalid == null && other.masteroperationalid != null) || (this.masteroperationalid != null && !this.masteroperationalid.equals(other.masteroperationalid))) {
+        if (((this.masteroperationalid == null) && (other.masteroperationalid != null)) || ((this.masteroperationalid != null) && (!this.masteroperationalid.equals(other.masteroperationalid)))) {
             return false;
         }
         return true;
     }
 
-    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Masteroperational[ masteroperationalid=" + masteroperationalid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Masteroperational[ masteroperationalid=" + this.masteroperationalid + " ]";
     }
-
 }

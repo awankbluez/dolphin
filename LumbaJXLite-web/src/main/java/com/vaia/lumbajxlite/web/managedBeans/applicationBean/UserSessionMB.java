@@ -6,7 +6,7 @@ package com.vaia.lumbajxlite.web.managedBeans.applicationBean;
 
 import com.vaia.lumbajxlite.ejbs.ejb.local.OperatorUserFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Menu;
-import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.ejbs.entity.Operatoruser;
 import com.vaia.lumbajxlite.web.ejb.local.MenuServiceLocal;
 import com.vaia.lumbajxlite.web.managedBeans.AbstractManagedBean;
 import java.io.IOException;
@@ -32,12 +32,12 @@ import org.slf4j.LoggerFactory;
 public class UserSessionMB extends AbstractManagedBean implements Serializable {
 
     @EJB
-    private OperatorUserFacadeLocal operatorUserService;
+    private OperatorUserFacadeLocal OperatoruserService;
     @EJB
     private MenuServiceLocal menuService;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionMB.class);
-    private OperatorUser user;
-    private OperatorUser authenticatedUser;
+    private Operatoruser user;
+    private Operatoruser authenticatedUser;
     private MenuModel userMainMenuModel;
     private MenuModel userReportMenuModel;
     private List<Menu> userAccessedMenu;
@@ -47,12 +47,12 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
 
     @PostConstruct
     private void initialize() {
-        user = new OperatorUser();
+        user = new Operatoruser();
     }
 
     public void userLogin() throws SQLException {
         if (!user.getUsername().isEmpty() && !user.getPassword().isEmpty()) {
-            authenticatedUser = operatorUserService.checkUser(user);
+            authenticatedUser = OperatoruserService.checkUser(user);
         } else {
             displayErrorMessageToUser("User Name and Password cannot be empty.");
         }
@@ -120,19 +120,19 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
     /**
      * getter setter
      */
-    public OperatorUser getUser() {
+    public Operatoruser getUser() {
         return user;
     }
 
-    public void setUser(OperatorUser user) {
+    public void setUser(Operatoruser user) {
         this.user = user;
     }
 
-    public OperatorUser getAuthenticatedUser() {
+    public Operatoruser getAuthenticatedUser() {
         return authenticatedUser;
     }
 
-    public void setAuthenticatedUser(OperatorUser authenticatedUser) {
+    public void setAuthenticatedUser(Operatoruser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
     }
 

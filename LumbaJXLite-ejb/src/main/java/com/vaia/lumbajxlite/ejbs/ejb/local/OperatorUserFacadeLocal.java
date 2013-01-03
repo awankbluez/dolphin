@@ -1,33 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaia.lumbajxlite.ejbs.ejb.local;
 
-import com.vaia.lumbajxlite.ejbs.entity.OperatorUser;
+import com.vaia.lumbajxlite.ejbs.entity.Operatoruser;
 import java.util.List;
 import javax.ejb.Local;
 
-/**
- *
- * @author MBS Development Team
- */
 @Local
-public interface OperatorUserFacadeLocal {
+public abstract interface OperatorUserFacadeLocal {
 
-    void create(OperatorUser operatorUser);
+    public abstract void create(Operatoruser paramOperatoruser);
 
-    void edit(OperatorUser operatorUser);
+    public abstract void edit(Operatoruser paramOperatoruser);
 
-    void remove(OperatorUser operatorUser);
+    public abstract void remove(Operatoruser paramOperatoruser);
 
-    OperatorUser find(Object id);
+    public abstract Operatoruser find(Object paramObject);
 
-    List<OperatorUser> findAll();
+    public abstract List<Operatoruser> findAll();
 
-    List<OperatorUser> findRange(int[] range);
+    public abstract List<Operatoruser> findRange(int[] paramArrayOfInt);
 
-    int count();
+    public abstract int count();
 
-    OperatorUser checkUser(OperatorUser operatorUser);
+    public abstract Operatoruser checkUser(Operatoruser paramOperatoruser);
 }

@@ -44,6 +44,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loancategory.findByCreator", query = "SELECT l FROM Loancategory l WHERE l.creator = :creator"),
     @NamedQuery(name = "Loancategory.findByEditor", query = "SELECT l FROM Loancategory l WHERE l.editor = :editor")})
 public class LoanCategory implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -198,5 +199,4 @@ public class LoanCategory implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Loancategory[ loancategoryid=" + loancategoryid + " ]";
     }
-
 }

@@ -1,7 +1,7 @@
 jQuery.noConflict();
 $ = jQuery;
 jQuery(document).ready(function(){
-	///// SHOW/HIDE USERDATA WHEN USERINFO IS CLICKED ///// 
+	
 	jQuery('.userinfo').click(function(){
 		if(!jQuery(this).hasClass('active')) {
 			jQuery('.userinfodrop').show();
