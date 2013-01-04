@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -12,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -21,30 +26,32 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Customermanagement.findAll", query = "SELECT c FROM Customermanagement c"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByCustomermanagementid", query = "SELECT c FROM Customermanagement c WHERE c.customermanagementid = :customermanagementid"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByManagementname", query = "SELECT c FROM Customermanagement c WHERE c.managementname = :managementname"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByShare", query = "SELECT c FROM Customermanagement c WHERE c.share = :share"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByDescription", query = "SELECT c FROM Customermanagement c WHERE c.description = :description"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByCreationdate", query = "SELECT c FROM Customermanagement c WHERE c.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByEditdate", query = "SELECT c FROM Customermanagement c WHERE c.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByCreator", query = "SELECT c FROM Customermanagement c WHERE c.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByEditor", query = "SELECT c FROM Customermanagement c WHERE c.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByGender", query = "SELECT c FROM Customermanagement c WHERE c.gender = :gender"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findBySocialsecuritynumber", query = "SELECT c FROM Customermanagement c WHERE c.socialsecuritynumber = :socialsecuritynumber"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByDrivinglicencenumber", query = "SELECT c FROM Customermanagement c WHERE c.drivinglicencenumber = :drivinglicencenumber"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByPassportnumber", query = "SELECT c FROM Customermanagement c WHERE c.passportnumber = :passportnumber"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByStatus", query = "SELECT c FROM Customermanagement c WHERE c.status = :status"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findBySessiondate", query = "SELECT c FROM Customermanagement c WHERE c.sessiondate = :sessiondate"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByLinkId", query = "SELECT c FROM Customermanagement c WHERE c.linkId = :linkId"),
-    @javax.persistence.NamedQuery(name = "Customermanagement.findByStatusData", query = "SELECT c FROM Customermanagement c WHERE c.statusData = :statusData")})
-public class Customermanagement
-        implements Serializable {
-
+    @NamedQuery(name = "Customermanagement.findAll", query = "SELECT c FROM Customermanagement c"),
+    @NamedQuery(name = "Customermanagement.findByCustomermanagementid", query = "SELECT c FROM Customermanagement c WHERE c.customermanagementid = :customermanagementid"),
+    @NamedQuery(name = "Customermanagement.findByManagementname", query = "SELECT c FROM Customermanagement c WHERE c.managementname = :managementname"),
+    @NamedQuery(name = "Customermanagement.findByShare", query = "SELECT c FROM Customermanagement c WHERE c.share = :share"),
+    @NamedQuery(name = "Customermanagement.findByDescription", query = "SELECT c FROM Customermanagement c WHERE c.description = :description"),
+    @NamedQuery(name = "Customermanagement.findByCreationdate", query = "SELECT c FROM Customermanagement c WHERE c.creationdate = :creationdate"),
+    @NamedQuery(name = "Customermanagement.findByEditdate", query = "SELECT c FROM Customermanagement c WHERE c.editdate = :editdate"),
+    @NamedQuery(name = "Customermanagement.findByCreator", query = "SELECT c FROM Customermanagement c WHERE c.creator = :creator"),
+    @NamedQuery(name = "Customermanagement.findByEditor", query = "SELECT c FROM Customermanagement c WHERE c.editor = :editor"),
+    @NamedQuery(name = "Customermanagement.findByGender", query = "SELECT c FROM Customermanagement c WHERE c.gender = :gender"),
+    @NamedQuery(name = "Customermanagement.findBySocialsecuritynumber", query = "SELECT c FROM Customermanagement c WHERE c.socialsecuritynumber = :socialsecuritynumber"),
+    @NamedQuery(name = "Customermanagement.findByDrivinglicencenumber", query = "SELECT c FROM Customermanagement c WHERE c.drivinglicencenumber = :drivinglicencenumber"),
+    @NamedQuery(name = "Customermanagement.findByPassportnumber", query = "SELECT c FROM Customermanagement c WHERE c.passportnumber = :passportnumber"),
+    @NamedQuery(name = "Customermanagement.findByStatus", query = "SELECT c FROM Customermanagement c WHERE c.status = :status"),
+    @NamedQuery(name = "Customermanagement.findBySessiondate", query = "SELECT c FROM Customermanagement c WHERE c.sessiondate = :sessiondate"),
+    @NamedQuery(name = "Customermanagement.findByLinkId", query = "SELECT c FROM Customermanagement c WHERE c.linkId = :linkId"),
+    @NamedQuery(name = "Customermanagement.findByStatusData", query = "SELECT c FROM Customermanagement c WHERE c.statusData = :statusData")})
+public class Customermanagement implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +61,7 @@ public class Customermanagement
     @Size(max = 100)
     @Column(length = 100)
     private String managementname;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(precision = 17, scale = 17)
     private Double share;
     @Size(max = 200)
@@ -110,7 +118,7 @@ public class Customermanagement
     }
 
     public Integer getCustomermanagementid() {
-        return this.customermanagementid;
+        return customermanagementid;
     }
 
     public void setCustomermanagementid(Integer customermanagementid) {
@@ -118,7 +126,7 @@ public class Customermanagement
     }
 
     public String getManagementname() {
-        return this.managementname;
+        return managementname;
     }
 
     public void setManagementname(String managementname) {
@@ -126,7 +134,7 @@ public class Customermanagement
     }
 
     public Double getShare() {
-        return this.share;
+        return share;
     }
 
     public void setShare(Double share) {
@@ -134,7 +142,7 @@ public class Customermanagement
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     public void setDescription(String description) {
@@ -142,7 +150,7 @@ public class Customermanagement
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -150,7 +158,7 @@ public class Customermanagement
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -158,7 +166,7 @@ public class Customermanagement
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -166,7 +174,7 @@ public class Customermanagement
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -174,7 +182,7 @@ public class Customermanagement
     }
 
     public Character getGender() {
-        return this.gender;
+        return gender;
     }
 
     public void setGender(Character gender) {
@@ -182,7 +190,7 @@ public class Customermanagement
     }
 
     public String getSocialsecuritynumber() {
-        return this.socialsecuritynumber;
+        return socialsecuritynumber;
     }
 
     public void setSocialsecuritynumber(String socialsecuritynumber) {
@@ -190,7 +198,7 @@ public class Customermanagement
     }
 
     public String getDrivinglicencenumber() {
-        return this.drivinglicencenumber;
+        return drivinglicencenumber;
     }
 
     public void setDrivinglicencenumber(String drivinglicencenumber) {
@@ -198,7 +206,7 @@ public class Customermanagement
     }
 
     public String getPassportnumber() {
-        return this.passportnumber;
+        return passportnumber;
     }
 
     public void setPassportnumber(String passportnumber) {
@@ -206,7 +214,7 @@ public class Customermanagement
     }
 
     public Boolean getStatus() {
-        return this.status;
+        return status;
     }
 
     public void setStatus(Boolean status) {
@@ -214,7 +222,7 @@ public class Customermanagement
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -222,7 +230,7 @@ public class Customermanagement
     }
 
     public Integer getLinkId() {
-        return this.linkId;
+        return linkId;
     }
 
     public void setLinkId(Integer linkId) {
@@ -230,7 +238,7 @@ public class Customermanagement
     }
 
     public Character getStatusData() {
-        return this.statusData;
+        return statusData;
     }
 
     public void setStatusData(Character statusData) {
@@ -238,7 +246,7 @@ public class Customermanagement
     }
 
     public Parameter getPosition() {
-        return this.position;
+        return position;
     }
 
     public void setPosition(Parameter position) {
@@ -246,7 +254,7 @@ public class Customermanagement
     }
 
     public Customer getCustomerid() {
-        return this.customerid;
+        return customerid;
     }
 
     public void setCustomerid(Customer customerid) {
@@ -255,31 +263,36 @@ public class Customermanagement
 
     @XmlTransient
     public List<Address> getAddressList() {
-        return this.addressList;
+        return addressList;
     }
 
     public void setAddressList(List<Address> addressList) {
         this.addressList = addressList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.customermanagementid != null ? this.customermanagementid.hashCode() : 0);
+        hash += (customermanagementid != null ? customermanagementid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Customermanagement)) {
             return false;
         }
         Customermanagement other = (Customermanagement) object;
-        if (((this.customermanagementid == null) && (other.customermanagementid != null)) || ((this.customermanagementid != null) && (!this.customermanagementid.equals(other.customermanagementid)))) {
+        if ((this.customermanagementid == null && other.customermanagementid != null) || (this.customermanagementid != null && !this.customermanagementid.equals(other.customermanagementid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Customermanagement[ customermanagementid=" + this.customermanagementid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Customermanagement[ customermanagementid=" + customermanagementid + " ]";
     }
+
 }

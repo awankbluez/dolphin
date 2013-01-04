@@ -1,9 +1,14 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,32 +17,36 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"provincename"}),
-    @javax.persistence.UniqueConstraint(columnNames = {"provincecode"})})
+    @UniqueConstraint(columnNames = {"provincename"}),
+    @UniqueConstraint(columnNames = {"provincecode"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Province.findAll", query = "SELECT p FROM Province p"),
-    @javax.persistence.NamedQuery(name = "Province.findByProvinceid", query = "SELECT p FROM Province p WHERE p.provinceid = :provinceid"),
-    @javax.persistence.NamedQuery(name = "Province.findByProvincecode", query = "SELECT p FROM Province p WHERE p.provincecode = :provincecode"),
-    @javax.persistence.NamedQuery(name = "Province.findByProvincename", query = "SELECT p FROM Province p WHERE p.provincename = :provincename"),
-    @javax.persistence.NamedQuery(name = "Province.findByCreationdate", query = "SELECT p FROM Province p WHERE p.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Province.findByEditdate", query = "SELECT p FROM Province p WHERE p.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Province.findByCreator", query = "SELECT p FROM Province p WHERE p.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Province.findByEditor", query = "SELECT p FROM Province p WHERE p.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Province.findBySessiondate", query = "SELECT p FROM Province p WHERE p.sessiondate = :sessiondate")})
-public class Province
-        implements Serializable {
-
+    @NamedQuery(name = "Province.findAll", query = "SELECT p FROM Province p"),
+    @NamedQuery(name = "Province.findByProvinceid", query = "SELECT p FROM Province p WHERE p.provinceid = :provinceid"),
+    @NamedQuery(name = "Province.findByProvincecode", query = "SELECT p FROM Province p WHERE p.provincecode = :provincecode"),
+    @NamedQuery(name = "Province.findByProvincename", query = "SELECT p FROM Province p WHERE p.provincename = :provincename"),
+    @NamedQuery(name = "Province.findByCreationdate", query = "SELECT p FROM Province p WHERE p.creationdate = :creationdate"),
+    @NamedQuery(name = "Province.findByEditdate", query = "SELECT p FROM Province p WHERE p.editdate = :editdate"),
+    @NamedQuery(name = "Province.findByCreator", query = "SELECT p FROM Province p WHERE p.creator = :creator"),
+    @NamedQuery(name = "Province.findByEditor", query = "SELECT p FROM Province p WHERE p.editor = :editor"),
+    @NamedQuery(name = "Province.findBySessiondate", query = "SELECT p FROM Province p WHERE p.sessiondate = :sessiondate")})
+public class Province implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +74,7 @@ public class Province
     @JoinColumn(name = "countryid", referencedColumnName = "countryid")
     @ManyToOne
     private Country countryid;
-    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "provinceid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "provinceid")
     private List<District> districtList;
 
     public Province() {
@@ -76,7 +85,7 @@ public class Province
     }
 
     public Integer getProvinceid() {
-        return this.provinceid;
+        return provinceid;
     }
 
     public void setProvinceid(Integer provinceid) {
@@ -84,7 +93,7 @@ public class Province
     }
 
     public String getProvincecode() {
-        return this.provincecode;
+        return provincecode;
     }
 
     public void setProvincecode(String provincecode) {
@@ -92,7 +101,7 @@ public class Province
     }
 
     public String getProvincename() {
-        return this.provincename;
+        return provincename;
     }
 
     public void setProvincename(String provincename) {
@@ -100,7 +109,7 @@ public class Province
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -108,7 +117,7 @@ public class Province
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -116,7 +125,7 @@ public class Province
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -124,7 +133,7 @@ public class Province
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -132,7 +141,7 @@ public class Province
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -140,7 +149,7 @@ public class Province
     }
 
     public Country getCountryid() {
-        return this.countryid;
+        return countryid;
     }
 
     public void setCountryid(Country countryid) {
@@ -149,31 +158,36 @@ public class Province
 
     @XmlTransient
     public List<District> getDistrictList() {
-        return this.districtList;
+        return districtList;
     }
 
     public void setDistrictList(List<District> districtList) {
         this.districtList = districtList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.provinceid != null ? this.provinceid.hashCode() : 0);
+        hash += (provinceid != null ? provinceid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Province)) {
             return false;
         }
         Province other = (Province) object;
-        if (((this.provinceid == null) && (other.provinceid != null)) || ((this.provinceid != null) && (!this.provinceid.equals(other.provinceid)))) {
+        if ((this.provinceid == null && other.provinceid != null) || (this.provinceid != null && !this.provinceid.equals(other.provinceid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Province[ provinceid=" + this.provinceid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Province[ provinceid=" + provinceid + " ]";
     }
+
 }

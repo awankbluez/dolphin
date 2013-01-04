@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -12,32 +16,36 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"villagecode"})})
+    @UniqueConstraint(columnNames = {"villagecode"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Village.findAll", query = "SELECT v FROM Village v"),
-    @javax.persistence.NamedQuery(name = "Village.findByVillageid", query = "SELECT v FROM Village v WHERE v.villageid = :villageid"),
-    @javax.persistence.NamedQuery(name = "Village.findByVillagecode", query = "SELECT v FROM Village v WHERE v.villagecode = :villagecode"),
-    @javax.persistence.NamedQuery(name = "Village.findByVillagename", query = "SELECT v FROM Village v WHERE v.villagename = :villagename"),
-    @javax.persistence.NamedQuery(name = "Village.findByCreationdate", query = "SELECT v FROM Village v WHERE v.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Village.findByEditdate", query = "SELECT v FROM Village v WHERE v.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Village.findByCreator", query = "SELECT v FROM Village v WHERE v.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Village.findByEditor", query = "SELECT v FROM Village v WHERE v.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Village.findBySessiondate", query = "SELECT v FROM Village v WHERE v.sessiondate = :sessiondate")})
-public class Village
-        implements Serializable {
-
+    @NamedQuery(name = "Village.findAll", query = "SELECT v FROM Village v"),
+    @NamedQuery(name = "Village.findByVillageid", query = "SELECT v FROM Village v WHERE v.villageid = :villageid"),
+    @NamedQuery(name = "Village.findByVillagecode", query = "SELECT v FROM Village v WHERE v.villagecode = :villagecode"),
+    @NamedQuery(name = "Village.findByVillagename", query = "SELECT v FROM Village v WHERE v.villagename = :villagename"),
+    @NamedQuery(name = "Village.findByCreationdate", query = "SELECT v FROM Village v WHERE v.creationdate = :creationdate"),
+    @NamedQuery(name = "Village.findByEditdate", query = "SELECT v FROM Village v WHERE v.editdate = :editdate"),
+    @NamedQuery(name = "Village.findByCreator", query = "SELECT v FROM Village v WHERE v.creator = :creator"),
+    @NamedQuery(name = "Village.findByEditor", query = "SELECT v FROM Village v WHERE v.editor = :editor"),
+    @NamedQuery(name = "Village.findBySessiondate", query = "SELECT v FROM Village v WHERE v.sessiondate = :sessiondate")})
+public class Village implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,7 +96,7 @@ public class Village
     }
 
     public Integer getVillageid() {
-        return this.villageid;
+        return villageid;
     }
 
     public void setVillageid(Integer villageid) {
@@ -96,7 +104,7 @@ public class Village
     }
 
     public String getVillagecode() {
-        return this.villagecode;
+        return villagecode;
     }
 
     public void setVillagecode(String villagecode) {
@@ -104,7 +112,7 @@ public class Village
     }
 
     public String getVillagename() {
-        return this.villagename;
+        return villagename;
     }
 
     public void setVillagename(String villagename) {
@@ -112,7 +120,7 @@ public class Village
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -120,7 +128,7 @@ public class Village
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -128,7 +136,7 @@ public class Village
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -136,7 +144,7 @@ public class Village
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -144,7 +152,7 @@ public class Village
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -152,7 +160,7 @@ public class Village
     }
 
     public Subdistrict getSubdistrictid() {
-        return this.subdistrictid;
+        return subdistrictid;
     }
 
     public void setSubdistrictid(Subdistrict subdistrictid) {
@@ -161,7 +169,7 @@ public class Village
 
     @XmlTransient
     public List<Masteroperational> getMasteroperationalList() {
-        return this.masteroperationalList;
+        return masteroperationalList;
     }
 
     public void setMasteroperationalList(List<Masteroperational> masteroperationalList) {
@@ -170,31 +178,36 @@ public class Village
 
     @XmlTransient
     public List<Address> getAddressList() {
-        return this.addressList;
+        return addressList;
     }
 
     public void setAddressList(List<Address> addressList) {
         this.addressList = addressList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.villageid != null ? this.villageid.hashCode() : 0);
+        hash += (villageid != null ? villageid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Village)) {
             return false;
         }
         Village other = (Village) object;
-        if (((this.villageid == null) && (other.villageid != null)) || ((this.villageid != null) && (!this.villageid.equals(other.villageid)))) {
+        if ((this.villageid == null && other.villageid != null) || (this.villageid != null && !this.villageid.equals(other.villageid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Village[ villageid=" + this.villageid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Village[ villageid=" + villageid + " ]";
     }
+
 }

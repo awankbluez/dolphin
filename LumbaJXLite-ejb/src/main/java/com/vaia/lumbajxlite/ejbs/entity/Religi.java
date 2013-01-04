@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -10,30 +14,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"religi"})})
+    @UniqueConstraint(columnNames = {"religi"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Religi.findAll", query = "SELECT r FROM Religi r"),
-    @javax.persistence.NamedQuery(name = "Religi.findByReligiid", query = "SELECT r FROM Religi r WHERE r.religiid = :religiid"),
-    @javax.persistence.NamedQuery(name = "Religi.findByReligi", query = "SELECT r FROM Religi r WHERE r.religi = :religi"),
-    @javax.persistence.NamedQuery(name = "Religi.findByCreationdate", query = "SELECT r FROM Religi r WHERE r.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Religi.findByEditdate", query = "SELECT r FROM Religi r WHERE r.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Religi.findByCreator", query = "SELECT r FROM Religi r WHERE r.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Religi.findByEditor", query = "SELECT r FROM Religi r WHERE r.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Religi.findBySessiondate", query = "SELECT r FROM Religi r WHERE r.sessiondate = :sessiondate")})
-public class Religi
-        implements Serializable {
-
+    @NamedQuery(name = "Religi.findAll", query = "SELECT r FROM Religi r"),
+    @NamedQuery(name = "Religi.findByReligiid", query = "SELECT r FROM Religi r WHERE r.religiid = :religiid"),
+    @NamedQuery(name = "Religi.findByReligi", query = "SELECT r FROM Religi r WHERE r.religi = :religi"),
+    @NamedQuery(name = "Religi.findByCreationdate", query = "SELECT r FROM Religi r WHERE r.creationdate = :creationdate"),
+    @NamedQuery(name = "Religi.findByEditdate", query = "SELECT r FROM Religi r WHERE r.editdate = :editdate"),
+    @NamedQuery(name = "Religi.findByCreator", query = "SELECT r FROM Religi r WHERE r.creator = :creator"),
+    @NamedQuery(name = "Religi.findByEditor", query = "SELECT r FROM Religi r WHERE r.editor = :editor"),
+    @NamedQuery(name = "Religi.findBySessiondate", query = "SELECT r FROM Religi r WHERE r.sessiondate = :sessiondate")})
+public class Religi implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,7 +74,7 @@ public class Religi
     }
 
     public Integer getReligiid() {
-        return this.religiid;
+        return religiid;
     }
 
     public void setReligiid(Integer religiid) {
@@ -74,7 +82,7 @@ public class Religi
     }
 
     public String getReligi() {
-        return this.religi;
+        return religi;
     }
 
     public void setReligi(String religi) {
@@ -82,7 +90,7 @@ public class Religi
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -90,7 +98,7 @@ public class Religi
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -98,7 +106,7 @@ public class Religi
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -106,7 +114,7 @@ public class Religi
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -114,7 +122,7 @@ public class Religi
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -123,31 +131,36 @@ public class Religi
 
     @XmlTransient
     public List<Person> getPersonList() {
-        return this.personList;
+        return personList;
     }
 
     public void setPersonList(List<Person> personList) {
         this.personList = personList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.religiid != null ? this.religiid.hashCode() : 0);
+        hash += (religiid != null ? religiid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Religi)) {
             return false;
         }
         Religi other = (Religi) object;
-        if (((this.religiid == null) && (other.religiid != null)) || ((this.religiid != null) && (!this.religiid.equals(other.religiid)))) {
+        if ((this.religiid == null && other.religiid != null) || (this.religiid != null && !this.religiid.equals(other.religiid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Religi[ religiid=" + this.religiid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Religi[ religiid=" + religiid + " ]";
     }
+
 }

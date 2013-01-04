@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
@@ -55,7 +55,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Account.findByInterestamount", query = "SELECT a FROM Account a WHERE a.interestamount = :interestamount"),
     @NamedQuery(name = "Account.findByDifferentBalanceDate", query = "SELECT a FROM Account a WHERE a.differentBalanceDate = :differentBalanceDate")})
 public class Account implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -111,13 +110,13 @@ public class Account implements Serializable {
     private Saving savingid;
     @JoinColumn(name = "routinglogid", referencedColumnName = "routinglogid")
     @ManyToOne
-    private RoutingLog routinglogid;
+    private Routinglog routinglogid;
     @JoinColumn(name = "masteroperationalid", referencedColumnName = "masteroperationalid")
     @ManyToOne
     private Masteroperational masteroperationalid;
     @JoinColumn(name = "loanapplicationid", referencedColumnName = "loanapplicationid")
     @ManyToOne
-    private LoanApplication loanapplicationid;
+    private Loanapplication loanapplicationid;
     @JoinColumn(name = "loanid", referencedColumnName = "loanid")
     @ManyToOne
     private Loan loanid;
@@ -322,11 +321,11 @@ public class Account implements Serializable {
         this.savingid = savingid;
     }
 
-    public RoutingLog getRoutinglogid() {
+    public Routinglog getRoutinglogid() {
         return routinglogid;
     }
 
-    public void setRoutinglogid(RoutingLog routinglogid) {
+    public void setRoutinglogid(Routinglog routinglogid) {
         this.routinglogid = routinglogid;
     }
 
@@ -338,11 +337,11 @@ public class Account implements Serializable {
         this.masteroperationalid = masteroperationalid;
     }
 
-    public LoanApplication getLoanapplicationid() {
+    public Loanapplication getLoanapplicationid() {
         return loanapplicationid;
     }
 
-    public void setLoanapplicationid(LoanApplication loanapplicationid) {
+    public void setLoanapplicationid(Loanapplication loanapplicationid) {
         this.loanapplicationid = loanapplicationid;
     }
 
@@ -386,4 +385,5 @@ public class Account implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Account[ accountid=" + accountid + " ]";
     }
+
 }

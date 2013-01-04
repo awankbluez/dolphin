@@ -102,6 +102,7 @@
 
                 <h:panelGrid id="gridCreateCif" rendered="#{cifBean.selectedCustomer.customertype != null}" style="width: 100%;">
                     <p:tabView id="tabCreateCif">
+                        <!--Individual and Community-->
                         <p:tab title="Data Perorangan" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV or cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMM}">
                             <p:panelGrid styleClass="hideBorderPanelGrid">
                                 <p:row>
@@ -212,6 +213,7 @@
                             </p:panelGrid>
                         </p:tab>
 
+                        <!--Indivudual and Company-->
                         <p:tab title="Alamat Nasabah" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV or cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMP}">
                             <p:panelGrid styleClass="hideBorderPanelGrid">
                                 <p:row>
@@ -324,6 +326,7 @@
                             </p:panelGrid>
                         </p:tab>
 
+                        <!--Individual and Company-->
                         <p:tab title="Analisa" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV or cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMP}">
                             <p:panel header="Data Terkait">
                                 <h:panelGrid columns="4">
@@ -378,6 +381,7 @@
 
                     <p:spacer height="10"/>
 
+                    <!--individual-->
                     <p:panel header="Foto dan Tanda Tangan" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV}">
                         <p:fileUpload/>
                         <p:fileUpload/>

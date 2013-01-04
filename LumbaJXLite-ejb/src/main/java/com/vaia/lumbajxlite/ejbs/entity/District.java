@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -12,33 +16,37 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"districtcode"})})
+    @UniqueConstraint(columnNames = {"districtcode"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "District.findAll", query = "SELECT d FROM District d"),
-    @javax.persistence.NamedQuery(name = "District.findByDistrictid", query = "SELECT d FROM District d WHERE d.districtid = :districtid"),
-    @javax.persistence.NamedQuery(name = "District.findByDistrictcode", query = "SELECT d FROM District d WHERE d.districtcode = :districtcode"),
-    @javax.persistence.NamedQuery(name = "District.findByDistrictname", query = "SELECT d FROM District d WHERE d.districtname = :districtname"),
-    @javax.persistence.NamedQuery(name = "District.findByCreationdate", query = "SELECT d FROM District d WHERE d.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "District.findByEditdate", query = "SELECT d FROM District d WHERE d.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "District.findByCreator", query = "SELECT d FROM District d WHERE d.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "District.findByEditor", query = "SELECT d FROM District d WHERE d.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "District.findBySandi", query = "SELECT d FROM District d WHERE d.sandi = :sandi"),
-    @javax.persistence.NamedQuery(name = "District.findBySessiondate", query = "SELECT d FROM District d WHERE d.sessiondate = :sessiondate")})
-public class District
-        implements Serializable {
-
+    @NamedQuery(name = "District.findAll", query = "SELECT d FROM District d"),
+    @NamedQuery(name = "District.findByDistrictid", query = "SELECT d FROM District d WHERE d.districtid = :districtid"),
+    @NamedQuery(name = "District.findByDistrictcode", query = "SELECT d FROM District d WHERE d.districtcode = :districtcode"),
+    @NamedQuery(name = "District.findByDistrictname", query = "SELECT d FROM District d WHERE d.districtname = :districtname"),
+    @NamedQuery(name = "District.findByCreationdate", query = "SELECT d FROM District d WHERE d.creationdate = :creationdate"),
+    @NamedQuery(name = "District.findByEditdate", query = "SELECT d FROM District d WHERE d.editdate = :editdate"),
+    @NamedQuery(name = "District.findByCreator", query = "SELECT d FROM District d WHERE d.creator = :creator"),
+    @NamedQuery(name = "District.findByEditor", query = "SELECT d FROM District d WHERE d.editor = :editor"),
+    @NamedQuery(name = "District.findBySandi", query = "SELECT d FROM District d WHERE d.sandi = :sandi"),
+    @NamedQuery(name = "District.findBySessiondate", query = "SELECT d FROM District d WHERE d.sessiondate = :sessiondate")})
+public class District implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,7 +98,7 @@ public class District
     }
 
     public Integer getDistrictid() {
-        return this.districtid;
+        return districtid;
     }
 
     public void setDistrictid(Integer districtid) {
@@ -98,7 +106,7 @@ public class District
     }
 
     public String getDistrictcode() {
-        return this.districtcode;
+        return districtcode;
     }
 
     public void setDistrictcode(String districtcode) {
@@ -106,7 +114,7 @@ public class District
     }
 
     public String getDistrictname() {
-        return this.districtname;
+        return districtname;
     }
 
     public void setDistrictname(String districtname) {
@@ -114,7 +122,7 @@ public class District
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -122,7 +130,7 @@ public class District
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -130,7 +138,7 @@ public class District
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -138,7 +146,7 @@ public class District
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -146,7 +154,7 @@ public class District
     }
 
     public String getSandi() {
-        return this.sandi;
+        return sandi;
     }
 
     public void setSandi(String sandi) {
@@ -154,7 +162,7 @@ public class District
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -162,7 +170,7 @@ public class District
     }
 
     public Province getProvinceid() {
-        return this.provinceid;
+        return provinceid;
     }
 
     public void setProvinceid(Province provinceid) {
@@ -171,31 +179,36 @@ public class District
 
     @XmlTransient
     public List<Subdistrict> getSubdistrictList() {
-        return this.subdistrictList;
+        return subdistrictList;
     }
 
     public void setSubdistrictList(List<Subdistrict> subdistrictList) {
         this.subdistrictList = subdistrictList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.districtid != null ? this.districtid.hashCode() : 0);
+        hash += (districtid != null ? districtid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof District)) {
             return false;
         }
         District other = (District) object;
-        if (((this.districtid == null) && (other.districtid != null)) || ((this.districtid != null) && (!this.districtid.equals(other.districtid)))) {
+        if ((this.districtid == null && other.districtid != null) || (this.districtid != null && !this.districtid.equals(other.districtid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.District[ districtid=" + this.districtid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.District[ districtid=" + districtid + " ]";
     }
+
 }

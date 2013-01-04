@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -10,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,21 +23,23 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Organization.findAll", query = "SELECT o FROM Organization o"),
-    @javax.persistence.NamedQuery(name = "Organization.findByOrganizationid", query = "SELECT o FROM Organization o WHERE o.organizationid = :organizationid"),
-    @javax.persistence.NamedQuery(name = "Organization.findByOrganizationname", query = "SELECT o FROM Organization o WHERE o.organizationname = :organizationname"),
-    @javax.persistence.NamedQuery(name = "Organization.findByCreationdate", query = "SELECT o FROM Organization o WHERE o.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Organization.findByEditdate", query = "SELECT o FROM Organization o WHERE o.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Organization.findByCreator", query = "SELECT o FROM Organization o WHERE o.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Organization.findByEditor", query = "SELECT o FROM Organization o WHERE o.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Organization.findBySessiondate", query = "SELECT o FROM Organization o WHERE o.sessiondate = :sessiondate")})
-public class Organization
-        implements Serializable {
-
+    @NamedQuery(name = "Organization.findAll", query = "SELECT o FROM Organization o"),
+    @NamedQuery(name = "Organization.findByOrganizationid", query = "SELECT o FROM Organization o WHERE o.organizationid = :organizationid"),
+    @NamedQuery(name = "Organization.findByOrganizationname", query = "SELECT o FROM Organization o WHERE o.organizationname = :organizationname"),
+    @NamedQuery(name = "Organization.findByCreationdate", query = "SELECT o FROM Organization o WHERE o.creationdate = :creationdate"),
+    @NamedQuery(name = "Organization.findByEditdate", query = "SELECT o FROM Organization o WHERE o.editdate = :editdate"),
+    @NamedQuery(name = "Organization.findByCreator", query = "SELECT o FROM Organization o WHERE o.creator = :creator"),
+    @NamedQuery(name = "Organization.findByEditor", query = "SELECT o FROM Organization o WHERE o.editor = :editor"),
+    @NamedQuery(name = "Organization.findBySessiondate", query = "SELECT o FROM Organization o WHERE o.sessiondate = :sessiondate")})
+public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +72,7 @@ public class Organization
     }
 
     public Integer getOrganizationid() {
-        return this.organizationid;
+        return organizationid;
     }
 
     public void setOrganizationid(Integer organizationid) {
@@ -73,7 +80,7 @@ public class Organization
     }
 
     public String getOrganizationname() {
-        return this.organizationname;
+        return organizationname;
     }
 
     public void setOrganizationname(String organizationname) {
@@ -81,7 +88,7 @@ public class Organization
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -89,7 +96,7 @@ public class Organization
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -97,7 +104,7 @@ public class Organization
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -105,7 +112,7 @@ public class Organization
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -113,7 +120,7 @@ public class Organization
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -122,31 +129,36 @@ public class Organization
 
     @XmlTransient
     public List<Customer> getCustomerList() {
-        return this.customerList;
+        return customerList;
     }
 
     public void setCustomerList(List<Customer> customerList) {
         this.customerList = customerList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.organizationid != null ? this.organizationid.hashCode() : 0);
+        hash += (organizationid != null ? organizationid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Organization)) {
             return false;
         }
         Organization other = (Organization) object;
-        if (((this.organizationid == null) && (other.organizationid != null)) || ((this.organizationid != null) && (!this.organizationid.equals(other.organizationid)))) {
+        if ((this.organizationid == null && other.organizationid != null) || (this.organizationid != null && !this.organizationid.equals(other.organizationid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Organization[ organizationid=" + this.organizationid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Organization[ organizationid=" + organizationid + " ]";
     }
+
 }

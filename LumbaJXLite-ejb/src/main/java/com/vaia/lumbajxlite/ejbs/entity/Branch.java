@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -12,37 +16,41 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"branchcode"}),
-    @javax.persistence.UniqueConstraint(columnNames = {"branchname"})})
+    @UniqueConstraint(columnNames = {"branchcode"}),
+    @UniqueConstraint(columnNames = {"branchname"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Branch.findAll", query = "SELECT b FROM Branch b"),
-    @javax.persistence.NamedQuery(name = "Branch.findByBranchid", query = "SELECT b FROM Branch b WHERE b.branchid = :branchid"),
-    @javax.persistence.NamedQuery(name = "Branch.findByBranchcode", query = "SELECT b FROM Branch b WHERE b.branchcode = :branchcode"),
-    @javax.persistence.NamedQuery(name = "Branch.findByBranchname", query = "SELECT b FROM Branch b WHERE b.branchname = :branchname"),
-    @javax.persistence.NamedQuery(name = "Branch.findByBranchstatus", query = "SELECT b FROM Branch b WHERE b.branchstatus = :branchstatus"),
-    @javax.persistence.NamedQuery(name = "Branch.findByCreator", query = "SELECT b FROM Branch b WHERE b.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Branch.findByEditor", query = "SELECT b FROM Branch b WHERE b.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Branch.findByCreationdate", query = "SELECT b FROM Branch b WHERE b.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Branch.findByEditdate", query = "SELECT b FROM Branch b WHERE b.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Branch.findByBranchvaultaccount", query = "SELECT b FROM Branch b WHERE b.branchvaultaccount = :branchvaultaccount"),
-    @javax.persistence.NamedQuery(name = "Branch.findByInterbranchaccount", query = "SELECT b FROM Branch b WHERE b.interbranchaccount = :interbranchaccount"),
-    @javax.persistence.NamedQuery(name = "Branch.findByBranchbankaccount", query = "SELECT b FROM Branch b WHERE b.branchbankaccount = :branchbankaccount"),
-    @javax.persistence.NamedQuery(name = "Branch.findBySessiondate", query = "SELECT b FROM Branch b WHERE b.sessiondate = :sessiondate")})
-public class Branch
-        implements Serializable {
-
+    @NamedQuery(name = "Branch.findAll", query = "SELECT b FROM Branch b"),
+    @NamedQuery(name = "Branch.findByBranchid", query = "SELECT b FROM Branch b WHERE b.branchid = :branchid"),
+    @NamedQuery(name = "Branch.findByBranchcode", query = "SELECT b FROM Branch b WHERE b.branchcode = :branchcode"),
+    @NamedQuery(name = "Branch.findByBranchname", query = "SELECT b FROM Branch b WHERE b.branchname = :branchname"),
+    @NamedQuery(name = "Branch.findByBranchstatus", query = "SELECT b FROM Branch b WHERE b.branchstatus = :branchstatus"),
+    @NamedQuery(name = "Branch.findByCreator", query = "SELECT b FROM Branch b WHERE b.creator = :creator"),
+    @NamedQuery(name = "Branch.findByEditor", query = "SELECT b FROM Branch b WHERE b.editor = :editor"),
+    @NamedQuery(name = "Branch.findByCreationdate", query = "SELECT b FROM Branch b WHERE b.creationdate = :creationdate"),
+    @NamedQuery(name = "Branch.findByEditdate", query = "SELECT b FROM Branch b WHERE b.editdate = :editdate"),
+    @NamedQuery(name = "Branch.findByBranchvaultaccount", query = "SELECT b FROM Branch b WHERE b.branchvaultaccount = :branchvaultaccount"),
+    @NamedQuery(name = "Branch.findByInterbranchaccount", query = "SELECT b FROM Branch b WHERE b.interbranchaccount = :interbranchaccount"),
+    @NamedQuery(name = "Branch.findByBranchbankaccount", query = "SELECT b FROM Branch b WHERE b.branchbankaccount = :branchbankaccount"),
+    @NamedQuery(name = "Branch.findBySessiondate", query = "SELECT b FROM Branch b WHERE b.sessiondate = :sessiondate")})
+public class Branch implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,7 +109,7 @@ public class Branch
     }
 
     public Integer getBranchid() {
-        return this.branchid;
+        return branchid;
     }
 
     public void setBranchid(Integer branchid) {
@@ -109,7 +117,7 @@ public class Branch
     }
 
     public String getBranchcode() {
-        return this.branchcode;
+        return branchcode;
     }
 
     public void setBranchcode(String branchcode) {
@@ -117,7 +125,7 @@ public class Branch
     }
 
     public String getBranchname() {
-        return this.branchname;
+        return branchname;
     }
 
     public void setBranchname(String branchname) {
@@ -125,7 +133,7 @@ public class Branch
     }
 
     public boolean getBranchstatus() {
-        return this.branchstatus;
+        return branchstatus;
     }
 
     public void setBranchstatus(boolean branchstatus) {
@@ -133,7 +141,7 @@ public class Branch
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -141,7 +149,7 @@ public class Branch
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -149,7 +157,7 @@ public class Branch
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -157,7 +165,7 @@ public class Branch
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -165,7 +173,7 @@ public class Branch
     }
 
     public Integer getBranchvaultaccount() {
-        return this.branchvaultaccount;
+        return branchvaultaccount;
     }
 
     public void setBranchvaultaccount(Integer branchvaultaccount) {
@@ -173,7 +181,7 @@ public class Branch
     }
 
     public Integer getInterbranchaccount() {
-        return this.interbranchaccount;
+        return interbranchaccount;
     }
 
     public void setInterbranchaccount(Integer interbranchaccount) {
@@ -181,7 +189,7 @@ public class Branch
     }
 
     public Integer getBranchbankaccount() {
-        return this.branchbankaccount;
+        return branchbankaccount;
     }
 
     public void setBranchbankaccount(Integer branchbankaccount) {
@@ -189,7 +197,7 @@ public class Branch
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -198,7 +206,7 @@ public class Branch
 
     @XmlTransient
     public List<Masteroperational> getMasteroperationalList() {
-        return this.masteroperationalList;
+        return masteroperationalList;
     }
 
     public void setMasteroperationalList(List<Masteroperational> masteroperationalList) {
@@ -207,7 +215,7 @@ public class Branch
 
     @XmlTransient
     public List<Subbranchunitco> getSubbranchunitcoList() {
-        return this.subbranchunitcoList;
+        return subbranchunitcoList;
     }
 
     public void setSubbranchunitcoList(List<Subbranchunitco> subbranchunitcoList) {
@@ -215,31 +223,36 @@ public class Branch
     }
 
     public Region getRegionid() {
-        return this.regionid;
+        return regionid;
     }
 
     public void setRegionid(Region regionid) {
         this.regionid = regionid;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.branchid != null ? this.branchid.hashCode() : 0);
+        hash += (branchid != null ? branchid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Branch)) {
             return false;
         }
         Branch other = (Branch) object;
-        if (((this.branchid == null) && (other.branchid != null)) || ((this.branchid != null) && (!this.branchid.equals(other.branchid)))) {
+        if ((this.branchid == null && other.branchid != null) || (this.branchid != null && !this.branchid.equals(other.branchid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Branch[ branchid=" + this.branchid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Branch[ branchid=" + branchid + " ]";
     }
+
 }

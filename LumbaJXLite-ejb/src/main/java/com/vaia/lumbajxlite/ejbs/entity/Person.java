@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -12,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -21,47 +26,50 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
-    @javax.persistence.NamedQuery(name = "Person.findByPersonid", query = "SELECT p FROM Person p WHERE p.personid = :personid"),
-    @javax.persistence.NamedQuery(name = "Person.findByPlaceofbirth", query = "SELECT p FROM Person p WHERE p.placeofbirth = :placeofbirth"),
-    @javax.persistence.NamedQuery(name = "Person.findByDateofbirth", query = "SELECT p FROM Person p WHERE p.dateofbirth = :dateofbirth"),
-    @javax.persistence.NamedQuery(name = "Person.findByBirthcertificatenumber", query = "SELECT p FROM Person p WHERE p.birthcertificatenumber = :birthcertificatenumber"),
-    @javax.persistence.NamedQuery(name = "Person.findByBirthcertificatedate", query = "SELECT p FROM Person p WHERE p.birthcertificatedate = :birthcertificatedate"),
-    @javax.persistence.NamedQuery(name = "Person.findByMaritalstatus", query = "SELECT p FROM Person p WHERE p.maritalstatus = :maritalstatus"),
-    @javax.persistence.NamedQuery(name = "Person.findBySocialsecuritynumber", query = "SELECT p FROM Person p WHERE p.socialsecuritynumber = :socialsecuritynumber"),
-    @javax.persistence.NamedQuery(name = "Person.findByStartdate", query = "SELECT p FROM Person p WHERE p.startdate = :startdate"),
-    @javax.persistence.NamedQuery(name = "Person.findByEnddate", query = "SELECT p FROM Person p WHERE p.enddate = :enddate"),
-    @javax.persistence.NamedQuery(name = "Person.findByDrivinglicencenumber", query = "SELECT p FROM Person p WHERE p.drivinglicencenumber = :drivinglicencenumber"),
-    @javax.persistence.NamedQuery(name = "Person.findByNpwp", query = "SELECT p FROM Person p WHERE p.npwp = :npwp"),
-    @javax.persistence.NamedQuery(name = "Person.findByPassportnumber", query = "SELECT p FROM Person p WHERE p.passportnumber = :passportnumber"),
-    @javax.persistence.NamedQuery(name = "Person.findByPassportstartdate", query = "SELECT p FROM Person p WHERE p.passportstartdate = :passportstartdate"),
-    @javax.persistence.NamedQuery(name = "Person.findByPassportenddate", query = "SELECT p FROM Person p WHERE p.passportenddate = :passportenddate"),
-    @javax.persistence.NamedQuery(name = "Person.findByNumberofchildren", query = "SELECT p FROM Person p WHERE p.numberofchildren = :numberofchildren"),
-    @javax.persistence.NamedQuery(name = "Person.findByMothermaiden", query = "SELECT p FROM Person p WHERE p.mothermaiden = :mothermaiden"),
-    @javax.persistence.NamedQuery(name = "Person.findByLongsettled", query = "SELECT p FROM Person p WHERE p.longsettled = :longsettled"),
-    @javax.persistence.NamedQuery(name = "Person.findByPhonenumberfamilyarea", query = "SELECT p FROM Person p WHERE p.phonenumberfamilyarea = :phonenumberfamilyarea"),
-    @javax.persistence.NamedQuery(name = "Person.findByPhonenumberfamily", query = "SELECT p FROM Person p WHERE p.phonenumberfamily = :phonenumberfamily"),
-    @javax.persistence.NamedQuery(name = "Person.findByCreationdate", query = "SELECT p FROM Person p WHERE p.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Person.findByEditdate", query = "SELECT p FROM Person p WHERE p.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Person.findByOccupationname", query = "SELECT p FROM Person p WHERE p.occupationname = :occupationname"),
-    @javax.persistence.NamedQuery(name = "Person.findByLasteducation", query = "SELECT p FROM Person p WHERE p.lasteducation = :lasteducation"),
-    @javax.persistence.NamedQuery(name = "Person.findBySessiondate", query = "SELECT p FROM Person p WHERE p.sessiondate = :sessiondate"),
-    @javax.persistence.NamedQuery(name = "Person.findByStatusData", query = "SELECT p FROM Person p WHERE p.statusData = :statusData"),
-    @javax.persistence.NamedQuery(name = "Person.findByCreator", query = "SELECT p FROM Person p WHERE p.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Person.findByEditor", query = "SELECT p FROM Person p WHERE p.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Person.findByGender", query = "SELECT p FROM Person p WHERE p.gender = :gender"),
-    @javax.persistence.NamedQuery(name = "Person.findByBeginingcertificatenumber", query = "SELECT p FROM Person p WHERE p.beginingcertificatenumber = :beginingcertificatenumber"),
-    @javax.persistence.NamedQuery(name = "Person.findByBeginingcertificatedate", query = "SELECT p FROM Person p WHERE p.beginingcertificatedate = :beginingcertificatedate"),
-    @javax.persistence.NamedQuery(name = "Person.findByFinalcertificatenumber", query = "SELECT p FROM Person p WHERE p.finalcertificatenumber = :finalcertificatenumber"),
-    @javax.persistence.NamedQuery(name = "Person.findByFinalcertificatedate", query = "SELECT p FROM Person p WHERE p.finalcertificatedate = :finalcertificatedate"),
-    @javax.persistence.NamedQuery(name = "Person.findByTypeofbusiness", query = "SELECT p FROM Person p WHERE p.typeofbusiness = :typeofbusiness"),
-    @javax.persistence.NamedQuery(name = "Person.findByTdp", query = "SELECT p FROM Person p WHERE p.tdp = :tdp")})
-public class Person
-        implements Serializable {
+    @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
+    @NamedQuery(name = "Person.findByPersonid", query = "SELECT p FROM Person p WHERE p.personid = :personid"),
+    @NamedQuery(name = "Person.findByPlaceofbirth", query = "SELECT p FROM Person p WHERE p.placeofbirth = :placeofbirth"),
+    @NamedQuery(name = "Person.findByDateofbirth", query = "SELECT p FROM Person p WHERE p.dateofbirth = :dateofbirth"),
+    @NamedQuery(name = "Person.findByBirthcertificatenumber", query = "SELECT p FROM Person p WHERE p.birthcertificatenumber = :birthcertificatenumber"),
+    @NamedQuery(name = "Person.findByBirthcertificatedate", query = "SELECT p FROM Person p WHERE p.birthcertificatedate = :birthcertificatedate"),
+    @NamedQuery(name = "Person.findByMaritalstatus", query = "SELECT p FROM Person p WHERE p.maritalstatus = :maritalstatus"),
+    @NamedQuery(name = "Person.findBySocialsecuritynumber", query = "SELECT p FROM Person p WHERE p.socialsecuritynumber = :socialsecuritynumber"),
+    @NamedQuery(name = "Person.findByStartdate", query = "SELECT p FROM Person p WHERE p.startdate = :startdate"),
+    @NamedQuery(name = "Person.findByEnddate", query = "SELECT p FROM Person p WHERE p.enddate = :enddate"),
+    @NamedQuery(name = "Person.findByDrivinglicencenumber", query = "SELECT p FROM Person p WHERE p.drivinglicencenumber = :drivinglicencenumber"),
+    @NamedQuery(name = "Person.findByNpwp", query = "SELECT p FROM Person p WHERE p.npwp = :npwp"),
+    @NamedQuery(name = "Person.findByPassportnumber", query = "SELECT p FROM Person p WHERE p.passportnumber = :passportnumber"),
+    @NamedQuery(name = "Person.findByPassportstartdate", query = "SELECT p FROM Person p WHERE p.passportstartdate = :passportstartdate"),
+    @NamedQuery(name = "Person.findByPassportenddate", query = "SELECT p FROM Person p WHERE p.passportenddate = :passportenddate"),
+    @NamedQuery(name = "Person.findByNumberofchildren", query = "SELECT p FROM Person p WHERE p.numberofchildren = :numberofchildren"),
+    @NamedQuery(name = "Person.findByMothermaiden", query = "SELECT p FROM Person p WHERE p.mothermaiden = :mothermaiden"),
+    @NamedQuery(name = "Person.findByLongsettled", query = "SELECT p FROM Person p WHERE p.longsettled = :longsettled"),
+    @NamedQuery(name = "Person.findByPhonenumberfamilyarea", query = "SELECT p FROM Person p WHERE p.phonenumberfamilyarea = :phonenumberfamilyarea"),
+    @NamedQuery(name = "Person.findByPhonenumberfamily", query = "SELECT p FROM Person p WHERE p.phonenumberfamily = :phonenumberfamily"),
+    @NamedQuery(name = "Person.findByCreationdate", query = "SELECT p FROM Person p WHERE p.creationdate = :creationdate"),
+    @NamedQuery(name = "Person.findByEditdate", query = "SELECT p FROM Person p WHERE p.editdate = :editdate"),
+    @NamedQuery(name = "Person.findByOccupationname", query = "SELECT p FROM Person p WHERE p.occupationname = :occupationname"),
+    @NamedQuery(name = "Person.findByLasteducation", query = "SELECT p FROM Person p WHERE p.lasteducation = :lasteducation"),
+    @NamedQuery(name = "Person.findBySessiondate", query = "SELECT p FROM Person p WHERE p.sessiondate = :sessiondate"),
+    @NamedQuery(name = "Person.findByStatusData", query = "SELECT p FROM Person p WHERE p.statusData = :statusData"),
+    @NamedQuery(name = "Person.findByCreator", query = "SELECT p FROM Person p WHERE p.creator = :creator"),
+    @NamedQuery(name = "Person.findByEditor", query = "SELECT p FROM Person p WHERE p.editor = :editor"),
+    @NamedQuery(name = "Person.findByGender", query = "SELECT p FROM Person p WHERE p.gender = :gender"),
+    @NamedQuery(name = "Person.findByBeginingcertificatenumber", query = "SELECT p FROM Person p WHERE p.beginingcertificatenumber = :beginingcertificatenumber"),
+    @NamedQuery(name = "Person.findByBeginingcertificatedate", query = "SELECT p FROM Person p WHERE p.beginingcertificatedate = :beginingcertificatedate"),
+    @NamedQuery(name = "Person.findByFinalcertificatenumber", query = "SELECT p FROM Person p WHERE p.finalcertificatenumber = :finalcertificatenumber"),
+    @NamedQuery(name = "Person.findByFinalcertificatedate", query = "SELECT p FROM Person p WHERE p.finalcertificatedate = :finalcertificatedate"),
+    @NamedQuery(name = "Person.findByTypeofbusiness", query = "SELECT p FROM Person p WHERE p.typeofbusiness = :typeofbusiness"),
+    @NamedQuery(name = "Person.findByTdp", query = "SELECT p FROM Person p WHERE p.tdp = :tdp")})
+public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -149,12 +157,18 @@ public class Person
     @JoinColumn(name = "customerid", referencedColumnName = "customerid")
     @ManyToOne
     private Customer customerid;
+    @JoinColumn(name = "address_addressid", referencedColumnName = "addressid")
+    @ManyToOne
+    private Address addressAddressid;
     @OneToMany(mappedBy = "personid")
     private List<Address> addressList;
-    @OneToOne
+    @OneToOne(mappedBy = "personid")
     private Address address;
 
     public Person() {
+        address = new Address();
+        religiid = new Religi();
+        residencecustomerid = new Residencecustomer();
     }
 
     public Person(Integer personid) {
@@ -162,7 +176,7 @@ public class Person
     }
 
     public Integer getPersonid() {
-        return this.personid;
+        return personid;
     }
 
     public void setPersonid(Integer personid) {
@@ -170,7 +184,7 @@ public class Person
     }
 
     public String getPlaceofbirth() {
-        return this.placeofbirth;
+        return placeofbirth;
     }
 
     public void setPlaceofbirth(String placeofbirth) {
@@ -178,7 +192,7 @@ public class Person
     }
 
     public Date getDateofbirth() {
-        return this.dateofbirth;
+        return dateofbirth;
     }
 
     public void setDateofbirth(Date dateofbirth) {
@@ -186,7 +200,7 @@ public class Person
     }
 
     public String getBirthcertificatenumber() {
-        return this.birthcertificatenumber;
+        return birthcertificatenumber;
     }
 
     public void setBirthcertificatenumber(String birthcertificatenumber) {
@@ -194,7 +208,7 @@ public class Person
     }
 
     public Date getBirthcertificatedate() {
-        return this.birthcertificatedate;
+        return birthcertificatedate;
     }
 
     public void setBirthcertificatedate(Date birthcertificatedate) {
@@ -202,7 +216,7 @@ public class Person
     }
 
     public Character getMaritalstatus() {
-        return this.maritalstatus;
+        return maritalstatus;
     }
 
     public void setMaritalstatus(Character maritalstatus) {
@@ -210,7 +224,7 @@ public class Person
     }
 
     public String getSocialsecuritynumber() {
-        return this.socialsecuritynumber;
+        return socialsecuritynumber;
     }
 
     public void setSocialsecuritynumber(String socialsecuritynumber) {
@@ -218,7 +232,7 @@ public class Person
     }
 
     public Date getStartdate() {
-        return this.startdate;
+        return startdate;
     }
 
     public void setStartdate(Date startdate) {
@@ -226,7 +240,7 @@ public class Person
     }
 
     public Date getEnddate() {
-        return this.enddate;
+        return enddate;
     }
 
     public void setEnddate(Date enddate) {
@@ -234,7 +248,7 @@ public class Person
     }
 
     public String getDrivinglicencenumber() {
-        return this.drivinglicencenumber;
+        return drivinglicencenumber;
     }
 
     public void setDrivinglicencenumber(String drivinglicencenumber) {
@@ -242,7 +256,7 @@ public class Person
     }
 
     public String getNpwp() {
-        return this.npwp;
+        return npwp;
     }
 
     public void setNpwp(String npwp) {
@@ -250,7 +264,7 @@ public class Person
     }
 
     public String getPassportnumber() {
-        return this.passportnumber;
+        return passportnumber;
     }
 
     public void setPassportnumber(String passportnumber) {
@@ -258,7 +272,7 @@ public class Person
     }
 
     public Date getPassportstartdate() {
-        return this.passportstartdate;
+        return passportstartdate;
     }
 
     public void setPassportstartdate(Date passportstartdate) {
@@ -266,7 +280,7 @@ public class Person
     }
 
     public Date getPassportenddate() {
-        return this.passportenddate;
+        return passportenddate;
     }
 
     public void setPassportenddate(Date passportenddate) {
@@ -274,7 +288,7 @@ public class Person
     }
 
     public Integer getNumberofchildren() {
-        return this.numberofchildren;
+        return numberofchildren;
     }
 
     public void setNumberofchildren(Integer numberofchildren) {
@@ -282,7 +296,7 @@ public class Person
     }
 
     public String getMothermaiden() {
-        return this.mothermaiden;
+        return mothermaiden;
     }
 
     public void setMothermaiden(String mothermaiden) {
@@ -290,7 +304,7 @@ public class Person
     }
 
     public Integer getLongsettled() {
-        return this.longsettled;
+        return longsettled;
     }
 
     public void setLongsettled(Integer longsettled) {
@@ -298,7 +312,7 @@ public class Person
     }
 
     public String getPhonenumberfamilyarea() {
-        return this.phonenumberfamilyarea;
+        return phonenumberfamilyarea;
     }
 
     public void setPhonenumberfamilyarea(String phonenumberfamilyarea) {
@@ -306,7 +320,7 @@ public class Person
     }
 
     public String getPhonenumberfamily() {
-        return this.phonenumberfamily;
+        return phonenumberfamily;
     }
 
     public void setPhonenumberfamily(String phonenumberfamily) {
@@ -314,7 +328,7 @@ public class Person
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -322,7 +336,7 @@ public class Person
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -330,7 +344,7 @@ public class Person
     }
 
     public String getOccupationname() {
-        return this.occupationname;
+        return occupationname;
     }
 
     public void setOccupationname(String occupationname) {
@@ -338,7 +352,7 @@ public class Person
     }
 
     public Integer getLasteducation() {
-        return this.lasteducation;
+        return lasteducation;
     }
 
     public void setLasteducation(Integer lasteducation) {
@@ -346,7 +360,7 @@ public class Person
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -354,7 +368,7 @@ public class Person
     }
 
     public Character getStatusData() {
-        return this.statusData;
+        return statusData;
     }
 
     public void setStatusData(Character statusData) {
@@ -362,7 +376,7 @@ public class Person
     }
 
     public Integer getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(Integer creator) {
@@ -370,7 +384,7 @@ public class Person
     }
 
     public Integer getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(Integer editor) {
@@ -378,7 +392,7 @@ public class Person
     }
 
     public Integer getGender() {
-        return this.gender;
+        return gender;
     }
 
     public void setGender(Integer gender) {
@@ -386,7 +400,7 @@ public class Person
     }
 
     public String getBeginingcertificatenumber() {
-        return this.beginingcertificatenumber;
+        return beginingcertificatenumber;
     }
 
     public void setBeginingcertificatenumber(String beginingcertificatenumber) {
@@ -394,7 +408,7 @@ public class Person
     }
 
     public Date getBeginingcertificatedate() {
-        return this.beginingcertificatedate;
+        return beginingcertificatedate;
     }
 
     public void setBeginingcertificatedate(Date beginingcertificatedate) {
@@ -402,7 +416,7 @@ public class Person
     }
 
     public String getFinalcertificatenumber() {
-        return this.finalcertificatenumber;
+        return finalcertificatenumber;
     }
 
     public void setFinalcertificatenumber(String finalcertificatenumber) {
@@ -410,7 +424,7 @@ public class Person
     }
 
     public Date getFinalcertificatedate() {
-        return this.finalcertificatedate;
+        return finalcertificatedate;
     }
 
     public void setFinalcertificatedate(Date finalcertificatedate) {
@@ -418,7 +432,7 @@ public class Person
     }
 
     public Integer getTypeofbusiness() {
-        return this.typeofbusiness;
+        return typeofbusiness;
     }
 
     public void setTypeofbusiness(Integer typeofbusiness) {
@@ -426,7 +440,7 @@ public class Person
     }
 
     public String getTdp() {
-        return this.tdp;
+        return tdp;
     }
 
     public void setTdp(String tdp) {
@@ -434,7 +448,7 @@ public class Person
     }
 
     public Residencecustomer getResidencecustomerid() {
-        return this.residencecustomerid;
+        return residencecustomerid;
     }
 
     public void setResidencecustomerid(Residencecustomer residencecustomerid) {
@@ -442,7 +456,7 @@ public class Person
     }
 
     public Religi getReligiid() {
-        return this.religiid;
+        return religiid;
     }
 
     public void setReligiid(Religi religiid) {
@@ -450,15 +464,23 @@ public class Person
     }
 
     public Customer getCustomerid() {
-        return this.customerid;
+        return customerid;
     }
 
     public void setCustomerid(Customer customerid) {
         this.customerid = customerid;
     }
 
+    public Address getAddressAddressid() {
+        return addressAddressid;
+    }
+
+    public void setAddressAddressid(Address addressAddressid) {
+        this.addressAddressid = addressAddressid;
+    }
+
     public Address getAddress() {
-        return this.address;
+        return address;
     }
 
     public void setAddress(Address address) {
@@ -467,31 +489,35 @@ public class Person
 
     @XmlTransient
     public List<Address> getAddressList() {
-        return this.addressList;
+        return addressList;
     }
 
     public void setAddressList(List<Address> addressList) {
         this.addressList = addressList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.personid != null ? this.personid.hashCode() : 0);
+        hash += (personid != null ? personid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Person)) {
             return false;
         }
         Person other = (Person) object;
-        if (((this.personid == null) && (other.personid != null)) || ((this.personid != null) && (!this.personid.equals(other.personid)))) {
+        if ((this.personid == null && other.personid != null) || (this.personid != null && !this.personid.equals(other.personid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Person[ personid=" + this.personid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Person[ personid=" + personid + " ]";
     }
 }

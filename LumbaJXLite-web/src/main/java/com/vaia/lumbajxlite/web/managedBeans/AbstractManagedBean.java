@@ -5,13 +5,14 @@
 package com.vaia.lumbajxlite.web.managedBeans;
 
 import com.vaia.lumbajxlite.web.util.JSFMessagesUtil;
+import java.io.Serializable;
 import org.primefaces.context.RequestContext;
 
 /**
  *
  * @author awank
  */
-public class AbstractManagedBean {
+public class AbstractManagedBean implements Serializable {
 
     public AbstractManagedBean() {
         super();

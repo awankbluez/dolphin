@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -9,31 +13,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Menu.findAll", query = "SELECT m FROM Menu m"),
-    @javax.persistence.NamedQuery(name = "Menu.findByMenuid", query = "SELECT m FROM Menu m WHERE m.menuid = :menuid"),
-    @javax.persistence.NamedQuery(name = "Menu.findByMenuname", query = "SELECT m FROM Menu m WHERE m.menuname = :menuname"),
-    @javax.persistence.NamedQuery(name = "Menu.findByAlias", query = "SELECT m FROM Menu m WHERE m.alias = :alias"),
-    @javax.persistence.NamedQuery(name = "Menu.findByLink", query = "SELECT m FROM Menu m WHERE m.link = :link"),
-    @javax.persistence.NamedQuery(name = "Menu.findByMenustatus", query = "SELECT m FROM Menu m WHERE m.menustatus = :menustatus"),
-    @javax.persistence.NamedQuery(name = "Menu.findByParentid", query = "SELECT m FROM Menu m WHERE m.parentid = :parentid"),
-    @javax.persistence.NamedQuery(name = "Menu.findByLevel", query = "SELECT m FROM Menu m WHERE m.level = :level"),
-    @javax.persistence.NamedQuery(name = "Menu.findByOrdering", query = "SELECT m FROM Menu m WHERE m.ordering = :ordering"),
-    @javax.persistence.NamedQuery(name = "Menu.findByMenutype", query = "SELECT m FROM Menu m WHERE m.menutype = :menutype"),
-    @javax.persistence.NamedQuery(name = "Menu.findByAction", query = "SELECT m FROM Menu m WHERE m.action = :action"),
-    @javax.persistence.NamedQuery(name = "Menu.findBySessiondate", query = "SELECT m FROM Menu m WHERE m.sessiondate = :sessiondate")})
-public class Menu
-        implements Serializable {
-
+    @NamedQuery(name = "Menu.findAll", query = "SELECT m FROM Menu m"),
+    @NamedQuery(name = "Menu.findByMenuid", query = "SELECT m FROM Menu m WHERE m.menuid = :menuid"),
+    @NamedQuery(name = "Menu.findByMenuname", query = "SELECT m FROM Menu m WHERE m.menuname = :menuname"),
+    @NamedQuery(name = "Menu.findByAlias", query = "SELECT m FROM Menu m WHERE m.alias = :alias"),
+    @NamedQuery(name = "Menu.findByLink", query = "SELECT m FROM Menu m WHERE m.link = :link"),
+    @NamedQuery(name = "Menu.findByMenustatus", query = "SELECT m FROM Menu m WHERE m.menustatus = :menustatus"),
+    @NamedQuery(name = "Menu.findByParentid", query = "SELECT m FROM Menu m WHERE m.parentid = :parentid"),
+    @NamedQuery(name = "Menu.findByLevel", query = "SELECT m FROM Menu m WHERE m.level = :level"),
+    @NamedQuery(name = "Menu.findByOrdering", query = "SELECT m FROM Menu m WHERE m.ordering = :ordering"),
+    @NamedQuery(name = "Menu.findByMenutype", query = "SELECT m FROM Menu m WHERE m.menutype = :menutype"),
+    @NamedQuery(name = "Menu.findByAction", query = "SELECT m FROM Menu m WHERE m.action = :action"),
+    @NamedQuery(name = "Menu.findBySessiondate", query = "SELECT m FROM Menu m WHERE m.sessiondate = :sessiondate")})
+public class Menu implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,7 +77,7 @@ public class Menu
     }
 
     public Integer getMenuid() {
-        return this.menuid;
+        return menuid;
     }
 
     public void setMenuid(Integer menuid) {
@@ -78,7 +85,7 @@ public class Menu
     }
 
     public String getMenuname() {
-        return this.menuname;
+        return menuname;
     }
 
     public void setMenuname(String menuname) {
@@ -86,7 +93,7 @@ public class Menu
     }
 
     public String getAlias() {
-        return this.alias;
+        return alias;
     }
 
     public void setAlias(String alias) {
@@ -94,7 +101,7 @@ public class Menu
     }
 
     public String getLink() {
-        return this.link;
+        return link;
     }
 
     public void setLink(String link) {
@@ -102,7 +109,7 @@ public class Menu
     }
 
     public Boolean getMenustatus() {
-        return this.menustatus;
+        return menustatus;
     }
 
     public void setMenustatus(Boolean menustatus) {
@@ -110,7 +117,7 @@ public class Menu
     }
 
     public Integer getParentid() {
-        return this.parentid;
+        return parentid;
     }
 
     public void setParentid(Integer parentid) {
@@ -118,7 +125,7 @@ public class Menu
     }
 
     public Integer getLevel() {
-        return this.level;
+        return level;
     }
 
     public void setLevel(Integer level) {
@@ -126,7 +133,7 @@ public class Menu
     }
 
     public Integer getOrdering() {
-        return this.ordering;
+        return ordering;
     }
 
     public void setOrdering(Integer ordering) {
@@ -134,7 +141,7 @@ public class Menu
     }
 
     public String getMenutype() {
-        return this.menutype;
+        return menutype;
     }
 
     public void setMenutype(String menutype) {
@@ -142,7 +149,7 @@ public class Menu
     }
 
     public String getAction() {
-        return this.action;
+        return action;
     }
 
     public void setAction(String action) {
@@ -150,31 +157,36 @@ public class Menu
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
         this.sessiondate = sessiondate;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.menuid != null ? this.menuid.hashCode() : 0);
+        hash += (menuid != null ? menuid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Menu)) {
             return false;
         }
         Menu other = (Menu) object;
-        if (((this.menuid == null) && (other.menuid != null)) || ((this.menuid != null) && (!this.menuid.equals(other.menuid)))) {
+        if ((this.menuid == null && other.menuid != null) || (this.menuid != null && !this.menuid.equals(other.menuid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Menu[ menuid=" + this.menuid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Menu[ menuid=" + menuid + " ]";
     }
+
 }

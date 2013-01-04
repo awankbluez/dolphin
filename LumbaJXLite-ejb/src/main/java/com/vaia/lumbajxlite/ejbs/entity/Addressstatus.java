@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -10,32 +14,36 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"addressstatuscode"})})
+    @UniqueConstraint(columnNames = {"addressstatuscode"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Addressstatus.findAll", query = "SELECT a FROM Addressstatus a"),
-    @javax.persistence.NamedQuery(name = "Addressstatus.findByAddressstatusid", query = "SELECT a FROM Addressstatus a WHERE a.addressstatusid = :addressstatusid"),
-    @javax.persistence.NamedQuery(name = "Addressstatus.findByAddressstatuscode", query = "SELECT a FROM Addressstatus a WHERE a.addressstatuscode = :addressstatuscode"),
-    @javax.persistence.NamedQuery(name = "Addressstatus.findByAddressstatusdescribe", query = "SELECT a FROM Addressstatus a WHERE a.addressstatusdescribe = :addressstatusdescribe"),
-    @javax.persistence.NamedQuery(name = "Addressstatus.findByCreationdate", query = "SELECT a FROM Addressstatus a WHERE a.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Addressstatus.findByEditdate", query = "SELECT a FROM Addressstatus a WHERE a.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Addressstatus.findByCreator", query = "SELECT a FROM Addressstatus a WHERE a.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Addressstatus.findByEditor", query = "SELECT a FROM Addressstatus a WHERE a.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Addressstatus.findBySessiondate", query = "SELECT a FROM Addressstatus a WHERE a.sessiondate = :sessiondate")})
-public class Addressstatus
-        implements Serializable {
-
+    @NamedQuery(name = "Addressstatus.findAll", query = "SELECT a FROM Addressstatus a"),
+    @NamedQuery(name = "Addressstatus.findByAddressstatusid", query = "SELECT a FROM Addressstatus a WHERE a.addressstatusid = :addressstatusid"),
+    @NamedQuery(name = "Addressstatus.findByAddressstatuscode", query = "SELECT a FROM Addressstatus a WHERE a.addressstatuscode = :addressstatuscode"),
+    @NamedQuery(name = "Addressstatus.findByAddressstatusdescribe", query = "SELECT a FROM Addressstatus a WHERE a.addressstatusdescribe = :addressstatusdescribe"),
+    @NamedQuery(name = "Addressstatus.findByCreationdate", query = "SELECT a FROM Addressstatus a WHERE a.creationdate = :creationdate"),
+    @NamedQuery(name = "Addressstatus.findByEditdate", query = "SELECT a FROM Addressstatus a WHERE a.editdate = :editdate"),
+    @NamedQuery(name = "Addressstatus.findByCreator", query = "SELECT a FROM Addressstatus a WHERE a.creator = :creator"),
+    @NamedQuery(name = "Addressstatus.findByEditor", query = "SELECT a FROM Addressstatus a WHERE a.editor = :editor"),
+    @NamedQuery(name = "Addressstatus.findBySessiondate", query = "SELECT a FROM Addressstatus a WHERE a.sessiondate = :sessiondate")})
+public class Addressstatus implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,7 +85,7 @@ public class Addressstatus
     }
 
     public Integer getAddressstatusid() {
-        return this.addressstatusid;
+        return addressstatusid;
     }
 
     public void setAddressstatusid(Integer addressstatusid) {
@@ -85,7 +93,7 @@ public class Addressstatus
     }
 
     public char getAddressstatuscode() {
-        return this.addressstatuscode;
+        return addressstatuscode;
     }
 
     public void setAddressstatuscode(char addressstatuscode) {
@@ -93,7 +101,7 @@ public class Addressstatus
     }
 
     public String getAddressstatusdescribe() {
-        return this.addressstatusdescribe;
+        return addressstatusdescribe;
     }
 
     public void setAddressstatusdescribe(String addressstatusdescribe) {
@@ -101,7 +109,7 @@ public class Addressstatus
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -109,7 +117,7 @@ public class Addressstatus
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -117,7 +125,7 @@ public class Addressstatus
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -125,7 +133,7 @@ public class Addressstatus
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -133,7 +141,7 @@ public class Addressstatus
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -142,31 +150,36 @@ public class Addressstatus
 
     @XmlTransient
     public List<Address> getAddressList() {
-        return this.addressList;
+        return addressList;
     }
 
     public void setAddressList(List<Address> addressList) {
         this.addressList = addressList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.addressstatusid != null ? this.addressstatusid.hashCode() : 0);
+        hash += (addressstatusid != null ? addressstatusid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Addressstatus)) {
             return false;
         }
         Addressstatus other = (Addressstatus) object;
-        if (((this.addressstatusid == null) && (other.addressstatusid != null)) || ((this.addressstatusid != null) && (!this.addressstatusid.equals(other.addressstatusid)))) {
+        if ((this.addressstatusid == null && other.addressstatusid != null) || (this.addressstatusid != null && !this.addressstatusid.equals(other.addressstatusid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Addressstatus[ addressstatusid=" + this.addressstatusid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Addressstatus[ addressstatusid=" + addressstatusid + " ]";
     }
+
 }

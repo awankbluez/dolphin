@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -10,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,21 +23,23 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Residencecustomer.findAll", query = "SELECT r FROM Residencecustomer r"),
-    @javax.persistence.NamedQuery(name = "Residencecustomer.findByResidencecustomerid", query = "SELECT r FROM Residencecustomer r WHERE r.residencecustomerid = :residencecustomerid"),
-    @javax.persistence.NamedQuery(name = "Residencecustomer.findByResidence", query = "SELECT r FROM Residencecustomer r WHERE r.residence = :residence"),
-    @javax.persistence.NamedQuery(name = "Residencecustomer.findByCreationdate", query = "SELECT r FROM Residencecustomer r WHERE r.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Residencecustomer.findByEditdate", query = "SELECT r FROM Residencecustomer r WHERE r.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Residencecustomer.findByCreator", query = "SELECT r FROM Residencecustomer r WHERE r.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Residencecustomer.findByEditor", query = "SELECT r FROM Residencecustomer r WHERE r.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Residencecustomer.findBySessiondate", query = "SELECT r FROM Residencecustomer r WHERE r.sessiondate = :sessiondate")})
-public class Residencecustomer
-        implements Serializable {
-
+    @NamedQuery(name = "Residencecustomer.findAll", query = "SELECT r FROM Residencecustomer r"),
+    @NamedQuery(name = "Residencecustomer.findByResidencecustomerid", query = "SELECT r FROM Residencecustomer r WHERE r.residencecustomerid = :residencecustomerid"),
+    @NamedQuery(name = "Residencecustomer.findByResidence", query = "SELECT r FROM Residencecustomer r WHERE r.residence = :residence"),
+    @NamedQuery(name = "Residencecustomer.findByCreationdate", query = "SELECT r FROM Residencecustomer r WHERE r.creationdate = :creationdate"),
+    @NamedQuery(name = "Residencecustomer.findByEditdate", query = "SELECT r FROM Residencecustomer r WHERE r.editdate = :editdate"),
+    @NamedQuery(name = "Residencecustomer.findByCreator", query = "SELECT r FROM Residencecustomer r WHERE r.creator = :creator"),
+    @NamedQuery(name = "Residencecustomer.findByEditor", query = "SELECT r FROM Residencecustomer r WHERE r.editor = :editor"),
+    @NamedQuery(name = "Residencecustomer.findBySessiondate", query = "SELECT r FROM Residencecustomer r WHERE r.sessiondate = :sessiondate")})
+public class Residencecustomer implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +72,7 @@ public class Residencecustomer
     }
 
     public Integer getResidencecustomerid() {
-        return this.residencecustomerid;
+        return residencecustomerid;
     }
 
     public void setResidencecustomerid(Integer residencecustomerid) {
@@ -73,7 +80,7 @@ public class Residencecustomer
     }
 
     public String getResidence() {
-        return this.residence;
+        return residence;
     }
 
     public void setResidence(String residence) {
@@ -81,7 +88,7 @@ public class Residencecustomer
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -89,7 +96,7 @@ public class Residencecustomer
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -97,7 +104,7 @@ public class Residencecustomer
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -105,7 +112,7 @@ public class Residencecustomer
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -113,7 +120,7 @@ public class Residencecustomer
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -122,31 +129,36 @@ public class Residencecustomer
 
     @XmlTransient
     public List<Person> getPersonList() {
-        return this.personList;
+        return personList;
     }
 
     public void setPersonList(List<Person> personList) {
         this.personList = personList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.residencecustomerid != null ? this.residencecustomerid.hashCode() : 0);
+        hash += (residencecustomerid != null ? residencecustomerid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Residencecustomer)) {
             return false;
         }
         Residencecustomer other = (Residencecustomer) object;
-        if (((this.residencecustomerid == null) && (other.residencecustomerid != null)) || ((this.residencecustomerid != null) && (!this.residencecustomerid.equals(other.residencecustomerid)))) {
+        if ((this.residencecustomerid == null && other.residencecustomerid != null) || (this.residencecustomerid != null && !this.residencecustomerid.equals(other.residencecustomerid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Residencecustomer[ residencecustomerid=" + this.residencecustomerid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Residencecustomer[ residencecustomerid=" + residencecustomerid + " ]";
     }
+
 }

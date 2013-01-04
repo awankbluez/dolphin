@@ -1,15 +1,21 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -19,26 +25,28 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c"),
-    @javax.persistence.NamedQuery(name = "Category.findByCategoryid", query = "SELECT c FROM Category c WHERE c.categoryid = :categoryid"),
-    @javax.persistence.NamedQuery(name = "Category.findByCategoryname", query = "SELECT c FROM Category c WHERE c.categoryname = :categoryname"),
-    @javax.persistence.NamedQuery(name = "Category.findByReportname", query = "SELECT c FROM Category c WHERE c.reportname = :reportname"),
-    @javax.persistence.NamedQuery(name = "Category.findByReportstatus", query = "SELECT c FROM Category c WHERE c.reportstatus = :reportstatus"),
-    @javax.persistence.NamedQuery(name = "Category.findByReportorder", query = "SELECT c FROM Category c WHERE c.reportorder = :reportorder"),
-    @javax.persistence.NamedQuery(name = "Category.findByCreationdate", query = "SELECT c FROM Category c WHERE c.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Category.findByCreator", query = "SELECT c FROM Category c WHERE c.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Category.findByEditdate", query = "SELECT c FROM Category c WHERE c.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Category.findByEditor", query = "SELECT c FROM Category c WHERE c.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Category.findByRefference", query = "SELECT c FROM Category c WHERE c.refference = :refference"),
-    @javax.persistence.NamedQuery(name = "Category.findByNormallycredit", query = "SELECT c FROM Category c WHERE c.normallycredit = :normallycredit"),
-    @javax.persistence.NamedQuery(name = "Category.findBySessiondate", query = "SELECT c FROM Category c WHERE c.sessiondate = :sessiondate")})
-public class Category
-        implements Serializable {
-
+    @NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c"),
+    @NamedQuery(name = "Category.findByCategoryid", query = "SELECT c FROM Category c WHERE c.categoryid = :categoryid"),
+    @NamedQuery(name = "Category.findByCategoryname", query = "SELECT c FROM Category c WHERE c.categoryname = :categoryname"),
+    @NamedQuery(name = "Category.findByReportname", query = "SELECT c FROM Category c WHERE c.reportname = :reportname"),
+    @NamedQuery(name = "Category.findByReportstatus", query = "SELECT c FROM Category c WHERE c.reportstatus = :reportstatus"),
+    @NamedQuery(name = "Category.findByReportorder", query = "SELECT c FROM Category c WHERE c.reportorder = :reportorder"),
+    @NamedQuery(name = "Category.findByCreationdate", query = "SELECT c FROM Category c WHERE c.creationdate = :creationdate"),
+    @NamedQuery(name = "Category.findByCreator", query = "SELECT c FROM Category c WHERE c.creator = :creator"),
+    @NamedQuery(name = "Category.findByEditdate", query = "SELECT c FROM Category c WHERE c.editdate = :editdate"),
+    @NamedQuery(name = "Category.findByEditor", query = "SELECT c FROM Category c WHERE c.editor = :editor"),
+    @NamedQuery(name = "Category.findByRefference", query = "SELECT c FROM Category c WHERE c.refference = :refference"),
+    @NamedQuery(name = "Category.findByNormallycredit", query = "SELECT c FROM Category c WHERE c.normallycredit = :normallycredit"),
+    @NamedQuery(name = "Category.findBySessiondate", query = "SELECT c FROM Category c WHERE c.sessiondate = :sessiondate")})
+public class Category implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,11 +77,11 @@ public class Category
     private Boolean normallycredit;
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
-    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "categoryid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryid")
     private List<Financialcategory> financialcategoryList;
     @OneToMany(mappedBy = "categoryid")
     private List<Accountcategory> accountcategoryList;
-    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "categoryid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryid")
     private List<Chartofaccount> chartofaccountList;
 
     public Category() {
@@ -89,7 +97,7 @@ public class Category
     }
 
     public Integer getCategoryid() {
-        return this.categoryid;
+        return categoryid;
     }
 
     public void setCategoryid(Integer categoryid) {
@@ -97,7 +105,7 @@ public class Category
     }
 
     public String getCategoryname() {
-        return this.categoryname;
+        return categoryname;
     }
 
     public void setCategoryname(String categoryname) {
@@ -105,7 +113,7 @@ public class Category
     }
 
     public String getReportname() {
-        return this.reportname;
+        return reportname;
     }
 
     public void setReportname(String reportname) {
@@ -113,7 +121,7 @@ public class Category
     }
 
     public Boolean getReportstatus() {
-        return this.reportstatus;
+        return reportstatus;
     }
 
     public void setReportstatus(Boolean reportstatus) {
@@ -121,7 +129,7 @@ public class Category
     }
 
     public Integer getReportorder() {
-        return this.reportorder;
+        return reportorder;
     }
 
     public void setReportorder(Integer reportorder) {
@@ -129,7 +137,7 @@ public class Category
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -137,7 +145,7 @@ public class Category
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -145,7 +153,7 @@ public class Category
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -153,7 +161,7 @@ public class Category
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -161,7 +169,7 @@ public class Category
     }
 
     public Integer getRefference() {
-        return this.refference;
+        return refference;
     }
 
     public void setRefference(Integer refference) {
@@ -169,7 +177,7 @@ public class Category
     }
 
     public Boolean getNormallycredit() {
-        return this.normallycredit;
+        return normallycredit;
     }
 
     public void setNormallycredit(Boolean normallycredit) {
@@ -177,7 +185,7 @@ public class Category
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -186,7 +194,7 @@ public class Category
 
     @XmlTransient
     public List<Financialcategory> getFinancialcategoryList() {
-        return this.financialcategoryList;
+        return financialcategoryList;
     }
 
     public void setFinancialcategoryList(List<Financialcategory> financialcategoryList) {
@@ -195,7 +203,7 @@ public class Category
 
     @XmlTransient
     public List<Accountcategory> getAccountcategoryList() {
-        return this.accountcategoryList;
+        return accountcategoryList;
     }
 
     public void setAccountcategoryList(List<Accountcategory> accountcategoryList) {
@@ -204,31 +212,36 @@ public class Category
 
     @XmlTransient
     public List<Chartofaccount> getChartofaccountList() {
-        return this.chartofaccountList;
+        return chartofaccountList;
     }
 
     public void setChartofaccountList(List<Chartofaccount> chartofaccountList) {
         this.chartofaccountList = chartofaccountList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.categoryid != null ? this.categoryid.hashCode() : 0);
+        hash += (categoryid != null ? categoryid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Category)) {
             return false;
         }
         Category other = (Category) object;
-        if (((this.categoryid == null) && (other.categoryid != null)) || ((this.categoryid != null) && (!this.categoryid.equals(other.categoryid)))) {
+        if ((this.categoryid == null && other.categoryid != null) || (this.categoryid != null && !this.categoryid.equals(other.categoryid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Category[ categoryid=" + this.categoryid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Category[ categoryid=" + categoryid + " ]";
     }
+
 }

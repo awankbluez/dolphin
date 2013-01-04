@@ -1,9 +1,14 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -21,25 +27,27 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Bankbranch.findAll", query = "SELECT b FROM Bankbranch b"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByBankbranchid", query = "SELECT b FROM Bankbranch b WHERE b.bankbranchid = :bankbranchid"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByBankbranchcode", query = "SELECT b FROM Bankbranch b WHERE b.bankbranchcode = :bankbranchcode"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByBankbranchname", query = "SELECT b FROM Bankbranch b WHERE b.bankbranchname = :bankbranchname"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByAddress", query = "SELECT b FROM Bankbranch b WHERE b.address = :address"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByCreationdate", query = "SELECT b FROM Bankbranch b WHERE b.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByCreator", query = "SELECT b FROM Bankbranch b WHERE b.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByEditdate", query = "SELECT b FROM Bankbranch b WHERE b.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByEditor", query = "SELECT b FROM Bankbranch b WHERE b.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByChequeclearancepersonal", query = "SELECT b FROM Bankbranch b WHERE b.chequeclearancepersonal = :chequeclearancepersonal"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findByChequeclearancethirdparty", query = "SELECT b FROM Bankbranch b WHERE b.chequeclearancethirdparty = :chequeclearancethirdparty"),
-    @javax.persistence.NamedQuery(name = "Bankbranch.findBySessiondate", query = "SELECT b FROM Bankbranch b WHERE b.sessiondate = :sessiondate")})
-public class Bankbranch
-        implements Serializable {
-
+    @NamedQuery(name = "Bankbranch.findAll", query = "SELECT b FROM Bankbranch b"),
+    @NamedQuery(name = "Bankbranch.findByBankbranchid", query = "SELECT b FROM Bankbranch b WHERE b.bankbranchid = :bankbranchid"),
+    @NamedQuery(name = "Bankbranch.findByBankbranchcode", query = "SELECT b FROM Bankbranch b WHERE b.bankbranchcode = :bankbranchcode"),
+    @NamedQuery(name = "Bankbranch.findByBankbranchname", query = "SELECT b FROM Bankbranch b WHERE b.bankbranchname = :bankbranchname"),
+    @NamedQuery(name = "Bankbranch.findByAddress", query = "SELECT b FROM Bankbranch b WHERE b.address = :address"),
+    @NamedQuery(name = "Bankbranch.findByCreationdate", query = "SELECT b FROM Bankbranch b WHERE b.creationdate = :creationdate"),
+    @NamedQuery(name = "Bankbranch.findByCreator", query = "SELECT b FROM Bankbranch b WHERE b.creator = :creator"),
+    @NamedQuery(name = "Bankbranch.findByEditdate", query = "SELECT b FROM Bankbranch b WHERE b.editdate = :editdate"),
+    @NamedQuery(name = "Bankbranch.findByEditor", query = "SELECT b FROM Bankbranch b WHERE b.editor = :editor"),
+    @NamedQuery(name = "Bankbranch.findByChequeclearancepersonal", query = "SELECT b FROM Bankbranch b WHERE b.chequeclearancepersonal = :chequeclearancepersonal"),
+    @NamedQuery(name = "Bankbranch.findByChequeclearancethirdparty", query = "SELECT b FROM Bankbranch b WHERE b.chequeclearancethirdparty = :chequeclearancethirdparty"),
+    @NamedQuery(name = "Bankbranch.findBySessiondate", query = "SELECT b FROM Bankbranch b WHERE b.sessiondate = :sessiondate")})
+public class Bankbranch implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,13 +79,14 @@ public class Bankbranch
     @Size(max = 40)
     @Column(length = 40)
     private String editor;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(precision = 17, scale = 17)
     private Double chequeclearancepersonal;
     @Column(precision = 17, scale = 17)
     private Double chequeclearancethirdparty;
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
-    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "bankbranchid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bankbranchid")
     private List<Bankaccount> bankaccountList;
     @JoinColumn(name = "bankid", referencedColumnName = "bankid", nullable = false)
     @ManyToOne(optional = false)
@@ -98,7 +107,7 @@ public class Bankbranch
     }
 
     public Integer getBankbranchid() {
-        return this.bankbranchid;
+        return bankbranchid;
     }
 
     public void setBankbranchid(Integer bankbranchid) {
@@ -106,7 +115,7 @@ public class Bankbranch
     }
 
     public String getBankbranchcode() {
-        return this.bankbranchcode;
+        return bankbranchcode;
     }
 
     public void setBankbranchcode(String bankbranchcode) {
@@ -114,7 +123,7 @@ public class Bankbranch
     }
 
     public String getBankbranchname() {
-        return this.bankbranchname;
+        return bankbranchname;
     }
 
     public void setBankbranchname(String bankbranchname) {
@@ -122,7 +131,7 @@ public class Bankbranch
     }
 
     public String getAddress() {
-        return this.address;
+        return address;
     }
 
     public void setAddress(String address) {
@@ -130,7 +139,7 @@ public class Bankbranch
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -138,7 +147,7 @@ public class Bankbranch
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -146,7 +155,7 @@ public class Bankbranch
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -154,7 +163,7 @@ public class Bankbranch
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -162,7 +171,7 @@ public class Bankbranch
     }
 
     public Double getChequeclearancepersonal() {
-        return this.chequeclearancepersonal;
+        return chequeclearancepersonal;
     }
 
     public void setChequeclearancepersonal(Double chequeclearancepersonal) {
@@ -170,7 +179,7 @@ public class Bankbranch
     }
 
     public Double getChequeclearancethirdparty() {
-        return this.chequeclearancethirdparty;
+        return chequeclearancethirdparty;
     }
 
     public void setChequeclearancethirdparty(Double chequeclearancethirdparty) {
@@ -178,7 +187,7 @@ public class Bankbranch
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -187,7 +196,7 @@ public class Bankbranch
 
     @XmlTransient
     public List<Bankaccount> getBankaccountList() {
-        return this.bankaccountList;
+        return bankaccountList;
     }
 
     public void setBankaccountList(List<Bankaccount> bankaccountList) {
@@ -195,31 +204,36 @@ public class Bankbranch
     }
 
     public Bank getBankid() {
-        return this.bankid;
+        return bankid;
     }
 
     public void setBankid(Bank bankid) {
         this.bankid = bankid;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.bankbranchid != null ? this.bankbranchid.hashCode() : 0);
+        hash += (bankbranchid != null ? bankbranchid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Bankbranch)) {
             return false;
         }
         Bankbranch other = (Bankbranch) object;
-        if (((this.bankbranchid == null) && (other.bankbranchid != null)) || ((this.bankbranchid != null) && (!this.bankbranchid.equals(other.bankbranchid)))) {
+        if ((this.bankbranchid == null && other.bankbranchid != null) || (this.bankbranchid != null && !this.bankbranchid.equals(other.bankbranchid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Bankbranch[ bankbranchid=" + this.bankbranchid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Bankbranch[ bankbranchid=" + bankbranchid + " ]";
     }
+
 }

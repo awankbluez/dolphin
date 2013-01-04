@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Saving.findAll", query = "SELECT s FROM Saving s"),
@@ -100,7 +100,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Saving.findByMinimumdeposit", query = "SELECT s FROM Saving s WHERE s.minimumdeposit = :minimumdeposit"),
     @NamedQuery(name = "Saving.findByMaximumdeposit", query = "SELECT s FROM Saving s WHERE s.maximumdeposit = :maximumdeposit")})
 public class Saving implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -883,4 +882,5 @@ public class Saving implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Saving[ savingid=" + savingid + " ]";
     }
+
 }

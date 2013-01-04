@@ -40,7 +40,6 @@ public class UserSessionMB extends AbstractManagedBean implements Serializable {
     private Operatoruser authenticatedUser;
     private MenuModel userMainMenuModel;
     private MenuModel userReportMenuModel;
-    private List<Menu> userAccessedMenu;
 
     public UserSessionMB() {
     }

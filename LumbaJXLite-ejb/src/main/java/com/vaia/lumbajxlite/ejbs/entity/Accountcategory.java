@@ -1,9 +1,14 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -21,23 +27,25 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Accountcategory.findAll", query = "SELECT a FROM Accountcategory a"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findByAccountcategoryid", query = "SELECT a FROM Accountcategory a WHERE a.accountcategoryid = :accountcategoryid"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findByReference", query = "SELECT a FROM Accountcategory a WHERE a.reference = :reference"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findByDescription", query = "SELECT a FROM Accountcategory a WHERE a.description = :description"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findByStatus", query = "SELECT a FROM Accountcategory a WHERE a.status = :status"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findByCreationdate", query = "SELECT a FROM Accountcategory a WHERE a.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findByCreator", query = "SELECT a FROM Accountcategory a WHERE a.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findByEditdate", query = "SELECT a FROM Accountcategory a WHERE a.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findByEditor", query = "SELECT a FROM Accountcategory a WHERE a.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Accountcategory.findBySessiondate", query = "SELECT a FROM Accountcategory a WHERE a.sessiondate = :sessiondate")})
-public class Accountcategory
-        implements Serializable {
-
+    @NamedQuery(name = "Accountcategory.findAll", query = "SELECT a FROM Accountcategory a"),
+    @NamedQuery(name = "Accountcategory.findByAccountcategoryid", query = "SELECT a FROM Accountcategory a WHERE a.accountcategoryid = :accountcategoryid"),
+    @NamedQuery(name = "Accountcategory.findByReference", query = "SELECT a FROM Accountcategory a WHERE a.reference = :reference"),
+    @NamedQuery(name = "Accountcategory.findByDescription", query = "SELECT a FROM Accountcategory a WHERE a.description = :description"),
+    @NamedQuery(name = "Accountcategory.findByStatus", query = "SELECT a FROM Accountcategory a WHERE a.status = :status"),
+    @NamedQuery(name = "Accountcategory.findByCreationdate", query = "SELECT a FROM Accountcategory a WHERE a.creationdate = :creationdate"),
+    @NamedQuery(name = "Accountcategory.findByCreator", query = "SELECT a FROM Accountcategory a WHERE a.creator = :creator"),
+    @NamedQuery(name = "Accountcategory.findByEditdate", query = "SELECT a FROM Accountcategory a WHERE a.editdate = :editdate"),
+    @NamedQuery(name = "Accountcategory.findByEditor", query = "SELECT a FROM Accountcategory a WHERE a.editor = :editor"),
+    @NamedQuery(name = "Accountcategory.findBySessiondate", query = "SELECT a FROM Accountcategory a WHERE a.sessiondate = :sessiondate")})
+public class Accountcategory implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,7 +80,7 @@ public class Accountcategory
     @JoinColumn(name = "categoryid", referencedColumnName = "categoryid")
     @ManyToOne
     private Category categoryid;
-    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "accountcategoryid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountcategoryid")
     private List<Chartofaccount> chartofaccountList;
 
     public Accountcategory() {
@@ -89,7 +97,7 @@ public class Accountcategory
     }
 
     public Integer getAccountcategoryid() {
-        return this.accountcategoryid;
+        return accountcategoryid;
     }
 
     public void setAccountcategoryid(Integer accountcategoryid) {
@@ -97,7 +105,7 @@ public class Accountcategory
     }
 
     public Integer getReference() {
-        return this.reference;
+        return reference;
     }
 
     public void setReference(Integer reference) {
@@ -105,7 +113,7 @@ public class Accountcategory
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     public void setDescription(String description) {
@@ -113,7 +121,7 @@ public class Accountcategory
     }
 
     public boolean getStatus() {
-        return this.status;
+        return status;
     }
 
     public void setStatus(boolean status) {
@@ -121,7 +129,7 @@ public class Accountcategory
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -129,7 +137,7 @@ public class Accountcategory
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -137,7 +145,7 @@ public class Accountcategory
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -145,7 +153,7 @@ public class Accountcategory
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -153,7 +161,7 @@ public class Accountcategory
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -161,7 +169,7 @@ public class Accountcategory
     }
 
     public Financialcategory getFcid() {
-        return this.fcid;
+        return fcid;
     }
 
     public void setFcid(Financialcategory fcid) {
@@ -169,7 +177,7 @@ public class Accountcategory
     }
 
     public Category getCategoryid() {
-        return this.categoryid;
+        return categoryid;
     }
 
     public void setCategoryid(Category categoryid) {
@@ -178,31 +186,36 @@ public class Accountcategory
 
     @XmlTransient
     public List<Chartofaccount> getChartofaccountList() {
-        return this.chartofaccountList;
+        return chartofaccountList;
     }
 
     public void setChartofaccountList(List<Chartofaccount> chartofaccountList) {
         this.chartofaccountList = chartofaccountList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.accountcategoryid != null ? this.accountcategoryid.hashCode() : 0);
+        hash += (accountcategoryid != null ? accountcategoryid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Accountcategory)) {
             return false;
         }
         Accountcategory other = (Accountcategory) object;
-        if (((this.accountcategoryid == null) && (other.accountcategoryid != null)) || ((this.accountcategoryid != null) && (!this.accountcategoryid.equals(other.accountcategoryid)))) {
+        if ((this.accountcategoryid == null && other.accountcategoryid != null) || (this.accountcategoryid != null && !this.accountcategoryid.equals(other.accountcategoryid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Accountcategory[ accountcategoryid=" + this.accountcategoryid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Accountcategory[ accountcategoryid=" + accountcategoryid + " ]";
     }
+
 }

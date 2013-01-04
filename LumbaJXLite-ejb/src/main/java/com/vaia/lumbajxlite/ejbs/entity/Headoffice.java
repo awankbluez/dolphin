@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -10,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,27 +23,29 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Headoffice.findAll", query = "SELECT h FROM Headoffice h"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByHeadofficeid", query = "SELECT h FROM Headoffice h WHERE h.headofficeid = :headofficeid"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByHeadofficecode", query = "SELECT h FROM Headoffice h WHERE h.headofficecode = :headofficecode"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByHeadofficename", query = "SELECT h FROM Headoffice h WHERE h.headofficename = :headofficename"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByBusinessunit", query = "SELECT h FROM Headoffice h WHERE h.businessunit = :businessunit"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByHeadofficestatus", query = "SELECT h FROM Headoffice h WHERE h.headofficestatus = :headofficestatus"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByCreator", query = "SELECT h FROM Headoffice h WHERE h.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByEditor", query = "SELECT h FROM Headoffice h WHERE h.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByCreationdate", query = "SELECT h FROM Headoffice h WHERE h.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByEditdate", query = "SELECT h FROM Headoffice h WHERE h.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByBranchvaultaccount", query = "SELECT h FROM Headoffice h WHERE h.branchvaultaccount = :branchvaultaccount"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByInterbranchaccount", query = "SELECT h FROM Headoffice h WHERE h.interbranchaccount = :interbranchaccount"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findByBranchbankaccount", query = "SELECT h FROM Headoffice h WHERE h.branchbankaccount = :branchbankaccount"),
-    @javax.persistence.NamedQuery(name = "Headoffice.findBySessiondate", query = "SELECT h FROM Headoffice h WHERE h.sessiondate = :sessiondate")})
-public class Headoffice
-        implements Serializable {
-
+    @NamedQuery(name = "Headoffice.findAll", query = "SELECT h FROM Headoffice h"),
+    @NamedQuery(name = "Headoffice.findByHeadofficeid", query = "SELECT h FROM Headoffice h WHERE h.headofficeid = :headofficeid"),
+    @NamedQuery(name = "Headoffice.findByHeadofficecode", query = "SELECT h FROM Headoffice h WHERE h.headofficecode = :headofficecode"),
+    @NamedQuery(name = "Headoffice.findByHeadofficename", query = "SELECT h FROM Headoffice h WHERE h.headofficename = :headofficename"),
+    @NamedQuery(name = "Headoffice.findByBusinessunit", query = "SELECT h FROM Headoffice h WHERE h.businessunit = :businessunit"),
+    @NamedQuery(name = "Headoffice.findByHeadofficestatus", query = "SELECT h FROM Headoffice h WHERE h.headofficestatus = :headofficestatus"),
+    @NamedQuery(name = "Headoffice.findByCreator", query = "SELECT h FROM Headoffice h WHERE h.creator = :creator"),
+    @NamedQuery(name = "Headoffice.findByEditor", query = "SELECT h FROM Headoffice h WHERE h.editor = :editor"),
+    @NamedQuery(name = "Headoffice.findByCreationdate", query = "SELECT h FROM Headoffice h WHERE h.creationdate = :creationdate"),
+    @NamedQuery(name = "Headoffice.findByEditdate", query = "SELECT h FROM Headoffice h WHERE h.editdate = :editdate"),
+    @NamedQuery(name = "Headoffice.findByBranchvaultaccount", query = "SELECT h FROM Headoffice h WHERE h.branchvaultaccount = :branchvaultaccount"),
+    @NamedQuery(name = "Headoffice.findByInterbranchaccount", query = "SELECT h FROM Headoffice h WHERE h.interbranchaccount = :interbranchaccount"),
+    @NamedQuery(name = "Headoffice.findByBranchbankaccount", query = "SELECT h FROM Headoffice h WHERE h.branchbankaccount = :branchbankaccount"),
+    @NamedQuery(name = "Headoffice.findBySessiondate", query = "SELECT h FROM Headoffice h WHERE h.sessiondate = :sessiondate")})
+public class Headoffice implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,7 +90,7 @@ public class Headoffice
     }
 
     public Integer getHeadofficeid() {
-        return this.headofficeid;
+        return headofficeid;
     }
 
     public void setHeadofficeid(Integer headofficeid) {
@@ -91,7 +98,7 @@ public class Headoffice
     }
 
     public String getHeadofficecode() {
-        return this.headofficecode;
+        return headofficecode;
     }
 
     public void setHeadofficecode(String headofficecode) {
@@ -99,7 +106,7 @@ public class Headoffice
     }
 
     public String getHeadofficename() {
-        return this.headofficename;
+        return headofficename;
     }
 
     public void setHeadofficename(String headofficename) {
@@ -107,7 +114,7 @@ public class Headoffice
     }
 
     public String getBusinessunit() {
-        return this.businessunit;
+        return businessunit;
     }
 
     public void setBusinessunit(String businessunit) {
@@ -115,7 +122,7 @@ public class Headoffice
     }
 
     public Boolean getHeadofficestatus() {
-        return this.headofficestatus;
+        return headofficestatus;
     }
 
     public void setHeadofficestatus(Boolean headofficestatus) {
@@ -123,7 +130,7 @@ public class Headoffice
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -131,7 +138,7 @@ public class Headoffice
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -139,7 +146,7 @@ public class Headoffice
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -147,7 +154,7 @@ public class Headoffice
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -155,7 +162,7 @@ public class Headoffice
     }
 
     public Integer getBranchvaultaccount() {
-        return this.branchvaultaccount;
+        return branchvaultaccount;
     }
 
     public void setBranchvaultaccount(Integer branchvaultaccount) {
@@ -163,7 +170,7 @@ public class Headoffice
     }
 
     public Integer getInterbranchaccount() {
-        return this.interbranchaccount;
+        return interbranchaccount;
     }
 
     public void setInterbranchaccount(Integer interbranchaccount) {
@@ -171,7 +178,7 @@ public class Headoffice
     }
 
     public Integer getBranchbankaccount() {
-        return this.branchbankaccount;
+        return branchbankaccount;
     }
 
     public void setBranchbankaccount(Integer branchbankaccount) {
@@ -179,7 +186,7 @@ public class Headoffice
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -188,7 +195,7 @@ public class Headoffice
 
     @XmlTransient
     public List<Region> getRegionList() {
-        return this.regionList;
+        return regionList;
     }
 
     public void setRegionList(List<Region> regionList) {
@@ -197,31 +204,36 @@ public class Headoffice
 
     @XmlTransient
     public List<Masteroperational> getMasteroperationalList() {
-        return this.masteroperationalList;
+        return masteroperationalList;
     }
 
     public void setMasteroperationalList(List<Masteroperational> masteroperationalList) {
         this.masteroperationalList = masteroperationalList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.headofficeid != null ? this.headofficeid.hashCode() : 0);
+        hash += (headofficeid != null ? headofficeid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Headoffice)) {
             return false;
         }
         Headoffice other = (Headoffice) object;
-        if (((this.headofficeid == null) && (other.headofficeid != null)) || ((this.headofficeid != null) && (!this.headofficeid.equals(other.headofficeid)))) {
+        if ((this.headofficeid == null && other.headofficeid != null) || (this.headofficeid != null && !this.headofficeid.equals(other.headofficeid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Headoffice[ headofficeid=" + this.headofficeid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Headoffice[ headofficeid=" + headofficeid + " ]";
     }
+
 }

@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -12,40 +16,44 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"username"})})
+    @UniqueConstraint(columnNames = {"username"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Operatoruser.findAll", query = "SELECT o FROM Operatoruser o"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByUserid", query = "SELECT o FROM Operatoruser o WHERE o.userid = :userid"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByUsername", query = "SELECT o FROM Operatoruser o WHERE o.username = :username"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByPassword", query = "SELECT o FROM Operatoruser o WHERE o.password = :password"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByEmployeeid", query = "SELECT o FROM Operatoruser o WHERE o.employeeid = :employeeid"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByEmployeename", query = "SELECT o FROM Operatoruser o WHERE o.employeename = :employeename"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByEmail", query = "SELECT o FROM Operatoruser o WHERE o.email = :email"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByUserstatus", query = "SELECT o FROM Operatoruser o WHERE o.userstatus = :userstatus"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByHelp", query = "SELECT o FROM Operatoruser o WHERE o.help = :help"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByCreationdate", query = "SELECT o FROM Operatoruser o WHERE o.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByEditdate", query = "SELECT o FROM Operatoruser o WHERE o.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByCreator", query = "SELECT o FROM Operatoruser o WHERE o.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByEditor", query = "SELECT o FROM Operatoruser o WHERE o.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByCash", query = "SELECT o FROM Operatoruser o WHERE o.cash = :cash"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findBySessiondate", query = "SELECT o FROM Operatoruser o WHERE o.sessiondate = :sessiondate"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByOveridesettlementamount", query = "SELECT o FROM Operatoruser o WHERE o.overidesettlementamount = :overidesettlementamount"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByCreatorid", query = "SELECT o FROM Operatoruser o WHERE o.creatorid = :creatorid"),
-    @javax.persistence.NamedQuery(name = "Operatoruser.findByEditorid", query = "SELECT o FROM Operatoruser o WHERE o.editorid = :editorid")})
-public class Operatoruser
-        implements Serializable {
-
+    @NamedQuery(name = "Operatoruser.findAll", query = "SELECT o FROM Operatoruser o"),
+    @NamedQuery(name = "Operatoruser.findByUserid", query = "SELECT o FROM Operatoruser o WHERE o.userid = :userid"),
+    @NamedQuery(name = "Operatoruser.findByUsername", query = "SELECT o FROM Operatoruser o WHERE o.username = :username"),
+    @NamedQuery(name = "Operatoruser.findByPassword", query = "SELECT o FROM Operatoruser o WHERE o.password = :password"),
+    @NamedQuery(name = "Operatoruser.findByEmployeeid", query = "SELECT o FROM Operatoruser o WHERE o.employeeid = :employeeid"),
+    @NamedQuery(name = "Operatoruser.findByEmployeename", query = "SELECT o FROM Operatoruser o WHERE o.employeename = :employeename"),
+    @NamedQuery(name = "Operatoruser.findByEmail", query = "SELECT o FROM Operatoruser o WHERE o.email = :email"),
+    @NamedQuery(name = "Operatoruser.findByUserstatus", query = "SELECT o FROM Operatoruser o WHERE o.userstatus = :userstatus"),
+    @NamedQuery(name = "Operatoruser.findByHelp", query = "SELECT o FROM Operatoruser o WHERE o.help = :help"),
+    @NamedQuery(name = "Operatoruser.findByCreationdate", query = "SELECT o FROM Operatoruser o WHERE o.creationdate = :creationdate"),
+    @NamedQuery(name = "Operatoruser.findByEditdate", query = "SELECT o FROM Operatoruser o WHERE o.editdate = :editdate"),
+    @NamedQuery(name = "Operatoruser.findByCash", query = "SELECT o FROM Operatoruser o WHERE o.cash = :cash"),
+    @NamedQuery(name = "Operatoruser.findBySessiondate", query = "SELECT o FROM Operatoruser o WHERE o.sessiondate = :sessiondate"),
+    @NamedQuery(name = "Operatoruser.findByOveridesettlementamount", query = "SELECT o FROM Operatoruser o WHERE o.overidesettlementamount = :overidesettlementamount"),
+    @NamedQuery(name = "Operatoruser.findByCreatorid", query = "SELECT o FROM Operatoruser o WHERE o.creatorid = :creatorid"),
+    @NamedQuery(name = "Operatoruser.findByEditorid", query = "SELECT o FROM Operatoruser o WHERE o.editorid = :editorid"),
+    @NamedQuery(name = "Operatoruser.findByCreator", query = "SELECT o FROM Operatoruser o WHERE o.creator = :creator"),
+    @NamedQuery(name = "Operatoruser.findByEditor", query = "SELECT o FROM Operatoruser o WHERE o.editor = :editor")})
+public class Operatoruser implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,6 +72,7 @@ public class Operatoruser
     @Size(max = 100)
     @Column(length = 100)
     private String employeename;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 40)
     @Column(length = 40)
     private String email;
@@ -73,12 +82,7 @@ public class Operatoruser
     private Date creationdate;
     @Temporal(TemporalType.TIMESTAMP)
     private Date editdate;
-    @Size(max = 40)
-    @Column(length = 40)
-    private String creator;
-    @Size(max = 40)
-    @Column(length = 40)
-    private String editor;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(precision = 17, scale = 17)
     private Double cash;
     @Temporal(TemporalType.DATE)
@@ -86,6 +90,8 @@ public class Operatoruser
     private Boolean overidesettlementamount;
     private Integer creatorid;
     private Integer editorid;
+    private Integer creator;
+    private Integer editor;
     @OneToMany(mappedBy = "userid")
     private List<Customer> customerList;
     @JoinColumn(name = "positionid", referencedColumnName = "positionid")
@@ -121,7 +127,7 @@ public class Operatoruser
     }
 
     public Integer getUserid() {
-        return this.userid;
+        return userid;
     }
 
     public void setUserid(Integer userid) {
@@ -129,7 +135,7 @@ public class Operatoruser
     }
 
     public String getUsername() {
-        return this.username;
+        return username;
     }
 
     public void setUsername(String username) {
@@ -137,7 +143,7 @@ public class Operatoruser
     }
 
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     public void setPassword(String password) {
@@ -145,7 +151,7 @@ public class Operatoruser
     }
 
     public String getEmployeeid() {
-        return this.employeeid;
+        return employeeid;
     }
 
     public void setEmployeeid(String employeeid) {
@@ -153,7 +159,7 @@ public class Operatoruser
     }
 
     public String getEmployeename() {
-        return this.employeename;
+        return employeename;
     }
 
     public void setEmployeename(String employeename) {
@@ -161,7 +167,7 @@ public class Operatoruser
     }
 
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
     public void setEmail(String email) {
@@ -169,7 +175,7 @@ public class Operatoruser
     }
 
     public Boolean getUserstatus() {
-        return this.userstatus;
+        return userstatus;
     }
 
     public void setUserstatus(Boolean userstatus) {
@@ -177,7 +183,7 @@ public class Operatoruser
     }
 
     public Boolean getHelp() {
-        return this.help;
+        return help;
     }
 
     public void setHelp(Boolean help) {
@@ -185,7 +191,7 @@ public class Operatoruser
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -193,31 +199,15 @@ public class Operatoruser
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
         this.editdate = editdate;
     }
 
-    public String getCreator() {
-        return this.creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public String getEditor() {
-        return this.editor;
-    }
-
-    public void setEditor(String editor) {
-        this.editor = editor;
-    }
-
     public Double getCash() {
-        return this.cash;
+        return cash;
     }
 
     public void setCash(Double cash) {
@@ -225,7 +215,7 @@ public class Operatoruser
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -233,7 +223,7 @@ public class Operatoruser
     }
 
     public Boolean getOveridesettlementamount() {
-        return this.overidesettlementamount;
+        return overidesettlementamount;
     }
 
     public void setOveridesettlementamount(Boolean overidesettlementamount) {
@@ -241,7 +231,7 @@ public class Operatoruser
     }
 
     public Integer getCreatorid() {
-        return this.creatorid;
+        return creatorid;
     }
 
     public void setCreatorid(Integer creatorid) {
@@ -249,16 +239,32 @@ public class Operatoruser
     }
 
     public Integer getEditorid() {
-        return this.editorid;
+        return editorid;
     }
 
     public void setEditorid(Integer editorid) {
         this.editorid = editorid;
     }
 
+    public Integer getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Integer creator) {
+        this.creator = creator;
+    }
+
+    public Integer getEditor() {
+        return editor;
+    }
+
+    public void setEditor(Integer editor) {
+        this.editor = editor;
+    }
+
     @XmlTransient
     public List<Customer> getCustomerList() {
-        return this.customerList;
+        return customerList;
     }
 
     public void setCustomerList(List<Customer> customerList) {
@@ -266,7 +272,7 @@ public class Operatoruser
     }
 
     public Position getPositionid() {
-        return this.positionid;
+        return positionid;
     }
 
     public void setPositionid(Position positionid) {
@@ -274,7 +280,7 @@ public class Operatoruser
     }
 
     public Masteroperational getMasteroperationalid() {
-        return this.masteroperationalid;
+        return masteroperationalid;
     }
 
     public void setMasteroperationalid(Masteroperational masteroperationalid) {
@@ -282,7 +288,7 @@ public class Operatoruser
     }
 
     public Division getDivisionid() {
-        return this.divisionid;
+        return divisionid;
     }
 
     public void setDivisionid(Division divisionid) {
@@ -290,7 +296,7 @@ public class Operatoruser
     }
 
     public Directorate getDirectorateid() {
-        return this.directorateid;
+        return directorateid;
     }
 
     public void setDirectorateid(Directorate directorateid) {
@@ -298,7 +304,7 @@ public class Operatoruser
     }
 
     public Chartofaccount getUserterminalcontra() {
-        return this.userterminalcontra;
+        return userterminalcontra;
     }
 
     public void setUserterminalcontra(Chartofaccount userterminalcontra) {
@@ -306,7 +312,7 @@ public class Operatoruser
     }
 
     public Chartofaccount getUserterminalsuspense() {
-        return this.userterminalsuspense;
+        return userterminalsuspense;
     }
 
     public void setUserterminalsuspense(Chartofaccount userterminalsuspense) {
@@ -314,7 +320,7 @@ public class Operatoruser
     }
 
     public Chartofaccount getUserterminalchequecontra() {
-        return this.userterminalchequecontra;
+        return userterminalchequecontra;
     }
 
     public void setUserterminalchequecontra(Chartofaccount userterminalchequecontra) {
@@ -322,31 +328,36 @@ public class Operatoruser
     }
 
     public Chartofaccount getUserterminaldeficitsurplus() {
-        return this.userterminaldeficitsurplus;
+        return userterminaldeficitsurplus;
     }
 
     public void setUserterminaldeficitsurplus(Chartofaccount userterminaldeficitsurplus) {
         this.userterminaldeficitsurplus = userterminaldeficitsurplus;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.userid != null ? this.userid.hashCode() : 0);
+        hash += (userid != null ? userid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Operatoruser)) {
             return false;
         }
         Operatoruser other = (Operatoruser) object;
-        if (((this.userid == null) && (other.userid != null)) || ((this.userid != null) && (!this.userid.equals(other.userid)))) {
+        if ((this.userid == null && other.userid != null) || (this.userid != null && !this.userid.equals(other.userid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Operatoruser[ userid=" + this.userid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Operatoruser[ userid=" + userid + " ]";
     }
+
 }

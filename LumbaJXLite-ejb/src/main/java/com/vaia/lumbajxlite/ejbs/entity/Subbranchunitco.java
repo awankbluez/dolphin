@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -12,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -20,27 +25,29 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findAll", query = "SELECT s FROM Subbranchunitco s"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findBySubbranchunitcoid", query = "SELECT s FROM Subbranchunitco s WHERE s.subbranchunitcoid = :subbranchunitcoid"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findBySubbranchunitcocode", query = "SELECT s FROM Subbranchunitco s WHERE s.subbranchunitcocode = :subbranchunitcocode"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findBySubbranchunitconame", query = "SELECT s FROM Subbranchunitco s WHERE s.subbranchunitconame = :subbranchunitconame"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findBySubbranchunitcostatus", query = "SELECT s FROM Subbranchunitco s WHERE s.subbranchunitcostatus = :subbranchunitcostatus"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findByType", query = "SELECT s FROM Subbranchunitco s WHERE s.type = :type"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findByCreator", query = "SELECT s FROM Subbranchunitco s WHERE s.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findByEditor", query = "SELECT s FROM Subbranchunitco s WHERE s.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findByCreationdate", query = "SELECT s FROM Subbranchunitco s WHERE s.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findByEditdate", query = "SELECT s FROM Subbranchunitco s WHERE s.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findByBranchvaultaccount", query = "SELECT s FROM Subbranchunitco s WHERE s.branchvaultaccount = :branchvaultaccount"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findByInterbranchaccount", query = "SELECT s FROM Subbranchunitco s WHERE s.interbranchaccount = :interbranchaccount"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findByBranchbankaccount", query = "SELECT s FROM Subbranchunitco s WHERE s.branchbankaccount = :branchbankaccount"),
-    @javax.persistence.NamedQuery(name = "Subbranchunitco.findBySessiondate", query = "SELECT s FROM Subbranchunitco s WHERE s.sessiondate = :sessiondate")})
-public class Subbranchunitco
-        implements Serializable {
-
+    @NamedQuery(name = "Subbranchunitco.findAll", query = "SELECT s FROM Subbranchunitco s"),
+    @NamedQuery(name = "Subbranchunitco.findBySubbranchunitcoid", query = "SELECT s FROM Subbranchunitco s WHERE s.subbranchunitcoid = :subbranchunitcoid"),
+    @NamedQuery(name = "Subbranchunitco.findBySubbranchunitcocode", query = "SELECT s FROM Subbranchunitco s WHERE s.subbranchunitcocode = :subbranchunitcocode"),
+    @NamedQuery(name = "Subbranchunitco.findBySubbranchunitconame", query = "SELECT s FROM Subbranchunitco s WHERE s.subbranchunitconame = :subbranchunitconame"),
+    @NamedQuery(name = "Subbranchunitco.findBySubbranchunitcostatus", query = "SELECT s FROM Subbranchunitco s WHERE s.subbranchunitcostatus = :subbranchunitcostatus"),
+    @NamedQuery(name = "Subbranchunitco.findByType", query = "SELECT s FROM Subbranchunitco s WHERE s.type = :type"),
+    @NamedQuery(name = "Subbranchunitco.findByCreator", query = "SELECT s FROM Subbranchunitco s WHERE s.creator = :creator"),
+    @NamedQuery(name = "Subbranchunitco.findByEditor", query = "SELECT s FROM Subbranchunitco s WHERE s.editor = :editor"),
+    @NamedQuery(name = "Subbranchunitco.findByCreationdate", query = "SELECT s FROM Subbranchunitco s WHERE s.creationdate = :creationdate"),
+    @NamedQuery(name = "Subbranchunitco.findByEditdate", query = "SELECT s FROM Subbranchunitco s WHERE s.editdate = :editdate"),
+    @NamedQuery(name = "Subbranchunitco.findByBranchvaultaccount", query = "SELECT s FROM Subbranchunitco s WHERE s.branchvaultaccount = :branchvaultaccount"),
+    @NamedQuery(name = "Subbranchunitco.findByInterbranchaccount", query = "SELECT s FROM Subbranchunitco s WHERE s.interbranchaccount = :interbranchaccount"),
+    @NamedQuery(name = "Subbranchunitco.findByBranchbankaccount", query = "SELECT s FROM Subbranchunitco s WHERE s.branchbankaccount = :branchbankaccount"),
+    @NamedQuery(name = "Subbranchunitco.findBySessiondate", query = "SELECT s FROM Subbranchunitco s WHERE s.sessiondate = :sessiondate")})
+public class Subbranchunitco implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,7 +91,7 @@ public class Subbranchunitco
     }
 
     public Integer getSubbranchunitcoid() {
-        return this.subbranchunitcoid;
+        return subbranchunitcoid;
     }
 
     public void setSubbranchunitcoid(Integer subbranchunitcoid) {
@@ -92,7 +99,7 @@ public class Subbranchunitco
     }
 
     public String getSubbranchunitcocode() {
-        return this.subbranchunitcocode;
+        return subbranchunitcocode;
     }
 
     public void setSubbranchunitcocode(String subbranchunitcocode) {
@@ -100,7 +107,7 @@ public class Subbranchunitco
     }
 
     public String getSubbranchunitconame() {
-        return this.subbranchunitconame;
+        return subbranchunitconame;
     }
 
     public void setSubbranchunitconame(String subbranchunitconame) {
@@ -108,7 +115,7 @@ public class Subbranchunitco
     }
 
     public Boolean getSubbranchunitcostatus() {
-        return this.subbranchunitcostatus;
+        return subbranchunitcostatus;
     }
 
     public void setSubbranchunitcostatus(Boolean subbranchunitcostatus) {
@@ -116,7 +123,7 @@ public class Subbranchunitco
     }
 
     public Character getType() {
-        return this.type;
+        return type;
     }
 
     public void setType(Character type) {
@@ -124,7 +131,7 @@ public class Subbranchunitco
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -132,7 +139,7 @@ public class Subbranchunitco
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -140,7 +147,7 @@ public class Subbranchunitco
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -148,7 +155,7 @@ public class Subbranchunitco
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -156,7 +163,7 @@ public class Subbranchunitco
     }
 
     public Integer getBranchvaultaccount() {
-        return this.branchvaultaccount;
+        return branchvaultaccount;
     }
 
     public void setBranchvaultaccount(Integer branchvaultaccount) {
@@ -164,7 +171,7 @@ public class Subbranchunitco
     }
 
     public Integer getInterbranchaccount() {
-        return this.interbranchaccount;
+        return interbranchaccount;
     }
 
     public void setInterbranchaccount(Integer interbranchaccount) {
@@ -172,7 +179,7 @@ public class Subbranchunitco
     }
 
     public Integer getBranchbankaccount() {
-        return this.branchbankaccount;
+        return branchbankaccount;
     }
 
     public void setBranchbankaccount(Integer branchbankaccount) {
@@ -180,7 +187,7 @@ public class Subbranchunitco
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -189,7 +196,7 @@ public class Subbranchunitco
 
     @XmlTransient
     public List<Masteroperational> getMasteroperationalList() {
-        return this.masteroperationalList;
+        return masteroperationalList;
     }
 
     public void setMasteroperationalList(List<Masteroperational> masteroperationalList) {
@@ -197,31 +204,36 @@ public class Subbranchunitco
     }
 
     public Branch getBranchid() {
-        return this.branchid;
+        return branchid;
     }
 
     public void setBranchid(Branch branchid) {
         this.branchid = branchid;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.subbranchunitcoid != null ? this.subbranchunitcoid.hashCode() : 0);
+        hash += (subbranchunitcoid != null ? subbranchunitcoid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Subbranchunitco)) {
             return false;
         }
         Subbranchunitco other = (Subbranchunitco) object;
-        if (((this.subbranchunitcoid == null) && (other.subbranchunitcoid != null)) || ((this.subbranchunitcoid != null) && (!this.subbranchunitcoid.equals(other.subbranchunitcoid)))) {
+        if ((this.subbranchunitcoid == null && other.subbranchunitcoid != null) || (this.subbranchunitcoid != null && !this.subbranchunitcoid.equals(other.subbranchunitcoid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Subbranchunitco[ subbranchunitcoid=" + this.subbranchunitcoid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Subbranchunitco[ subbranchunitcoid=" + subbranchunitcoid + " ]";
     }
+
 }

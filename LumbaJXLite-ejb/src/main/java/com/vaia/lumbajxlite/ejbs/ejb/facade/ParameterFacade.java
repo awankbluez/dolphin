@@ -24,7 +24,7 @@ public class ParameterFacade extends AbstractFacade<Parameter>
     }
 
     public List<Parameter> findByCode(String code) {
-        Query query = this.em.createNamedQuery("Parameter.findByParametercode");
+        Query query = this.em.createNamedQuery(Parameter.SQL_FIND_BY_CODE);
         query.setParameter("parametercode", code);
 
         return query.getResultList();

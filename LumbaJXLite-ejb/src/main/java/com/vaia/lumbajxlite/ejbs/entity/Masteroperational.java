@@ -1,9 +1,14 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -20,23 +26,25 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Masteroperational.findAll", query = "SELECT m FROM Masteroperational m"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findByMasteroperationalid", query = "SELECT m FROM Masteroperational m WHERE m.masteroperationalid = :masteroperationalid"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findByAddress", query = "SELECT m FROM Masteroperational m WHERE m.address = :address"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findByPhonenumber", query = "SELECT m FROM Masteroperational m WHERE m.phonenumber = :phonenumber"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findByCreationdate", query = "SELECT m FROM Masteroperational m WHERE m.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findByEditdate", query = "SELECT m FROM Masteroperational m WHERE m.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findByCreator", query = "SELECT m FROM Masteroperational m WHERE m.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findByEditor", query = "SELECT m FROM Masteroperational m WHERE m.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findByTypeoffice", query = "SELECT m FROM Masteroperational m WHERE m.typeoffice = :typeoffice"),
-    @javax.persistence.NamedQuery(name = "Masteroperational.findBySessiondate", query = "SELECT m FROM Masteroperational m WHERE m.sessiondate = :sessiondate")})
-public class Masteroperational
-        implements Serializable {
-
+    @NamedQuery(name = "Masteroperational.findAll", query = "SELECT m FROM Masteroperational m"),
+    @NamedQuery(name = "Masteroperational.findByMasteroperationalid", query = "SELECT m FROM Masteroperational m WHERE m.masteroperationalid = :masteroperationalid"),
+    @NamedQuery(name = "Masteroperational.findByAddress", query = "SELECT m FROM Masteroperational m WHERE m.address = :address"),
+    @NamedQuery(name = "Masteroperational.findByPhonenumber", query = "SELECT m FROM Masteroperational m WHERE m.phonenumber = :phonenumber"),
+    @NamedQuery(name = "Masteroperational.findByCreationdate", query = "SELECT m FROM Masteroperational m WHERE m.creationdate = :creationdate"),
+    @NamedQuery(name = "Masteroperational.findByEditdate", query = "SELECT m FROM Masteroperational m WHERE m.editdate = :editdate"),
+    @NamedQuery(name = "Masteroperational.findByCreator", query = "SELECT m FROM Masteroperational m WHERE m.creator = :creator"),
+    @NamedQuery(name = "Masteroperational.findByEditor", query = "SELECT m FROM Masteroperational m WHERE m.editor = :editor"),
+    @NamedQuery(name = "Masteroperational.findByTypeoffice", query = "SELECT m FROM Masteroperational m WHERE m.typeoffice = :typeoffice"),
+    @NamedQuery(name = "Masteroperational.findBySessiondate", query = "SELECT m FROM Masteroperational m WHERE m.sessiondate = :sessiondate")})
+public class Masteroperational implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,7 +91,9 @@ public class Masteroperational
     @JoinColumn(name = "branchid", referencedColumnName = "branchid")
     @ManyToOne
     private Branch branchid;
-    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "masteroperationalid")
+    @OneToMany(mappedBy = "masteroperationalid")
+    private List<Account> accountList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "masteroperationalid")
     private List<Chartofaccount> chartofaccountList;
 
     public Masteroperational() {
@@ -94,7 +104,7 @@ public class Masteroperational
     }
 
     public Integer getMasteroperationalid() {
-        return this.masteroperationalid;
+        return masteroperationalid;
     }
 
     public void setMasteroperationalid(Integer masteroperationalid) {
@@ -102,7 +112,7 @@ public class Masteroperational
     }
 
     public String getAddress() {
-        return this.address;
+        return address;
     }
 
     public void setAddress(String address) {
@@ -110,7 +120,7 @@ public class Masteroperational
     }
 
     public String getPhonenumber() {
-        return this.phonenumber;
+        return phonenumber;
     }
 
     public void setPhonenumber(String phonenumber) {
@@ -118,7 +128,7 @@ public class Masteroperational
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -126,7 +136,7 @@ public class Masteroperational
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -134,7 +144,7 @@ public class Masteroperational
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -142,7 +152,7 @@ public class Masteroperational
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -150,7 +160,7 @@ public class Masteroperational
     }
 
     public String getTypeoffice() {
-        return this.typeoffice;
+        return typeoffice;
     }
 
     public void setTypeoffice(String typeoffice) {
@@ -158,7 +168,7 @@ public class Masteroperational
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -167,7 +177,7 @@ public class Masteroperational
 
     @XmlTransient
     public List<Customer> getCustomerList() {
-        return this.customerList;
+        return customerList;
     }
 
     public void setCustomerList(List<Customer> customerList) {
@@ -176,7 +186,7 @@ public class Masteroperational
 
     @XmlTransient
     public List<Operatoruser> getOperatoruserList() {
-        return this.operatoruserList;
+        return operatoruserList;
     }
 
     public void setOperatoruserList(List<Operatoruser> operatoruserList) {
@@ -184,7 +194,7 @@ public class Masteroperational
     }
 
     public Village getVillageid() {
-        return this.villageid;
+        return villageid;
     }
 
     public void setVillageid(Village villageid) {
@@ -192,7 +202,7 @@ public class Masteroperational
     }
 
     public Subbranchunitco getSubbranchunitcoid() {
-        return this.subbranchunitcoid;
+        return subbranchunitcoid;
     }
 
     public void setSubbranchunitcoid(Subbranchunitco subbranchunitcoid) {
@@ -200,7 +210,7 @@ public class Masteroperational
     }
 
     public Region getRegionid() {
-        return this.regionid;
+        return regionid;
     }
 
     public void setRegionid(Region regionid) {
@@ -208,7 +218,7 @@ public class Masteroperational
     }
 
     public Headoffice getHeadofficeid() {
-        return this.headofficeid;
+        return headofficeid;
     }
 
     public void setHeadofficeid(Headoffice headofficeid) {
@@ -216,7 +226,7 @@ public class Masteroperational
     }
 
     public Branch getBranchid() {
-        return this.branchid;
+        return branchid;
     }
 
     public void setBranchid(Branch branchid) {
@@ -224,32 +234,46 @@ public class Masteroperational
     }
 
     @XmlTransient
+    public List<Account> getAccountList() {
+        return accountList;
+    }
+
+    public void setAccountList(List<Account> accountList) {
+        this.accountList = accountList;
+    }
+
+    @XmlTransient
     public List<Chartofaccount> getChartofaccountList() {
-        return this.chartofaccountList;
+        return chartofaccountList;
     }
 
     public void setChartofaccountList(List<Chartofaccount> chartofaccountList) {
         this.chartofaccountList = chartofaccountList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.masteroperationalid != null ? this.masteroperationalid.hashCode() : 0);
+        hash += (masteroperationalid != null ? masteroperationalid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Masteroperational)) {
             return false;
         }
         Masteroperational other = (Masteroperational) object;
-        if (((this.masteroperationalid == null) && (other.masteroperationalid != null)) || ((this.masteroperationalid != null) && (!this.masteroperationalid.equals(other.masteroperationalid)))) {
+        if ((this.masteroperationalid == null && other.masteroperationalid != null) || (this.masteroperationalid != null && !this.masteroperationalid.equals(other.masteroperationalid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Masteroperational[ masteroperationalid=" + this.masteroperationalid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Masteroperational[ masteroperationalid=" + masteroperationalid + " ]";
     }
+
 }

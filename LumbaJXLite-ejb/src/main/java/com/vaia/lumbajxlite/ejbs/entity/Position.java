@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -10,34 +14,38 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"positionname"})})
+    @UniqueConstraint(columnNames = {"positionname"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Position.findAll", query = "SELECT p FROM Position p"),
-    @javax.persistence.NamedQuery(name = "Position.findByPositionid", query = "SELECT p FROM Position p WHERE p.positionid = :positionid"),
-    @javax.persistence.NamedQuery(name = "Position.findByPositioncode", query = "SELECT p FROM Position p WHERE p.positioncode = :positioncode"),
-    @javax.persistence.NamedQuery(name = "Position.findByPositionname", query = "SELECT p FROM Position p WHERE p.positionname = :positionname"),
-    @javax.persistence.NamedQuery(name = "Position.findByPositionstatus", query = "SELECT p FROM Position p WHERE p.positionstatus = :positionstatus"),
-    @javax.persistence.NamedQuery(name = "Position.findByIsaccountofficer", query = "SELECT p FROM Position p WHERE p.isaccountofficer = :isaccountofficer"),
-    @javax.persistence.NamedQuery(name = "Position.findByCreationdate", query = "SELECT p FROM Position p WHERE p.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Position.findByEditdate", query = "SELECT p FROM Position p WHERE p.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Position.findByParentposition", query = "SELECT p FROM Position p WHERE p.parentposition = :parentposition"),
-    @javax.persistence.NamedQuery(name = "Position.findBySessiondate", query = "SELECT p FROM Position p WHERE p.sessiondate = :sessiondate"),
-    @javax.persistence.NamedQuery(name = "Position.findByCreator", query = "SELECT p FROM Position p WHERE p.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Position.findByEditor", query = "SELECT p FROM Position p WHERE p.editor = :editor")})
-public class Position
-        implements Serializable {
-
+    @NamedQuery(name = "Position.findAll", query = "SELECT p FROM Position p"),
+    @NamedQuery(name = "Position.findByPositionid", query = "SELECT p FROM Position p WHERE p.positionid = :positionid"),
+    @NamedQuery(name = "Position.findByPositioncode", query = "SELECT p FROM Position p WHERE p.positioncode = :positioncode"),
+    @NamedQuery(name = "Position.findByPositionname", query = "SELECT p FROM Position p WHERE p.positionname = :positionname"),
+    @NamedQuery(name = "Position.findByPositionstatus", query = "SELECT p FROM Position p WHERE p.positionstatus = :positionstatus"),
+    @NamedQuery(name = "Position.findByIsaccountofficer", query = "SELECT p FROM Position p WHERE p.isaccountofficer = :isaccountofficer"),
+    @NamedQuery(name = "Position.findByCreationdate", query = "SELECT p FROM Position p WHERE p.creationdate = :creationdate"),
+    @NamedQuery(name = "Position.findByEditdate", query = "SELECT p FROM Position p WHERE p.editdate = :editdate"),
+    @NamedQuery(name = "Position.findByParentposition", query = "SELECT p FROM Position p WHERE p.parentposition = :parentposition"),
+    @NamedQuery(name = "Position.findBySessiondate", query = "SELECT p FROM Position p WHERE p.sessiondate = :sessiondate"),
+    @NamedQuery(name = "Position.findByCreator", query = "SELECT p FROM Position p WHERE p.creator = :creator"),
+    @NamedQuery(name = "Position.findByEditor", query = "SELECT p FROM Position p WHERE p.editor = :editor")})
+public class Position implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,7 +80,7 @@ public class Position
     }
 
     public Integer getPositionid() {
-        return this.positionid;
+        return positionid;
     }
 
     public void setPositionid(Integer positionid) {
@@ -80,7 +88,7 @@ public class Position
     }
 
     public String getPositioncode() {
-        return this.positioncode;
+        return positioncode;
     }
 
     public void setPositioncode(String positioncode) {
@@ -88,7 +96,7 @@ public class Position
     }
 
     public String getPositionname() {
-        return this.positionname;
+        return positionname;
     }
 
     public void setPositionname(String positionname) {
@@ -96,7 +104,7 @@ public class Position
     }
 
     public Boolean getPositionstatus() {
-        return this.positionstatus;
+        return positionstatus;
     }
 
     public void setPositionstatus(Boolean positionstatus) {
@@ -104,7 +112,7 @@ public class Position
     }
 
     public Boolean getIsaccountofficer() {
-        return this.isaccountofficer;
+        return isaccountofficer;
     }
 
     public void setIsaccountofficer(Boolean isaccountofficer) {
@@ -112,7 +120,7 @@ public class Position
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -120,7 +128,7 @@ public class Position
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -128,7 +136,7 @@ public class Position
     }
 
     public Integer getParentposition() {
-        return this.parentposition;
+        return parentposition;
     }
 
     public void setParentposition(Integer parentposition) {
@@ -136,7 +144,7 @@ public class Position
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -144,7 +152,7 @@ public class Position
     }
 
     public Integer getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(Integer creator) {
@@ -152,7 +160,7 @@ public class Position
     }
 
     public Integer getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(Integer editor) {
@@ -161,31 +169,36 @@ public class Position
 
     @XmlTransient
     public List<Operatoruser> getOperatoruserList() {
-        return this.operatoruserList;
+        return operatoruserList;
     }
 
     public void setOperatoruserList(List<Operatoruser> operatoruserList) {
         this.operatoruserList = operatoruserList;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.positionid != null ? this.positionid.hashCode() : 0);
+        hash += (positionid != null ? positionid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Position)) {
             return false;
         }
         Position other = (Position) object;
-        if (((this.positionid == null) && (other.positionid != null)) || ((this.positionid != null) && (!this.positionid.equals(other.positionid)))) {
+        if ((this.positionid == null && other.positionid != null) || (this.positionid != null && !this.positionid.equals(other.positionid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Position[ positionid=" + this.positionid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Position[ positionid=" + positionid + " ]";
     }
+
 }

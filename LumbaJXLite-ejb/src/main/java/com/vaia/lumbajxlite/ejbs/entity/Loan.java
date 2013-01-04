@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loan.findAll", query = "SELECT l FROM Loan l"),
@@ -107,7 +107,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loan.findByPartialdeposit", query = "SELECT l FROM Loan l WHERE l.partialdeposit = :partialdeposit"),
     @NamedQuery(name = "Loan.findByPenaltycalculation", query = "SELECT l FROM Loan l WHERE l.penaltycalculation = :penaltycalculation")})
 public class Loan implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -224,10 +223,10 @@ public class Loan implements Serializable {
     private String penaltycalculation;
     @JoinColumn(name = "loancategory", referencedColumnName = "loancategoryid")
     @ManyToOne
-    private LoanCategory loancategory;
+    private Loancategory loancategory;
     @JoinColumn(name = "loanapprovalid", referencedColumnName = "loanapprovalid")
     @ManyToOne
-    private LoanApproval loanapprovalid;
+    private Loanapproval loanapprovalid;
     @JoinColumn(name = "currencyid", referencedColumnName = "currencyid")
     @ManyToOne
     private Currency currencyid;
@@ -817,19 +816,19 @@ public class Loan implements Serializable {
         this.penaltycalculation = penaltycalculation;
     }
 
-    public LoanCategory getLoancategory() {
+    public Loancategory getLoancategory() {
         return loancategory;
     }
 
-    public void setLoancategory(LoanCategory loancategory) {
+    public void setLoancategory(Loancategory loancategory) {
         this.loancategory = loancategory;
     }
 
-    public LoanApproval getLoanapprovalid() {
+    public Loanapproval getLoanapprovalid() {
         return loanapprovalid;
     }
 
-    public void setLoanapprovalid(LoanApproval loanapprovalid) {
+    public void setLoanapprovalid(Loanapproval loanapprovalid) {
         this.loanapprovalid = loanapprovalid;
     }
 
@@ -874,4 +873,5 @@ public class Loan implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Loan[ loanid=" + loanid + " ]";
     }
+
 }

@@ -1,7 +1,12 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,48 +16,53 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Address.findAll", query = "SELECT a FROM Address a"),
-    @javax.persistence.NamedQuery(name = "Address.findByAddressid", query = "SELECT a FROM Address a WHERE a.addressid = :addressid"),
-    @javax.persistence.NamedQuery(name = "Address.findByAddress", query = "SELECT a FROM Address a WHERE a.address = :address"),
-    @javax.persistence.NamedQuery(name = "Address.findByPostcode", query = "SELECT a FROM Address a WHERE a.postcode = :postcode"),
-    @javax.persistence.NamedQuery(name = "Address.findByPhonenumbercode", query = "SELECT a FROM Address a WHERE a.phonenumbercode = :phonenumbercode"),
-    @javax.persistence.NamedQuery(name = "Address.findByPhonenumber", query = "SELECT a FROM Address a WHERE a.phonenumber = :phonenumber"),
-    @javax.persistence.NamedQuery(name = "Address.findByMobilephonenumber", query = "SELECT a FROM Address a WHERE a.mobilephonenumber = :mobilephonenumber"),
-    @javax.persistence.NamedQuery(name = "Address.findByFaximilearea", query = "SELECT a FROM Address a WHERE a.faximilearea = :faximilearea"),
-    @javax.persistence.NamedQuery(name = "Address.findByFaximilenumber", query = "SELECT a FROM Address a WHERE a.faximilenumber = :faximilenumber"),
-    @javax.persistence.NamedQuery(name = "Address.findByEmail", query = "SELECT a FROM Address a WHERE a.email = :email"),
-    @javax.persistence.NamedQuery(name = "Address.findByMailingaddress", query = "SELECT a FROM Address a WHERE a.mailingaddress = :mailingaddress"),
-    @javax.persistence.NamedQuery(name = "Address.findByCreationdate", query = "SELECT a FROM Address a WHERE a.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Address.findByEditdate", query = "SELECT a FROM Address a WHERE a.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Address.findByStatus", query = "SELECT a FROM Address a WHERE a.status = :status"),
-    @javax.persistence.NamedQuery(name = "Address.findBySessiondate", query = "SELECT a FROM Address a WHERE a.sessiondate = :sessiondate"),
-    @javax.persistence.NamedQuery(name = "Address.findByLinkId", query = "SELECT a FROM Address a WHERE a.linkId = :linkId"),
-    @javax.persistence.NamedQuery(name = "Address.findByStatusData", query = "SELECT a FROM Address a WHERE a.statusData = :statusData"),
-    @javax.persistence.NamedQuery(name = "Address.findByRtrw", query = "SELECT a FROM Address a WHERE a.rtrw = :rtrw"),
-    @javax.persistence.NamedQuery(name = "Address.findByCreator", query = "SELECT a FROM Address a WHERE a.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Address.findByEditor", query = "SELECT a FROM Address a WHERE a.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Address.findByVillage", query = "SELECT a FROM Address a WHERE a.village = :village"),
-    @javax.persistence.NamedQuery(name = "Address.findBySubdistrict", query = "SELECT a FROM Address a WHERE a.subdistrict = :subdistrict"),
-    @javax.persistence.NamedQuery(name = "Address.findByProvinceid", query = "SELECT a FROM Address a WHERE a.provinceid = :provinceid"),
-    @javax.persistence.NamedQuery(name = "Address.findByCountryid", query = "SELECT a FROM Address a WHERE a.countryid = :countryid"),
-    @javax.persistence.NamedQuery(name = "Address.findByOfficephonenumbercode", query = "SELECT a FROM Address a WHERE a.officephonenumbercode = :officephonenumbercode"),
-    @javax.persistence.NamedQuery(name = "Address.findByOfficephonenumber", query = "SELECT a FROM Address a WHERE a.officephonenumber = :officephonenumber"),
-    @javax.persistence.NamedQuery(name = "Address.findByWebsite", query = "SELECT a FROM Address a WHERE a.website = :website"),
-    @javax.persistence.NamedQuery(name = "Address.findByDistrictid", query = "SELECT a FROM Address a WHERE a.districtid = :districtid"),
-    @javax.persistence.NamedQuery(name = "Address.findByGroupingid", query = "SELECT a FROM Address a WHERE a.groupingid = :groupingid")})
-public class Address
-        implements Serializable {
-
+    @NamedQuery(name = "Address.findAll", query = "SELECT a FROM Address a"),
+    @NamedQuery(name = "Address.findByAddressid", query = "SELECT a FROM Address a WHERE a.addressid = :addressid"),
+    @NamedQuery(name = "Address.findByAddress", query = "SELECT a FROM Address a WHERE a.address = :address"),
+    @NamedQuery(name = "Address.findByPostcode", query = "SELECT a FROM Address a WHERE a.postcode = :postcode"),
+    @NamedQuery(name = "Address.findByPhonenumbercode", query = "SELECT a FROM Address a WHERE a.phonenumbercode = :phonenumbercode"),
+    @NamedQuery(name = "Address.findByPhonenumber", query = "SELECT a FROM Address a WHERE a.phonenumber = :phonenumber"),
+    @NamedQuery(name = "Address.findByMobilephonenumber", query = "SELECT a FROM Address a WHERE a.mobilephonenumber = :mobilephonenumber"),
+    @NamedQuery(name = "Address.findByFaximilearea", query = "SELECT a FROM Address a WHERE a.faximilearea = :faximilearea"),
+    @NamedQuery(name = "Address.findByFaximilenumber", query = "SELECT a FROM Address a WHERE a.faximilenumber = :faximilenumber"),
+    @NamedQuery(name = "Address.findByEmail", query = "SELECT a FROM Address a WHERE a.email = :email"),
+    @NamedQuery(name = "Address.findByMailingaddress", query = "SELECT a FROM Address a WHERE a.mailingaddress = :mailingaddress"),
+    @NamedQuery(name = "Address.findByCreationdate", query = "SELECT a FROM Address a WHERE a.creationdate = :creationdate"),
+    @NamedQuery(name = "Address.findByEditdate", query = "SELECT a FROM Address a WHERE a.editdate = :editdate"),
+    @NamedQuery(name = "Address.findByStatus", query = "SELECT a FROM Address a WHERE a.status = :status"),
+    @NamedQuery(name = "Address.findBySessiondate", query = "SELECT a FROM Address a WHERE a.sessiondate = :sessiondate"),
+    @NamedQuery(name = "Address.findByLinkId", query = "SELECT a FROM Address a WHERE a.linkId = :linkId"),
+    @NamedQuery(name = "Address.findByStatusData", query = "SELECT a FROM Address a WHERE a.statusData = :statusData"),
+    @NamedQuery(name = "Address.findByRtrw", query = "SELECT a FROM Address a WHERE a.rtrw = :rtrw"),
+    @NamedQuery(name = "Address.findByCreator", query = "SELECT a FROM Address a WHERE a.creator = :creator"),
+    @NamedQuery(name = "Address.findByEditor", query = "SELECT a FROM Address a WHERE a.editor = :editor"),
+    @NamedQuery(name = "Address.findByVillage", query = "SELECT a FROM Address a WHERE a.village = :village"),
+    @NamedQuery(name = "Address.findBySubdistrict", query = "SELECT a FROM Address a WHERE a.subdistrict = :subdistrict"),
+    @NamedQuery(name = "Address.findByProvinceid", query = "SELECT a FROM Address a WHERE a.provinceid = :provinceid"),
+    @NamedQuery(name = "Address.findByCountryid", query = "SELECT a FROM Address a WHERE a.countryid = :countryid"),
+    @NamedQuery(name = "Address.findByOfficephonenumbercode", query = "SELECT a FROM Address a WHERE a.officephonenumbercode = :officephonenumbercode"),
+    @NamedQuery(name = "Address.findByOfficephonenumber", query = "SELECT a FROM Address a WHERE a.officephonenumber = :officephonenumber"),
+    @NamedQuery(name = "Address.findByWebsite", query = "SELECT a FROM Address a WHERE a.website = :website"),
+    @NamedQuery(name = "Address.findByDistrictid", query = "SELECT a FROM Address a WHERE a.districtid = :districtid"),
+    @NamedQuery(name = "Address.findByGroupingid", query = "SELECT a FROM Address a WHERE a.groupingid = :groupingid")})
+public class Address implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,6 +90,7 @@ public class Address
     @Size(max = 15)
     @Column(length = 15)
     private String faximilenumber;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 50)
     @Column(length = 50)
     private String email;
@@ -119,6 +130,8 @@ public class Address
     private String website;
     private Integer districtid;
     private Integer groupingid;
+    @OneToMany(mappedBy = "addressAddressid")
+    private List<Person> personList;
     @JoinColumn(name = "villageid", referencedColumnName = "villageid")
     @ManyToOne
     private Village villageid;
@@ -140,7 +153,7 @@ public class Address
     }
 
     public Integer getAddressid() {
-        return this.addressid;
+        return addressid;
     }
 
     public void setAddressid(Integer addressid) {
@@ -148,7 +161,7 @@ public class Address
     }
 
     public String getAddress() {
-        return this.address;
+        return address;
     }
 
     public void setAddress(String address) {
@@ -156,7 +169,7 @@ public class Address
     }
 
     public String getPostcode() {
-        return this.postcode;
+        return postcode;
     }
 
     public void setPostcode(String postcode) {
@@ -164,7 +177,7 @@ public class Address
     }
 
     public String getPhonenumbercode() {
-        return this.phonenumbercode;
+        return phonenumbercode;
     }
 
     public void setPhonenumbercode(String phonenumbercode) {
@@ -172,7 +185,7 @@ public class Address
     }
 
     public String getPhonenumber() {
-        return this.phonenumber;
+        return phonenumber;
     }
 
     public void setPhonenumber(String phonenumber) {
@@ -180,7 +193,7 @@ public class Address
     }
 
     public String getMobilephonenumber() {
-        return this.mobilephonenumber;
+        return mobilephonenumber;
     }
 
     public void setMobilephonenumber(String mobilephonenumber) {
@@ -188,7 +201,7 @@ public class Address
     }
 
     public String getFaximilearea() {
-        return this.faximilearea;
+        return faximilearea;
     }
 
     public void setFaximilearea(String faximilearea) {
@@ -196,7 +209,7 @@ public class Address
     }
 
     public String getFaximilenumber() {
-        return this.faximilenumber;
+        return faximilenumber;
     }
 
     public void setFaximilenumber(String faximilenumber) {
@@ -204,7 +217,7 @@ public class Address
     }
 
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
     public void setEmail(String email) {
@@ -212,7 +225,7 @@ public class Address
     }
 
     public Boolean getMailingaddress() {
-        return this.mailingaddress;
+        return mailingaddress;
     }
 
     public void setMailingaddress(Boolean mailingaddress) {
@@ -220,7 +233,7 @@ public class Address
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -228,7 +241,7 @@ public class Address
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -236,7 +249,7 @@ public class Address
     }
 
     public Boolean getStatus() {
-        return this.status;
+        return status;
     }
 
     public void setStatus(Boolean status) {
@@ -244,7 +257,7 @@ public class Address
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -252,7 +265,7 @@ public class Address
     }
 
     public Integer getLinkId() {
-        return this.linkId;
+        return linkId;
     }
 
     public void setLinkId(Integer linkId) {
@@ -260,7 +273,7 @@ public class Address
     }
 
     public Character getStatusData() {
-        return this.statusData;
+        return statusData;
     }
 
     public void setStatusData(Character statusData) {
@@ -268,7 +281,7 @@ public class Address
     }
 
     public String getRtrw() {
-        return this.rtrw;
+        return rtrw;
     }
 
     public void setRtrw(String rtrw) {
@@ -276,7 +289,7 @@ public class Address
     }
 
     public Integer getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(Integer creator) {
@@ -284,7 +297,7 @@ public class Address
     }
 
     public Integer getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(Integer editor) {
@@ -292,7 +305,7 @@ public class Address
     }
 
     public String getVillage() {
-        return this.village;
+        return village;
     }
 
     public void setVillage(String village) {
@@ -300,7 +313,7 @@ public class Address
     }
 
     public String getSubdistrict() {
-        return this.subdistrict;
+        return subdistrict;
     }
 
     public void setSubdistrict(String subdistrict) {
@@ -308,7 +321,7 @@ public class Address
     }
 
     public Integer getProvinceid() {
-        return this.provinceid;
+        return provinceid;
     }
 
     public void setProvinceid(Integer provinceid) {
@@ -316,7 +329,7 @@ public class Address
     }
 
     public Integer getCountryid() {
-        return this.countryid;
+        return countryid;
     }
 
     public void setCountryid(Integer countryid) {
@@ -324,7 +337,7 @@ public class Address
     }
 
     public String getOfficephonenumbercode() {
-        return this.officephonenumbercode;
+        return officephonenumbercode;
     }
 
     public void setOfficephonenumbercode(String officephonenumbercode) {
@@ -332,7 +345,7 @@ public class Address
     }
 
     public String getOfficephonenumber() {
-        return this.officephonenumber;
+        return officephonenumber;
     }
 
     public void setOfficephonenumber(String officephonenumber) {
@@ -340,7 +353,7 @@ public class Address
     }
 
     public String getWebsite() {
-        return this.website;
+        return website;
     }
 
     public void setWebsite(String website) {
@@ -348,7 +361,7 @@ public class Address
     }
 
     public Integer getDistrictid() {
-        return this.districtid;
+        return districtid;
     }
 
     public void setDistrictid(Integer districtid) {
@@ -356,15 +369,24 @@ public class Address
     }
 
     public Integer getGroupingid() {
-        return this.groupingid;
+        return groupingid;
     }
 
     public void setGroupingid(Integer groupingid) {
         this.groupingid = groupingid;
     }
 
+    @XmlTransient
+    public List<Person> getPersonList() {
+        return personList;
+    }
+
+    public void setPersonList(List<Person> personList) {
+        this.personList = personList;
+    }
+
     public Village getVillageid() {
-        return this.villageid;
+        return villageid;
     }
 
     public void setVillageid(Village villageid) {
@@ -372,7 +394,7 @@ public class Address
     }
 
     public Person getPersonid() {
-        return this.personid;
+        return personid;
     }
 
     public void setPersonid(Person personid) {
@@ -380,7 +402,7 @@ public class Address
     }
 
     public Customermanagement getCustomermanagementid() {
-        return this.customermanagementid;
+        return customermanagementid;
     }
 
     public void setCustomermanagementid(Customermanagement customermanagementid) {
@@ -388,31 +410,36 @@ public class Address
     }
 
     public Addressstatus getAddressstatusid() {
-        return this.addressstatusid;
+        return addressstatusid;
     }
 
     public void setAddressstatusid(Addressstatus addressstatusid) {
         this.addressstatusid = addressstatusid;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.addressid != null ? this.addressid.hashCode() : 0);
+        hash += (addressid != null ? addressid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Address)) {
             return false;
         }
         Address other = (Address) object;
-        if (((this.addressid == null) && (other.addressid != null)) || ((this.addressid != null) && (!this.addressid.equals(other.addressid)))) {
+        if ((this.addressid == null && other.addressid != null) || (this.addressid != null && !this.addressid.equals(other.addressid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Address[ addressid=" + this.addressid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Address[ addressid=" + addressid + " ]";
     }
+
 }

@@ -27,14 +27,14 @@
                           steady-pool-size="1"
                           validate-atmost-once-period-in-seconds="0"
                           wrap-jdbc-objects="false">
-        <property name="serverName" value="192.168.0.101"/>
+        <property name="serverName" value="192.168.0.3"/>
         <property name="portNumber" value="5432"/>
 
         <property name="User" value="postgres"/>
         <property name="Password" value="postgres"/>
 
         <property name="databaseName" value="DB_LUMBA"/>
-        <property name="URL" value="jdbc:postgresql://192.168.0.101:5432/DB_LUMBA"/>
+        <property name="URL" value="jdbc:postgresql://192.168.0.3:5432/DB_LUMBA"/>
         <property name="driverClass" value="org.postgresql.Driver"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="jdbc/Lumba" object-type="user" pool-name="post-gre-sql_DB_LUMBA_serverPool"/>

@@ -17,6 +17,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
+        <lumbajx.database.address>192.168.0.3</lumbajx.database.address>
+        <lumbajx.database.db>DB_LUMBA</lumbajx.database.db>
+        <lumbajx.database.user>postgres</lumbajx.database.user>
+        <lumbajx.database.password>postgres</lumbajx.database.password>
+        <lumbajx.database.url>jdbc:postgresql://192.168.0.3:5432/DB_LUMBA</lumbajx.database.url>
     </properties>
 
     <build>

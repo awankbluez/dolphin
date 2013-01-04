@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.vaia.lumbajxlite.ejbs.entity;
 
 import java.io.Serializable;
@@ -12,31 +16,35 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author MBS Development Team
+ */
 @Entity
 @Table(schema = "public", uniqueConstraints = {
-    @javax.persistence.UniqueConstraint(columnNames = {"subdistrictcode"})})
+    @UniqueConstraint(columnNames = {"subdistrictcode"})})
 @XmlRootElement
 @NamedQueries({
-    @javax.persistence.NamedQuery(name = "Subdistrict.findAll", query = "SELECT s FROM Subdistrict s"),
-    @javax.persistence.NamedQuery(name = "Subdistrict.findBySubdistrictid", query = "SELECT s FROM Subdistrict s WHERE s.subdistrictid = :subdistrictid"),
-    @javax.persistence.NamedQuery(name = "Subdistrict.findBySubdistrictcode", query = "SELECT s FROM Subdistrict s WHERE s.subdistrictcode = :subdistrictcode"),
-    @javax.persistence.NamedQuery(name = "Subdistrict.findBySubdistrictname", query = "SELECT s FROM Subdistrict s WHERE s.subdistrictname = :subdistrictname"),
-    @javax.persistence.NamedQuery(name = "Subdistrict.findByCreationdate", query = "SELECT s FROM Subdistrict s WHERE s.creationdate = :creationdate"),
-    @javax.persistence.NamedQuery(name = "Subdistrict.findByEditdate", query = "SELECT s FROM Subdistrict s WHERE s.editdate = :editdate"),
-    @javax.persistence.NamedQuery(name = "Subdistrict.findByCreator", query = "SELECT s FROM Subdistrict s WHERE s.creator = :creator"),
-    @javax.persistence.NamedQuery(name = "Subdistrict.findByEditor", query = "SELECT s FROM Subdistrict s WHERE s.editor = :editor"),
-    @javax.persistence.NamedQuery(name = "Subdistrict.findBySessiondate", query = "SELECT s FROM Subdistrict s WHERE s.sessiondate = :sessiondate")})
-public class Subdistrict
-        implements Serializable {
-
+    @NamedQuery(name = "Subdistrict.findAll", query = "SELECT s FROM Subdistrict s"),
+    @NamedQuery(name = "Subdistrict.findBySubdistrictid", query = "SELECT s FROM Subdistrict s WHERE s.subdistrictid = :subdistrictid"),
+    @NamedQuery(name = "Subdistrict.findBySubdistrictcode", query = "SELECT s FROM Subdistrict s WHERE s.subdistrictcode = :subdistrictcode"),
+    @NamedQuery(name = "Subdistrict.findBySubdistrictname", query = "SELECT s FROM Subdistrict s WHERE s.subdistrictname = :subdistrictname"),
+    @NamedQuery(name = "Subdistrict.findByCreationdate", query = "SELECT s FROM Subdistrict s WHERE s.creationdate = :creationdate"),
+    @NamedQuery(name = "Subdistrict.findByEditdate", query = "SELECT s FROM Subdistrict s WHERE s.editdate = :editdate"),
+    @NamedQuery(name = "Subdistrict.findByCreator", query = "SELECT s FROM Subdistrict s WHERE s.creator = :creator"),
+    @NamedQuery(name = "Subdistrict.findByEditor", query = "SELECT s FROM Subdistrict s WHERE s.editor = :editor"),
+    @NamedQuery(name = "Subdistrict.findBySessiondate", query = "SELECT s FROM Subdistrict s WHERE s.sessiondate = :sessiondate")})
+public class Subdistrict implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,7 +83,7 @@ public class Subdistrict
     }
 
     public Integer getSubdistrictid() {
-        return this.subdistrictid;
+        return subdistrictid;
     }
 
     public void setSubdistrictid(Integer subdistrictid) {
@@ -83,7 +91,7 @@ public class Subdistrict
     }
 
     public String getSubdistrictcode() {
-        return this.subdistrictcode;
+        return subdistrictcode;
     }
 
     public void setSubdistrictcode(String subdistrictcode) {
@@ -91,7 +99,7 @@ public class Subdistrict
     }
 
     public String getSubdistrictname() {
-        return this.subdistrictname;
+        return subdistrictname;
     }
 
     public void setSubdistrictname(String subdistrictname) {
@@ -99,7 +107,7 @@ public class Subdistrict
     }
 
     public Date getCreationdate() {
-        return this.creationdate;
+        return creationdate;
     }
 
     public void setCreationdate(Date creationdate) {
@@ -107,7 +115,7 @@ public class Subdistrict
     }
 
     public Date getEditdate() {
-        return this.editdate;
+        return editdate;
     }
 
     public void setEditdate(Date editdate) {
@@ -115,7 +123,7 @@ public class Subdistrict
     }
 
     public String getCreator() {
-        return this.creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
@@ -123,7 +131,7 @@ public class Subdistrict
     }
 
     public String getEditor() {
-        return this.editor;
+        return editor;
     }
 
     public void setEditor(String editor) {
@@ -131,7 +139,7 @@ public class Subdistrict
     }
 
     public Date getSessiondate() {
-        return this.sessiondate;
+        return sessiondate;
     }
 
     public void setSessiondate(Date sessiondate) {
@@ -140,7 +148,7 @@ public class Subdistrict
 
     @XmlTransient
     public List<Village> getVillageList() {
-        return this.villageList;
+        return villageList;
     }
 
     public void setVillageList(List<Village> villageList) {
@@ -148,31 +156,36 @@ public class Subdistrict
     }
 
     public District getDistrictid() {
-        return this.districtid;
+        return districtid;
     }
 
     public void setDistrictid(District districtid) {
         this.districtid = districtid;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (this.subdistrictid != null ? this.subdistrictid.hashCode() : 0);
+        hash += (subdistrictid != null ? subdistrictid.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Subdistrict)) {
             return false;
         }
         Subdistrict other = (Subdistrict) object;
-        if (((this.subdistrictid == null) && (other.subdistrictid != null)) || ((this.subdistrictid != null) && (!this.subdistrictid.equals(other.subdistrictid)))) {
+        if ((this.subdistrictid == null && other.subdistrictid != null) || (this.subdistrictid != null && !this.subdistrictid.equals(other.subdistrictid))) {
             return false;
         }
         return true;
     }
 
+    @Override
     public String toString() {
-        return "com.vaia.lumbajxlite.ejbs.entity.Subdistrict[ subdistrictid=" + this.subdistrictid + " ]";
+        return "com.vaia.lumbajxlite.ejbs.entity.Subdistrict[ subdistrictid=" + subdistrictid + " ]";
     }
+
 }
