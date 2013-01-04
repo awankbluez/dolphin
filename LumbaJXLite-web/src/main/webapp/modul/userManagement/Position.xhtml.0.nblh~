@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="menuBar">
+        menuBar
+    </ui:define>
+
+    <ui:define name="content">
+        <p:panel closable="true" toggleable="true" header="Posisi">
+            <h:form id="formFieldsetPosition" >
+                <p:growl severity="info, error" showDetail="true" showSummary="true" escape="true"/>
+                <p:fieldset legend="Tambah Posisi"
+                            toggleable="TRUE"
+                            collapsed="#{positionBean.fieldsetCollapse}"
+                            toggleSpeed="500">
+
+                    <h:panelGrid columns="2">
+                        <h:panelGroup id="panelForm">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel for="PositionCode" value="Kode Posisi*"/>
+                                <p:inputText id="PositionCode" value="#{positionBean.position.positioncode}" required="true" label="Kode Posisi" maxlength="4"/>
+
+                                <p:outputLabel for="PositionName" value="Nama Posisi*"/>
+                                <p:inputText id="PositionName" value="#{positionBean.position.positionname}" required="true" label="Nama Posisi" maxlength="40"/>
+
+                                <p:outputLabel for="IsAccountOfficer" value="Account Officer ?"/>
+                                <p:selectOneRadio id="IsAccountOfficer" value="#{positionBean.position.isaccountofficer}">
+                                    <f:selectItem itemValue="true" itemLabel="Ya"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak"/>
+                                </p:selectOneRadio>
+
+                                <p:outputLabel for="PositionStatus" value="Status"/>
+                                <p:selectOneRadio id="PositionStatus" value="#{positionBean.position.positionstatus}">
+                                    <f:selectItem itemValue="true" itemLabel="Aktif"/>
+                                    <f:selectItem itemValue="false" itemLabel="Tidak Aktif"/>
+                                </p:selectOneRadio>
+
+                            </h:panelGrid>
+                            <p:commandButton value="Simpan" icon="ui-icon ui-icon-check" update="@form :formTablePosition:tablePosition" actionListener="#{positionBean.create}" rendered="#{positionBean.status == 'insert'}" process="@form"/>
+                            <p:commandButton value="Reset" global="false" icon="ui-icon ui-icon-closethick" rendered="#{positionBean.status == 'insert'}" actionListener="#{positionBean.reset}" update="@form"/>
+                            <p:commandButton value="Rubah" icon="ui-icon ui-icon-check" update="@form :formTablePosition:tablePosition" actionListener="#{positionBean.update}" rendered="#{positionBean.status == 'update'}"/>
+                            <p:commandButton value="Cancel" global="false" icon="ui-icon ui-icon-closethick" rendered="#{positionBean.status == 'update'}" actionListener="#{positionBean.reset}" update="@form"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                    <h:panelGroup layout="block">
+                        <p:tabView>
+                            <p:tab title="Menu Previlege">
+                                <p:treeTable value="#{positionBean.treeMenu}" var="menutree" selectionMode="single">
+                                    <p:column headerText="Menu">
+                                        <h:outputText value="#{msgs[menutree.menuname]}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Status">
+                                        <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{menutree.menustatus == true}"/>
+                                        <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{menutree.menustatus == false}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Button">
+                                    </p:column>
+
+                                    <p:column headerText="Link">
+                                        <h:outputText value="#{menutree.link}"/>
+                                    </p:column>
+                                </p:treeTable>
+
+                                <h:panelGrid columns="1">
+                                    <p:commandButton id="btnEditAccessMenu" value="Edit Access Menu" onclick="EditUserMenuDialog.show()"/>
+                                </h:panelGrid>
+                            </p:tab>
+
+                            <p:tab title="Menu Previlege">
+                                <p:sheet value="#{positionBean.mainMenuList}" var="mainmenu" scrollHeight="400">
+                                    <f:facet name="caption">
+                                        <h:outputText value="Main Menu List"/>
+                                    </f:facet>
+
+                                    <p:column headerText="Menu">
+
+                                    </p:column>
+
+                                    <p:column headerText="Accessible ?">
+
+                                    </p:column>
+                                </p:sheet>
+                            </p:tab>
+
+                            <p:tab title="Role">
+                                <h:panelGroup>
+                                    <h:panelGrid columns="2">
+                                        <ui:repeat value="#{userBean.routingMenus}" var="routingMenu">
+                                            <h:panelGrid columns="2">
+                                                <h:outputText value="#{routingMenu.menuname}" style="width: 200px;font-weight: bold;"/>
+                                                <p:selectManyCheckbox>
+                                                    <f:selectItem itemValue="1" itemLabel="Maker"/>
+                                                    <f:selectItem itemValue="2" itemLabel="Checker"/>
+                                                    <f:selectItem itemValue="3" itemLabel="Approver"/>
+                                                </p:selectManyCheckbox>
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="2" rendered="#{routingMenu.menuname.equalsIgnoreCase('loanApplicationCreation')}">
+                                                <h:outputText value="Next Target"/>
+                                                <p:selectOneMenu style="width: 200px;">
+                                                    <f:selectItem itemLabel="Select Next Target Position"/>
+                                                    <f:selectItems value="#{userBean.positions}" var="position" itemLabel="#{position.positioncode} | #{position.positionname}" itemValue="#{position.positionid}" />
+                                                </p:selectOneMenu>
+                                            </h:panelGrid>
+
+                                            <p:dataTable rendered="#{routingMenu.menuname == 'Loan Application Creation'}">
+                                                <f:facet name="header">
+                                                    <p:commandButton value="Add" icon="ui-icon ui-icon-plusthick" onclick="addTarget.show();"/>
+                                                </f:facet>
+                                                <p:column headerText="Next Target Position">
+
+                                                </p:column>
+                                                <p:column headerText="Level">
+
+                                                </p:column>
+                                                <p:column>
+
+                                                </p:column>
+                                            </p:dataTable>
+                                        </ui:repeat>
+                                        <h:outputText />
+                                    </h:panelGrid>
+                                </h:panelGroup>
+                            </p:tab>
+
+                            <p:tab title="Confirmation">
+
+                            </p:tab>
+                        </p:tabView>
+                    </h:panelGroup>
+                </p:fieldset>
+            </h:form>
+
+
+
+            <h:form id="formTablePosition" >
+                <p:dataTable
+                    id="tablePosition"
+                    value="#{positionBean.positionList}"
+                    var="position"
+                    emptyMessage="Tidak Ada Posisi"
+                    sortOrder="descending">
+
+                    <pe:paginator
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        rows="10"
+                        rowsPerPageTemplate="5,10,15"
+                        />
+
+                    <f:facet name="header">Daftar Jabatan</f:facet>
+
+                    <p:column headerText="Kode" sortBy="#{position.positioncode}" filterBy="#{position.positioncode}" filterMatchMode="contains">
+                        <h:outputText value="#{position.positioncode}"/>
+                    </p:column>
+
+                    <p:column headerText="Nama" sortBy="#{position.positionname}" filterBy="#{position.positionname}" filterMatchMode="contains">
+                        <h:outputText value="#{position.positionname}"/>
+                    </p:column>
+
+                    <p:column headerText="Account Officer ?" style="width: 70px; text-align: center;">
+                        <p:commandButton icon="ui-icon ui-icon-check" title="Yes" rendered="#{position.isaccountofficer == true}"/>
+                        <p:commandButton icon="ui-icon ui-icon-closethick" title="No" rendered="#{position.isaccountofficer == false}"/>
+                    </p:column>
+
+                    <p:column headerText="Status" style="width: 80px; text-align: center;">
+                        <p:commandButton icon="ui-icon ui-icon-check" title="Active" rendered="#{position.positionstatus == true}"/>
+                        <p:commandButton icon="ui-icon ui-icon-closethick" title="Inactive" rendered="#{position.positionstatus == false}"/>
+                    </p:column>
+
+                    <p:column headerText="" style="width: 80px;">
+                        <p:commandButton icon="ui-icon ui-icon-pencil" title="Edit #{position.positionname}" actionListener="#{positionBean.edit(position)}" update=":formFieldsetPosition"/>
+                        <p:commandButton icon="ui-icon ui-icon-trash" title="Delete #{position.positionname}" actionListener="#{positionBean.delete(position)}" update="@form"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:panel>
+
+        <p:dialog header="Edit User Access Menu" widgetVar="EditUserMenuDialog" modal="true" hideEffect="fade" showEffect="fade">
+            <h:form id="formDialogEditUserAccessMenu">
+                <!--                <p:sheet>
+
+                                </p:sheet>-->
+
+                <h:panelGrid columns="2">
+
+
+                    <p:commandButton value="Save"/>
+                    <p:commandButton value="Cancel" onclick="EditUserMenuDialog.hide()"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+    <ui:define name="bottom">
+        bottom
+    </ui:define>
+
+</ui:composition>

@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Subbranchunitco.findAll", query = "SELECT s FROM Subbranchunitco s"),
@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Subbranchunitco.findByInterbranchaccount", query = "SELECT s FROM Subbranchunitco s WHERE s.interbranchaccount = :interbranchaccount"),
     @NamedQuery(name = "Subbranchunitco.findByBranchbankaccount", query = "SELECT s FROM Subbranchunitco s WHERE s.branchbankaccount = :branchbankaccount"),
     @NamedQuery(name = "Subbranchunitco.findBySessiondate", query = "SELECT s FROM Subbranchunitco s WHERE s.sessiondate = :sessiondate")})
-public class SubBranchUnitCo implements Serializable {
+public class Subbranchunitco implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,10 +83,10 @@ public class SubBranchUnitCo implements Serializable {
     @ManyToOne
     private Branch branchid;
 
-    public SubBranchUnitCo() {
+    public Subbranchunitco() {
     }
 
-    public SubBranchUnitCo(Integer subbranchunitcoid) {
+    public Subbranchunitco(Integer subbranchunitcoid) {
         this.subbranchunitcoid = subbranchunitcoid;
     }
 
@@ -221,10 +221,10 @@ public class SubBranchUnitCo implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SubBranchUnitCo)) {
+        if (!(object instanceof Subbranchunitco)) {
             return false;
         }
-        SubBranchUnitCo other = (SubBranchUnitCo) object;
+        Subbranchunitco other = (Subbranchunitco) object;
         if ((this.subbranchunitcoid == null && other.subbranchunitcoid != null) || (this.subbranchunitcoid != null && !this.subbranchunitcoid.equals(other.subbranchunitcoid))) {
             return false;
         }

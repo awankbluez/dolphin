@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accounttype.findAll", query = "SELECT a FROM Accounttype a"),
@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Accounttype.findByEditdate", query = "SELECT a FROM Accounttype a WHERE a.editdate = :editdate"),
     @NamedQuery(name = "Accounttype.findByEditor", query = "SELECT a FROM Accounttype a WHERE a.editor = :editor"),
     @NamedQuery(name = "Accounttype.findBySessiondate", query = "SELECT a FROM Accounttype a WHERE a.sessiondate = :sessiondate")})
-public class AccountType implements Serializable {
+public class Accounttype implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,16 +72,16 @@ public class AccountType implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "accounttypeid")
-    private List<ChartOfAccount> chartofaccountList;
+    private List<Chartofaccount> chartofaccountList;
 
-    public AccountType() {
+    public Accounttype() {
     }
 
-    public AccountType(Integer accounttypeid) {
+    public Accounttype(Integer accounttypeid) {
         this.accounttypeid = accounttypeid;
     }
 
-    public AccountType(Integer accounttypeid, String accounttypecode, String description) {
+    public Accounttype(Integer accounttypeid, String accounttypecode, String description) {
         this.accounttypeid = accounttypeid;
         this.accounttypecode = accounttypecode;
         this.description = description;
@@ -152,11 +152,11 @@ public class AccountType implements Serializable {
     }
 
     @XmlTransient
-    public List<ChartOfAccount> getChartofaccountList() {
+    public List<Chartofaccount> getChartofaccountList() {
         return chartofaccountList;
     }
 
-    public void setChartofaccountList(List<ChartOfAccount> chartofaccountList) {
+    public void setChartofaccountList(List<Chartofaccount> chartofaccountList) {
         this.chartofaccountList = chartofaccountList;
     }
 
@@ -170,10 +170,10 @@ public class AccountType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof AccountType)) {
+        if (!(object instanceof Accounttype)) {
             return false;
         }
-        AccountType other = (AccountType) object;
+        Accounttype other = (Accounttype) object;
         if ((this.accounttypeid == null && other.accounttypeid != null) || (this.accounttypeid != null && !this.accounttypeid.equals(other.accounttypeid))) {
             return false;
         }

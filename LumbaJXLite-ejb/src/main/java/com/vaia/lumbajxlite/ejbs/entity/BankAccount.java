@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Bankaccount.findAll", query = "SELECT b FROM Bankaccount b"),
@@ -48,7 +48,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Bankaccount.findByInvesmentmaturitydate", query = "SELECT b FROM Bankaccount b WHERE b.invesmentmaturitydate = :invesmentmaturitydate"),
     @NamedQuery(name = "Bankaccount.findByCredit", query = "SELECT b FROM Bankaccount b WHERE b.credit = :credit"),
     @NamedQuery(name = "Bankaccount.findBySessiondate", query = "SELECT b FROM Bankaccount b WHERE b.sessiondate = :sessiondate")})
-public class BankAccount implements Serializable {
+public class Bankaccount implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,21 +89,21 @@ public class BankAccount implements Serializable {
     private Date sessiondate;
     @JoinColumn(name = "bankbranchid", referencedColumnName = "bankbranchid", nullable = false)
     @ManyToOne(optional = false)
-    private BankBranch bankbranchid;
+    private Bankbranch bankbranchid;
     @JoinColumn(name = "bankid", referencedColumnName = "bankid")
     @ManyToOne
     private Bank bankid;
     @OneToMany(mappedBy = "bankacountid")
-    private List<ChartOfAccount> chartofaccountList;
+    private List<Chartofaccount> chartofaccountList;
 
-    public BankAccount() {
+    public Bankaccount() {
     }
 
-    public BankAccount(Integer bankacountid) {
+    public Bankaccount(Integer bankacountid) {
         this.bankacountid = bankacountid;
     }
 
-    public BankAccount(Integer bankacountid, String bankaccountname, String bankaccountnumber) {
+    public Bankaccount(Integer bankacountid, String bankaccountname, String bankaccountnumber) {
         this.bankacountid = bankacountid;
         this.bankaccountname = bankaccountname;
         this.bankaccountnumber = bankaccountnumber;
@@ -213,11 +213,11 @@ public class BankAccount implements Serializable {
         this.sessiondate = sessiondate;
     }
 
-    public BankBranch getBankbranchid() {
+    public Bankbranch getBankbranchid() {
         return bankbranchid;
     }
 
-    public void setBankbranchid(BankBranch bankbranchid) {
+    public void setBankbranchid(Bankbranch bankbranchid) {
         this.bankbranchid = bankbranchid;
     }
 
@@ -230,11 +230,11 @@ public class BankAccount implements Serializable {
     }
 
     @XmlTransient
-    public List<ChartOfAccount> getChartofaccountList() {
+    public List<Chartofaccount> getChartofaccountList() {
         return chartofaccountList;
     }
 
-    public void setChartofaccountList(List<ChartOfAccount> chartofaccountList) {
+    public void setChartofaccountList(List<Chartofaccount> chartofaccountList) {
         this.chartofaccountList = chartofaccountList;
     }
 
@@ -248,10 +248,10 @@ public class BankAccount implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof BankAccount)) {
+        if (!(object instanceof Bankaccount)) {
             return false;
         }
-        BankAccount other = (BankAccount) object;
+        Bankaccount other = (Bankaccount) object;
         if ((this.bankacountid == null && other.bankacountid != null) || (this.bankacountid != null && !this.bankacountid.equals(other.bankacountid))) {
             return false;
         }

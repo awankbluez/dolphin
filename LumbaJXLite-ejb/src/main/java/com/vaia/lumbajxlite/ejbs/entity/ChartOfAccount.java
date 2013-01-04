@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Chartofaccount.findAll", query = "SELECT c FROM Chartofaccount c"),
@@ -58,7 +58,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Chartofaccount.findByFlag", query = "SELECT c FROM Chartofaccount c WHERE c.flag = :flag"),
     @NamedQuery(name = "Chartofaccount.findByLevel", query = "SELECT c FROM Chartofaccount c WHERE c.level = :level"),
     @NamedQuery(name = "Chartofaccount.findBySessiondate", query = "SELECT c FROM Chartofaccount c WHERE c.sessiondate = :sessiondate")})
-public class ChartOfAccount implements Serializable {
+public class Chartofaccount implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -113,13 +113,13 @@ public class ChartOfAccount implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date sessiondate;
     @OneToMany(mappedBy = "userterminalcontra")
-    private List<OperatorUser> operatoruserList;
+    private List<Operatoruser> operatoruserList;
     @OneToMany(mappedBy = "userterminalsuspense")
-    private List<OperatorUser> operatoruserList1;
+    private List<Operatoruser> operatoruserList1;
     @OneToMany(mappedBy = "userterminalchequecontra")
-    private List<OperatorUser> operatoruserList2;
+    private List<Operatoruser> operatoruserList2;
     @OneToMany(mappedBy = "userterminaldeficitsurplus")
-    private List<OperatorUser> operatoruserList3;
+    private List<Operatoruser> operatoruserList3;
     @OneToMany(mappedBy = "savinginterestdevidedtaxpayable")
     private List<Saving> savingList;
     @OneToMany(mappedBy = "savinginterestdevidedpayable")
@@ -141,7 +141,7 @@ public class ChartOfAccount implements Serializable {
     private Masteroperational masteroperationalid;
     @JoinColumn(name = "fcid", referencedColumnName = "fcid", nullable = false)
     @ManyToOne(optional = false)
-    private FinancialCategory fcid;
+    private Financialcategory fcid;
     @JoinColumn(name = "currencyid", referencedColumnName = "currencyid", nullable = false)
     @ManyToOne(optional = false)
     private Currency currencyid;
@@ -150,22 +150,22 @@ public class ChartOfAccount implements Serializable {
     private Category categoryid;
     @JoinColumn(name = "bankacountid", referencedColumnName = "bankacountid")
     @ManyToOne
-    private BankAccount bankacountid;
+    private Bankaccount bankacountid;
     @JoinColumn(name = "accounttypeid", referencedColumnName = "accounttypeid", nullable = false)
     @ManyToOne(optional = false)
-    private AccountType accounttypeid;
+    private Accounttype accounttypeid;
     @JoinColumn(name = "accountcategoryid", referencedColumnName = "accountcategoryid", nullable = false)
     @ManyToOne(optional = false)
-    private AccountCategory accountcategoryid;
+    private Accountcategory accountcategoryid;
 
-    public ChartOfAccount() {
+    public Chartofaccount() {
     }
 
-    public ChartOfAccount(Integer chartofaccountid) {
+    public Chartofaccount(Integer chartofaccountid) {
         this.chartofaccountid = chartofaccountid;
     }
 
-    public ChartOfAccount(Integer chartofaccountid, String generalaccountnumber, boolean status) {
+    public Chartofaccount(Integer chartofaccountid, String generalaccountnumber, boolean status) {
         this.chartofaccountid = chartofaccountid;
         this.generalaccountnumber = generalaccountnumber;
         this.status = status;
@@ -356,38 +356,38 @@ public class ChartOfAccount implements Serializable {
     }
 
     @XmlTransient
-    public List<OperatorUser> getOperatoruserList() {
+    public List<Operatoruser> getOperatoruserList() {
         return operatoruserList;
     }
 
-    public void setOperatoruserList(List<OperatorUser> operatoruserList) {
+    public void setOperatoruserList(List<Operatoruser> operatoruserList) {
         this.operatoruserList = operatoruserList;
     }
 
     @XmlTransient
-    public List<OperatorUser> getOperatoruserList1() {
+    public List<Operatoruser> getOperatoruserList1() {
         return operatoruserList1;
     }
 
-    public void setOperatoruserList1(List<OperatorUser> operatoruserList1) {
+    public void setOperatoruserList1(List<Operatoruser> operatoruserList1) {
         this.operatoruserList1 = operatoruserList1;
     }
 
     @XmlTransient
-    public List<OperatorUser> getOperatoruserList2() {
+    public List<Operatoruser> getOperatoruserList2() {
         return operatoruserList2;
     }
 
-    public void setOperatoruserList2(List<OperatorUser> operatoruserList2) {
+    public void setOperatoruserList2(List<Operatoruser> operatoruserList2) {
         this.operatoruserList2 = operatoruserList2;
     }
 
     @XmlTransient
-    public List<OperatorUser> getOperatoruserList3() {
+    public List<Operatoruser> getOperatoruserList3() {
         return operatoruserList3;
     }
 
-    public void setOperatoruserList3(List<OperatorUser> operatoruserList3) {
+    public void setOperatoruserList3(List<Operatoruser> operatoruserList3) {
         this.operatoruserList3 = operatoruserList3;
     }
 
@@ -471,11 +471,11 @@ public class ChartOfAccount implements Serializable {
         this.masteroperationalid = masteroperationalid;
     }
 
-    public FinancialCategory getFcid() {
+    public Financialcategory getFcid() {
         return fcid;
     }
 
-    public void setFcid(FinancialCategory fcid) {
+    public void setFcid(Financialcategory fcid) {
         this.fcid = fcid;
     }
 
@@ -495,27 +495,27 @@ public class ChartOfAccount implements Serializable {
         this.categoryid = categoryid;
     }
 
-    public BankAccount getBankacountid() {
+    public Bankaccount getBankacountid() {
         return bankacountid;
     }
 
-    public void setBankacountid(BankAccount bankacountid) {
+    public void setBankacountid(Bankaccount bankacountid) {
         this.bankacountid = bankacountid;
     }
 
-    public AccountType getAccounttypeid() {
+    public Accounttype getAccounttypeid() {
         return accounttypeid;
     }
 
-    public void setAccounttypeid(AccountType accounttypeid) {
+    public void setAccounttypeid(Accounttype accounttypeid) {
         this.accounttypeid = accounttypeid;
     }
 
-    public AccountCategory getAccountcategoryid() {
+    public Accountcategory getAccountcategoryid() {
         return accountcategoryid;
     }
 
-    public void setAccountcategoryid(AccountCategory accountcategoryid) {
+    public void setAccountcategoryid(Accountcategory accountcategoryid) {
         this.accountcategoryid = accountcategoryid;
     }
 
@@ -529,10 +529,10 @@ public class ChartOfAccount implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ChartOfAccount)) {
+        if (!(object instanceof Chartofaccount)) {
             return false;
         }
-        ChartOfAccount other = (ChartOfAccount) object;
+        Chartofaccount other = (Chartofaccount) object;
         if ((this.chartofaccountid == null && other.chartofaccountid != null) || (this.chartofaccountid != null && !this.chartofaccountid.equals(other.chartofaccountid))) {
             return false;
         }

@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Headoffice.findAll", query = "SELECT h FROM Headoffice h"),
@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Headoffice.findByInterbranchaccount", query = "SELECT h FROM Headoffice h WHERE h.interbranchaccount = :interbranchaccount"),
     @NamedQuery(name = "Headoffice.findByBranchbankaccount", query = "SELECT h FROM Headoffice h WHERE h.branchbankaccount = :branchbankaccount"),
     @NamedQuery(name = "Headoffice.findBySessiondate", query = "SELECT h FROM Headoffice h WHERE h.sessiondate = :sessiondate")})
-public class HeadOffice implements Serializable {
+public class Headoffice implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,10 +82,10 @@ public class HeadOffice implements Serializable {
     @OneToMany(mappedBy = "headofficeid")
     private List<Masteroperational> masteroperationalList;
 
-    public HeadOffice() {
+    public Headoffice() {
     }
 
-    public HeadOffice(Integer headofficeid) {
+    public Headoffice(Integer headofficeid) {
         this.headofficeid = headofficeid;
     }
 
@@ -221,10 +221,10 @@ public class HeadOffice implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof HeadOffice)) {
+        if (!(object instanceof Headoffice)) {
             return false;
         }
-        HeadOffice other = (HeadOffice) object;
+        Headoffice other = (Headoffice) object;
         if ((this.headofficeid == null && other.headofficeid != null) || (this.headofficeid != null && !this.headofficeid.equals(other.headofficeid))) {
             return false;
         }

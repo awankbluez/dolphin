@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanapplication.findAll", query = "SELECT l FROM Loanapplication l"),
@@ -217,8 +217,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loanapplication.findByRestructureidchecker", query = "SELECT l FROM Loanapplication l WHERE l.restructureidchecker = :restructureidchecker"),
     @NamedQuery(name = "Loanapplication.findBySessiondatechecker", query = "SELECT l FROM Loanapplication l WHERE l.sessiondatechecker = :sessiondatechecker"),
     @NamedQuery(name = "Loanapplication.findByApprovaldate", query = "SELECT l FROM Loanapplication l WHERE l.approvaldate = :approvaldate")})
-public class LoanApplication implements Serializable {
-
+public class Loanapplication implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -573,10 +572,10 @@ public class LoanApplication implements Serializable {
     @OneToMany(mappedBy = "loanapplicationid")
     private List<Account> accountList;
 
-    public LoanApplication() {
+    public Loanapplication() {
     }
 
-    public LoanApplication(Integer loanapplicationid) {
+    public Loanapplication(Integer loanapplicationid) {
         this.loanapplicationid = loanapplicationid;
     }
 
@@ -2079,10 +2078,10 @@ public class LoanApplication implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof LoanApplication)) {
+        if (!(object instanceof Loanapplication)) {
             return false;
         }
-        LoanApplication other = (LoanApplication) object;
+        Loanapplication other = (Loanapplication) object;
         if ((this.loanapplicationid == null && other.loanapplicationid != null) || (this.loanapplicationid != null && !this.loanapplicationid.equals(other.loanapplicationid))) {
             return false;
         }
@@ -2093,4 +2092,5 @@ public class LoanApplication implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Loanapplication[ loanapplicationid=" + loanapplicationid + " ]";
     }
+
 }

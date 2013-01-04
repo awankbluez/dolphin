@@ -31,12 +31,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"username", "email"})})
+@Table(schema = "public", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"username"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Operatoruser.findAll", query = "SELECT o FROM Operatoruser o"),
-    @NamedQuery(name = "Operatoruser.findByUsernamePassword", query = "SELECT o FROM Operatoruser o WHERE o.username = :username AND o.password = :password"),
     @NamedQuery(name = "Operatoruser.findByUserid", query = "SELECT o FROM Operatoruser o WHERE o.userid = :userid"),
     @NamedQuery(name = "Operatoruser.findByUsername", query = "SELECT o FROM Operatoruser o WHERE o.username = :username"),
     @NamedQuery(name = "Operatoruser.findByPassword", query = "SELECT o FROM Operatoruser o WHERE o.password = :password"),
@@ -47,23 +46,22 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Operatoruser.findByHelp", query = "SELECT o FROM Operatoruser o WHERE o.help = :help"),
     @NamedQuery(name = "Operatoruser.findByCreationdate", query = "SELECT o FROM Operatoruser o WHERE o.creationdate = :creationdate"),
     @NamedQuery(name = "Operatoruser.findByEditdate", query = "SELECT o FROM Operatoruser o WHERE o.editdate = :editdate"),
-    @NamedQuery(name = "Operatoruser.findByCreator", query = "SELECT o FROM Operatoruser o WHERE o.creator = :creator"),
-    @NamedQuery(name = "Operatoruser.findByEditor", query = "SELECT o FROM Operatoruser o WHERE o.editor = :editor"),
     @NamedQuery(name = "Operatoruser.findByCash", query = "SELECT o FROM Operatoruser o WHERE o.cash = :cash"),
     @NamedQuery(name = "Operatoruser.findBySessiondate", query = "SELECT o FROM Operatoruser o WHERE o.sessiondate = :sessiondate"),
     @NamedQuery(name = "Operatoruser.findByOveridesettlementamount", query = "SELECT o FROM Operatoruser o WHERE o.overidesettlementamount = :overidesettlementamount"),
     @NamedQuery(name = "Operatoruser.findByCreatorid", query = "SELECT o FROM Operatoruser o WHERE o.creatorid = :creatorid"),
-    @NamedQuery(name = "Operatoruser.findByEditorid", query = "SELECT o FROM Operatoruser o WHERE o.editorid = :editorid")})
-public class OperatorUser implements Serializable {
+    @NamedQuery(name = "Operatoruser.findByEditorid", query = "SELECT o FROM Operatoruser o WHERE o.editorid = :editorid"),
+    @NamedQuery(name = "Operatoruser.findByCreator", query = "SELECT o FROM Operatoruser o WHERE o.creator = :creator"),
+    @NamedQuery(name = "Operatoruser.findByEditor", query = "SELECT o FROM Operatoruser o WHERE o.editor = :editor")})
+public class Operatoruser implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final String USER_CHECK_LOGIN = "Operatoruser.findByUsernamePassword";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(nullable = false)
     private Integer userid;
     @Size(max = 50)
-    @Column(length = 50, unique = true)
+    @Column(length = 50)
     private String username;
     @Size(max = 100)
     @Column(length = 100)
@@ -76,7 +74,7 @@ public class OperatorUser implements Serializable {
     private String employeename;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 40)
-    @Column(length = 40, unique = true)
+    @Column(length = 40)
     private String email;
     private Boolean userstatus;
     private Boolean help;
@@ -84,12 +82,6 @@ public class OperatorUser implements Serializable {
     private Date creationdate;
     @Temporal(TemporalType.TIMESTAMP)
     private Date editdate;
-    @Size(max = 40)
-    @Column(length = 40)
-    private String creator;
-    @Size(max = 40)
-    @Column(length = 40)
-    private String editor;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(precision = 17, scale = 17)
     private Double cash;
@@ -98,6 +90,8 @@ public class OperatorUser implements Serializable {
     private Boolean overidesettlementamount;
     private Integer creatorid;
     private Integer editorid;
+    private Integer creator;
+    private Integer editor;
     @OneToMany(mappedBy = "userid")
     private List<Customer> customerList;
     @JoinColumn(name = "positionid", referencedColumnName = "positionid")
@@ -114,21 +108,21 @@ public class OperatorUser implements Serializable {
     private Directorate directorateid;
     @JoinColumn(name = "userterminalcontra", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount userterminalcontra;
+    private Chartofaccount userterminalcontra;
     @JoinColumn(name = "userterminalsuspense", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount userterminalsuspense;
+    private Chartofaccount userterminalsuspense;
     @JoinColumn(name = "userterminalchequecontra", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount userterminalchequecontra;
+    private Chartofaccount userterminalchequecontra;
     @JoinColumn(name = "userterminaldeficitsurplus", referencedColumnName = "chartofaccountid")
     @ManyToOne
-    private ChartOfAccount userterminaldeficitsurplus;
+    private Chartofaccount userterminaldeficitsurplus;
 
-    public OperatorUser() {
+    public Operatoruser() {
     }
 
-    public OperatorUser(Integer userid) {
+    public Operatoruser(Integer userid) {
         this.userid = userid;
     }
 
@@ -212,22 +206,6 @@ public class OperatorUser implements Serializable {
         this.editdate = editdate;
     }
 
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public String getEditor() {
-        return editor;
-    }
-
-    public void setEditor(String editor) {
-        this.editor = editor;
-    }
-
     public Double getCash() {
         return cash;
     }
@@ -266,6 +244,22 @@ public class OperatorUser implements Serializable {
 
     public void setEditorid(Integer editorid) {
         this.editorid = editorid;
+    }
+
+    public Integer getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Integer creator) {
+        this.creator = creator;
+    }
+
+    public Integer getEditor() {
+        return editor;
+    }
+
+    public void setEditor(Integer editor) {
+        this.editor = editor;
     }
 
     @XmlTransient
@@ -309,35 +303,35 @@ public class OperatorUser implements Serializable {
         this.directorateid = directorateid;
     }
 
-    public ChartOfAccount getUserterminalcontra() {
+    public Chartofaccount getUserterminalcontra() {
         return userterminalcontra;
     }
 
-    public void setUserterminalcontra(ChartOfAccount userterminalcontra) {
+    public void setUserterminalcontra(Chartofaccount userterminalcontra) {
         this.userterminalcontra = userterminalcontra;
     }
 
-    public ChartOfAccount getUserterminalsuspense() {
+    public Chartofaccount getUserterminalsuspense() {
         return userterminalsuspense;
     }
 
-    public void setUserterminalsuspense(ChartOfAccount userterminalsuspense) {
+    public void setUserterminalsuspense(Chartofaccount userterminalsuspense) {
         this.userterminalsuspense = userterminalsuspense;
     }
 
-    public ChartOfAccount getUserterminalchequecontra() {
+    public Chartofaccount getUserterminalchequecontra() {
         return userterminalchequecontra;
     }
 
-    public void setUserterminalchequecontra(ChartOfAccount userterminalchequecontra) {
+    public void setUserterminalchequecontra(Chartofaccount userterminalchequecontra) {
         this.userterminalchequecontra = userterminalchequecontra;
     }
 
-    public ChartOfAccount getUserterminaldeficitsurplus() {
+    public Chartofaccount getUserterminaldeficitsurplus() {
         return userterminaldeficitsurplus;
     }
 
-    public void setUserterminaldeficitsurplus(ChartOfAccount userterminaldeficitsurplus) {
+    public void setUserterminaldeficitsurplus(Chartofaccount userterminaldeficitsurplus) {
         this.userterminaldeficitsurplus = userterminaldeficitsurplus;
     }
 
@@ -351,10 +345,10 @@ public class OperatorUser implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof OperatorUser)) {
+        if (!(object instanceof Operatoruser)) {
             return false;
         }
-        OperatorUser other = (OperatorUser) object;
+        Operatoruser other = (Operatoruser) object;
         if ((this.userid == null && other.userid != null) || (this.userid != null && !this.userid.equals(other.userid))) {
             return false;
         }
@@ -363,6 +357,7 @@ public class OperatorUser implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Operator user [id = %s, userName = %s, employeeName = %s, email = %s, userStatus = %s]", userid, username, employeename, email, userstatus);
+        return "com.vaia.lumbajxlite.ejbs.entity.Operatoruser[ userid=" + userid + " ]";
     }
+
 }

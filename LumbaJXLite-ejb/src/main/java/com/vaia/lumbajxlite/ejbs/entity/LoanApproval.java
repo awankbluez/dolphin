@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanapproval.findAll", query = "SELECT l FROM Loanapproval l"),
@@ -41,8 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loanapproval.findByCreator", query = "SELECT l FROM Loanapproval l WHERE l.creator = :creator"),
     @NamedQuery(name = "Loanapproval.findByEditor", query = "SELECT l FROM Loanapproval l WHERE l.editor = :editor"),
     @NamedQuery(name = "Loanapproval.findBySessiondate", query = "SELECT l FROM Loanapproval l WHERE l.sessiondate = :sessiondate")})
-public class LoanApproval implements Serializable {
-
+public class Loanapproval implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,10 +71,10 @@ public class LoanApproval implements Serializable {
     @OneToMany(mappedBy = "loanapprovalid")
     private List<Loan> loanList;
 
-    public LoanApproval() {
+    public Loanapproval() {
     }
 
-    public LoanApproval(Integer loanapprovalid) {
+    public Loanapproval(Integer loanapprovalid) {
         this.loanapprovalid = loanapprovalid;
     }
 
@@ -170,10 +169,10 @@ public class LoanApproval implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof LoanApproval)) {
+        if (!(object instanceof Loanapproval)) {
             return false;
         }
-        LoanApproval other = (LoanApproval) object;
+        Loanapproval other = (Loanapproval) object;
         if ((this.loanapprovalid == null && other.loanapprovalid != null) || (this.loanapprovalid != null && !this.loanapprovalid.equals(other.loanapprovalid))) {
             return false;
         }
@@ -184,4 +183,5 @@ public class LoanApproval implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Loanapproval[ loanapprovalid=" + loanapprovalid + " ]";
     }
+
 }

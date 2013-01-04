@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public", uniqueConstraints = {
+@Table(schema = "public", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"subdistrictcode"})})
 @XmlRootElement
 @NamedQueries({
@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Subdistrict.findByCreator", query = "SELECT s FROM Subdistrict s WHERE s.creator = :creator"),
     @NamedQuery(name = "Subdistrict.findByEditor", query = "SELECT s FROM Subdistrict s WHERE s.editor = :editor"),
     @NamedQuery(name = "Subdistrict.findBySessiondate", query = "SELECT s FROM Subdistrict s WHERE s.sessiondate = :sessiondate")})
-public class SubDistrict implements Serializable {
+public class Subdistrict implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,10 +75,10 @@ public class SubDistrict implements Serializable {
     @ManyToOne
     private District districtid;
 
-    public SubDistrict() {
+    public Subdistrict() {
     }
 
-    public SubDistrict(Integer subdistrictid) {
+    public Subdistrict(Integer subdistrictid) {
         this.subdistrictid = subdistrictid;
     }
 
@@ -173,10 +173,10 @@ public class SubDistrict implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SubDistrict)) {
+        if (!(object instanceof Subdistrict)) {
             return false;
         }
-        SubDistrict other = (SubDistrict) object;
+        Subdistrict other = (Subdistrict) object;
         if ((this.subdistrictid == null && other.subdistrictid != null) || (this.subdistrictid != null && !this.subdistrictid.equals(other.subdistrictid))) {
             return false;
         }

@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author MBS Development Team
  */
 @Entity
-@Table(catalog = "DB_LUMBA", schema = "public")
+@Table(schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Financialcategory.findAll", query = "SELECT f FROM Financialcategory f"),
@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Financialcategory.findByEditdate", query = "SELECT f FROM Financialcategory f WHERE f.editdate = :editdate"),
     @NamedQuery(name = "Financialcategory.findByEditor", query = "SELECT f FROM Financialcategory f WHERE f.editor = :editor"),
     @NamedQuery(name = "Financialcategory.findBySessiondate", query = "SELECT f FROM Financialcategory f WHERE f.sessiondate = :sessiondate")})
-public class FinancialCategory implements Serializable {
+public class Financialcategory implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,18 +82,18 @@ public class FinancialCategory implements Serializable {
     @ManyToOne(optional = false)
     private Category categoryid;
     @OneToMany(mappedBy = "fcid")
-    private List<AccountCategory> accountcategoryList;
+    private List<Accountcategory> accountcategoryList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fcid")
-    private List<ChartOfAccount> chartofaccountList;
+    private List<Chartofaccount> chartofaccountList;
 
-    public FinancialCategory() {
+    public Financialcategory() {
     }
 
-    public FinancialCategory(Integer fcid) {
+    public Financialcategory(Integer fcid) {
         this.fcid = fcid;
     }
 
-    public FinancialCategory(Integer fcid, String fccode, String fcname, boolean status) {
+    public Financialcategory(Integer fcid, String fccode, String fcname, boolean status) {
         this.fcid = fcid;
         this.fccode = fccode;
         this.fcname = fcname;
@@ -181,20 +181,20 @@ public class FinancialCategory implements Serializable {
     }
 
     @XmlTransient
-    public List<AccountCategory> getAccountcategoryList() {
+    public List<Accountcategory> getAccountcategoryList() {
         return accountcategoryList;
     }
 
-    public void setAccountcategoryList(List<AccountCategory> accountcategoryList) {
+    public void setAccountcategoryList(List<Accountcategory> accountcategoryList) {
         this.accountcategoryList = accountcategoryList;
     }
 
     @XmlTransient
-    public List<ChartOfAccount> getChartofaccountList() {
+    public List<Chartofaccount> getChartofaccountList() {
         return chartofaccountList;
     }
 
-    public void setChartofaccountList(List<ChartOfAccount> chartofaccountList) {
+    public void setChartofaccountList(List<Chartofaccount> chartofaccountList) {
         this.chartofaccountList = chartofaccountList;
     }
 
@@ -208,10 +208,10 @@ public class FinancialCategory implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FinancialCategory)) {
+        if (!(object instanceof Financialcategory)) {
             return false;
         }
-        FinancialCategory other = (FinancialCategory) object;
+        Financialcategory other = (Financialcategory) object;
         if ((this.fcid == null && other.fcid != null) || (this.fcid != null && !this.fcid.equals(other.fcid))) {
             return false;
         }
