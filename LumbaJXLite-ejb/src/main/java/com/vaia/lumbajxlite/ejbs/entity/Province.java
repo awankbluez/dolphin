@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Province.findAll", query = "SELECT p FROM Province p"),
+    @NamedQuery(name = "Province.findAllByCountry", query = "SELECT p FROM Province p WHERE p.countryid = :countryid ORDER BY p.provincename"),
     @NamedQuery(name = "Province.findByProvinceid", query = "SELECT p FROM Province p WHERE p.provinceid = :provinceid"),
     @NamedQuery(name = "Province.findByProvincecode", query = "SELECT p FROM Province p WHERE p.provincecode = :provincecode"),
     @NamedQuery(name = "Province.findByProvincename", query = "SELECT p FROM Province p WHERE p.provincename = :provincename"),
@@ -47,6 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Province.findByEditor", query = "SELECT p FROM Province p WHERE p.editor = :editor"),
     @NamedQuery(name = "Province.findBySessiondate", query = "SELECT p FROM Province p WHERE p.sessiondate = :sessiondate")})
 public class Province implements Serializable {
+
+    public static final String SQL_FIND_BY_COUNTRY = "Province.findAllByCountry";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -189,5 +192,4 @@ public class Province implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Province[ provinceid=" + provinceid + " ]";
     }
-
 }

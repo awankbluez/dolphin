@@ -42,8 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Parameter.findBySessiondate", query = "SELECT p FROM Parameter p WHERE p.sessiondate = :sessiondate")})
 public class Parameter implements Serializable {
 
-    public static final String SQL_FIND_BY_CODE = "Parameter.findByParametercode";
     private static final long serialVersionUID = 1L;
+    public static final String SQL_FIND_BY_CODE = "Parameter.findByParametercode";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

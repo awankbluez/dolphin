@@ -1,6 +1,8 @@
 package com.vaia.lumbajxlite.ejbs.ejb.facade;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -53,5 +55,11 @@ public abstract class AbstractFacade<T> {
         cq.select(getEntityManager().getCriteriaBuilder().count(rt));
         Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
+    }
+
+    public static void populateParameter(Query query, Map<String, Object> parameters) {
+        for (Entry<String, Object> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
     }
 }

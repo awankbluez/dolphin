@@ -44,13 +44,14 @@
 
                 <br clear="all" />
 
+                <p:commandLink id="buttonLogout" action="#{userSessionBean.userLogout}"/>
             </div><!--bodywrapper-->
 
             <!--global tooltips-->
             <pe:tooltip global="true"/>
 
             <!-- An example of custom layout -->
-            <pe:ajaxErrorHandler button="Close warning!" widgetVar="myAjaxErrorHandler">
+            <pe:ajaxErrorHandler widgetVar="myAjaxErrorHandler">
                 <h:panelGrid columns="1">
                     <p:tabView >
                         <p:tab title="#{msgs['lumbajx.error']}">
@@ -113,7 +114,7 @@
 
 
             <script type="text/javascript">
-                var startFrom = 1*60;//#{session.maxInactiveInterval};  // Total session time out setting eg 10 sec, Real implementation assign from session
+                var startFrom = 5*60;//#{session.maxInactiveInterval};  // Total session time out setting eg 10 sec, Real implementation assign from session
                 var loopTill = 10;//#{systemController.getSessionTimeoutAlertDuration()};  //Count down degins from 6 sec and starts after 4 sec ie 10-6
                 var reduce = 1;
                 var handleDialog = null;
@@ -136,7 +137,7 @@
                             clearInterval(handleDialog);
 //                            window.location.href = timeOutPage;
                             
-                            $('#logoutButton').click();
+                            $('#buttonLogout').click();
                         }
                         else {
                             wCounter -= reduce;

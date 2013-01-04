@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @UniqueConstraint(columnNames = {"countryname"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Country.findAll", query = "SELECT c FROM Country c"),
+    @NamedQuery(name = "Country.findAll", query = "SELECT c FROM Country c ORDER BY c.countryname"),
     @NamedQuery(name = "Country.findByCountryid", query = "SELECT c FROM Country c WHERE c.countryid = :countryid"),
     @NamedQuery(name = "Country.findByCountrycode", query = "SELECT c FROM Country c WHERE c.countrycode = :countrycode"),
     @NamedQuery(name = "Country.findByCountryname", query = "SELECT c FROM Country c WHERE c.countryname = :countryname"),
@@ -45,6 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Country.findByEditor", query = "SELECT c FROM Country c WHERE c.editor = :editor"),
     @NamedQuery(name = "Country.findBySessiondate", query = "SELECT c FROM Country c WHERE c.sessiondate = :sessiondate")})
 public class Country implements Serializable {
+
+    public static final String SQL_FIND_ALL_COUNTRY = "Country.findAll";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -197,5 +199,4 @@ public class Country implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Country[ countryid=" + countryid + " ]";
     }
-
 }

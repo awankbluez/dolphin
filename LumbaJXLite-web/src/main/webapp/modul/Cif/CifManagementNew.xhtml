@@ -112,6 +112,7 @@
                                     <p:column>
                                         <p:selectOneMenu id="statusDegreeCif" value="#{cifBean.selectedCustomer.degreestatus}">
                                             <f:selectItem itemLabel="Pilih Status"/>
+                                            <f:selectItems value="#{cifBean.degreeStatus}" var="degreeStat" itemLabel="#{degreeStat.name}" itemValue="#{degreeStat.parameterid}"/>
                                         </p:selectOneMenu>
                                     </p:column>
                                     <p:column colspan="2">
@@ -120,6 +121,7 @@
                                     <p:column>
                                         <p:selectOneMenu id="descripStatusDegreeCif" value="#{cifBean.selectedCustomer.degreedesc}">
                                             <f:selectItem itemLabel="Pilih Keterangan Status"/>
+                                            <f:selectItems value="#{cifBean.degreeStatusDesc}" var="degreeStatDesc" itemLabel="#{degreeStatDesc.name}" itemValue="#{degreeStatDesc.parameterid}"/>
                                         </p:selectOneMenu>
                                     </p:column>
                                 </p:row>
@@ -230,16 +232,20 @@
                                         <p:outputLabel value="Negara" for="country"/>
                                     </p:column>
                                     <p:column colspan="2">
-                                        <p:selectOneMenu id="country" value="#{cifBean.selectedCustomer.person.address.countryid}">
+                                        <p:selectOneMenu id="country" value="#{cifBean.selectedCustomer.person.address.country.countryid}">
                                             <f:selectItem itemLabel="Pilih Negara"/>
+                                            <f:selectItems value="#{cifBean.countrys}" var="country" itemLabel="#{country.countryname}" itemValue="#{country.countryid}"/>
+                                            <p:ajax update="province" listener="#{cifBean.populateProvince}"/>
                                         </p:selectOneMenu>
                                     </p:column>
                                     <p:column>
                                         <p:outputLabel value="Provinsi" for="province"/>
                                     </p:column>
                                     <p:column>
-                                        <p:selectOneMenu id="province" value="#{cifBean.selectedCustomer.person.address.provinceid}">
+                                        <p:selectOneMenu id="province" value="#{cifBean.selectedCustomer.person.address.province.provinceid}">
                                             <f:selectItem itemLabel="Pilih Provinsi"/>
+                                            <f:selectItems value="#{cifBean.provinces}" var="province" itemLabel="#{province.provincename}" itemValue="#{province.provinceid}"/>
+                                            <p:ajax update="district" listener="#{cifBean.populateDistrict}"/>
                                         </p:selectOneMenu>
                                     </p:column>
                                 </p:row>
@@ -249,8 +255,9 @@
                                         <p:outputLabel value="Kota" for="district"/>
                                     </p:column>
                                     <p:column colspan="2">
-                                        <p:selectOneMenu id="district" value="#{cifBean.selectedCustomer.person.address.districtid}">
+                                        <p:selectOneMenu id="district" value="#{cifBean.selectedCustomer.person.address.district.districtid}">
                                             <f:selectItem itemLabel="Pilih Kota / Kabupaten"/>
+                                            <f:selectItems value="#{cifBean.districts}" var="district" itemLabel="#{district.districtname}" itemValue="#{district.districtid}"/>
                                         </p:selectOneMenu>
                                     </p:column>
                                     <p:column>

@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "District.findAll", query = "SELECT d FROM District d"),
+    @NamedQuery(name = "District.findAllByProvinceid", query = "SELECT d FROM District d WHERE d.provinceid = :provinceid ORDER BY d.districtname"),
     @NamedQuery(name = "District.findByDistrictid", query = "SELECT d FROM District d WHERE d.districtid = :districtid"),
     @NamedQuery(name = "District.findByDistrictcode", query = "SELECT d FROM District d WHERE d.districtcode = :districtcode"),
     @NamedQuery(name = "District.findByDistrictname", query = "SELECT d FROM District d WHERE d.districtname = :districtname"),
@@ -47,6 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "District.findBySandi", query = "SELECT d FROM District d WHERE d.sandi = :sandi"),
     @NamedQuery(name = "District.findBySessiondate", query = "SELECT d FROM District d WHERE d.sessiondate = :sessiondate")})
 public class District implements Serializable {
+
+    public static final String SQL_FIND_BY_PROVINCE = "District.findAllByProvinceid";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -210,5 +213,4 @@ public class District implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.District[ districtid=" + districtid + " ]";
     }
-
 }

@@ -63,6 +63,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Address.findByDistrictid", query = "SELECT a FROM Address a WHERE a.districtid = :districtid"),
     @NamedQuery(name = "Address.findByGroupingid", query = "SELECT a FROM Address a WHERE a.groupingid = :groupingid")})
 public class Address implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -144,8 +145,17 @@ public class Address implements Serializable {
     @JoinColumn(name = "addressstatusid", referencedColumnName = "addressstatusid")
     @ManyToOne
     private Addressstatus addressstatusid;
+    @ManyToOne
+    private Country country;
+    @ManyToOne
+    private Province province;
+    @ManyToOne
+    private District district;
 
     public Address() {
+        country = new Country();
+        province = new Province();
+        district = new District();
     }
 
     public Address(Integer addressid) {
@@ -417,6 +427,30 @@ public class Address implements Serializable {
         this.addressstatusid = addressstatusid;
     }
 
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public Province getProvince() {
+        return province;
+    }
+
+    public void setProvince(Province province) {
+        this.province = province;
+    }
+
+    public District getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(District district) {
+        this.district = district;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -441,5 +475,4 @@ public class Address implements Serializable {
     public String toString() {
         return "com.vaia.lumbajxlite.ejbs.entity.Address[ addressid=" + addressid + " ]";
     }
-
 }

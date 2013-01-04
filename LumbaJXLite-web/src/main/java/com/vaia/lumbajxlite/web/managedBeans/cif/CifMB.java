@@ -1,7 +1,10 @@
 package com.vaia.lumbajxlite.web.managedBeans.cif;
 
+import com.vaia.lumbajxlite.ejbs.ejb.local.CountryFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.ejb.local.CustomerFacadeLocal;
+import com.vaia.lumbajxlite.ejbs.ejb.local.DistrictFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.ejb.local.ParameterFacadeLocal;
+import com.vaia.lumbajxlite.ejbs.ejb.local.ProvinceFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Country;
 import com.vaia.lumbajxlite.ejbs.entity.Customer;
 import com.vaia.lumbajxlite.ejbs.entity.District;
@@ -35,6 +38,12 @@ public class CifMB extends AbstractManagedBean {
     private ParameterFacadeLocal parameterService;
     @EJB
     private CustomerFacadeLocal customerService;
+    @EJB
+    private CountryFacadeLocal countryService;
+    @EJB
+    private ProvinceFacadeLocal provinceService;
+    @EJB
+    private DistrictFacadeLocal districtSerice;
     private Customer selectedCustomer;
     private Customer findCustomer;
     private String findCustomerName;
@@ -54,13 +63,17 @@ public class CifMB extends AbstractManagedBean {
         this.findCustomer = new Customer();
         this.customerList = new ArrayList();
         this.customerType = new ArrayList();
+        this.status = this.STATUS_SEARCH;
 
+        populateBasicData();
+    }
+
+    private void populateBasicData() {
         this.customerType = this.parameterService.findByCode("tipe nasabah");
         this.genders = this.parameterService.findByCode("jenis kelamin");
         degreeStatus = parameterService.findByCode("status/gelar");
         degreeStatusDesc = parameterService.findByCode("keterangan status/gelar");
-
-        this.status = this.STATUS_SEARCH;
+        countrys = countryService.findAll();
     }
 
     public void searchCustomer() {
@@ -74,11 +87,19 @@ public class CifMB extends AbstractManagedBean {
     }
 
     public void populateProvince() {
-        if (this.selectedCustomer.getPerson().getAddress().getCountryid() != null);
+        if (this.selectedCustomer.getPerson().getAddress().getCountry().getCountryid() != null) {
+            provinces = provinceService.retrieveAllByCountry(selectedCustomer.getPerson().getAddress().getCountry());
+        } else {
+            provinces = new ArrayList<>();
+        }
     }
 
     public void populateDistrict() {
-        if (this.selectedCustomer.getPerson().getAddress().getProvinceid() != null);
+        if (this.selectedCustomer.getPerson().getAddress().getProvince().getProvinceid() != null) {
+            districts = districtSerice.retrieveAllByProvince(selectedCustomer.getPerson().getAddress().getProvince());
+        } else {
+            districts = new ArrayList<>();
+        }
     }
 
     public void createCustomer() {
