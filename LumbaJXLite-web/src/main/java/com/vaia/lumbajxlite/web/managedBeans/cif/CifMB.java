@@ -8,14 +8,19 @@ import com.vaia.lumbajxlite.ejbs.ejb.local.ProvinceFacadeLocal;
 import com.vaia.lumbajxlite.ejbs.entity.Country;
 import com.vaia.lumbajxlite.ejbs.entity.Customer;
 import com.vaia.lumbajxlite.ejbs.entity.District;
+import com.vaia.lumbajxlite.ejbs.entity.Grouping;
+import com.vaia.lumbajxlite.ejbs.entity.Groupmember;
 import com.vaia.lumbajxlite.ejbs.entity.Parameter;
 import com.vaia.lumbajxlite.ejbs.entity.Province;
 import com.vaia.lumbajxlite.web.managedBeans.AbstractManagedBean;
+import com.vaia.lumbajxlite.web.managedBeans.applicationBean.UserSessionMB;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,10 +49,14 @@ public class CifMB extends AbstractManagedBean {
     private ProvinceFacadeLocal provinceService;
     @EJB
     private DistrictFacadeLocal districtSerice;
+    @ManagedProperty(value = "#{userSessionBean}")
+    private UserSessionMB userSessionMB;
     private Customer selectedCustomer;
     private Customer findCustomer;
     private String findCustomerName;
     private List<Customer> customerList;
+    private List<Groupmember> groupMembers;
+    private Grouping customerGrouping;
     private List<Parameter> customerType;
     private List<Parameter> genders;
     private List<Parameter> degreeStatus;
@@ -64,7 +73,7 @@ public class CifMB extends AbstractManagedBean {
         this.customerList = new ArrayList();
         this.customerType = new ArrayList();
         this.status = this.STATUS_SEARCH;
-
+        customerGrouping = new Grouping();
         populateBasicData();
     }
 
@@ -102,7 +111,23 @@ public class CifMB extends AbstractManagedBean {
         }
     }
 
-    public void createCustomer() {
+    public void createCustomer() throws SQLException {
+        boolean statuscreate = false;
+
+        selectedCustomer.setCreator(userSessionMB.getAuthenticatedUser().getUserid());
+
+        if (selectedCustomer.getCustomertype().equals(CUST_TYPE_INDV)) {
+            statuscreate = customerService.createIndividualCustomer(selectedCustomer);
+        } else if (selectedCustomer.getCustomertype().equals(CUST_TYPE_COMP)) {
+        } else if (selectedCustomer.getCustomertype().equals(CUST_TYPE_COMM)) {
+        }
+
+        if (statuscreate) {
+            initialize();
+            displayInfoMessageToUser("Successfull create customer.");
+        } else {
+            displayErrorMessageToUser("Failed create customer.");
+        }
     }
 
     /**
@@ -238,5 +263,29 @@ public class CifMB extends AbstractManagedBean {
 
     public void setDistricts(List<District> districts) {
         this.districts = districts;
+    }
+
+    public List<Groupmember> getGroupMembers() {
+        return groupMembers;
+    }
+
+    public void setGroupMembers(List<Groupmember> groupMembers) {
+        this.groupMembers = groupMembers;
+    }
+
+    public Grouping getCustomerGrouping() {
+        return customerGrouping;
+    }
+
+    public void setCustomerGrouping(Grouping customerGrouping) {
+        this.customerGrouping = customerGrouping;
+    }
+
+    public UserSessionMB getUserSessionMB() {
+        return userSessionMB;
+    }
+
+    public void setUserSessionMB(UserSessionMB userSessionMB) {
+        this.userSessionMB = userSessionMB;
     }
 }

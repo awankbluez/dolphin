@@ -52,37 +52,37 @@
 
             <!-- An example of custom layout -->
             <pe:ajaxErrorHandler widgetVar="myAjaxErrorHandler">
-                <h:panelGrid columns="1">
-                    <p:tabView >
-                        <p:tab title="#{msgs['lumbajx.error']}">
-                            <h:panelGrid style="height: 25px;">
-                                <span style="float: left; width: 7%">
-                                    <h:graphicImage value="#{resource['images:warning.png']}" height="32" style=""/>
-                                </span>
-                                <span style="float: right; width: 93%">
-                                    <h:outputText value="#{msgs['lumbajx.error.desc']}"/>
-                                </span>
+                <p:tabView >
+                    <p:tab title="#{msgs['lumbajx.error']}">
+                        <h:panelGrid style="height: 25px;">
+                            <span style="float: left; width: 7%">
+                                <h:graphicImage value="#{resource['images:warning.png']}" height="32" style=""/>
+                            </span>
+                            <span style="float: right; width: 93%">
+                                <h:outputText value="#{msgs['lumbajx.error.desc']}"/>
+                            </span>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Error">
+                        <h:panelGrid columns="1">
+                            <h:panelGrid columns="2">
+                                <h:outputLabel value="Error message:" />
+                                <h:outputText value="{error-message}" style="font-size: 1.2em;color:navy;" />
+
+                                <h:outputLabel value="Server name:" />
+                                <h:outputText value="{error-hostname}"  style="font-size: 1.2em;color:navy;"/>
                             </h:panelGrid>
-                        </p:tab>
-                        <p:tab title="Error">
-                            <h:panelGrid columns="1">
-                                <h:panelGrid columns="2">
-                                    <h:outputLabel value="Error message:" />
-                                    <h:outputText value="{error-message}" style="font-size: 1.2em;color:navy;" />
 
-                                    <h:outputLabel value="Server name:" />
-                                    <h:outputText value="{error-hostname}"  style="font-size: 1.2em;color:navy;"/>
-                                </h:panelGrid>
+                            <p:inputTextarea value="{error-stacktrace}" style="overflow: auto; height: 300px; width: 700px;"/>
+                        </h:panelGrid>
+                    </p:tab>
+                </p:tabView>
 
-                                <p:inputTextarea value="{error-stacktrace}" style="overflow: auto; height: 300px; width: 700px;"/>
-                            </h:panelGrid>
-                        </p:tab>
-                    </p:tabView>
+                <p:spacer height="10"/>
 
-                    <h:panelGrid columns="2" style="text-align  :center; padding: 5px;">
-                        <p:commandButton onclick="window.location.href=window.location.href; return false;" value="Buka ulang"/>
-                        <p:commandButton onclick="myAjaxErrorHandler.hide(); return false;" value="Tutup"/>
-                    </h:panelGrid>
+                <h:panelGrid columns="2" style="text-align  :center; padding: 5px;">
+                    <p:commandButton onclick="window.location.href=window.location.href; return false;" value="Buka ulang"/>
+                    <p:commandButton onclick="myAjaxErrorHandler.hide(); return false;" value="Tutup"/>
                 </h:panelGrid>
             </pe:ajaxErrorHandler>
 
@@ -135,7 +135,7 @@
                     handleDialog = setInterval(function() {
                         if(wCounter == 0) {
                             clearInterval(handleDialog);
-//                            window.location.href = timeOutPage;
+                            //                            window.location.href = timeOutPage;
                             
                             $('#buttonLogout').click();
                         }

@@ -17,7 +17,7 @@
     </ui:define>
 
     <ui:define name="content">
-        <p:growl autoUpdate="true"/>
+        <p:growl autoUpdate="true" showDetail="true" showSummary="true"/>
 
         <h:form id="formSearchCustomer">
             <p:fieldset legend="Cari CIF">
@@ -209,7 +209,7 @@
                                         <p:outputLabel value="tanggal Lahir" for="dateOfBirth"/>
                                     </p:column>
                                     <p:column colspan="2">
-                                        <p:calendar id="dateOfBirth" style="width: available;" value="#{cifBean.selectedCustomer.person.dateofbirth}"/>
+                                        <p:calendar navigator="true" id="dateOfBirth" style="width: available;" value="#{cifBean.selectedCustomer.person.dateofbirth}"/>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>
@@ -224,29 +224,26 @@
                                     </p:column>
 
                                     <p:column>
-                                        <p:inputText/>
+                                        <p:inputText value="#{cifBean.selectedCustomer.name1}"/>
                                     </p:column>
-
                                     <p:column>
-                                        <p:inputText/>
+                                        <p:inputText value="#{cifBean.selectedCustomer.name2}"/>
                                     </p:column>
-
                                     <p:column>
-                                        <p:inputText/>
+                                        <p:inputText value="#{cifBean.selectedCustomer.name3}"/>
                                     </p:column>
-
                                     <p:column>
-                                        <p:inputText/>
+                                        <p:inputText value="#{cifBean.selectedCustomer.name4}"/>
                                     </p:column>
                                 </p:row>
 
                                 <p:row>
                                     <p:column>
-                                        <h:outputText value="Alias"/>
+                                        <p:outputLabel for="aliasComp" value="Alias"/>
                                     </p:column>
 
                                     <p:column colspan="4">
-                                        <p:inputText/>
+                                        <p:inputText id="aliasComp" value="#{cifBean.selectedCustomer.aliasname}"/>
                                     </p:column>
                                 </p:row>
 
@@ -256,7 +253,7 @@
                                     </p:column>
 
                                     <p:column>
-                                        <p:inputText id="beginingCertificateNumber"/>
+                                        <p:inputText id="beginingCertificateNumber" value="#{cifBean.selectedCustomer.person.beginingcertificatenumber}"/>
                                     </p:column>
 
                                     <p:column>
@@ -264,7 +261,7 @@
                                     </p:column>
 
                                     <p:column colspan="2">
-                                        <p:calendar id="beginingCertificateDate"/>
+                                        <p:calendar navigator="true" id="beginingCertificateDate" value="#{cifBean.selectedCustomer.person.beginingcertificatedate}"/>
                                     </p:column>
                                 </p:row>
 
@@ -274,7 +271,7 @@
                                     </p:column>
 
                                     <p:column>
-                                        <p:inputText id="finalCertificateNumber"/>
+                                        <p:inputText id="finalCertificateNumber" value="#{cifBean.selectedCustomer.person.finalcertificatenumber}"/>
                                     </p:column>
 
                                     <p:column>
@@ -282,7 +279,7 @@
                                     </p:column>
 
                                     <p:column colspan="2">
-                                        <p:calendar id="finalCertificateDate"/>
+                                        <p:calendar navigator="true" id="finalCertificateDate" value="#{cifBean.selectedCustomer.person.finalcertificatedate}"/>
                                     </p:column>
                                 </p:row>
 
@@ -292,7 +289,7 @@
                                     </p:column>
 
                                     <p:column>
-                                        <p:inputText id="compPersonNpwp"/>
+                                        <p:inputText id="compPersonNpwp" value="#{cifBean.selectedCustomer.person.npwp}"/>
                                     </p:column>
 
                                     <p:column colspan="3"/>
@@ -304,7 +301,7 @@
                                     </p:column>
 
                                     <p:column>
-                                        <p:selectOneMenu id="personCompTypeOfBusiness">
+                                        <p:selectOneMenu id="personCompTypeOfBusiness" value="#{cifBean.selectedCustomer.person.typeofbusiness}">
                                             <f:selectItem itemLabel="Pilih Badan Usaha"/>
                                         </p:selectOneMenu>
                                     </p:column>
@@ -314,7 +311,7 @@
                                     </p:column>
 
                                     <p:column colspan="2">
-                                        <p:inputText id="personCompTDP"/>
+                                        <p:inputText id="personCompTDP" value="#{cifBean.selectedCustomer.person.tdp}"/>
                                     </p:column>
                                 </p:row>
 
@@ -324,7 +321,7 @@
                                     </p:column>
 
                                     <p:column>
-                                        <p:inputText id="personCompPlaceOfBirth"/>
+                                        <p:inputText id="personCompPlaceOfBirth" value="#{cifBean.selectedCustomer.person.placeofbirth}"/>
                                     </p:column>
 
                                     <p:column>
@@ -332,57 +329,54 @@
                                     </p:column>
 
                                     <p:column colspan="2">
-                                        <p:inputText id="personCompDateOfBirth"/>
+                                        <p:inputText id="personCompDateOfBirth" value="#{cifBean.selectedCustomer.person.dateofbirth}"/>
                                     </p:column>
                                 </p:row>
-
-                                <p:row>
-                                    <p:column>
-                                        <p:outputLabel for="personCompEmail" value="Email"/>
-                                    </p:column>
-
-                                    <p:column>
-                                        <p:inputText id="personCompEmail"/>
-                                    </p:column>
-
-                                    <p:column>
-                                        <p:outputLabel for="personCompWebsite" value="Website"/>
-                                    </p:column>
-
-                                    <p:column colspan="2">
-                                        <p:inputText id="personCompWebsite"/>
-                                    </p:column>
-                                </p:row>
-
                             </p:panelGrid>
                         </p:tab>
 
                         <!--Tab Keanggotaan nasabah Komunitas-->
                         <p:tab title="Keanggotaan" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMM}">
-                            <p:dataTable>
+                            <h:panelGrid>
+                                <p:outputLabel for="groupingName" value="Nama Kelompok"/>
+                                <p:inputText id="groupingName" value="#{cifBean.customerGrouping.groupname}"/>
+
+                                <p:outputLabel for="groupingAccountOfficer" value="Petugas Lapangan"/>
+                                <p:selectOneMenu id="groupingAccountOfficer" value="#{cifBean.customerGrouping.accountofficer}">
+                                    <f:selectItem itemLabel="Pilih AO"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+
+                            <p:spacer height="10"/>
+
+                            <p:dataTable value="#{cifBean.groupMembers}"
+                                         var="groupMember">
+
                                 <f:facet name="header">
                                     <h:outputText value="Daftar Anggota" style="float: left;"/>
-                                    <p:commandButton icon="ui-icon ui-icon-plus" value="Tambah Anggota" style="float: right;"/>
+                                    <p:commandButton icon="ui-icon ui-icon-plus" value="Tambah Anggota" style="float: right;" onclick="findGroupMemberdialog.show();" type="button"/>
                                 </f:facet>
 
                                 <p:column headerText="Nama Anggota">
-
+                                    <h:outputText value="#{of:capitalize(groupMember.customer.name1)} #{of:capitalize(groupMember.customer.name2)} #{of:capitalize(groupMember.customer.name3)} #{of:capitalize(groupMember.customer.name4)}"/>
                                 </p:column>
 
                                 <p:column headerText="Nomor Nasabah">
-
+                                    <h:outputText value="#{groupMember.customer.customercode}"/>
                                 </p:column>
 
                                 <p:column headerText="Tanggal Lahir">
-
+                                    <h:outputText value="#{groupMember.customer.person.dateofbirth}">
+                                        <f:convertDateTime type="date"/>
+                                    </h:outputText>
                                 </p:column>
 
                                 <p:column headerText="Alamat">
-
+                                    <h:outputText value="#{groupMember.customer.person.address.address}"/>
                                 </p:column>
 
                                 <p:column headerText="Ketua">
-
+                                    <p:selectBooleanCheckbox value="#{groupMember.isleader}"/>
                                 </p:column>
                             </p:dataTable>
                         </p:tab>
@@ -505,6 +499,134 @@
                             </p:panelGrid>
                         </p:tab>
 
+                        <p:tab title="Alamat Group" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMM}">
+                            <p:panelGrid styleClass="hideBorderPanelGrid">
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Alamat Nasabah" for="customerAddressComm"/>
+                                    </p:column>
+                                    <p:column colspan="4">
+                                        <p:inputText id="customerAddressComm" value="#{cifBean.selectedCustomer.person.address.address}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Negara" for="countryComm"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:selectOneMenu id="countryComm" value="#{cifBean.selectedCustomer.person.address.country.countryid}">
+                                            <f:selectItem itemLabel="Pilih Negara"/>
+                                            <f:selectItems value="#{cifBean.countrys}" var="country" itemLabel="#{country.countryname}" itemValue="#{country.countryid}"/>
+                                            <p:ajax update="provinceComm" listener="#{cifBean.populateProvince}"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Provinsi" for="provinceComm"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="provinceComm" value="#{cifBean.selectedCustomer.person.address.province.provinceid}">
+                                            <f:selectItem itemLabel="Pilih Provinsi"/>
+                                            <f:selectItems value="#{cifBean.provinces}" var="province" itemLabel="#{province.provincename}" itemValue="#{province.provinceid}"/>
+                                            <p:ajax update="districtComm" listener="#{cifBean.populateDistrict}"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Kota" for="districtComm"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:selectOneMenu id="districtComm" value="#{cifBean.selectedCustomer.person.address.district.districtid}">
+                                            <f:selectItem itemLabel="Pilih Kota / Kabupaten"/>
+                                            <f:selectItems value="#{cifBean.districts}" var="district" itemLabel="#{district.districtname}" itemValue="#{district.districtid}"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Kecamatan" for="subdistrictComm"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="subdistrictComm" value="#{cifBean.selectedCustomer.person.address.subdistrict}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Kelurahan / Desa" for="villageComm"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:inputText id="villageComm" value="#{cifBean.selectedCustomer.person.address.village}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Kode Pos" for="postcodeComm"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="postcodeComm" value="#{cifBean.selectedCustomer.person.address.postcode}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="phoneNumberCodeComm" value="Nomer Telepon Rumah"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="phoneNumberCodeComm" value="#{cifBean.selectedCustomer.person.address.phonenumbercode}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="phoneNumberComm" value="#{cifBean.selectedCustomer.person.address.phonenumber}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Handphone" for="mobilePhoneNumberComm"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="mobilePhoneNumberComm" value="#{cifBean.selectedCustomer.person.address.mobilephonenumber}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="officePhoneNumberCodeComm" value="Nomer Telepon Kantor"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="officePhoneNumberCodeComm" value="#{cifBean.selectedCustomer.person.address.officephonenumbercode}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{cifBean.selectedCustomer.person.address.officephonenumber}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Email" for="emailComm"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="emailComm" value="#{cifBean.selectedCustomer.person.address.email}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Website" for="websiteComm"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:inputText id="websiteComm" value="#{cifBean.selectedCustomer.person.address.website}"/>
+                                    </p:column>
+                                    <p:column colspan="2">
+
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="weeklyMeeting" value="Pertemuan Kelompok"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="weeklyMeeting">
+                                            <f:selectItem itemLabel="Pilih Hari"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:tab>
+
                         <!--Individual and Company-->
                         <p:tab title="Analisa" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV or cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_COMP}">
                             <p:panel header="Data Terkait" rendered="#{cifBean.selectedCustomer.customertype == cifBean.CUST_TYPE_INDV}">
@@ -569,9 +691,50 @@
                     <p:spacer height="10"/>
 
                     <h:panelGrid columns="2">
-                        <p:commandButton value="Submit"/>
+                        <p:commandButton value="Submit" actionListener="#{cifBean.createCustomer}"/>
                         <p:commandButton value="Batal"/>
                     </h:panelGrid>
+
+                    <p:dialog modal="true" header="Cari Anggota" maximizable="false" minimizable="false" resizable="false" widgetVar="findGroupMemberdialog">
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Nomer Nasabah" for="searchCUstomerID"/>
+                            <p:inputText id="searchCUstomerID"/>
+
+                            <p:outputLabel value="Nama Nasabah" for="searchCustomerName"/>
+                            <p:inputText id="searchCustomerName"/>
+                        </h:panelGrid>
+
+                        <p:spacer height="10"/>
+
+                        <h:panelGrid columns="2">
+                            <p:commandButton value="Cari"/>
+                            <p:commandButton value="Batal" onclick="findGroupMemberdialog.hide();"/>
+                        </h:panelGrid>
+
+                        <p:spacer height="10"/>
+
+                        <p:dataTable>
+                            <f:facet name="header">
+                                <h:outputText value="Daftar Nasabah"/>
+                            </f:facet>
+
+                            <p:column headerText="Nama Anggota">
+
+                            </p:column>
+
+                            <p:column headerText="Nomor Nasabah">
+
+                            </p:column>
+
+                            <p:column headerText="Tanggal Lahir">
+
+                            </p:column>
+
+                            <p:column headerText="Alamat">
+
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
                 </h:panelGrid>
             </p:fieldset>
         </h:form>
